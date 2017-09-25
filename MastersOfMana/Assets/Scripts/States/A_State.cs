@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Rewired;
 
 public class A_State {
 
@@ -15,9 +16,12 @@ public class A_State {
     //shared datafields
     public PlayerScript player;
 
+	protected Rewired.Player mRewiredPlayer;
+
     //Constructor
     public A_State(PlayerScript player) {
         this.player = player;
+		mRewiredPlayer = ReInput.players.GetPlayer(0);
     }
 
     //behaviour distinction

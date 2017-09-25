@@ -9,6 +9,12 @@ public class PlayerScript : MonoBehaviour {
     public A_State mCurrentState;
     //holds instances of all the possible states the player can be in
     public Dictionary<A_State.StateID, A_State> mPlayerStates;
+
+    //spellslots
+    public SpellSlot
+        mSpellSlot_1,
+        mSpellSlot_2,
+        mSpellSlot_3;
     
 
 	// Use this for initialization
@@ -21,7 +27,16 @@ public class PlayerScript : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		
-	}
+	void Update () {}
+
+
+
+
+    //useful asstes for the PlayerScript
+
+    /*Simple Datacontainer (inner class) for a Pair of Spell and burndown*/
+   public struct SpellSlot {
+        public A_Spell mSpell;
+        public float mBurndown;
+    }
 }

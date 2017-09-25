@@ -4,8 +4,8 @@ using UnityEngine;
 
 public abstract class A_Spell : ScriptableObject 
 {
-	public UnityEngine.UI.Image icon;
-	public GameObject[] spawningObjects;
+	public UnityEngine.UI.Image mIcon;
+	public GameObject[] mSpawningObjects;
 
 	public abstract void Cast();
 }

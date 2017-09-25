@@ -9,6 +9,7 @@ public class StateNormal : A_State
 
     public override void Hurt()
     {
+        //get the instance of the hurt state and ask for it in the state dictionary
         player.mCurrentState = player.mPlayerStates[StateID.Hurt];
     }
 }

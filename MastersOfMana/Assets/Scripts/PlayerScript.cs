@@ -5,7 +5,9 @@ using UnityEngine;
 public class PlayerScript : MonoBehaviour {
 
     //member
+    //holds the current state, the player is in
     public A_State mCurrentState;
+    //holds instances of all the possible states the player can be in
     public Dictionary<A_State.StateID, A_State> mPlayerStates;
     
 

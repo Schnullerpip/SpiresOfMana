@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class A_State {
+/// <summary>
+/// abstract State, that defines default behaviour for substates and provides the base constructor
+/// </summary>
+public abstract class A_State {
     //shared datafields
     public PlayerScript player;
 
@@ -16,6 +19,7 @@ public class A_State {
     public A_State(PlayerScript player) {
         this.player = player;
     }
+    private A_State() { }
 
     /*behaviour distinction
      * those are keptempty on purpose because they're ment to be implemented in the subclasses

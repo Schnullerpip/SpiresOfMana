@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Rewired;
 
+[RequireComponent(typeof(CharacterController))]
 /// <summary>
 /// Defines the basic properties for a player
 /// </summary>
@@ -20,8 +21,12 @@ public class PlayerScript : MonoBehaviour {
         mSpellSlot_3;
     
 
-	public float speed = 10;    
-	
+	public float movementSpeed = 10;    
+	public float aimSpeed = 10;    
+	public CharacterController character;
+
+	public Vector3 moveForce;
+
 	protected Rewired.Player mRewiredPlayer;
 
 	// Use this for initialization
@@ -34,16 +39,25 @@ public class PlayerScript : MonoBehaviour {
 
         //initialize Inpur handler
 	    mRewiredPlayer = ReInput.players.GetPlayer(0);
+
+		character = GetComponent<CharacterController>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
 		//store the input values
-		Vector2 input = mRewiredPlayer.GetAxis2D("MoveHorizontal","MoveVertical");
-		input *= Time.deltaTime * speed;
+		Vector2 movementInput = mRewiredPlayer.GetAxis2D("MoveHorizontal", "MoveVertical");
+		movementInput *= Time.deltaTime * movementSpeed;
 
-        mInputStateSystem.mCurrent.Move(input);
+		Vector2 aimInput = mRewiredPlayer.GetAxis2D("AimHorizontal", "AimVertical");
+		aimInput *= Time.deltaTime * aimSpeed;
+
+        mInputStateSystem.mCurrent.Move(movementInput);
+		mInputStateSystem.mCurrent.Aim(aimInput);
+
+		//apply the accumulated force, in addition to gravity
+		character.Move(moveForce + Physics.gravity * Time.deltaTime);
 	}
 
 	//useful asstes for the PlayerScript

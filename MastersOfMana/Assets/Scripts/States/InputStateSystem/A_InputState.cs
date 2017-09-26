@@ -14,7 +14,7 @@ public abstract class A_InputState : A_State{
      * implementations inside the abstract A_Spell should only describe default behaviour
      */
     public virtual void Hurt() { }
-    public virtual void Move() { }
+    public virtual void Move(Vector2 input) { }
     public virtual void Jump() { }
     public virtual void Cast_Spell_1() { }
     public virtual void Cast_Spell_2() { }

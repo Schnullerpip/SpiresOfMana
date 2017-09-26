@@ -26,30 +26,14 @@ public class PlayerScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-<<<<<<< HEAD
-=======
-		mRewiredPlayer = ReInput.players.GetPlayer(0);
-
-        //instantiate all pissible states the player can be in and hold them ready to access
-        mPlayerStates = new Dictionary<A_State.StateID, A_State>();
-        mPlayerStates.Add(A_State.StateID.Normal, new StateNormal(this));
-        mPlayerStates.Add(A_State.StateID.Moving, new StateMoving(this));
-        mPlayerStates.Add(A_State.StateID.Hurt, new StateHurt(this));
-
-        //
-	    mCurrentState = mPlayerStates[A_State.StateID.Normal];
->>>>>>> 6b64c8611b7c834e005d2d34557aa1c407d21a78
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		mCurrentState.Update();
 
 		//store the input values
 		Vector2 input = mRewiredPlayer.GetAxis2D("MoveHorizontal","MoveVertical");
 		input *= Time.deltaTime * speed;
-
-		mCurrentState.Move(input);
 	}
 
 	//useful asstes for the PlayerScript

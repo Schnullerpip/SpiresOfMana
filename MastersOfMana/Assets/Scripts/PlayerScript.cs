@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Defines the basic properties for a player
+/// </summary>
 public class PlayerScript : MonoBehaviour {
 
     //member
@@ -24,6 +27,9 @@ public class PlayerScript : MonoBehaviour {
         mPlayerStates.Add(A_State.StateID.Normal, new StateNormal(this));
         mPlayerStates.Add(A_State.StateID.Moving, new StateMoving(this));
         mPlayerStates.Add(A_State.StateID.Hurt, new StateHurt(this));
+
+        //
+	    mCurrentState = mPlayerStates[A_State.StateID.Normal];
 	}
 	
 	// Update is called once per frame

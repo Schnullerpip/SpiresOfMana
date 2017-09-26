@@ -13,7 +13,7 @@ public abstract class A_InputState : A_State{
      * those are keptempty on purpose because they're ment to be implemented in the subclasses
      * implementations inside the abstract A_Spell should only describe default behaviour
      */
-    public virtual void Hurt() { }
+    public virtual void Hurt(float amount) { }
     public virtual void Move(Vector2 input) { }
     public virtual void Jump() { }
     public virtual void Cast_Spell_1() { }

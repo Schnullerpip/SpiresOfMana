@@ -7,7 +7,7 @@ public class InputStateNormal : A_InputState
     public InputStateNormal(PlayerScript player) : base(player) { }
 
 
-    public override void Hurt()
+    public override void Hurt(float amount)
     {
         //get the instance of the hurt state and ask for it in the state dictionary
         mPlayer.mInputStateSystem.SetState(InputStateSystem.InputStateID.Hurt);

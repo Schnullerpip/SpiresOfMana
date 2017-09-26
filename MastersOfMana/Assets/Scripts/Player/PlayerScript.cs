@@ -6,6 +6,7 @@ using Rewired;
 /// <summary>
 /// Defines the basic properties for a player
 /// </summary>
+[RequireComponent(typeof(PlayerHealthScript))]
 public class PlayerScript : MonoBehaviour {
 
     //member

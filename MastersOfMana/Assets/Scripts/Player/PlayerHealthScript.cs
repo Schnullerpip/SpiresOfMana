@@ -11,6 +11,7 @@ public class PlayerHealthScript : HealthScript {
         mPlayer = GetComponent<PlayerScript>();
     }
 
-    public override void TakeDamage(float amount) { 
+    public override void TakeDamage(float amount) {
+        mPlayer.mInputStateSystem.mCurrent.Hurt(amount);
     }
 }

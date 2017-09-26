@@ -8,9 +8,9 @@ using UnityEngine;
 /// </summary>
 public class CastStateSystem
 {
-    //holds instances of all the possible states the player can be in
+    //holds instances of all the possible mStates the player can be in
     public List<A_CastState> mStates;
-    //holds the current state, the player is in
+    //holds the mCurrent state, the player is in
     public A_CastState mCurrent;
 
     /*Each Player will hold his or her specific state instances in a dictionary
@@ -23,7 +23,7 @@ public class CastStateSystem
     //Constructor
     public CastStateSystem(PlayerScript player)
     {
-        //instantiate all pissible states the player can be in and hold them ready to access
+        //instantiate all pissible mStates the player can be in and hold them ready to access
         mStates = new List<A_CastState>()
         {
             new CastStateNormal(player),
@@ -35,5 +35,10 @@ public class CastStateSystem
     public A_CastState GetState(CastStateID idx)
     {
         return mStates[(int)idx];
+    }
+
+    public void SetState(CastStateID idx)
+    {
+        mCurrent = mStates[(int)idx];
     }
 }

@@ -10,7 +10,7 @@ public class InputStateNormal : A_InputState
     public override void Hurt()
     {
         //get the instance of the hurt state and ask for it in the state dictionary
-        mPlayer.mInputStateSystem.mCurrent = mPlayer.mInputStateSystem.GetState(InputStateSystem.InputStateID.Hurt);
+        mPlayer.mInputStateSystem.SetState(InputStateSystem.InputStateID.Hurt);
     }
 
 	public override void Update ()
@@ -23,7 +23,8 @@ public class InputStateNormal : A_InputState
 		base.Move (input);
 		if(input.sqrMagnitude > float.Epsilon)
 		{
-            mPlayer.mInputStateSystem.mCurrent = mPlayer.mInputStateSystem.GetState(InputStateSystem.InputStateID.Moving);
+		    mPlayer.mInputStateSystem.SetState(InputStateSystem.InputStateID.Moving);
+            mPlayer.mInputStateSystem.mCurrent.Move(input);
 			return;
 		}
 	}

@@ -16,7 +16,7 @@ public class InputStateSystem
     /*Each Player will hold his or her specific state instances in a dictionary
      * if a state change occures the 'new' state can be adressed through the player's
      * dictionary with the respective InputStateID as the key */
-    public enum InputStateID { Normal, Moving, Hurt};
+    public enum InputStateID {Normal, Moving, Hurt};
 
 
 
@@ -37,5 +37,10 @@ public class InputStateSystem
     public A_InputState GetState(InputStateID idx)
     {
         return mStates[(int)idx];
+    }
+
+    public void SetState(InputStateID idx)
+    {
+        mCurrent = mStates[(int)idx];
     }
 }

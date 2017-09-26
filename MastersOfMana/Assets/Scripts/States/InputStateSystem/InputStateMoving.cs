@@ -12,7 +12,7 @@ public class InputStateMoving : A_InputState
 
 		if(input.sqrMagnitude <= float.Epsilon)
 		{
-			mPlayer.mInputStateSystem.mCurrent = mPlayer.mInputStateSystem.GetState(InputStateSystem.InputStateID.Normal);
+		    mPlayer.mInputStateSystem.SetState(InputStateSystem.InputStateID.Normal);
 			mPlayer.mInputStateSystem.mCurrent.Move(input);
 			return;
 		}

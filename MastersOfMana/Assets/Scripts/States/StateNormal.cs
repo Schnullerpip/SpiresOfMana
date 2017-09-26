@@ -15,12 +15,16 @@ public class StateNormal : A_State
 	public override void Update ()
 	{
 		base.Update ();
+	}
 
-		//check for any kind of input
-		if(mRewiredPlayer.GetAxis2D("MoveHorizontal","MoveVertical").sqrMagnitude > float.Epsilon)
+	public override void Move (Vector2 input)
+	{
+		base.Move (input);
+		if(input.sqrMagnitude > float.Epsilon)
 		{
 			player.mCurrentState = player.mPlayerStates[StateID.Moving];
-			player.mCurrentState.Update();
+			player.mCurrentState.Move(input);
+			return;
 		}
 	}
 }

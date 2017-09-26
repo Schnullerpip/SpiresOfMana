@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Rewired;
 
 public class A_State {
 
@@ -16,17 +15,19 @@ public class A_State {
     //shared datafields
     public PlayerScript player;
 
-	protected Rewired.Player mRewiredPlayer;
 
     //Constructor
+	/// <summary>
+	/// Initializes a new instance of the <see cref="A_State"/> class.
+	/// </summary>
+	/// <param name="player">Player.</param>
     public A_State(PlayerScript player) {
         this.player = player;
-		mRewiredPlayer = ReInput.players.GetPlayer(0);
     }
 
     //behaviour distinction
     public virtual void Hurt() { }
-    public virtual void Move() { }
+    public virtual void Move(Vector2 input) { }
     public virtual void Jump() { }
     public virtual void Cast_Spell_1() { }
     public virtual void Cast_Spell_2() { }

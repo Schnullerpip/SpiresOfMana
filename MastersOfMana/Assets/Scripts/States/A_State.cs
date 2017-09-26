@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,7 +14,6 @@ public abstract class A_State {
      * dictionary with the respective StateID as the key */
     public enum StateID { Normal, Moving, Hurt};
 
-
     //Constructor - this abstract class defines the constructor for all the subclasses
     public A_State(PlayerScript player) {
         this.player = player;
@@ -26,7 +25,7 @@ public abstract class A_State {
      * implementations inside the abstract A_Spell should only describe default behaviour
      */
     public virtual void Hurt() { }
-    public virtual void Move() { }
+    public virtual void Move(Vector2 input) { }
     public virtual void Jump() { }
     public virtual void Cast_Spell_1() { }
     public virtual void Cast_Spell_2() { }

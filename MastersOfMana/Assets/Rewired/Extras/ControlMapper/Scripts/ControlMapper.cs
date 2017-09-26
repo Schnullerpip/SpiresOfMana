@@ -231,7 +231,7 @@ namespace Rewired.UI.ControlMapper {
         private bool _showMapCategoriesGroupLabel = true;
 
         [SerializeField]
-        [Tooltip("Show the label for the current controller name?")]
+        [Tooltip("Show the label for the mCurrent controller name?")]
         private bool _showControllerNameLabel = true;
         [SerializeField]
         [Tooltip("Show the Assigned Controllers group? If joystick auto-assignment is enabled in the Rewired Input Manager and the max joysticks per player is set to any value other than 1, the Assigned Controllers group will always be displayed.")]
@@ -282,7 +282,7 @@ namespace Rewired.UI.ControlMapper {
         #region Inspector Properties
 
         // Public access to certain settings which can be changed at runtime before initialization or after initialization provided Reset() is called afterwards.
-        // This is useful if you want to show only certain settings based on the current platform.
+        // This is useful if you want to show only certain settings based on the mCurrent platform.
         // Not all properties are runtime modifiable.
 
         public InputManager rewiredInputManager { get { return _rewiredInputManager; } set { _rewiredInputManager = value; InspectorPropertyChanged(true); } }
@@ -485,7 +485,7 @@ namespace Rewired.UI.ControlMapper {
             if(_rewiredInputManager == null) {
                 _rewiredInputManager = Object.FindObjectOfType<Rewired.InputManager>();
                 if(_rewiredInputManager == null) {
-                    Debug.LogError("Rewired Control Mapper: A Rewired Input Manager was not assigned in the inspector or found in the current scene! Control Mapper will not function.");
+                    Debug.LogError("Rewired Control Mapper: A Rewired Input Manager was not assigned in the inspector or found in the mCurrent scene! Control Mapper will not function.");
                     return;
                 }
             }
@@ -1963,7 +1963,7 @@ namespace Rewired.UI.ControlMapper {
 
         private void CreateLayout() {
 
-            // Enable all groups that are used by the current settings.
+            // Enable all groups that are used by the mCurrent settings.
 
             // Player section
             references.playersGroup.gameObject.SetActive(showPlayers);
@@ -2132,7 +2132,7 @@ namespace Rewired.UI.ControlMapper {
                 assignedControllerButtonsPlaceholder.SetActive(true);
             }
 
-            // Get the current player
+            // Get the mCurrent player
             Player player = ReInput.players.GetPlayer(currentPlayerId);
             if(player == null) return;
 
@@ -2488,7 +2488,7 @@ namespace Rewired.UI.ControlMapper {
                 if(Keyboard.IsModifierKey(info.keyboardKey)) { // a modifier key is pressed
                     if(modifierPressedCount == 0) firstModifierKeyInfo = info; // store the polling info for the first modifier key pressed in case its the only key pressed
 
-                    curModifiers |= Keyboard.KeyCodeToModifierKeyFlags(key); // add the key to the current modifier flags
+                    curModifiers |= Keyboard.KeyCodeToModifierKeyFlags(key); // add the key to the mCurrent modifier flags
                     modifierPressedCount += 1; // count how many modifier keys are pressed
 
                 } else { // this is not a modifier key

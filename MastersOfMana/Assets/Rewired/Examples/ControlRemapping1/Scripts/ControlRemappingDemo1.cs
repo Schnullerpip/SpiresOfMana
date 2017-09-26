@@ -334,7 +334,7 @@ namespace Rewired.Demos {
             prevValue = selectedController.type == ControllerType.Keyboard;
             value = GUILayout.Toggle(prevValue, "Keyboard", "Button", GUILayout.ExpandWidth(false));
             if(value != prevValue) {
-                selectedController.Set(0, ControllerType.Keyboard); // set current selected device to this
+                selectedController.Set(0, ControllerType.Keyboard); // set mCurrent selected device to this
                 ControllerSelectionChanged();
             }
 
@@ -343,7 +343,7 @@ namespace Rewired.Demos {
             prevValue = selectedController.type == ControllerType.Mouse;
             value = GUILayout.Toggle(prevValue, "Mouse", "Button", GUILayout.ExpandWidth(false));
             if(value != prevValue) {
-                selectedController.Set(0, ControllerType.Mouse); // set current selected device to this
+                selectedController.Set(0, ControllerType.Mouse); // set mCurrent selected device to this
                 ControllerSelectionChanged();
             }
             if(GUI.enabled != origGuiEnabled) GUI.enabled = origGuiEnabled; // re-enable gui
@@ -353,7 +353,7 @@ namespace Rewired.Demos {
                 prevValue = selectedController.type == ControllerType.Joystick && selectedController.id == j.id;
                 value = GUILayout.Toggle(prevValue, j.name, "Button", GUILayout.ExpandWidth(false));
                 if(value != prevValue) {
-                    selectedController.Set(j.id, ControllerType.Joystick); // set current selected device to this
+                    selectedController.Set(j.id, ControllerType.Joystick); // set mCurrent selected device to this
                     ControllerSelectionChanged();
                 }
             }
@@ -812,7 +812,7 @@ namespace Rewired.Demos {
                 int axisIndex = entry.joystick.GetAxisIndexById(entry.selectedElementIdentifierId);
                 AxisCalibration axis = entry.calibrationMap.GetAxis(axisIndex); // get the axis calibration
 
-                // Show current axis information
+                // Show mCurrent axis information
                 GUILayout.Label("Calibrated Value: " + entry.joystick.GetAxisById(entry.selectedElementIdentifierId));
                 GUILayout.Label("Zero: " + axis.calibratedZero);
                 GUILayout.Label("Min: " + axis.calibratedMin);
@@ -1307,7 +1307,7 @@ namespace Rewired.Demos {
         }
 
         private void JoystickPreDisconnect(ControllerStatusChangedEventArgs args) {
-            // Check if the current editing controller was just disconnected and deselect it
+            // Check if the mCurrent editing controller was just disconnected and deselect it
             if(selectedController.hasSelection && args.controllerType == selectedController.type && args.controllerId == selectedController.id) {
                 ClearControllerSelection(); // joystick was disconnected
             }

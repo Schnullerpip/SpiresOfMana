@@ -10,8 +10,8 @@ namespace Rewired.UI.ControlMapper {
     using System.Collections;
 
     /// <summary>
-    /// Adjusts the scale based on the current screen aspect ratio to try to fit the content sensibly.
-    /// Uses break points to determine current scale settings.
+    /// Adjusts the scale based on the mCurrent screen aspect ratio to try to fit the content sensibly.
+    /// Uses break points to determine mCurrent scale settings.
     /// </summary>
     [RequireComponent(typeof(CanvasScalerExt))]
     public class CanvasScalerFitter : MonoBehaviour {

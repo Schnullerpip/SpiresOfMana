@@ -598,7 +598,7 @@ namespace Rewired.Integration.UnityUI {
         protected bool SendMoveEventToSelectedObject() {
             if(recompiling) return false; // never allow movement while recompiling
 
-            float time = Time.unscaledTime; // get the current time
+            float time = Time.unscaledTime; // get the mCurrent time
 
             // Check for zero movement and clear
             Vector2 movement = GetRawMoveVector();
@@ -710,7 +710,7 @@ namespace Rewired.Integration.UnityUI {
         }
 
         /// <summary>
-        /// Process the current mouse press.
+        /// Process the mCurrent mouse press.
         /// </summary>
         protected void ProcessMousePress(MouseButtonEventData data) {
             var pointerEvent = data.buttonData;

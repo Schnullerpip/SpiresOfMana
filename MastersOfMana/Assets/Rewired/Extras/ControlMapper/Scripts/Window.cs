@@ -269,7 +269,7 @@ namespace Rewired.UI.ControlMapper {
             if(!hasFocus) return;
             if(EventSystem.current == null) return;
             if(EventSystem.current.currentSelectedGameObject == null) RestoreDefaultOrLastUISelection(); // nothing is selected, restore default or last selection
-            lastUISelection = EventSystem.current.currentSelectedGameObject; // store current selection as last
+            lastUISelection = EventSystem.current.currentSelectedGameObject; // store mCurrent selection as last
         }
 
         private void RestoreDefaultOrLastUISelection() {

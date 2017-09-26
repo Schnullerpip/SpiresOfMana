@@ -25,7 +25,15 @@ public class PlayerScript : MonoBehaviour {
 	protected Rewired.Player mRewiredPlayer;
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
+        //initialize the statesystems
+        mInputStateSystem = new InputStateSystem(this);
+        mEffectStateSystem = new EffectStateSystem(this);
+        mCastStateSystem = new CastStateSystem(this);
+
+        //initialize Inpur handler
+	    mRewiredPlayer = ReInput.players.GetPlayer(0);
 	}
 	
 	// Update is called once per frame
@@ -34,6 +42,8 @@ public class PlayerScript : MonoBehaviour {
 		//store the input values
 		Vector2 input = mRewiredPlayer.GetAxis2D("MoveHorizontal","MoveVertical");
 		input *= Time.deltaTime * speed;
+
+        mInputStateSystem.mCurrent.Move(input);
 	}
 
 	//useful asstes for the PlayerScript

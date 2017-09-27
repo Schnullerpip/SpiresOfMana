@@ -20,9 +20,20 @@ public class SmoothFollow : MonoBehaviour {
 	[ReadOnlyAttribute]
 	public Vector3 rotationVelocity;
 
-	void LateUpdate () 
+	void FixedUpdate()
 	{
 		transform.position = Vector3.SmoothDamp(transform.position,followTarget.position,ref movementVelocity, movementDamping);
-		transform.rotation = Quaternion.LookRotation(Vector3.SmoothDamp(transform.forward, followTarget.forward, ref rotationVelocity, rotationDamping),transform.up);
+	}
+
+	void LateUpdate () 
+	{
+		if(rotationDamping <= float.Epsilon)
+		{
+			transform.rotation = followTarget.rotation;
+		}
+		else
+		{
+			transform.rotation = Quaternion.LookRotation(Vector3.SmoothDamp(transform.forward, followTarget.forward, ref rotationVelocity, rotationDamping),transform.up);
+		}
 	}
 }

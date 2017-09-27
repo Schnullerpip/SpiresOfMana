@@ -20,7 +20,10 @@ public abstract class A_InputState : A_State{
         //TODO: add true 360 aiming
 		mPlayer.transform.Rotate(0,input.x,0);
 	}
-    public virtual void Jump() { }
+    public virtual void Jump() 
+	{
+		mPlayer.Jump();
+	}
     public virtual void Cast_Spell_1() { }
     public virtual void Cast_Spell_2() { }
     public virtual void Cast_Spell_3() { }

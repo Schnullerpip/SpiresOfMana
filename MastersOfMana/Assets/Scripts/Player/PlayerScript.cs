@@ -36,20 +36,25 @@ public class PlayerScript : MonoBehaviour {
         //initialize Inpur handler
 	    mRewiredPlayer = ReInput.players.GetPlayer(0);
 	}
-	
-	// Update is called once per frame
+
+    //cached Vector2 forplayer Input
+    private Vector2 input;
+    // Update is called once per frame
 	void Update () {
 
 		//store the input values
-		Vector2 input = mRewiredPlayer.GetAxis2D("MoveHorizontal","MoveVertical");
+		input = mRewiredPlayer.GetAxis2D("MoveHorizontal","MoveVertical");
 		input *= Time.deltaTime * speed;
 
+        //forward the player input to the InputStateSystem
         mInputStateSystem.mCurrent.Move(input);
 	}
 
 	//useful asstes for the PlayerScript
 
-	/*Simple Datacontainer (inner class) for a Pair of Spell and burndown*/
+    /// <summary>
+	/// Simple Datacontainer (inner class) for a Pair of Spell and burndown
+    /// </summary>
 	public struct SpellSlot {
 		public A_Spell mSpell;
 		public float mBurndown;

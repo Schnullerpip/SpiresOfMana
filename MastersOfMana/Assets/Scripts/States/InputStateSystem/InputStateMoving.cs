@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class InputStateMoving : A_InputState
 {
@@ -17,8 +18,8 @@ public class InputStateMoving : A_InputState
 			return;
 		}
 
-		//cache position
-		Vector3 pos = mPlayer.transform.position;
+        //cache position
+        Vector3 pos = mPlayer.transform.position;
 		pos.x += input.x;
 		pos.z += input.y;
 		mPlayer.transform.position = pos;

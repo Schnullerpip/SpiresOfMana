@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Rewired;
+using UnityEngine.Networking;
+using UnityEngine.Events;
 
 /// <summary>
 /// Defines the basic properties for a player
 /// </summary>
-public class PlayerScript : MonoBehaviour {
+public class PlayerScript : NetworkBehaviour {
 
     //member
     public InputStateSystem mInputStateSystem;
@@ -35,13 +37,16 @@ public class PlayerScript : MonoBehaviour {
         //initialize Inpur handler
 	    mRewiredPlayer = ReInput.players.GetPlayer(0);
 	}
-	
+
 	// Update is called once per frame
-	void Update () {
+    void Update () {
+
+        if (!isLocalPlayer || mRewiredPlayer == null)
+            return;
 
 		//store the input values
 		Vector2 input = mRewiredPlayer.GetAxis2D("MoveHorizontal","MoveVertical");
-		input *= Time.deltaTime * speed;
+        input *= Time.deltaTime * speed;
 
         mInputStateSystem.mCurrent.Move(input);
 	}

@@ -24,7 +24,7 @@ public class PlayerScript : MonoBehaviour {
 	public float movementAcceleration = 10;    
 	public float aimSpeed = 10;    
 	public float jumpStrength = 5;
-	public Rigidbody rigid;
+	private Rigidbody rigid;
 
 	public Vector3 moveInputForce;
 
@@ -41,10 +41,8 @@ public class PlayerScript : MonoBehaviour {
         //initialize Inpur handler
 	    mRewiredPlayer = ReInput.players.GetPlayer(0);
 
-		if(rigid == null)
-		{
-			rigid = GetComponent<Rigidbody>();
-		}
+		rigid = GetComponent<Rigidbody>();
+
 	}
 	
 	// Update is called once per frame
@@ -81,10 +79,10 @@ public class PlayerScript : MonoBehaviour {
 	//useful asstes for the PlayerScript
 
 	/// <summary>
-	/// Simple Datacontainer (inner class) for a Pair of Spell and burndown
+	/// Simple Datacontainer (inner class) for a Pair of Spell and cooldown
 	/// </summary>
 	public struct SpellSlot {
 		public A_Spell mSpell;
-		public float mBurndown;
+		public float mCooldown;
 	}
 }

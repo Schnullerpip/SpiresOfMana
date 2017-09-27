@@ -955,7 +955,7 @@ namespace Rewired.Data {
          * delete all player prefs including any ones you've created yourself or other plugins have created.
          */
 
-        // WARNING: Do not use & symbol in keys. Linux cannot load them after the mCurrent session ends.
+        // WARNING: Do not use & symbol in keys. Linux cannot load them after the current session ends.
 
         private string GetBasePlayerPrefsKey(Player player) {
             string key = playerPrefsKeyPrefix;

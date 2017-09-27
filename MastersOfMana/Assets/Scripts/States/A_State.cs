@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Abstract class, that sets up the minimal needs for a state -> to know a mPlayer
+/// Abstract class, that sets up the minimal needs for a state -> to know a player
 /// </summary>
 public class A_State
 {
-    public PlayerScript mPlayer;
+    public PlayerScript player;
 
-    public A_State(PlayerScript mPlayer)
+    public A_State(PlayerScript player)
     {
-        this.mPlayer = mPlayer;
+        this.player = player;
     }
 
     //prevent standard construction

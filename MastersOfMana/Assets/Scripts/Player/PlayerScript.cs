@@ -57,11 +57,11 @@ public class PlayerScript : MonoBehaviour {
 
 		if(mRewiredPlayer.GetButtonDown("Jump"))
 		{
-			mInputStateSystem.mCurrent.Jump();
+			mInputStateSystem.current.Jump();
 		}
 
-        mInputStateSystem.mCurrent.Move(movementInput);
-		mInputStateSystem.mCurrent.Aim(aimInput);
+        mInputStateSystem.current.Move(movementInput);
+		mInputStateSystem.current.Aim(aimInput);
 
 	}
 		

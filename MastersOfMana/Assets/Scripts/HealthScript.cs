@@ -4,18 +4,18 @@ using UnityEngine;
 
 /// <summary>
 /// The script that provides an interface to anything, that can be damaged 
-/// a mCurrentHealth field is supposed to keep track of the GameObject's current health,
-/// while mMaxHealth is the GameObject's initial health value
+/// a currentHealth field is supposed to keep track of the GameObject's current health,
+/// while maxHealth is the GameObject's initial health value
 /// </summary>
 public class HealthScript : MonoBehaviour
 {
     [SerializeField]
-    private float mMaxHealth = 100, mCurrentHealth;
+    private float maxHealth = 100, currentHealth;
 
     //states whether the GameObject is alive or not
-    private bool mIsAlive = true;
+    private bool isAlive = true;
     public bool IsAlive() {
-        return mIsAlive;
+        return isAlive;
     }
 
     // Use this for initialization
@@ -28,16 +28,16 @@ public class HealthScript : MonoBehaviour
 
     //the only thing, that should be adressed, to actually hurt a GameObject
     public virtual void TakeDamage(float amount) {
-        if ((mCurrentHealth -= amount) <= 0) {
-            mCurrentHealth = 0;
-            mIsAlive = false;
+        if ((currentHealth -= amount) <= 0) {
+            currentHealth = 0;
+            isAlive = false;
         }
     }
 
     //bring a GameObject to life
     public void Reset()
     {
-        mCurrentHealth = mMaxHealth;
-        mIsAlive = true;
+        currentHealth = maxHealth;
+        isAlive = true;
     }
 }

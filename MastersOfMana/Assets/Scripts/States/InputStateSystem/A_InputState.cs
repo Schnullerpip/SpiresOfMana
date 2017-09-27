@@ -18,11 +18,11 @@ public abstract class A_InputState : A_State{
     public virtual void Aim(Vector2 input) 
 	{
         //TODO: add true 360 aiming
-		mPlayer.transform.Rotate(0,input.x,0);
+		player.transform.Rotate(0,input.x,0);
 	}
     public virtual void Jump() 
 	{
-		mPlayer.Jump();
+		player.Jump();
 	}
     public virtual void Cast_Spell_1() { }
     public virtual void Cast_Spell_2() { }

@@ -55,7 +55,7 @@ namespace Rewired.Demos {
             axisCount = touchController.joysticks.Length * 2; // 2 axes per stick
             buttonCount = touchController.buttons.Length;
 
-            // Set up arrays to store our mCurrent source element values
+            // Set up arrays to store our current source element values
             axisValues = new float[axisCount];
             buttonValues = new bool[buttonCount];
 
@@ -73,10 +73,10 @@ namespace Rewired.Demos {
             }
 
             // Callback Update Method:
-            // Set callbacks to retrieve mCurrent element values.
+            // Set callbacks to retrieve current element values.
             // This is a different way of updating the element values in the controller.
             // You set an update function for axes and buttons and these functions will be called
-            // to retrieve the mCurrent source element values on every update loop in which input is updated.
+            // to retrieve the current source element values on every update loop in which input is updated.
             if(useUpdateCallbacks && controller != null) {
                 controller.SetAxisUpdateCallback(GetAxisValueCallback);
                 controller.SetButtonUpdateCallback(GetButtonValueCallback);
@@ -99,17 +99,17 @@ namespace Rewired.Demos {
             GetSourceAxisValues();
             GetSourceButtonValues();
 
-            // Set the mCurrent values directly in the controller
+            // Set the current values directly in the controller
             if(!useUpdateCallbacks) { // if not using update callbacks, set the values directly, otherwise controller values will be updated via callbacks
                 SetControllerAxisValues();
                 SetControllerButtonValues();
             }
         }
 
-        // Get the mCurrent values from the source elements. 
+        // Get the current values from the source elements. 
 
         private void GetSourceAxisValues() {
-            // Get the mCurrent element values from our source and store them
+            // Get the current element values from our source and store them
             for(int i = 0; i < axisValues.Length; i++) {
                 if(i % 2 != 0) {// odd
                     axisValues[i] = touchController.joysticks[i/2].position.y;
@@ -120,7 +120,7 @@ namespace Rewired.Demos {
         }
 
         private void GetSourceButtonValues() {
-            // Get the mCurrent element values from our source and store them
+            // Get the current element values from our source and store them
             for(int i = 0; i < buttonValues.Length; i++) {
                 buttonValues[i] = touchController.buttons[i].isPressed;
             }
@@ -148,14 +148,14 @@ namespace Rewired.Demos {
 
         private float GetAxisValueCallback(int index) {
             // This will be called by each axis element in the Custom Controller when updating its raw value
-            // Get the mCurrent value from the source axis at index
+            // Get the current value from the source axis at index
             if(index >= axisValues.Length) return 0.0f;
             return axisValues[index];
         }
 
         private bool GetButtonValueCallback(int index) {
             // This will be called by each button element in the Custom Controller when updating its raw value
-            // Get the mCurrent value from the source button at index
+            // Get the current value from the source button at index
             if(index >= buttonValues.Length) return false;
             return buttonValues[index];
         }

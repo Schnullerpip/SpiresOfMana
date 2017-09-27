@@ -8,10 +8,10 @@ using UnityEngine;
 /// </summary>
 public class InputStateSystem
 {
-    //holds instances of all the possible mStates the player can be in
-    public List<A_InputState> mStates;
-    //holds the mCurrent state, the player is in
-    public A_InputState mCurrent;
+    //holds instances of all the possible states the player can be in
+    public List<A_InputState> states;
+    //holds the current state, the player is in
+    public A_InputState current;
 
 	/// <summary>
 	/// Each Player will hold his or her specific state instances in a dictionary
@@ -25,24 +25,24 @@ public class InputStateSystem
     //Constructor
     public InputStateSystem(PlayerScript player)
     {
-        //instantiate all pissible mStates the player can be in and hold them ready to access
-        mStates = new List<A_InputState>()
+        //instantiate all pissible states the player can be in and hold them ready to access
+        states = new List<A_InputState>()
         {
             new InputStateNormal(player),
             new InputStateMoving(player),
             new InputStateHurt(player),
         };
 
-        mCurrent = mStates[0];
+        current = states[0];
     }
 
     public A_InputState GetState(InputStateID idx)
     {
-        return mStates[(int)idx];
+        return states[(int)idx];
     }
 
     public void SetState(InputStateID idx)
     {
-        mCurrent = mStates[(int)idx];
+        current = states[(int)idx];
     }
 }

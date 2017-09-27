@@ -14,7 +14,7 @@ public class InputStateMoving : A_InputState
 		{
 		    mPlayer.mInputStateSystem.SetState(InputStateSystem.InputStateID.Normal);
 			mPlayer.mInputStateSystem.mCurrent.Move(input);
-			mPlayer.moveForce = Vector3.zero;
+			mPlayer.moveInputForce = Vector3.zero;
 			return;
 		}
 			
@@ -23,6 +23,6 @@ public class InputStateMoving : A_InputState
 		moveForce = mPlayer.transform.TransformDirection(moveForce);
 
 		//override moveForce in player script
-		mPlayer.moveForce = moveForce;
+		mPlayer.moveInputForce = moveForce;
 	}
 }

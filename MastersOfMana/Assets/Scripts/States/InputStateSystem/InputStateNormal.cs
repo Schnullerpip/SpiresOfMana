@@ -27,5 +27,6 @@ public class InputStateNormal : A_InputState
             mPlayer.mInputStateSystem.mCurrent.Move(input);
 			return;
 		}
+
 	}
 }

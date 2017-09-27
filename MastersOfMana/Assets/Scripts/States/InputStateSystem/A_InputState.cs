@@ -14,7 +14,12 @@ public abstract class A_InputState : A_State{
      * implementations inside the abstract A_Spell should only describe default behaviour
      */
     public virtual void Hurt(float amount) { }
-    public virtual void Move(Vector2 input) { }
+	public virtual void Move(Vector2 input) { }
+    public virtual void Aim(Vector2 input) 
+	{
+        //TODO: add true 360 aiming
+		mPlayer.transform.Rotate(0,input.x,0);
+	}
     public virtual void Jump() { }
     public virtual void Cast_Spell_1() { }
     public virtual void Cast_Spell_2() { }

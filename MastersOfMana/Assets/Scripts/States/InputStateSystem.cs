@@ -13,9 +13,11 @@ public class InputStateSystem
     //holds the mCurrent state, the player is in
     public A_InputState mCurrent;
 
-    /*Each Player will hold his or her specific state instances in a dictionary
-     * if a state change occures the 'new' state can be adressed through the player's
-     * dictionary with the respective InputStateID as the key */
+	/// <summary>
+	/// Each Player will hold his or her specific state instances in a dictionary
+	/// if a state change occures the 'new' state can be adressed through the player's
+	/// dictionary with the respective InputStateID as the key
+	/// </summary>
     public enum InputStateID {Normal, Moving, Hurt};
 
 

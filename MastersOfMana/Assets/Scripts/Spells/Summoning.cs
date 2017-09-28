@@ -7,7 +7,7 @@ public class Summoning : A_Spell
 {
 	#region implemented abstract members of A_Spell
 
-	public override void Cast ()
+	public override void Cast (PlayerScript caster)
 	{
 		throw new System.NotImplementedException ();
 	}

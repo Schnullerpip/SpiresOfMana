@@ -4,22 +4,22 @@ using UnityEngine;
 using Rewired;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(PlayerHealthScript))]
 /// <summary>
 /// Defines the basic properties for a player
 /// </summary>
-[RequireComponent(typeof(PlayerHealthScript))]
 public class PlayerScript : MonoBehaviour {
 
     //member
-    public InputStateSystem mInputStateSystem;
-    public EffectStateSystem mEffectStateSystem;
-    public CastStateSystem mCastStateSystem;
+    public InputStateSystem inputStateSystem;
+    public EffectStateSystem effectStateSystem;
+    public CastStateSystem cCastStateSystem;
 
     //spellslots
     public SpellSlot
-        mSpellSlot_1,
-        mSpellSlot_2,
-        mSpellSlot_3;
+        spellSlot_1,
+        spellSlot_2,
+        spellSlot_3;
     
 
 	public float movementAcceleration = 10;    
@@ -35,9 +35,9 @@ public class PlayerScript : MonoBehaviour {
 	void Start ()
 	{
         //initialize the statesystems
-        mInputStateSystem = new InputStateSystem(this);
-        mEffectStateSystem = new EffectStateSystem(this);
-        mCastStateSystem = new CastStateSystem(this);
+        inputStateSystem = new InputStateSystem(this);
+        effectStateSystem = new EffectStateSystem(this);
+        cCastStateSystem = new CastStateSystem(this);
 
         //initialize Inpur handler
 	    mRewiredPlayer = ReInput.players.GetPlayer(0);
@@ -57,11 +57,11 @@ public class PlayerScript : MonoBehaviour {
 
 		if(mRewiredPlayer.GetButtonDown("Jump"))
 		{
-			mInputStateSystem.current.Jump();
+			inputStateSystem.current.Jump();
 		}
 
-        mInputStateSystem.current.Move(movementInput);
-		mInputStateSystem.current.Aim(aimInput);
+        inputStateSystem.current.Move(movementInput);
+		inputStateSystem.current.Aim(aimInput);
 
 	}
 		

@@ -15,13 +15,15 @@ public class InputStateMoving : A_InputState
 		{
 		    mPlayer.mInputStateSystem.SetState(InputStateSystem.InputStateID.Normal);
 			mPlayer.mInputStateSystem.mCurrent.Move(input);
+			mPlayer.moveForce = Vector3.zero;
 			return;
 		}
+			
+		Vector3 moveForce = new Vector3(input.x, 0, input.y);
+		//from global to local space
+		moveForce = mPlayer.transform.TransformDirection(moveForce);
 
-        //cache position
-        Vector3 pos = mPlayer.transform.position;
-		pos.x += input.x;
-		pos.z += input.y;
-		mPlayer.transform.position = pos;
+		//override moveForce in player script
+		mPlayer.moveForce = moveForce;
 	}
 }

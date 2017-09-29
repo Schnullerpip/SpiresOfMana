@@ -24,9 +24,15 @@ public class PlayerScript : MonoBehaviour {
 	public float movementAcceleration = 10;    
 	public float aimSpeed = 10;    
 	public float jumpStrength = 5;
+
+	public float gravityMultiplier = 2;
+
 	private Rigidbody rigid;
 
 	public Vector3 moveInputForce;
+	public float yAim = 0;
+
+	public Vector3 lookDirection;
 
 	protected Rewired.Player mRewiredPlayer;
 
@@ -63,6 +69,9 @@ public class PlayerScript : MonoBehaviour {
         mInputStateSystem.mCurrent.Move(movementInput);
 		mInputStateSystem.mCurrent.Aim(aimInput);
 
+		lookDirection = Quaternion.AngleAxis(-yAim, transform.right) * transform.forward;
+
+		Debug.DrawRay(transform.position+Vector3.up*1.8f, lookDirection, Color.red);
 	}
 		
 	void FixedUpdate()
@@ -76,6 +85,11 @@ public class PlayerScript : MonoBehaviour {
 		rigid.AddForce(Vector3.up*jumpStrength,ForceMode.Impulse);
 	}
 
+	public void test(PlayerScript i)
+	{
+		
+	}
+		
 	//useful asstes for the PlayerScript
 
 	/// <summary>

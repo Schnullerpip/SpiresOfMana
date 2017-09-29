@@ -19,6 +19,7 @@ public abstract class A_InputState : A_State{
 	{
         //TODO: add true 360 aiming
 		mPlayer.transform.Rotate(0,input.x,0);
+		mPlayer.yAim = Mathf.Clamp(mPlayer.yAim + input.y, -89, 89);
 	}
     public virtual void Jump() 
 	{

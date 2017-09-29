@@ -24,7 +24,6 @@ public class PlayerScript : MonoBehaviour {
     //TODO delete this eventually
     public A_Spell debug_spell;
 
-
     /// <summary>
     /// holds references to all the coroutines a spell is running, so they can bes stopped/interrupted when a player is for example hit
     /// and can therefore not continue to cast the spell
@@ -48,6 +47,15 @@ public class PlayerScript : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
 	{
+
+        //TODO delete this eventually
+	    spellSlot_1 = new SpellSlot()
+	    {
+	        cooldown = 0,
+	        spell = debug_spell
+	    };
+
+
         //initialize the statesystems
         inputStateSystem = new InputStateSystem(this);
         effectStateSystem = new EffectStateSystem(this);
@@ -63,8 +71,14 @@ public class PlayerScript : MonoBehaviour {
 	void Update () 
 	{
 
-        //TODO delete this evetually
-        debug_spell.Cast(this);
+        //STEP 1 - Decrease the cooldown in the associated spellslots
+        DecreaseCooldowns();
+
+        //STEP 2
+
+        //STEP 3
+
+        //STEP n
 
 		//store the input values
 		Vector2 movementInput = rewiredPlayer.GetAxis2D("MoveHorizontal", "MoveVertical");
@@ -89,9 +103,29 @@ public class PlayerScript : MonoBehaviour {
 
 	public void Jump()
 	{
+        //TODO delete this evetually
+        spellSlot_1.Cast(this);
+
 		//TODO grounded
 		rigid.AddForce(Vector3.up*jumpStrength,ForceMode.Impulse);
+
 	}
+
+    private void DecreaseCooldowns()
+    {
+        if ((spellSlot_1.cooldown -= Time.deltaTime) < 0)
+        {
+            spellSlot_1.cooldown = 0;
+        }
+        if ((spellSlot_2.cooldown -= Time.deltaTime) < 0)
+        {
+            spellSlot_2.cooldown = 0;
+        }
+        if ((spellSlot_3.cooldown -= Time.deltaTime) < 0)
+        {
+            spellSlot_3.cooldown = 0;
+        }
+    }
 
 	//useful asstes for the PlayerScript
 
@@ -99,7 +133,21 @@ public class PlayerScript : MonoBehaviour {
 	/// Simple Datacontainer (inner class) for a Pair of Spell and cooldown
 	/// </summary>
 	public struct SpellSlot {
-		public A_Spell mSpell;
-		public float mCooldown;
+		public A_Spell spell;
+		public float cooldown;
+
+        /// <summary>
+        /// casts the spell inside the slot and also adjusts the cooldown accordingly
+        /// This automatically assumes, that the overlaying PlayerScript's update routine decreases the spellslot's cooldown continuously
+        /// </summary>
+        /// <param name="caster"></param>
+	    public void Cast(PlayerScript caster)
+	    {
+	        if (cooldown <= 0)
+	        {
+	            cooldown = spell.coolDownInSeconds;
+                spell.Cast(caster);
+	        }
+	    }
 	}
 }

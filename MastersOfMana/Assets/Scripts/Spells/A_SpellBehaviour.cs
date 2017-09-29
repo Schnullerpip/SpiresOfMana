@@ -13,7 +13,7 @@ public abstract class A_SpellBehaviour : MonoBehaviour
     //relevant data like damage, manacost etc.
     public A_Spell referencedSpell;
 
-    public void Awake()
+    public void Start()
     {
         //make sure referencedSpell was attached in Editor
         if (!referencedSpell)

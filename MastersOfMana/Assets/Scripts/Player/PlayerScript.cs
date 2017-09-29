@@ -20,7 +20,21 @@ public class PlayerScript : MonoBehaviour {
         spellSlot_1,
         spellSlot_2,
         spellSlot_3;
-    
+
+    //TODO delete this eventually
+    public A_Spell debug_spell;
+
+
+    /// <summary>
+    /// holds references to all the coroutines a spell is running, so they can bes stopped/interrupted when a player is for example hit
+    /// and can therefore not continue to cast the spell
+    /// </summary>
+    public List<IEnumerator> spellRoutines = new List<IEnumerator>();
+
+    public void EnlistCoroutine(IEnumerator spellRoutine)
+    {
+        spellRoutines.Add(spellRoutine);
+    }
 
 	public float movementAcceleration = 10;    
 	public float aimSpeed = 10;    
@@ -29,7 +43,7 @@ public class PlayerScript : MonoBehaviour {
 
 	public Vector3 moveInputForce;
 
-	protected Rewired.Player mRewiredPlayer;
+	protected Rewired.Player rewiredPlayer;
 
 	// Use this for initialization
 	void Start ()
@@ -40,29 +54,32 @@ public class PlayerScript : MonoBehaviour {
         cCastStateSystem = new CastStateSystem(this);
 
         //initialize Inpur handler
-	    mRewiredPlayer = ReInput.players.GetPlayer(0);
+	    rewiredPlayer = ReInput.players.GetPlayer(0);
 
 		rigid = GetComponent<Rigidbody>();
-
 	}
+
 	// Update is called once per frame
 	void Update () 
 	{
+
+        //TODO delete this evetually
+        debug_spell.Cast(this);
+
 		//store the input values
-		Vector2 movementInput = mRewiredPlayer.GetAxis2D("MoveHorizontal", "MoveVertical");
+		Vector2 movementInput = rewiredPlayer.GetAxis2D("MoveHorizontal", "MoveVertical");
 		movementInput *= Time.deltaTime * movementAcceleration;
 
-		Vector2 aimInput = mRewiredPlayer.GetAxis2D("AimHorizontal", "AimVertical");
+		Vector2 aimInput = rewiredPlayer.GetAxis2D("AimHorizontal", "AimVertical");
 		aimInput *= Time.deltaTime * aimSpeed;
 
-		if(mRewiredPlayer.GetButtonDown("Jump"))
+		if(rewiredPlayer.GetButtonDown("Jump"))
 		{
 			inputStateSystem.current.Jump();
 		}
 
         inputStateSystem.current.Move(movementInput);
 		inputStateSystem.current.Aim(aimInput);
-
 	}
 		
 	void FixedUpdate()

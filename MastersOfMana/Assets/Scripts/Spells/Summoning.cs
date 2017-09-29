@@ -6,11 +6,12 @@ using UnityEngine;
 public class Summoning : A_Spell 
 {
 	#region implemented abstract members of A_Spell
-
 	public override void Cast (PlayerScript caster)
 	{
-		throw new System.NotImplementedException ();
+	    foreach (var sc in SpellBehaviours)
+	    {
+	        sc.Execute(caster);
+	    }
 	}
-
 	#endregion
 }

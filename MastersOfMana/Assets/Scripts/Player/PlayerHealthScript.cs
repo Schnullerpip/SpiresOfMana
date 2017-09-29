@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class PlayerHealthScript : HealthScript {
 
-    private PlayerScript mPlayer;
+    private PlayerScript player;
 
     public void Start()
     {
-        mPlayer = GetComponent<PlayerScript>();
+        player = GetComponent<PlayerScript>();
     }
 
     public override void TakeDamage(float amount) {
-        mPlayer.inputStateSystem.current.Hurt(amount);
+        player.inputStateSystem.current.Hurt(amount);
     }
 }

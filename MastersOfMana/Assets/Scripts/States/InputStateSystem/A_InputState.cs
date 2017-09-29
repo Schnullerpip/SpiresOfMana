@@ -17,8 +17,8 @@ public abstract class A_InputState : A_State{
 	public virtual void Move(Vector2 input) { }
     public virtual void Aim(Vector2 input) 
 	{
-        //TODO: add true 360 aiming
 		player.transform.Rotate(0,input.x,0);
+		player.yAim = Mathf.Clamp(mPlayer.yAim + input.y, -89, 89);
 	}
     public virtual void Jump() 
 	{

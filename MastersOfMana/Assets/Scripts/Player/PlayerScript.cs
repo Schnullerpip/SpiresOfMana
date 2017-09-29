@@ -56,7 +56,6 @@ public class PlayerScript : MonoBehaviour {
 	{
 		//store the input values
 		Vector2 movementInput = mRewiredPlayer.GetAxis2D("MoveHorizontal", "MoveVertical");
-		movementInput *= Time.deltaTime * movementAcceleration;
 
 		Vector2 aimInput = mRewiredPlayer.GetAxis2D("AimHorizontal", "AimVertical");
 		aimInput *= Time.deltaTime * aimSpeed;
@@ -76,7 +75,7 @@ public class PlayerScript : MonoBehaviour {
 		
 	void FixedUpdate()
 	{
-		rigid.MovePosition(rigid.position + moveInputForce);
+		rigid.MovePosition(rigid.position + moveInputForce * Time.deltaTime * movementAcceleration);
 	}
 
 	public void Jump()

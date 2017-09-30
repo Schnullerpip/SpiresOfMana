@@ -86,7 +86,7 @@
             Event data returned by an Input Action update event. Use this to get information about the input event.
             </summary>
         </member>
-        <member name="F:Rewired.InputActionEventData.playerId">
+        <member name="F:Rewired.InputActionEventData.mPlayerId">
             <summary>
             The Player Id of the Player that generated this event.
             </summary>
@@ -592,7 +592,7 @@
             The event type of this event.
             </summary>
         </member>
-        <member name="P:Rewired.InputActionEventData.player">
+        <member name="P:Rewired.InputActionEventData.mPlayer">
             <summary>
             The Player that generated this event.
             </summary>
@@ -618,9 +618,9 @@
             Was user input detected? If false, no user input was detected.
             </summary>
         </member>
-        <member name="P:Rewired.ControllerPollingInfo.playerId">
+        <member name="P:Rewired.ControllerPollingInfo.mPlayerId">
             <summary>
-            The player id that generated this input. This value is only valid if the controller is assigned to a Player and polling was called on or through Player.
+            The mPlayer id that generated this input. This value is only valid if the controller is assigned to a Player and polling was called on or through Player.
             </summary>
         </member>
         <member name="P:Rewired.ControllerPollingInfo.controllerId">
@@ -680,7 +680,7 @@
             </summary>
             <param name="isConflict">Was an assignment conflict found?</param>
             <param name="isUserAssignable">Is the Map Category of this Action user assignable?</param>
-            <param name="playerId">The id of the Player that contains the map that has the conflicting assignment.</param>
+            <param name="mPlayerId">The id of the Player that contains the map that has the conflicting assignment.</param>
             <param name="controllerType">The controller type of the controller that contains the conflict.</param>
             <param name="controllerId">The id of the controller that contains the conflict. Use with controllerType to get the Controller.</param>
             <param name="controllerMapId">The unique id of the ControllerMap that contains the conflict.</param>
@@ -707,7 +707,7 @@
             Is the Map Category of this Action user assignable?
             </summary>
         </member>
-        <member name="P:Rewired.ElementAssignmentConflictInfo.playerId">
+        <member name="P:Rewired.ElementAssignmentConflictInfo.mPlayerId">
             <summary>
             The id of the Player that contains the map that has the conflicting assignment.
             </summary>
@@ -757,7 +757,7 @@
             The Action Id assigned to the ActionElementMap with the conflict.
             </summary>
         </member>
-        <member name="P:Rewired.ElementAssignmentConflictInfo.player">
+        <member name="P:Rewired.ElementAssignmentConflictInfo.mPlayer">
             <summary>
             The Player that contains the map that has the conflicting assignment.
             </summary>
@@ -802,7 +802,7 @@
             A struct for use in element assignment conflict checking.
             Overload for complete assignment.
             </summary>
-            <param name="playerId">The Player that is being assigned to.</param>
+            <param name="mPlayerId">The Player that is being assigned to.</param>
             <param name="controllerType">The type of controller that is being assigned to.</param>
             <param name="controllerId">The id of the controller that is being assigned to.</param>
             <param name="controllerMapId">The unique id of the controller map that is being assigned to. Corresponds to ControllerMap.id.</param>
@@ -820,7 +820,7 @@
             A struct for use in element assignment conflict checking.
             Overload for complete assignment to replace an existing element map.
             </summary>
-            <param name="playerId">The Player that is being assigned to.</param>
+            <param name="mPlayerId">The Player that is being assigned to.</param>
             <param name="controllerType">The type of controller that is being assigned to.</param>
             <param name="controllerId">The id of the controller that is being assigned to.</param>
             <param name="controllerMapId">The unique id of the controller map that is being assigned to. Corresponds to ControllerMap.id.</param>
@@ -839,7 +839,7 @@
             A struct for use in element assignment conflict checking.
             Overload for complete assignment.
             </summary>
-            <param name="playerId">The Player that is being assigned to.</param>
+            <param name="mPlayerId">The Player that is being assigned to.</param>
             <param name="controllerType">The type of controller that is being assigned to.</param>
             <param name="controllerId">The id of the controller that is being assigned to.</param>
             <param name="controllerMapId">The unique id of the controller map that is being assigned to. Corresponds to ControllerMap.id.</param>
@@ -857,7 +857,7 @@
             A struct for use in element assignment conflict checking.
             Overload for complete assignment to replace an existing element map.
             </summary>
-            <param name="playerId">The Player that is being assigned to.</param>
+            <param name="mPlayerId">The Player that is being assigned to.</param>
             <param name="controllerType">The type of controller that is being assigned to.</param>
             <param name="controllerId">The id of the controller that is being assigned to.</param>
             <param name="controllerMapId">The unique id of the controller map that is being assigned to. Corresponds to ControllerMap.id.</param>
@@ -876,7 +876,7 @@
             A struct for use in element assignment conflict checking.
             Overload for assignment of a full axis.
             </summary>
-            <param name="playerId">The Player that is being assigned to.</param>
+            <param name="mPlayerId">The Player that is being assigned to.</param>
             <param name="controllerType">The type of controller that is being assigned to.</param>
             <param name="controllerId">The id of the controller that is being assigned to.</param>
             <param name="controllerMapId">The unique id of the controller map that is being assigned to. Corresponds to ControllerMap.id.</param>
@@ -889,7 +889,7 @@
             A struct for use in element assignment conflict checking.
             Overload for assignment of a full axis to replace an existing element map..
             </summary>
-            <param name="playerId">The Player that is being assigned to.</param>
+            <param name="mPlayerId">The Player that is being assigned to.</param>
             <param name="controllerType">The type of controller that is being assigned to.</param>
             <param name="controllerId">The id of the controller that is being assigned to.</param>
             <param name="controllerMapId">The unique id of the controller map that is being assigned to. Corresponds to ControllerMap.id.</param>
@@ -903,7 +903,7 @@
             A struct for use in element assignment conflict checking.
             Overload for assignment of a split axis.
             </summary>
-            <param name="playerId">The Player that is being assigned to.</param>
+            <param name="mPlayerId">The Player that is being assigned to.</param>
             <param name="controllerType">The type of controller that is being assigned to.</param>
             <param name="controllerId">The id of the controller that is being assigned to.</param>
             <param name="controllerMapId">The unique id of the controller map that is being assigned to. Corresponds to ControllerMap.id.</param>
@@ -917,7 +917,7 @@
             A struct for use in element assignment conflict checking.
             Overload for assignment of a split axis to replace an existing element map.
             </summary>
-            <param name="playerId">The Player that is being assigned to.</param>
+            <param name="mPlayerId">The Player that is being assigned to.</param>
             <param name="controllerType">The type of controller that is being assigned to.</param>
             <param name="controllerId">The id of the controller that is being assigned to.</param>
             <param name="controllerMapId">The unique id of the controller map that is being assigned to. Corresponds to ControllerMap.id.</param>
@@ -932,7 +932,7 @@
             A struct for use in element assignment conflict checking.
             Overload for assignment of a button.
             </summary>
-            <param name="playerId">The Player that is being assigned to.</param>
+            <param name="mPlayerId">The Player that is being assigned to.</param>
             <param name="controllerType">The type of controller that is being assigned to.</param>
             <param name="controllerId">The id of the controller that is being assigned to.</param>
             <param name="controllerMapId">The unique id of the controller map that is being assigned to. Corresponds to ControllerMap.id.</param>
@@ -945,7 +945,7 @@
             A struct for use in element assignment conflict checking.
             Overload for assignment of a button to replace an existing element map..
             </summary>
-            <param name="playerId">The Player that is being assigned to.</param>
+            <param name="mPlayerId">The Player that is being assigned to.</param>
             <param name="controllerType">The type of controller that is being assigned to.</param>
             <param name="controllerId">The id of the controller that is being assigned to.</param>
             <param name="controllerMapId">The unique id of the controller map that is being assigned to. Corresponds to ControllerMap.id.</param>
@@ -959,7 +959,7 @@
             A struct for use in element assignment conflict checking.
             Overload for assignment of a keyboard key.
             </summary>
-            <param name="playerId">The Player that is being assigned to.</param>
+            <param name="mPlayerId">The Player that is being assigned to.</param>
             <param name="controllerType">The type of controller that is being assigned to.</param>
             <param name="controllerId">The id of the controller that is being assigned to.</param>
             <param name="controllerMapId">The unique id of the controller map that is being assigned to. Corresponds to ControllerMap.id.</param>
@@ -973,7 +973,7 @@
             A struct for use in element assignment conflict checking.
             Overload for assignment of a keyboard key to replace an existing element map..
             </summary>
-            <param name="playerId">The Player that is being assigned to.</param>
+            <param name="mPlayerId">The Player that is being assigned to.</param>
             <param name="controllerType">The type of controller that is being assigned to.</param>
             <param name="controllerId">The id of the controller that is being assigned to.</param>
             <param name="controllerMapId">The unique id of the controller map that is being assigned to. Corresponds to ControllerMap.id.</param>
@@ -1029,7 +1029,7 @@
             The type of the desired assignment.
             </summary>
         </member>
-        <member name="P:Rewired.ElementAssignmentConflictCheck.playerId">
+        <member name="P:Rewired.ElementAssignmentConflictCheck.mPlayerId">
             <summary>
             The Player that is being assigned to.
             </summary>
@@ -1448,7 +1448,7 @@
             Describes a pending element assignment.
             </summary>
         </member>
-        <member name="P:Rewired.ElementAssignmentInfo.player">
+        <member name="P:Rewired.ElementAssignmentInfo.mPlayer">
             <summary>
             The Player this assignment is for.
             </summary>
@@ -1843,7 +1843,7 @@
             This can be used with Find Using Source Id and/or Find Using Tag to further refine the search parameters.
             </summary>
         </member>
-        <member name="P:Rewired.ComponentControls.Data.CustomControllerSelector.playerId">
+        <member name="P:Rewired.ComponentControls.Data.CustomControllerSelector.mPlayerId">
             <summary>
             The Player Id of the Player that owns the Custom Controller.
             </summary>
@@ -5113,7 +5113,7 @@
             <summary>
             Save all data for a specific controller for a Player.
             </summary>
-            <param name="playerId">Player id</param>
+            <param name="mPlayerId">Player id</param>
             <param name="controllerType">Controller type</param>
             <param name="controllerId">Controller id</param>
         </member>
@@ -5128,13 +5128,13 @@
             <summary>
             Save all data for a specific Player.
             </summary>
-            <param name="playerId">Player id</param>
+            <param name="mPlayerId">Player id</param>
         </member>
         <member name="M:Rewired.Interfaces.IUserDataStore.SaveInputBehavior(System.Int32,System.Int32)">
             <summary>
             Save all data for a specific InputBehavior for a Player.
             </summary>
-            <param name="playerId">Player id</param>
+            <param name="mPlayerId">Player id</param>
             <param name="behaviorId">Input Behavior id</param>
         </member>
         <member name="M:Rewired.Interfaces.IUserDataStore.Load">
@@ -5146,7 +5146,7 @@
             <summary>
             Load all data for a specific controller for a Player.
             </summary>
-            <param name="playerId">Player id</param>
+            <param name="mPlayerId">Player id</param>
             <param name="controllerType">Controller type</param>
             <param name="controllerId">Controller id</param>
         </member>
@@ -5161,13 +5161,13 @@
             <summary>
             Load all data for a specific Player.
             </summary>
-            <param name="playerId">Player id</param>
+            <param name="mPlayerId">Player id</param>
         </member>
         <member name="M:Rewired.Interfaces.IUserDataStore.LoadInputBehavior(System.Int32,System.Int32)">
             <summary>
             Load all data for a specific InputBehavior for a Player.
             </summary>
-            <param name="playerId">Player id</param>
+            <param name="mPlayerId">Player id</param>
             <param name="behaviorId">Input Behavior id</param>
         </member>
         <member name="M:Rewired.Data.UserDataStore.Load">
@@ -5179,7 +5179,7 @@
             <summary>
             Load all data for a specific controller for a Player.
             </summary>
-            <param name="playerId">Player id</param>
+            <param name="mPlayerId">Player id</param>
             <param name="controllerType">Controller type</param>
             <param name="controllerId">Controller id</param>
         </member>
@@ -5194,13 +5194,13 @@
             <summary>
             Load all data for a specific Player.
             </summary>
-            <param name="playerId">Player id</param>
+            <param name="mPlayerId">Player id</param>
         </member>
         <member name="M:Rewired.Data.UserDataStore.LoadInputBehavior(System.Int32,System.Int32)">
             <summary>
             Load all data for a specific InputBehavior for a Player.
             </summary>
-            <param name="playerId">Player id</param>
+            <param name="mPlayerId">Player id</param>
             <param name="behaviorId">Input Behavior id</param>
         </member>
         <member name="M:Rewired.Data.UserDataStore.Save">
@@ -5212,7 +5212,7 @@
             <summary>
             Save all data for a specific controller for a Player.
             </summary>
-            <param name="playerId">Player id</param>
+            <param name="mPlayerId">Player id</param>
             <param name="controllerType">Controller type</param>
             <param name="controllerId">Controller id</param>
         </member>
@@ -5227,13 +5227,13 @@
             <summary>
             Save all data for a specific Player.
             </summary>
-            <param name="playerId">Player id</param>
+            <param name="mPlayerId">Player id</param>
         </member>
         <member name="M:Rewired.Data.UserDataStore.SaveInputBehavior(System.Int32,System.Int32)">
             <summary>
             Save all data for a specific InputBehavior for a Player.
             </summary>
-            <param name="playerId">Player id</param>
+            <param name="mPlayerId">Player id</param>
             <param name="behaviorId">Input Behavior id</param>
         </member>
         <member name="M:Rewired.Data.UserDataStore.OnInitialize">
@@ -7115,7 +7115,7 @@
             Is the controller map enabled? Disabled maps will never return input values for the ActionElementMaps contained within.
             </summary>
         </member>
-        <member name="P:Rewired.ControllerMap.playerId">
+        <member name="P:Rewired.ControllerMap.mPlayerId">
             <summary>
             The id of the Player that owns this controller map.
             </summary>
@@ -7130,7 +7130,7 @@
             The type of controller this controller map applies to.
             </summary>
         </member>
-        <member name="P:Rewired.ControllerMap.player">
+        <member name="P:Rewired.ControllerMap.mPlayer">
             <summary>
             The parent Player that owns this controller map.
             </summary>
@@ -8163,10 +8163,10 @@
             The editor platform.
             </summary>
         </member>
-        <member name="T:Rewired.Platforms.WebplayerPlatform">
+        <member name="T:Rewired.Platforms.WebmPlayerPlatform">
             <exclude></exclude>
             <summary>
-            The webplayer platform.
+            The webmPlayer platform.
             </summary>
         </member>
         <member name="T:Rewired.Platforms.WindowsStandalonePrimaryInputSource">
@@ -8327,7 +8327,7 @@
         </member>
         <member name="T:Rewired.Player">
             <summary>
-            Represents a player to which controllers are assigned. Input should normally be managed through the Player class.
+            Represents a mPlayer to which controllers are assigned. Input should normally be managed through the Player class.
             </summary>
         </member>
         <member name="F:Rewired.Player.controllers">
@@ -8337,7 +8337,7 @@
         </member>
         <member name="M:Rewired.Player.GetSaveData(System.Boolean)">
             <summary>
-            Gets save data for this player.
+            Gets save data for this mPlayer.
             </summary>
             <param name="userAssignableMapsOnly"></param>
             <returns></returns>
@@ -9831,7 +9831,7 @@
             </summary>
             <typeparam name="T">Controller type</typeparam>
             <param name="controllerId">Controller id - Get this from the Controller.id property. For Keyboard and Mouse, just use 0.</param>
-            <param name="removeFromOtherPlayers">Unassign this controller from all other players.</param>
+            <param name="removeFromOtherPlayers">Unassign this controller from all other mPlayers.</param>
         </member>
         <member name="M:Rewired.Player.ControllerHelper.RemoveController``1(System.Int32)">
             <summary>
@@ -10504,21 +10504,21 @@
         </member>
         <member name="M:Rewired.Player.ControllerHelper.MapHelper.GetAllMapsInCategory(System.String)">
             <summary>
-            Enumerates all controller maps assigned to this player in a specific category.
+            Enumerates all controller maps assigned to this mPlayer in a specific category.
             </summary>
             <param name="categoryName">Category name</param>
             <returns>IEnumerable of controller maps</returns>
         </member>
         <member name="M:Rewired.Player.ControllerHelper.MapHelper.GetAllMapsInCategory(System.Int32)">
             <summary>
-            Enumerates all controller maps assigned to this player in a specific category.
+            Enumerates all controller maps assigned to this mPlayer in a specific category.
             </summary>
             <param name="categoryId">Category id</param>
             <returns>IEnumerable of controller maps</returns>
         </member>
         <member name="M:Rewired.Player.ControllerHelper.MapHelper.GetAllMapsInCategory``1(System.String)">
             <summary>
-            Enumerates all controller maps assigned to this player in a specific category.
+            Enumerates all controller maps assigned to this mPlayer in a specific category.
             </summary>
             <typeparam name="T">Controller Map type</typeparam>
             <param name="categoryName">Category name</param>
@@ -10526,7 +10526,7 @@
         </member>
         <member name="M:Rewired.Player.ControllerHelper.MapHelper.GetAllMapsInCategory``1(System.Int32)">
             <summary>
-            Enumerates all controller maps assigned to this player in a specific category.
+            Enumerates all controller maps assigned to this mPlayer in a specific category.
             </summary>
             <typeparam name="T">Controller Map type</typeparam>
             <param name="categoryId">Category id</param>
@@ -10534,7 +10534,7 @@
         </member>
         <member name="M:Rewired.Player.ControllerHelper.MapHelper.GetAllMapsInCategory(System.String,Rewired.ControllerType)">
             <summary>
-            Enumerates all controller maps assigned to this player in a specific category.
+            Enumerates all controller maps assigned to this mPlayer in a specific category.
             </summary>
             <param name="categoryName">Category name</param>
             <param name="controllerType">Controller type</param>
@@ -10542,7 +10542,7 @@
         </member>
         <member name="M:Rewired.Player.ControllerHelper.MapHelper.GetAllMapsInCategory(System.Int32,Rewired.ControllerType)">
             <summary>
-            Enumerates all controller maps assigned to this player in a specific category.
+            Enumerates all controller maps assigned to this mPlayer in a specific category.
             </summary>
             <param name="categoryId">Category id</param>
             <param name="controllerType">Controller type</param>
@@ -11672,7 +11672,7 @@
         </member>
         <member name="M:Rewired.Player.ControllerHelper.MapHelper.LoadDefaultMaps(Rewired.ControllerType)">
             <summary>
-            Loads the maps defined in the Rewired Editor and assigned to this player for the specified controller type.
+            Loads the maps defined in the Rewired Editor and assigned to this mPlayer for the specified controller type.
             All existing maps will be cleared and replaced with the default maps.
             The Enabled state of each map will attempt to be preserved, but if you have
             added or removed maps through scripting, the result may not be as expected and you should set the Enabled states manually.
@@ -12117,9 +12117,9 @@
             Event triggered when editor begins recompiling scripts.
             </summary>
         </member>
-        <member name="P:Rewired.ReInput.players">
+        <member name="P:Rewired.ReInput.mPlayers">
             <summary>
-            Gets an object that contains all player-related members.
+            Gets an object that contains all mPlayer-related members.
             </summary>
         </member>
         <member name="P:Rewired.ReInput.controllers">
@@ -12348,43 +12348,43 @@
         </member>
         <member name="M:Rewired.ReInput.ControllerHelper.IsControllerAssigned(Rewired.ControllerType,Rewired.Controller)">
             <summary>
-            Is the specified controller assigned to any players?
+            Is the specified controller assigned to any mPlayers?
             </summary>
             <param name="controllerType">Type of controller</param>
             <param name="controller">The controller</param>
-            <returns>Boolean determining whether this controller is assigned to any player</returns>
+            <returns>Boolean determining whether this controller is assigned to any mPlayer</returns>
         </member>
         <member name="M:Rewired.ReInput.ControllerHelper.IsControllerAssigned(Rewired.ControllerType,System.Int32)">
             <summary>
-            Is the specified controller assigned to any players?
+            Is the specified controller assigned to any mPlayers?
             </summary>
             <param name="controllerType">Type of controller</param>
             <param name="controllerId">Id of the controller</param>
-            <returns>Boolean determining whether this controller is assigned to any player</returns>
+            <returns>Boolean determining whether this controller is assigned to any mPlayer</returns>
         </member>
         <member name="M:Rewired.ReInput.ControllerHelper.IsControllerAssignedToPlayer(Rewired.ControllerType,System.Int32,System.Int32)">
             <summary>
-            Is the specified controller assigned to the specified player?
+            Is the specified controller assigned to the specified mPlayer?
             </summary>
             <param name="controllerType">Type of controller</param>
             <param name="controllerId">Id of the controller</param>
-            <param name="playerId">Id of the player</param>
-            <returns>Boolean determining whether this controller is assigned to the player</returns>
+            <param name="playerId">Id of the mPlayer</param>
+            <returns>Boolean determining whether this controller is assigned to the mPlayer</returns>
         </member>
         <member name="M:Rewired.ReInput.ControllerHelper.RemoveControllerFromAllPlayers(Rewired.Controller,System.Boolean)">
             <summary>
-            De-assigns the specified controller from all players.
+            De-assigns the specified controller from all mPlayers.
             </summary>
             <param name="controller">The controller</param>
-            <param name="includeSystemPlayer">Do we de-assign from the System player also?</param>
+            <param name="includeSysteplayer">Do we de-assign from the System mPlayer also?</param>
         </member>
         <member name="M:Rewired.ReInput.ControllerHelper.RemoveControllerFromAllPlayers(Rewired.ControllerType,System.Int32,System.Boolean)">
             <summary>
-            De-assigns the specified controller from all players.
+            De-assigns the specified controller from all mPlayers.
             </summary>
             <param name="controllerType">Tyoe of the controller</param>
             <param name="controllerId">Id of the controller</param>
-            <param name="includeSystemPlayer">Do we de-assign from the System player also?</param>
+            <param name="includeSysteplayer">Do we de-assign from the System mPlayer also?</param>
         </member>
         <member name="M:Rewired.ReInput.ControllerHelper.GetJoystick(System.Int32)">
             <summary>
@@ -12409,39 +12409,39 @@
         </member>
         <member name="M:Rewired.ReInput.ControllerHelper.IsJoystickAssigned(Rewired.Joystick)">
             <summary>
-            Is a specific Joystick assigned to any players?
+            Is a specific Joystick assigned to any mPlayers?
             </summary>
             <param name="joystick">The Joystick</param>
-            <returns>Boolean determining if the specified joystick is assigned to any players</returns>
+            <returns>Boolean determining if the specified joystick is assigned to any mPlayers</returns>
         </member>
         <member name="M:Rewired.ReInput.ControllerHelper.IsJoystickAssigned(System.Int32)">
             <summary>
-            Is a specific Joystick assigned to any players?
+            Is a specific Joystick assigned to any mPlayers?
             </summary>
             <param name="joystickId">Id of the Joystick</param>
-            <returns>Boolean determining if the specified joystick is assigned to any players</returns>
+            <returns>Boolean determining if the specified joystick is assigned to any mPlayers</returns>
         </member>
         <member name="M:Rewired.ReInput.ControllerHelper.IsJoystickAssignedToPlayer(System.Int32,System.Int32)">
             <summary>
-            Is a specific Joystick assigned to a specific player?
+            Is a specific Joystick assigned to a specific mPlayer?
             </summary>
             <param name="joystickId">Id of the Joystick</param>
-            <param name="playerId">Id of the Player</param>
-            <returns>Boolean determining if the specified joystick is assigned to the specified player</returns>
+            <param name="mPlayerId">Id of the Player</param>
+            <returns>Boolean determining if the specified joystick is assigned to the specified mPlayer</returns>
         </member>
         <member name="M:Rewired.ReInput.ControllerHelper.RemoveJoystickFromAllPlayers(Rewired.Joystick,System.Boolean)">
             <summary>
             De-assigns a specific Joystick from all Players
             </summary>
             <param name="joystick">The Joystick</param>
-            <param name="includeSystemPlayer">De-assign from System player also?</param>
+            <param name="includeSysteplayer">De-assign from System mPlayer also?</param>
         </member>
         <member name="M:Rewired.ReInput.ControllerHelper.RemoveJoystickFromAllPlayers(System.Int32,System.Boolean)">
             <summary>
             De-assigns a specific Joystick from all Players
             </summary>
             <param name="joystickId">Id of the Joystick</param>
-            <param name="includeSystemPlayer">De-assign from System player also?</param>
+            <param name="includeSysteplayer">De-assign from System mPlayer also?</param>
         </member>
         <member name="M:Rewired.ReInput.ControllerHelper.GetUnityJoystickIdFromAnyButtonPress">
             <summary>
@@ -12513,39 +12513,39 @@
         </member>
         <member name="M:Rewired.ReInput.ControllerHelper.IsCustomControllerAssigned(Rewired.CustomController)">
             <summary>
-            Is a specific Custom Controller assigned to any players?
+            Is a specific Custom Controller assigned to any mPlayers?
             </summary>
             <param name="customController">The Custom Controller</param>
-            <returns>Boolean determining if the specified custom controller is assigned to any players</returns>
+            <returns>Boolean determining if the specified custom controller is assigned to any mPlayers</returns>
         </member>
         <member name="M:Rewired.ReInput.ControllerHelper.IsCustomControllerAssigned(System.Int32)">
             <summary>
-            Is a specific Custom Controller assigned to any players?
+            Is a specific Custom Controller assigned to any mPlayers?
             </summary>
             <param name="customControllerId">Id of the Custom Controller</param>
-            <returns>Boolean determining if the specified custom controller is assigned to any players</returns>
+            <returns>Boolean determining if the specified custom controller is assigned to any mPlayers</returns>
         </member>
         <member name="M:Rewired.ReInput.ControllerHelper.IsCustomControllerAssignedToPlayer(System.Int32,System.Int32)">
             <summary>
-            Is a specific Custom Controller assigned to a specific player?
+            Is a specific Custom Controller assigned to a specific mPlayer?
             </summary>
             <param name="customControllerId">Id of the Custom Controller</param>
-            <param name="playerId">Id of the Player</param>
-            <returns>Boolean determining if the specified custom controller is assigned to the specified player</returns>
+            <param name="mPlayerId">Id of the Player</param>
+            <returns>Boolean determining if the specified custom controller is assigned to the specified mPlayer</returns>
         </member>
         <member name="M:Rewired.ReInput.ControllerHelper.RemoveCustomControllerFromAllPlayers(Rewired.CustomController,System.Boolean)">
             <summary>
             De-assigns a specific Custom Controller from all Players
             </summary>
             <param name="customController">The Custom Controller</param>
-            <param name="includeSystemPlayer">De-assign from System player also?</param>
+            <param name="includeSysteplayer">De-assign from System mPlayer also?</param>
         </member>
         <member name="M:Rewired.ReInput.ControllerHelper.RemoveCustomControllerFromAllPlayers(System.Int32,System.Boolean)">
             <summary>
             De-assigns a specific Custom Controller from all Players
             </summary>
             <param name="customControllerId">Id of the Custom Controller</param>
-            <param name="includeSystemPlayer">De-assign from System player also?</param>
+            <param name="includeSysteplayer">De-assign from System mPlayer also?</param>
         </member>
         <member name="M:Rewired.ReInput.ControllerHelper.CreateCustomController(System.Int32)">
             <summary>
@@ -13107,46 +13107,46 @@
         </member>
         <member name="M:Rewired.ReInput.MappingHelper.GetInputBehaviors(System.Int32)">
             <summary>
-            Gets a list of input behaviors from a specific player
+            Gets a list of input behaviors from a specific mPlayer
             </summary>
-            <param name="playerId">Player id</param>
-            <returns>List of input behaviors from the player</returns>
+            <param name="mPlayerId">Player id</param>
+            <returns>List of input behaviors from the mPlayer</returns>
         </member>
         <member name="M:Rewired.ReInput.MappingHelper.GetSystemPlayerInputBehaviors">
             <summary>
-            Gets a list of input behaviors from the system player
+            Gets a list of input behaviors from the system mPlayer
             </summary>
             <returns></returns>
         </member>
         <member name="M:Rewired.ReInput.MappingHelper.GetInputBehavior(System.Int32,System.Int32)">
             <summary>
-            Gets a specific input behavior from a specific player
+            Gets a specific input behavior from a specific mPlayer
             </summary>
-            <param name="playerId">Player id</param>
+            <param name="mPlayerId">Player id</param>
             <param name="behaviorId">Input Behavior id</param>
-            <returns>Input Behavior from the player</returns>
+            <returns>Input Behavior from the mPlayer</returns>
         </member>
         <member name="M:Rewired.ReInput.MappingHelper.GetInputBehavior(System.Int32,System.String)">
             <summary>
-            Gets a specific input behavior from a specific player
+            Gets a specific input behavior from a specific mPlayer
             </summary>
-            <param name="playerId">Player id</param>
+            <param name="mPlayerId">Player id</param>
             <param name="behaviorName">Input Behavior name</param>
-            <returns>Input Behavior from the player</returns>
+            <returns>Input Behavior from the mPlayer</returns>
         </member>
         <member name="M:Rewired.ReInput.MappingHelper.GetSystemPlayerInputBehavior(System.Int32)">
             <summary>
-            Gets a specific input behavior from the System player
+            Gets a specific input behavior from the System mPlayer
             </summary>
             <param name="behaviorId">Input Behavior id</param>
-            <returns>Input Behavior from the System player</returns>
+            <returns>Input Behavior from the System mPlayer</returns>
         </member>
         <member name="M:Rewired.ReInput.MappingHelper.GetSystemPlayerInputBehavior(System.String)">
             <summary>
-            Gets a specific input behavior from the System player
+            Gets a specific input behavior from the System mPlayer
             </summary>
             <param name="behaviorName">Input Behavior name</param>
-            <returns>Input Behavior from the System player</returns>
+            <returns>Input Behavior from the System mPlayer</returns>
         </member>
         <member name="M:Rewired.ReInput.MappingHelper.GetInputBehaviorId(System.String)">
             <summary>
@@ -13329,46 +13329,46 @@
         </member>
         <member name="T:Rewired.ReInput.PlayerHelper">
             <summary>
-            Provides access to all player-related members.
+            Provides access to all mPlayer-related members.
             </summary>
         </member>
         <member name="M:Rewired.ReInput.PlayerHelper.GetPlayers(System.Boolean)">
             <summary>
             Gets a list of Players.
             </summary>
-            <param name="includeSystemPlayer">Optionally include the System player</param>
+            <param name="includeSysteplayer">Optionally include the System mPlayer</param>
             <returns>Player collection</returns>
         </member>
         <member name="M:Rewired.ReInput.PlayerHelper.GetPlayer(System.Int32)">
             <summary>
             Gets a Player at a specific id
             </summary>
-            <param name="playerId">The id of the player</param>
+            <param name="playerId">The id of the mPlayer</param>
             <returns>Player with id</returns>
         </member>
         <member name="M:Rewired.ReInput.PlayerHelper.GetPlayer(System.String)">
             <summary>
             Gets a Player by name
             </summary>
-            <param name="name">The name of the player</param>
+            <param name="name">The name of the mPlayer</param>
             <returns>Player with name</returns>
         </member>
         <member name="M:Rewired.ReInput.PlayerHelper.GetSystemPlayer">
             <summary>
             Gets the System Player
             </summary>
-            <returns>The system player</returns>
+            <returns>The system mPlayer</returns>
         </member>
         <member name="M:Rewired.ReInput.PlayerHelper.GetPlayerId(System.String)">
             <summary>
             Gets the id of a Player by name
             </summary>
-            <param name="playerName">The name of the player</param>
+            <param name="playerName">The name of the mPlayer</param>
             <returns>Id of the Player</returns>
         </member>
         <member name="M:Rewired.ReInput.PlayerHelper.GetPlayerNames(System.Boolean)">
             <summary>
-            Gets an array of player names. Optionally includes the System player.
+            Gets an array of mPlayer names. Optionally includes the System player.
             Allocates an array, so use sparingly to reduce garbage collection.
             </summary>
             <param name="includeSystemPlayer"></param>
@@ -13376,7 +13376,7 @@
         </member>
         <member name="M:Rewired.ReInput.PlayerHelper.GetPlayerDescriptiveNames(System.Boolean)">
             <summary>
-            Gets an array of player descriptive names. Optionally includes the System player.
+            Gets an array of mPlayer descriptive names. Optionally includes the System player.
             Allocates an array, so use sparingly to reduce garbage collection.
             </summary>
             <param name="includeSystemPlayer"></param>
@@ -13384,41 +13384,41 @@
         </member>
         <member name="M:Rewired.ReInput.PlayerHelper.GetPlayerIds(System.Boolean)">
             <summary>
-            Gets an array of player ids. Optionally includes System player.
+            Gets an array of mPlayer ids. Optionally includes System player.
             Allocates an array, so use sparingly to reduce garbage collection.
             </summary>
             <param name="includeSystemPlayer"></param>
             <returns>Player ids</returns>
         </member>
-        <member name="P:Rewired.ReInput.PlayerHelper.playerCount">
+        <member name="P:Rewired.ReInput.PlayerHelper.mPlayerCount">
             <summary>
-            Count of Players excluding system player
+            Count of Players excluding system mPlayer
             </summary>
-            <returns>Count of Players excluding system player</returns>
+            <returns>Count of Players excluding system mPlayer</returns>
         </member>
         <member name="P:Rewired.ReInput.PlayerHelper.allPlayerCount">
             <summary>
-            Count of all players including system player
+            Count of all mPlayers including system player
             </summary>
-            <returns>Count of all players including system player</returns>
+            <returns>Count of all mPlayers including system player</returns>
         </member>
         <member name="P:Rewired.ReInput.PlayerHelper.Players">
             <summary>
-            List of all Players excluding System player
+            List of all Players excluding System mPlayer
             </summary>
-            <returns>Player collection excluding the system player</returns>
+            <returns>Player collection excluding the system mPlayer</returns>
         </member>
         <member name="P:Rewired.ReInput.PlayerHelper.AllPlayers">
             <summary>
-            List of all Players including System player
+            List of all Players including System mPlayer
             </summary>
-            <returns>Player collection including the system player</returns>
+            <returns>Player collection including the system mPlayer</returns>
         </member>
         <member name="P:Rewired.ReInput.PlayerHelper.SystemPlayer">
             <summary>
-            The System player
+            The System mPlayer
             </summary>
-            <returns>System player</returns>
+            <returns>System mPlayer</returns>
         </member>
         <member name="T:Rewired.ReInput.TimeHelper">
             <summary>
@@ -14131,10 +14131,10 @@
             <param name="text"></param>
             <returns></returns>
         </member>
-        <member name="M:Rewired.Utils.UnityTools.DetermineWebplayerPlatformType(Rewired.Platforms.Platform,Rewired.Platforms.EditorPlatform)">
+        <member name="M:Rewired.Utils.UnityTools.DetermineWebmPlayerPlatformType(Rewired.Platforms.Platform,Rewired.Platforms.EditorPlatform)">
             <summary>
-            Only works if called from within #if UNITY_WEBPLAYER so we KNOW this a webplayer.
-            Always call before setting platform to Webplayer.
+            Only works if called from within #if UNITY_WEBPLAYER so we KNOW this a webmPlayer.
+            Always call before setting platform to WebmPlayer.
             Platform should have info about the real system platform based on #ifs
             </summary>
             <returns></returns>

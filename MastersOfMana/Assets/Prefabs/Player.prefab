@@ -1137,11 +1137,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43de72ef4a20ece46bc62b90687d8559, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementAcceleration: 10
-  aimSpeed: 100
-  jumpStrength: 8
-  rigid: {fileID: 0}
+  movementAcceleration: 5
+  aimSpeed: 360
+  jumpStrength: 6
   moveInputForce: {x: 0, y: 0, z: 0}
+  yAim: 0
+  lookDirection: {x: 0, y: 0, z: 0}
+  cameraRig: {fileID: 0}
+  handTransform: {fileID: 4974142991844500}
 --- !u!136 &136896862093126628
 CapsuleCollider:
   m_ObjectHideFlags: 1

@@ -22,11 +22,10 @@ public class PlayerScript : MonoBehaviour {
         mSpellSlot_3;
     
 
-	public float movementAcceleration = 10;    
-	public float aimSpeed = 10;    
+	public float movementAcceleration = 10;  
+	[Tooltip("Degrees per seconds")]
+	public float aimSpeed = 360;    
 	public float jumpStrength = 5;
-
-	public float gravityMultiplier = 2;
 
 	private Rigidbody rigid;
 
@@ -36,6 +35,17 @@ public class PlayerScript : MonoBehaviour {
 	public Vector3 lookDirection;
 
 	protected Rewired.Player mRewiredPlayer;
+
+	public PlayerCamera cameraRig;
+	public Transform handTransform;
+
+	void Awake()
+	{
+		if(cameraRig == null)
+		{
+			Debug.LogWarning("No camera rig assigned, consider creating one during runtime? Or don't. I'm not your boss. kthx");
+		}
+	}
 
 	// Use this for initialization
 	void Start ()
@@ -49,46 +59,91 @@ public class PlayerScript : MonoBehaviour {
 	    mRewiredPlayer = ReInput.players.GetPlayer(0);
 
 		rigid = GetComponent<Rigidbody>();
-
 	}
+
 	// Update is called once per frame
 	void Update () 
 	{
 		//store the input values
 		Vector2 movementInput = mRewiredPlayer.GetAxis2D("MoveHorizontal", "MoveVertical");
 
+		//store the aim input, either mouse or right analog stick
 		Vector2 aimInput = mRewiredPlayer.GetAxis2D("AimHorizontal", "AimVertical");
+		//take framerate into consideration
 		aimInput *= Time.deltaTime * aimSpeed;
 
+		//rotate the entire player along its y-axis
+		transform.Rotate(0,aimInput.x,0);
+		//prevent spinning around the z-Axis (no backflips allowed)
+		yAim = Mathf.Clamp(yAim + aimInput.y, -89, 89);
+		//calculate the lookDirection vector with the current forward vector as a basis, rotating up or down
+		lookDirection = Quaternion.AngleAxis(-yAim, transform.right) * transform.forward;
+
+		#if UNITY_EDITOR 
+		Debug.DrawRay(transform.position+Vector3.up*1.8f, lookDirection, Color.red);
+		#endif
+
+		//propergate various inputs to the statesystems
+		#region Input
 		if(mRewiredPlayer.GetButtonDown("Jump"))
 		{
 			mInputStateSystem.current.Jump();
 		}
 
+		//TODO: define mouse & keyboard / controller schemes, "CastSpell" not final axis name
+		if(mRewiredPlayer.GetButtonDown("CastSpell"))
+		{
+			mInputStateSystem.current.Cast_Spell_1();
+		}
+
         mInputStateSystem.current.Move(movementInput);
-		mInputStateSystem.current.Aim(aimInput);
+		#endregion
+	}
 
-		lookDirection = Quaternion.AngleAxis(-yAim, transform.right) * transform.forward;
+	//TODO: delete this method, testing purpose only
+	/// <summary>
+	/// !TESTING PURPOSE ONLY! 
+	/// This methods creates a GameObject with a LineRenderer to display the line between Hand and Raycast Hit by mouse.
+	/// </summary>
+	/// <param name="worldSpacePosition">World space position.</param>
+	public void DebugRayFromHandToPosition(Vector3 worldSpacePosition)
+	{
+//		Debug.DrawLine(handTransform.position, worldSpacePosition, Color.yellow, 10);
+		GameObject lineGO = new GameObject("line");
 
-		Debug.DrawRay(transform.position+Vector3.up*1.8f, lookDirection, Color.red);
+		LineRenderer line = lineGO.AddComponent<LineRenderer>();
+		line.positionCount = 2;
+		line.SetPosition(0,handTransform.position);
+		line.SetPosition(1,worldSpacePosition);
+		line.widthMultiplier = .1f;
+
+		Destroy(lineGO,10);
 	}
 		
 	void FixedUpdate()
 	{
-		rigid.MovePosition(rigid.position + moveInputForce * Time.deltaTime * movementAcceleration);
+		//move the character
+		rigid.MovePosition(rigid.position + (moveInputForce * Time.deltaTime * movementAcceleration));
 	}
 
+	/// <summary>
+	/// Let's the character jump with the default jumpStength
+	/// </summary>
 	public void Jump()
 	{
-		//TODO grounded
-		rigid.AddForce(Vector3.up*jumpStrength,ForceMode.Impulse);
+		Jump(jumpStrength);
 	}
 
-	public void test(PlayerScript i)
+	/// <summary>
+	/// Let's the character jump with a specified jumpStength
+	/// </summary>
+	/// <param name="jumpForce">Jump force.</param>
+	public void Jump(float jumpStrength)
 	{
-		
+		//TODO grounded
+		rigid.AddForce(Vector3.up * jumpStrength,ForceMode.VelocityChange);
 	}
-		
+
 	//useful asstes for the PlayerScript
 
 	/// <summary>

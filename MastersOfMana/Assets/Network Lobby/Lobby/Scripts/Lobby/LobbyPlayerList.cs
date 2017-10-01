@@ -12,7 +12,7 @@ namespace Prototype.NetworkLobby
 
         public RectTransform playerListContentTransform;
         public GameObject warningDirectPlayServer;
-        public Transform addButtonRow;
+        //public Transform addButtonRow;
 
         protected VerticalLayoutGroup _layout;
         protected List<LobbyPlayer> _players = new List<LobbyPlayer>();
@@ -46,7 +46,7 @@ namespace Prototype.NetworkLobby
             _players.Add(player);
 
             player.transform.SetParent(playerListContentTransform, false);
-            addButtonRow.transform.SetAsLastSibling();
+           // addButtonRow.transform.SetAsLastSibling();
 
             PlayerListModified();
         }

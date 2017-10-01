@@ -5,6 +5,7 @@ using UnityEngine.Networking;
 using UnityEngine.Networking.Types;
 using UnityEngine.Networking.Match;
 using System.Collections;
+using System.Collections.Generic;
 
 
 namespace Prototype.NetworkLobby
@@ -15,28 +16,15 @@ namespace Prototype.NetworkLobby
 
         static public LobbyManager s_Singleton;
 
-
         [Header("Unity UI Lobby")]
         [Tooltip("Time in second between all players ready & match start")]
         public float prematchCountdown = 5.0f;
 
-        [Space]
-        [Header("UI Reference")]
-        public LobbyTopPanel topPanel;
-
-        public RectTransform mainMenuPanel;
-        public RectTransform lobbyPanel;
-
-        public LobbyInfoPanel infoPanel;
-        public LobbyCountdownPanel countdownPanel;
-        public GameObject addPlayerButton;
-
         protected RectTransform currentPanel;
 
-        public Button backButton;
+        public LobbyMainMenu mainMenu;
 
-        public Text statusInfo;
-        public Text hostInfo;
+        public bool isInGame = false;
 
         //Client numPlayers from NetworkManager is always 0, so we count (throught connect/destroy in LobbyPlayer) the number
         //of players, so that even client know how many player there is.
@@ -52,15 +40,17 @@ namespace Prototype.NetworkLobby
         protected ulong _currentMatchID;
 
         protected LobbyHook _lobbyHooks;
+        protected List<LobbyPlayer> _players = new List<LobbyPlayer>();
+
 
         void Start()
         {
             s_Singleton = this;
             _lobbyHooks = GetComponent<Prototype.NetworkLobby.LobbyHook>();
-            currentPanel = mainMenuPanel;
+            currentPanel = mainMenu.mainMenuPanel;
 
-            backButton.gameObject.SetActive(false);
-            GetComponent<Canvas>().enabled = true;
+            mainMenu.backButton.gameObject.SetActive(false);
+            //GetComponent<Canvas>().enabled = true;
 
             DontDestroyOnLoad(gameObject);
 
@@ -69,11 +59,12 @@ namespace Prototype.NetworkLobby
 
         public override void OnLobbyClientSceneChanged(NetworkConnection conn)
         {
+
             if (SceneManager.GetSceneAt(0).name == lobbyScene)
             {
-                if (topPanel.isInGame)
+                if (isInGame)
                 {
-                    ChangeTo(lobbyPanel);
+                    ChangeTo(mainMenu.lobbyPanel);
                     if (_isMatchmaking)
                     {
                         if (conn.playerControllers[0].unetView.isServer)
@@ -99,11 +90,10 @@ namespace Prototype.NetworkLobby
                 }
                 else
                 {
-                    ChangeTo(mainMenuPanel);
+                    ChangeTo(mainMenu.mainMenuPanel);
                 }
 
-                topPanel.ToggleVisibility(true);
-                topPanel.isInGame = false;
+                isInGame = false;
             }
             else
             {
@@ -112,8 +102,7 @@ namespace Prototype.NetworkLobby
                 Destroy(GameObject.Find("MainMenuUI(Clone)"));
 
                 //backDelegate = StopGameClbk;
-                topPanel.isInGame = true;
-                topPanel.ToggleVisibility(false);
+                isInGame = true;
             }
         }
 
@@ -131,14 +120,14 @@ namespace Prototype.NetworkLobby
 
             currentPanel = newPanel;
 
-            if (currentPanel != mainMenuPanel)
+            if (currentPanel != mainMenu.mainMenuPanel && newPanel != null)
             {
-                backButton.gameObject.SetActive(true);
+                mainMenu.backButton.gameObject.SetActive(true);
             }
             else
             {
-                backButton.gameObject.SetActive(false);
-                SetServerInfo("Offline", "None");
+                mainMenu.backButton.gameObject.SetActive(false);
+                //SetServerInfo("Offline", "None");
                 _isMatchmaking = false;
             }
         }
@@ -146,7 +135,8 @@ namespace Prototype.NetworkLobby
         public void DisplayIsConnecting()
         {
             var _this = this;
-            infoPanel.Display("Connecting...", "Cancel", () => { _this.backDelegate(); });
+
+            mainMenu.infoPanel.Display("Connecting...", "Cancel", () => { _this.backDelegate(); });
         }
 
         public void SetServerInfo(string status, string host)
@@ -155,13 +145,20 @@ namespace Prototype.NetworkLobby
             //hostInfo.text = host;
         }
 
+        void OnLevelWasLoaded(int sceneId)
+        {
+            if (mainMenu == null && sceneId == 0)
+            {
+                mainMenu = GameObject.FindObjectOfType<LobbyMainMenu>();
+            }
+        }
 
         public delegate void BackButtonDelegate();
         public BackButtonDelegate backDelegate;
         public void GoBackButton()
         {
             backDelegate();
-			topPanel.isInGame = false;
+            isInGame = false;
         }
 
         // ----------------- Server management
@@ -178,7 +175,7 @@ namespace Prototype.NetworkLobby
 
         public void SimpleBackClbk()
         {
-            ChangeTo(mainMenuPanel);
+            ChangeTo(mainMenu.mainMenuPanel);
         }
                  
         public void StopHostClbk()
@@ -194,7 +191,7 @@ namespace Prototype.NetworkLobby
             }
 
             
-            ChangeTo(mainMenuPanel);
+            ChangeTo(mainMenu.mainMenuPanel);
         }
 
         public void StopClientClbk()
@@ -206,13 +203,13 @@ namespace Prototype.NetworkLobby
                 StopMatchMaker();
             }
 
-            ChangeTo(mainMenuPanel);
+            ChangeTo(mainMenu.mainMenuPanel);
         }
 
         public void StopServerClbk()
         {
             StopServer();
-            ChangeTo(mainMenuPanel);
+            ChangeTo(mainMenu.mainMenuPanel);
         }
 
         class KickMsg : MessageBase { }
@@ -226,7 +223,7 @@ namespace Prototype.NetworkLobby
 
         public void KickedMessageHandler(NetworkMessage netMsg)
         {
-            infoPanel.Display("Kicked by Server", "Close", null);
+            mainMenu.infoPanel.Display("Kicked by Server", "Close", null);
             netMsg.conn.Disconnect();
         }
 
@@ -236,7 +233,7 @@ namespace Prototype.NetworkLobby
         {
             base.OnStartHost();
 
-            ChangeTo(lobbyPanel);
+            ChangeTo(mainMenu.lobbyPanel);
             backDelegate = StopHostClbk;
             SetServerInfo("Hosting", networkAddress);
         }
@@ -266,7 +263,7 @@ namespace Prototype.NetworkLobby
             foreach (PlayerController p in ClientScene.localPlayers)
                 localPlayerCount += (p == null || p.playerControllerId == -1) ? 0 : 1;
 
-            addPlayerButton.SetActive(localPlayerCount < maxPlayersPerConnection && _playerNumber < maxPlayers);
+            //mainMenu.addPlayerButton.SetActive(localPlayerCount < maxPlayersPerConnection && _playerNumber < maxPlayers);
         }
 
         // ----------------- Server callbacks ------------------
@@ -383,7 +380,7 @@ namespace Prototype.NetworkLobby
                     (lobbySlots[i] as LobbyPlayer).RpcUpdateCountdown(0);
                 }
             }
-
+            
             ServerChangeScene(playScene);
         }
 
@@ -392,14 +389,13 @@ namespace Prototype.NetworkLobby
         public override void OnClientConnect(NetworkConnection conn)
         {
             base.OnClientConnect(conn);
-
-            infoPanel.gameObject.SetActive(false);
+            mainMenu.infoPanel.gameObject.SetActive(false);
 
             conn.RegisterHandler(MsgKicked, KickedMessageHandler);
 
             if (!NetworkServer.active)
             {//only to do on pure client (not self hosting client)
-                ChangeTo(lobbyPanel);
+                ChangeTo(mainMenu.lobbyPanel);
                 backDelegate = StopClientClbk;
                 SetServerInfo("Client", networkAddress);
             }
@@ -409,22 +405,13 @@ namespace Prototype.NetworkLobby
         public override void OnClientDisconnect(NetworkConnection conn)
         {
             base.OnClientDisconnect(conn);
-            ChangeTo(mainMenuPanel);
+            ChangeTo(mainMenu.mainMenuPanel);
         }
 
         public override void OnClientError(NetworkConnection conn, int errorCode)
         {
-            ChangeTo(mainMenuPanel);
-            infoPanel.Display("Cient error : " + (errorCode == 6 ? "timeout" : errorCode.ToString()), "Close", null);
-        }
-
-        public void Quit()
-        {
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-        Application.Quit ();
-#endif
+            ChangeTo(mainMenu.mainMenuPanel);
+            mainMenu.infoPanel.Display("Cient error : " + (errorCode == 6 ? "timeout" : errorCode.ToString()), "Close", null);
         }
     }
 }

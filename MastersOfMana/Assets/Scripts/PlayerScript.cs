@@ -57,7 +57,7 @@ public class PlayerScript : NetworkBehaviour {
 	// Update is called once per frame
     void Update () {
 
-        if (!isLocalPlayer || mRewiredPlayer == null)
+        if (!isLocalPlayer)
             return;
 
 		//store the input values

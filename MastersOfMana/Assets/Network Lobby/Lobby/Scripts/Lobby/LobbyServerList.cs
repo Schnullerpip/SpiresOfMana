@@ -26,11 +26,13 @@ namespace Prototype.NetworkLobby
             currentPage = 0;
             previousPage = 0;
 
+
             foreach (Transform t in serverListRect)
                 Destroy(t.gameObject);
 
             noServerFound.SetActive(false);
 
+            lobbyManager = GameObject.FindObjectOfType<LobbyManager>();
             RequestPage(0);
         }
 

@@ -9,11 +9,18 @@ namespace Prototype.NetworkLobby
     {
         public LobbyManager lobbyManager;
 
+
+
+        [Header("UI Reference")]
+
+        public RectTransform mainMenuPanel;
         public RectTransform lobbyServerList;
         public RectTransform lobbyPanel;
+        public LobbyInfoPanel infoPanel;
+        public LobbyCountdownPanel countdownPanel;
 
-        public InputField ipInput;
         public InputField matchNameInput;
+        public Button backButton;
 
         public void OnEnable()
         {
@@ -24,6 +31,9 @@ namespace Prototype.NetworkLobby
 
             matchNameInput.onEndEdit.RemoveAllListeners();
             matchNameInput.onEndEdit.AddListener(onEndEditGameName);
+
+            lobbyManager = GameObject.FindObjectOfType<LobbyManager>();
+            backButton.onClick.AddListener(lobbyManager.GoBackButton);
         }
 
         public void OnClickHost()
@@ -35,7 +45,7 @@ namespace Prototype.NetworkLobby
         {
             lobbyManager.ChangeTo(lobbyPanel);
 
-            lobbyManager.networkAddress = ipInput.text;
+            //lobbyManager.networkAddress = ipInput.text;
             lobbyManager.StartClient();
 
             lobbyManager.backDelegate = lobbyManager.StopClientClbk;
@@ -92,6 +102,15 @@ namespace Prototype.NetworkLobby
             {
                 OnClickCreateMatchmakingGame();
             }
+        }
+
+        public void Quit()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit ();
+#endif
         }
 
     }

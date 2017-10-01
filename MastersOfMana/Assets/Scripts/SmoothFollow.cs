@@ -15,9 +15,9 @@ public class SmoothFollow : MonoBehaviour {
 	[Range(0,1)]
 	public float rotationDamping = .2f;
 
-	[ReadOnlyAttribute]
+	//[ReadOnlyAttribute]
 	public Vector3 movementVelocity; 
-	[ReadOnlyAttribute]
+	//[ReadOnlyAttribute]
 	public Vector3 rotationVelocity;
 
 	void LateUpdate () 

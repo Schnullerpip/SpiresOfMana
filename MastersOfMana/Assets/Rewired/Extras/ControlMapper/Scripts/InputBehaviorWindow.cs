@@ -312,7 +312,7 @@ namespace Rewired.UI.ControlMapper {
                 if(_controlSet == null) return;
                 if(idToProperty == null) return;
 
-                // Redraw the controls with the mCurrent values
+                // Redraw the controls with the current values
 
                 foreach(KeyValuePair<int, PropertyType> pair in idToProperty) {
                     UISliderControl control = _controlSet.GetControl<UISliderControl>(pair.Key);

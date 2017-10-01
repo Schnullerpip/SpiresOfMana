@@ -13,17 +13,17 @@ public class InputStateMoving : A_InputState
 
 		if(input.sqrMagnitude <= float.Epsilon)
 		{
-		    mPlayer.mInputStateSystem.SetState(InputStateSystem.InputStateID.Normal);
-			mPlayer.mInputStateSystem.mCurrent.Move(input);
-			mPlayer.moveForce = Vector3.zero;
+		    player.inputStateSystem.SetState(InputStateSystem.InputStateID.Normal);
+			player.inputStateSystem.current.Move(input);
+			player.moveInputForce = Vector3.zero;
 			return;
 		}
 			
 		Vector3 moveForce = new Vector3(input.x, 0, input.y);
 		//from global to local space
-		moveForce = mPlayer.transform.TransformDirection(moveForce);
+		moveForce = player.transform.TransformDirection(moveForce);
 
 		//override moveForce in player script
-		mPlayer.moveForce = moveForce;
+		player.moveInputForce = moveForce;
 	}
 }

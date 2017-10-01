@@ -7,10 +7,10 @@ public class InputStateNormal : A_InputState
     public InputStateNormal(PlayerScript player) : base(player) { }
 
 
-    public override void Hurt()
+    public override void Hurt(float amount)
     {
         //get the instance of the hurt state and ask for it in the state dictionary
-        mPlayer.mInputStateSystem.SetState(InputStateSystem.InputStateID.Hurt);
+        player.inputStateSystem.SetState(InputStateSystem.InputStateID.Hurt);
     }
 
 	public override void Update ()
@@ -23,8 +23,8 @@ public class InputStateNormal : A_InputState
 		base.Move (input);
 		if(input.sqrMagnitude > float.Epsilon)
 		{
-		    mPlayer.mInputStateSystem.SetState(InputStateSystem.InputStateID.Moving);
-            mPlayer.mInputStateSystem.mCurrent.Move(input);
+		    player.inputStateSystem.SetState(InputStateSystem.InputStateID.Moving);
+            player.inputStateSystem.current.Move(input);
 			return;
 		}
 

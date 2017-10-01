@@ -55,7 +55,7 @@ namespace Rewired.Demos {
             // Check if there are any joysticks
             if(ReInput.controllers.joystickCount == 0) return; // no joysticks, nothing to do
 
-            // Get mCurrent Joysticks
+            // Get current Joysticks
             Joystick[] joysticks = ReInput.controllers.GetJoysticks();
             if(joysticks == null) return;
 

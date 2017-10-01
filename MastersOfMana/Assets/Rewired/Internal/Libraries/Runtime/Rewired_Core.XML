@@ -121,13 +121,13 @@
         </member>
         <member name="M:Rewired.InputActionEventData.GetAxisTimeActive">
             <summary>
-            Gets the length of time in seconds that an axis has been continuously active. Returns 0 if the axis is not mCurrently active.
+            Gets the length of time in seconds that an axis has been continuously active. Returns 0 if the axis is not currently active.
             </summary>
             <returns>The duration the axis has been continuously active.</returns>
         </member>
         <member name="M:Rewired.InputActionEventData.GetAxisTimeInactive">
             <summary>
-            Gets the length of time in seconds that an axis has been inactive. Returns 0 if the axis is mCurrently active.
+            Gets the length of time in seconds that an axis has been inactive. Returns 0 if the axis is currently active.
             </summary>
             <returns>The duration the axis has been continuously inactive.</returns>
         </member>
@@ -154,13 +154,13 @@
         </member>
         <member name="M:Rewired.InputActionEventData.GetAxisRawTimeActive">
             <summary>
-            Gets the length of time in seconds that an axis has been continuously active as calculated from the raw value. Returns 0 if the axis is not mCurrently active.
+            Gets the length of time in seconds that an axis has been continuously active as calculated from the raw value. Returns 0 if the axis is not currently active.
             </summary>
             <returns>The duration the raw axis has been continuously active.</returns>
         </member>
         <member name="M:Rewired.InputActionEventData.GetAxisRawTimeInactive">
             <summary>
-            Gets the length of time in seconds that an axis has been inactive as calculated from the raw value. Returns 0 if the axis is mCurrently active.
+            Gets the length of time in seconds that an axis has been inactive as calculated from the raw value. Returns 0 if the axis is currently active.
             </summary>
             <returns>The duration the axis has been continuously inactive.</returns>
         </member>
@@ -351,13 +351,13 @@
         </member>
         <member name="M:Rewired.InputActionEventData.GetButtonTimePressed">
             <summary>
-            Gets the length of time in seconds that a button has been continuously held down. Returns 0 if the button is not mCurrently pressed.
+            Gets the length of time in seconds that a button has been continuously held down. Returns 0 if the button is not currently pressed.
             </summary>
             <returns>The duration of the button hold.</returns>
         </member>
         <member name="M:Rewired.InputActionEventData.GetButtonTimeUnpressed">
             <summary>
-            Gets the length of time in seconds that a button has not been pressed. Returns 0 if the button is mCurrently pressed.
+            Gets the length of time in seconds that a button has not been pressed. Returns 0 if the button is currently pressed.
             </summary>
             <returns>The duration of the button inactivity.</returns>
         </member>
@@ -549,32 +549,32 @@
         </member>
         <member name="M:Rewired.InputActionEventData.GetNegativeButtonTimePressed">
             <summary>
-            Gets the length of time in seconds that a negative button has been continuously held down. Returns 0 if the negative button is not mCurrently pressed.
+            Gets the length of time in seconds that a negative button has been continuously held down. Returns 0 if the negative button is not currently pressed.
             </summary>
             <returns>The duration of the negative button hold.</returns>
         </member>
         <member name="M:Rewired.InputActionEventData.GetNegativeButtonTimeUnpressed">
             <summary>
-            Gets the length of time in seconds that a negative button has not been pressed. Returns 0 if the negative button is mCurrently pressed.
+            Gets the length of time in seconds that a negative button has not been pressed. Returns 0 if the negative button is currently pressed.
             </summary>
             <returns>The duration of the negative button inactivity.</returns>
         </member>
         <member name="M:Rewired.InputActionEventData.GetCurrentInputSources">
             <summary>
-            Gets a list of all the input sources that contributed to the value of the Action in the mCurrent frame.
+            Gets a list of all the input sources that contributed to the value of the Action in the current frame.
             </summary>
             <returns>Input source data</returns>
         </member>
         <member name="M:Rewired.InputActionEventData.IsCurrentInputSource(Rewired.ControllerType)">
             <summary>
-            Checks whether any controller of type contributed input to this Action in the mCurrent frame.
+            Checks whether any controller of type contributed input to this Action in the current frame.
             </summary>
             <param name="controllerType">Type of the controller</param>
             <returns>Whether any controller of type contributed to the Action this frame.</returns>
         </member>
         <member name="M:Rewired.InputActionEventData.IsCurrentInputSource(Rewired.ControllerType,System.Int32)">
             <summary>
-            Checks whether a particular controller contributed input to this Action in the mCurrent frame.
+            Checks whether a particular controller contributed input to this Action in the current frame.
             </summary>
             <param name="controllerType">Type of the controller</param>
             <param name="controllerId">Id of the Controller</param>
@@ -582,7 +582,7 @@
         </member>
         <member name="M:Rewired.InputActionEventData.IsCurrentInputSource(Rewired.Controller)">
             <summary>
-            Checks whether a particular controller contributed input to this Action in the mCurrent frame.
+            Checks whether a particular controller contributed input to this Action in the current frame.
             </summary>
             <param name="controller">Controller</param>
             <returns>Whether the controller contributed to the Action this frame.</returns>
@@ -1527,13 +1527,13 @@
         <member name="P:Rewired.ButtonStateRecorder.lastTimeStateChangedToPressed">
             <summary>
             Returns the last time the button state became pressed exactly.
-            Does not return 0 when the button is mCurrently pressed like above.
+            Does not return 0 when the button is currently pressed like above.
             </summary>
         </member>
         <member name="P:Rewired.ButtonStateRecorder.lastTimeStateChangedToUnpressed">
             <summary>
             Returns the the last time the button state became unpressed exactly.
-            Does not return 0 when the button is mCurrently unpressed like above.
+            Does not return 0 when the button is currently unpressed like above.
             </summary>
         </member>
         <member name="F:Rewired.PlatformInputManager._DeviceConnectedEvent">
@@ -1556,7 +1556,7 @@
         </member>
         <member name="T:Rewired.InputActionSourceData">
             <summary>
-            Provides information about the mCurrent sources contributing to the value of an Input Action.
+            Provides information about the current sources contributing to the value of an Input Action.
             </summary>
         </member>
         <member name="P:Rewired.InputActionSourceData.controller">
@@ -1811,7 +1811,7 @@
         </member>
         <member name="M:Rewired.ComponentControls.Data.CustomControllerSelector.GetCustomController">
             <summary>
-            Gets the Custom Controller using the mCurrent selection parameters.
+            Gets the Custom Controller using the current selection parameters.
             </summary>
             <returns>CustomController</returns>
         </member>
@@ -1917,13 +1917,13 @@
         </member>
         <member name="M:Rewired.ComponentControls.Effects.RotateAroundAxis.SetSpeed(Rewired.ComponentControls.Effects.RotateAroundAxis.Speed)">
             <summary>
-            Sets the mCurrent speed.
+            Sets the current speed.
             </summary>
             <param name="speed"></param>
         </member>
         <member name="M:Rewired.ComponentControls.Effects.RotateAroundAxis.SetSpeed(System.Int32)">
             <summary>
-            Sets the mCurrent speed as an integer.
+            Sets the current speed as an integer.
             This method only exists because the Unity event system
             could not call a method with an enum in Unity 5.0.
             </summary>
@@ -1931,7 +1931,7 @@
         </member>
         <member name="P:Rewired.ComponentControls.Effects.RotateAroundAxis.speed">
             <summary>
-            The mCurrent speed of rotation.
+            The current speed of rotation.
             </summary>
         </member>
         <member name="P:Rewired.ComponentControls.Effects.RotateAroundAxis.slowRotationSpeed">
@@ -1963,8 +1963,8 @@
         </member>
         <member name="T:Rewired.ComponentControls.Effects.TouchInteractableTransitioner">
             <summary>
-            Allows synchronization of transition mStates between a Touch Interactable and a Graphic.
-            Add this component to children of touch controls that need transition mStates or visibility to remain in sync with the parent.
+            Allows synchronization of transition states between a Touch Interactable and a Graphic.
+            Add this component to children of touch controls that need transition states or visibility to remain in sync with the parent.
             This is useful for Text or Image components parented underneath a touch control for example. This allows you to add graphics, text, or other
             decorations on your touch control and have them animate colors, sprite transitions, etc. in sync with the parent control.
             </summary>
@@ -2036,7 +2036,7 @@
         </member>
         <member name="P:Rewired.ComponentControls.TouchInteractable.transitionType">
             <summary>
-            The transition type(s) to be used when transitioning to various mStates. Multiple transition types can be used simultaneously. Denote multiple transition types using bitwise operations.
+            The transition type(s) to be used when transitioning to various states. Multiple transition types can be used simultaneously. Denote multiple transition types using bitwise operations.
             </summary>
         </member>
         <member name="P:Rewired.ComponentControls.TouchInteractable.transitionColorTint">
@@ -2071,7 +2071,7 @@
         </member>
         <member name="P:Rewired.ComponentControls.TouchInteractable.interactionState">
             <summary>
-            The mCurrent interaction state.
+            The current interaction state.
             </summary>
         </member>
         <member name="P:Rewired.ComponentControls.Effects.TouchInteractableTransitioner.visible">
@@ -2081,7 +2081,7 @@
         </member>
         <member name="P:Rewired.ComponentControls.Effects.TouchInteractableTransitioner.transitionType">
             <summary>
-            The transition type(s) to be used when transitioning to various mStates. Multiple transition types can be used simultaneously. Denote multiple transition types using bitwise operations.
+            The transition type(s) to be used when transitioning to various states. Multiple transition types can be used simultaneously. Denote multiple transition types using bitwise operations.
             </summary>
         </member>
         <member name="P:Rewired.ComponentControls.Effects.TouchInteractableTransitioner.transitionColorTint">
@@ -2127,7 +2127,7 @@
         </member>
         <member name="T:Rewired.ComponentControls.Effects.TouchJoystickAngleIndicator">
             <summary>
-            A visual indicator of the mCurrent direction of the joystick.
+            A visual indicator of the current direction of the joystick.
             This can be used to make arrows or other visual elements light up
             when the joystick is pressed in different directions.
             </summary>
@@ -2157,7 +2157,7 @@
         </member>
         <member name="M:Rewired.ComponentControls.TouchJoystick.SetDefaultPosition">
             <summary>
-            Record the mCurrent anchored position as the joystick's default position.
+            Record the current anchored position as the joystick's default position.
             The joystick will return to this position when released when using a
             Touch Region with moveToTouchPosition set to True.
             If you move the joystick's position and want it to return there next time,
@@ -2186,7 +2186,7 @@
         </member>
         <member name="M:Rewired.ComponentControls.TouchJoystick.OnClear">
             <summary>
-            Clears the control completely including all internal mStates.
+            Clears the control completely including all internal states.
             </summary>
         </member>
         <member name="P:Rewired.ComponentControls.TouchJoystick.horizontalAxisCustomControllerElement">
@@ -2211,7 +2211,7 @@
         </member>
         <member name="P:Rewired.ComponentControls.TouchJoystick.joystickMode">
             <summary>
-            The joystick's mode of operation. Set this to Digital to simulate a D-Pad which has only On/Off mStates. If you want mimic a real D-Pad, you should also set Snap Directions to 8.
+            The joystick's mode of operation. Set this to Digital to simulate a D-Pad which has only On/Off states. If you want mimic a real D-Pad, you should also set Snap Directions to 8.
             </summary>
         </member>
         <member name="P:Rewired.ComponentControls.TouchJoystick.digitalModeDeadZone">
@@ -2248,7 +2248,7 @@
             <summary>
             If true, the stick disc will snap immediately to the touch position when initially touched. This results in the stick disc being centered to the touch position.
             This will cause the stick to generate input immediately when touched if not touched perfectly centered.
-            If false, the stick disc will remain in its mCurrent position on touch, and when dragged will retain the same offset.
+            If false, the stick disc will remain in its current position on touch, and when dragged will retain the same offset.
             The stick's center point will be set to the position of the touch. The initial touch will not cause the stick to pop in any direction.
             </summary>
         </member>
@@ -2295,7 +2295,7 @@
         </member>
         <member name="P:Rewired.ComponentControls.TouchJoystick.moveToTouchPosition">
             <summary>
-            If True, the joystick will move to the location of the mCurrent touch in the Touch Region. This can be used to designate an area of the screen as a hot-spot for a joystick and have the joystick graphics follow the users touches. This only has an effect if a Touch Region is set.
+            If True, the joystick will move to the location of the current touch in the Touch Region. This can be used to designate an area of the screen as a hot-spot for a joystick and have the joystick graphics follow the users touches. This only has an effect if a Touch Region is set.
             </summary>
         </member>
         <member name="P:Rewired.ComponentControls.TouchJoystick.returnOnRelease">
@@ -2330,7 +2330,7 @@
         </member>
         <member name="P:Rewired.ComponentControls.TouchJoystick.manageRaycasting">
             <summary>
-            If True, it will attempt to automatically manage Graphic component raycasting for best results based on your mCurrent settings.
+            If True, it will attempt to automatically manage Graphic component raycasting for best results based on your current settings.
             </summary>
         </member>
         <member name="P:Rewired.ComponentControls.TouchJoystick.horizontalAxisCalibration">
@@ -2350,13 +2350,13 @@
         </member>
         <member name="P:Rewired.ComponentControls.TouchJoystick.pointerId">
             <summary>
-            The pointer id that mCurrently has control of this joystick. If there is no pointer id, the value is TouchControl.POINTER_ID_NULL.
+            The pointer id that currently has control of this joystick. If there is no pointer id, the value is TouchControl.POINTER_ID_NULL.
             Only one pointer id (touch, mouse, etc.) may be in control of this joystick at any time.
             </summary>
         </member>
         <member name="P:Rewired.ComponentControls.TouchJoystick.hasPointer">
             <summary>
-            Is this joystick mCurrently being controlled by a touch or pointer?
+            Is this joystick currently being controlled by a touch or pointer?
             </summary>
         </member>
         <member name="P:Rewired.ComponentControls.TouchJoystick.axis2D">
@@ -2397,12 +2397,12 @@
         </member>
         <member name="P:Rewired.ComponentControls.Effects.TouchJoystickAngleIndicator.fadeWithValue">
             <summary>
-            If enabled, the color will fade in and out based on the mCurrent joystick value.
+            If enabled, the color will fade in and out based on the current joystick value.
             </summary>
         </member>
         <member name="P:Rewired.ComponentControls.Effects.TouchJoystickAngleIndicator.fadeWithAngle">
             <summary>
-            If enabled, the color will fade in and out based on the mCurrent joystick angle. As the angle approaches the Target Angle, the color will become more intense.
+            If enabled, the color will fade in and out based on the current joystick angle. As the angle approaches the Target Angle, the color will become more intense.
             </summary>
         </member>
         <member name="P:Rewired.ComponentControls.Effects.TouchJoystickAngleIndicator.fadeRange">
@@ -2426,9 +2426,9 @@
             Gets the Image attached to this GameObject.
             </summary>
         </member>
-        <member name="P:Rewired.ComponentControls.Effects.TouchJoystickAngleIndicator.mCurrentSprite">
+        <member name="P:Rewired.ComponentControls.Effects.TouchJoystickAngleIndicator.currentSprite">
             <summary>
-            Gets the mCurrent Sprite being used by the Image component. If an Override Sprite is set, that is returned. Otherwise, the Sprite is returned.
+            Gets the current Sprite being used by the Image component. If an Override Sprite is set, that is returned. Otherwise, the Sprite is returned.
             </summary>
         </member>
         <member name="P:Rewired.ComponentControls.Effects.TouchJoystickAngleIndicator.rectTransform">
@@ -2455,7 +2455,7 @@
         </member>
         <member name="P:Rewired.ComponentControls.Effects.TouchJoystickRadialIndicator.scaleRatio">
             <summary>
-            The scale ratio of the indicators to the mCurrent RectTransform's height.
+            The scale ratio of the indicators to the current RectTransform's height.
             A ratio of 0.1 means the indicator will be 0.1 times the size of the RectTransform's height.
             This is useful if you need to be able to scale the transform and have the indicators also scale with it.
             </summary>
@@ -2493,7 +2493,7 @@
         </member>
         <member name="M:Rewired.ComponentControls.TouchButton.SetDefaultPosition">
             <summary>
-            Record the mCurrent anchored position as the button's default position.
+            Record the current anchored position as the button's default position.
             The button will return to this position when released when using a
             Touch Region with moveToTouchPosition set to True.
             If you move the button's position and want it to return there next time,
@@ -2522,7 +2522,7 @@
         </member>
         <member name="M:Rewired.ComponentControls.TouchButton.OnClear">
             <summary>
-            Clears the control completely including all internal mStates.
+            Clears the control completely including all internal states.
             </summary>
         </member>
         <member name="E:Rewired.ComponentControls.TouchButton.AxisValueChangedEvent">
@@ -2593,7 +2593,7 @@
         </member>
         <member name="P:Rewired.ComponentControls.TouchButton.moveToTouchPosition">
             <summary>
-            If True, the button will move to the location of the mCurrent touch in the Touch Region. This can be used to designate an area of the screen as a hot-spot for a button and have the button graphics follow the users touches. This only has an effect if a Touch Region is set.
+            If True, the button will move to the location of the current touch in the Touch Region. This can be used to designate an area of the screen as a hot-spot for a button and have the button graphics follow the users touches. This only has an effect if a Touch Region is set.
             </summary>
         </member>
         <member name="P:Rewired.ComponentControls.TouchButton.returnOnRelease">
@@ -2628,18 +2628,18 @@
         </member>
         <member name="P:Rewired.ComponentControls.TouchButton.manageRaycasting">
             <summary>
-            If True, it will attempt to automatically manage Graphic component raycasting for best results based on your mCurrent settings.
+            If True, it will attempt to automatically manage Graphic component raycasting for best results based on your current settings.
             </summary>
         </member>
         <member name="P:Rewired.ComponentControls.TouchButton.pointerId">
             <summary>
-            The pointer id that mCurrently has control of this button. If there is no pointer id, the value is TouchControl.POINTER_ID_NULL.
+            The pointer id that currently has control of this button. If there is no pointer id, the value is TouchControl.POINTER_ID_NULL.
             Only one pointer id (touch, mouse, etc.) may be in control of this button at any time.
             </summary>
         </member>
         <member name="P:Rewired.ComponentControls.TouchButton.hasPointer">
             <summary>
-            Is this button mCurrently being controlled by a touch or pointer?
+            Is this button currently being controlled by a touch or pointer?
             </summary>
         </member>
         <member name="P:Rewired.ComponentControls.TouchButton.axis">
@@ -2819,13 +2819,13 @@
         </member>
         <member name="P:Rewired.ComponentControls.TouchPad.pointerId">
             <summary>
-            The pointer id that mCurrently has control of this control. If there is no pointer id, the value is TouchControl.POINTER_ID_NULL.
+            The pointer id that currently has control of this control. If there is no pointer id, the value is TouchControl.POINTER_ID_NULL.
             Only one pointer id (touch, mouse, etc.) may be in control of this button at any time.
             </summary>
         </member>
         <member name="P:Rewired.ComponentControls.TouchPad.hasPointer">
             <summary>
-            Is this control mCurrently being controlled by a touch or pointer?
+            Is this control currently being controlled by a touch or pointer?
             </summary>
         </member>
         <member name="P:Rewired.ComponentControls.TouchPad.axis2D">
@@ -2835,7 +2835,7 @@
         </member>
         <member name="F:Rewired.ComponentControls.TouchPad.TouchPadMode.Delta">
             <summary>
-            Returns the change in position of the touch from the previous to the mCurrent frame.
+            Returns the change in position of the touch from the previous to the current frame.
             </summary>
         </member>
         <member name="F:Rewired.ComponentControls.TouchPad.TouchPadMode.ScreenPosition">
@@ -2845,12 +2845,12 @@
         </member>
         <member name="F:Rewired.ComponentControls.TouchPad.TouchPadMode.VectorFromCenter">
             <summary>
-            Returns a vector from the center of the Touch Pad to the mCurrent touch position.
+            Returns a vector from the center of the Touch Pad to the current touch position.
             </summary>
         </member>
         <member name="F:Rewired.ComponentControls.TouchPad.TouchPadMode.VectorFromInitialTouch">
             <summary>
-            Returns a vector from the intial touch position to the mCurrent touch position.
+            Returns a vector from the intial touch position to the current touch position.
             </summary>
         </member>
         <member name="F:Rewired.ComponentControls.TouchPad.ValueFormat.Pixels">
@@ -2952,7 +2952,7 @@
         </member>
         <member name="M:Rewired.Controller.GetButtonChanged(System.Int32)">
             <summary>
-            Returns true if the button has changed state from the previous frame to the mCurrent.
+            Returns true if the button has changed state from the previous frame to the current.
             This does not take into acount any controller mapping or Actions -- this is the unmapped physical button value only.
             Use the Player class to get button values mapped to Actions.
             </summary>
@@ -3030,7 +3030,7 @@
         </member>
         <member name="M:Rewired.Controller.GetAnyButtonChanged">
             <summary>
-            Returns true if any button has changed state from the previous frame to the mCurrent.
+            Returns true if any button has changed state from the previous frame to the current.
             This does not take into acount any controller mapping or Actions -- this is the unmapped physical button value only.
             Use the Player class to get button values mapped to Actions.
             </summary>
@@ -3039,14 +3039,14 @@
         <member name="M:Rewired.Controller.GetLastTimeActive">
             <summary>
             Gets the last timestamp any button was active.
-            NOTE: If comparing time against mCurrent time, always compare to ReInput.time.unscaledTime.
+            NOTE: If comparing time against current time, always compare to ReInput.time.unscaledTime.
             </summary>
             <returns>Timestamp</returns>
         </member>
         <member name="M:Rewired.Controller.GetLastTimeActive(System.Boolean)">
             <summary>
             Gets the last timestamp any button was active.
-            NOTE: If comparing time against mCurrent time, always compare to ReInput.time.unscaledTime.
+            NOTE: If comparing time against current time, always compare to ReInput.time.unscaledTime.
             </summary>
             <param name="useRawValues">Use raw axis values</param>
             <returns>Timestamp</returns>
@@ -3054,14 +3054,14 @@
         <member name="M:Rewired.Controller.GetLastTimeAnyElementChanged">
             <summary>
             Gets the last timestamp any button changed state.
-            NOTE: If comparing time against mCurrent time, always compare to ReInput.time.unscaledTime.
+            NOTE: If comparing time against current time, always compare to ReInput.time.unscaledTime.
             </summary>
             <returns>Timestamp</returns>
         </member>
         <member name="M:Rewired.Controller.GetLastTimeAnyElementChanged(System.Boolean)">
             <summary>
             Gets the last timestamp any button changed state.
-            NOTE: If comparing time against mCurrent time, always compare to ReInput.time.unscaledTime.
+            NOTE: If comparing time against current time, always compare to ReInput.time.unscaledTime.
             <param name="useRawValues">Use raw axis values</param>
             </summary>
             <returns>Timestamp</returns>
@@ -3069,14 +3069,14 @@
         <member name="M:Rewired.Controller.GetLastTimeAnyButtonPressed">
             <summary>
             Gets the last timestamp any button was active.
-            NOTE: If comparing time against mCurrent time, always compare to ReInput.time.unscaledTime.
+            NOTE: If comparing time against current time, always compare to ReInput.time.unscaledTime.
             </summary>
             <returns>Timestamp</returns>
         </member>
         <member name="M:Rewired.Controller.GetLastTimeAnyButtonChanged">
             <summary>
             Gets the last timestamp any button's state changed.
-            NOTE: If comparing time against mCurrent time, always compare to ReInput.time.unscaledTime.
+            NOTE: If comparing time against current time, always compare to ReInput.time.unscaledTime.
             </summary>
             <returns>Timestamp</returns>
         </member>
@@ -3197,37 +3197,37 @@
         <member name="P:Rewired.Controller.Axis.lastTimeActive">
             <summary>
             Gets the last time the axis was active.
-            NOTE: If comparing time against mCurrent time, always compare to ReInput.time.unscaledTime.
+            NOTE: If comparing time against current time, always compare to ReInput.time.unscaledTime.
             </summary>
         </member>
         <member name="P:Rewired.Controller.Axis.lastTimeActiveRaw">
             <summary>
             Gets the last time the axis was active based on raw value.
-            NOTE: If comparing time against mCurrent time, always compare to ReInput.time.unscaledTime.
+            NOTE: If comparing time against current time, always compare to ReInput.time.unscaledTime.
             </summary>
         </member>
         <member name="P:Rewired.Controller.Axis.lastTimeInactive">
             <summary>
             Gets the last time the axis was inactive.
-            NOTE: If comparing time against mCurrent time, always compare to ReInput.time.unscaledTime.
+            NOTE: If comparing time against current time, always compare to ReInput.time.unscaledTime.
             </summary>
         </member>
         <member name="P:Rewired.Controller.Axis.lastTimeInactiveRaw">
             <summary>
             Gets the last time the axis was inactive based on raw value.
-            NOTE: If comparing time against mCurrent time, always compare to ReInput.time.unscaledTime.
+            NOTE: If comparing time against current time, always compare to ReInput.time.unscaledTime.
             </summary>
         </member>
         <member name="P:Rewired.Controller.Axis.lastTimeValueChanged">
             <summary>
             Gets the last time the axis value changed.
-            NOTE: If comparing time against mCurrent time, always compare to ReInput.time.unscaledTime.
+            NOTE: If comparing time against current time, always compare to ReInput.time.unscaledTime.
             </summary>
         </member>
         <member name="P:Rewired.Controller.Axis.lastTimeValueChangedRaw">
             <summary>
             Gets the last time the axis value changed based on raw value.
-            NOTE: If comparing time against mCurrent time, always compare to ReInput.time.unscaledTime.
+            NOTE: If comparing time against current time, always compare to ReInput.time.unscaledTime.
             </summary>
         </member>
         <member name="P:Rewired.Controller.Axis.timeActive">
@@ -3276,12 +3276,12 @@
         </member>
         <member name="P:Rewired.Controller.Button.value">
             <summary>
-            The mCurrent state of the button.
+            The current state of the button.
             </summary>
         </member>
         <member name="P:Rewired.Controller.Button.pressure">
             <summary>
-            The mCurrent pressure on the button. [0.0 - 1.0]
+            The current pressure on the button. [0.0 - 1.0]
             </summary>
         </member>
         <member name="P:Rewired.Controller.Button.pressurePrev">
@@ -3332,19 +3332,19 @@
         <member name="P:Rewired.Controller.Button.lastTimePressed">
             <summary>
             Gets the last time the button was active.
-            NOTE: If comparing time against mCurrent time, always compare to ReInput.time.unscaledTime.
+            NOTE: If comparing time against current time, always compare to ReInput.time.unscaledTime.
             </summary>
         </member>
         <member name="P:Rewired.Controller.Button.lastTimeUnpressed">
             <summary>
             Gets the last time the button was inactive.
-            NOTE: If comparing time against mCurrent time, always compare to ReInput.time.unscaledTime.
+            NOTE: If comparing time against current time, always compare to ReInput.time.unscaledTime.
             </summary>
         </member>
         <member name="P:Rewired.Controller.Button.lastTimeStateChanged">
             <summary>
             Gets the last time the button changed state.
-            NOTE: If comparing time against mCurrent time, always compare to ReInput.time.unscaledTime.
+            NOTE: If comparing time against current time, always compare to ReInput.time.unscaledTime.
             </summary>
         </member>
         <member name="T:Rewired.Controller.CompoundElement">
@@ -3404,7 +3404,7 @@
         </member>
         <member name="P:Rewired.Controller.Axis2D.value">
             <summary>
-            The combined mCurrent value of the X and Y axes.
+            The combined current value of the X and Y axes.
             </summary>
         </member>
         <member name="P:Rewired.Controller.Axis2D.valuePrev">
@@ -3414,7 +3414,7 @@
         </member>
         <member name="P:Rewired.Controller.Axis2D.valueRaw">
             <summary>
-            The combined mCurrent raw value of the X and Y axes.
+            The combined current raw value of the X and Y axes.
             </summary>
         </member>
         <member name="P:Rewired.Controller.Axis2D.valueRawPrev">
@@ -3540,7 +3540,7 @@
         </member>
         <member name="M:Rewired.ControllerWithAxes.GetAxis(System.Int32)">
             <summary>
-            Gets the mCurrent axis value.
+            Gets the current axis value.
             </summary>
             <param name="index">Index of Axis</param>
             <returns>Axis value [-1.0 to 1.0]</returns>
@@ -3554,7 +3554,7 @@
         </member>
         <member name="M:Rewired.ControllerWithAxes.GetAxisRaw(System.Int32)">
             <summary>
-            Gets the mCurrent raw axis value. Excludes calibration.
+            Gets the current raw axis value. Excludes calibration.
             </summary>
             <param name="index">Index of Axis</param>
             <returns>Axis value [-1.0 to 1.0]</returns>
@@ -3568,7 +3568,7 @@
         </member>
         <member name="M:Rewired.ControllerWithAxes.GetAxisById(System.Int32)">
             <summary>
-            Gets the mCurrent axis value.
+            Gets the current axis value.
             </summary>
             <param name="elementIdentifierId">Element identifier id of Axis</param>
             <returns>Axis value [-1.0 to 1.0]</returns>
@@ -3582,7 +3582,7 @@
         </member>
         <member name="M:Rewired.ControllerWithAxes.GetAxisRawById(System.Int32)">
             <summary>
-            Gets the mCurrent raw axis value. Excludes calibration.
+            Gets the current raw axis value. Excludes calibration.
             </summary>
             <param name="elementIdentifierId">Element identifier id of Axis</param>
             <returns>Axis value [-1.0 to 1.0]</returns>
@@ -3596,7 +3596,7 @@
         </member>
         <member name="M:Rewired.ControllerWithAxes.GetAxis2D(System.Int32)">
             <summary>
-            Gets the mCurrent 2D axis value.
+            Gets the current 2D axis value.
             </summary>
             <param name="index">Index of Axis</param>
             <returns>2D Axis value [-1.0 to 1.0]</returns>
@@ -3610,7 +3610,7 @@
         </member>
         <member name="M:Rewired.ControllerWithAxes.GetAxis2DRaw(System.Int32)">
             <summary>
-            Gets the mCurrent raw 2D axis value. Excludes calibration.
+            Gets the current raw 2D axis value. Excludes calibration.
             </summary>
             <param name="index">Index of Axis</param>
             <returns>2D Axis value [-1.0 to 1.0]</returns>
@@ -3625,14 +3625,14 @@
         <member name="M:Rewired.ControllerWithAxes.GetLastTimeActive">
             <summary>
             Gets the last timestamp any axis or button was active.
-            NOTE: If comparing time against mCurrent time, always compare to ReInput.time.unscaledTime.
+            NOTE: If comparing time against current time, always compare to ReInput.time.unscaledTime.
             </summary>
             <returns>Timestamp</returns>
         </member>
         <member name="M:Rewired.ControllerWithAxes.GetLastTimeActive(System.Boolean)">
             <summary>
             Gets the last timestamp any axis or button was active.
-            NOTE: If comparing time against mCurrent time, always compare to ReInput.time.unscaledTime.
+            NOTE: If comparing time against current time, always compare to ReInput.time.unscaledTime.
             </summary>
             <param name="useRawValues">Use raw axis values</param>
             <returns>Timestamp</returns>
@@ -3640,14 +3640,14 @@
         <member name="M:Rewired.ControllerWithAxes.GetLastTimeAnyElementChanged">
             <summary>
             Gets the last timestamp any axis changed state.
-            NOTE: If comparing time against mCurrent time, always compare to ReInput.time.unscaledTime.
+            NOTE: If comparing time against current time, always compare to ReInput.time.unscaledTime.
             </summary>
             <returns>Timestamp</returns>
         </member>
         <member name="M:Rewired.ControllerWithAxes.GetLastTimeAnyElementChanged(System.Boolean)">
             <summary>
             Gets the last timestamp any axis changed state.
-            NOTE: If comparing time against mCurrent time, always compare to ReInput.time.unscaledTime.
+            NOTE: If comparing time against current time, always compare to ReInput.time.unscaledTime.
             <param name="useRawValues">Use raw axis values</param>
             </summary>
             <returns>Timestamp</returns>
@@ -3655,14 +3655,14 @@
         <member name="M:Rewired.ControllerWithAxes.GetLastTimeAnyAxisActive">
             <summary>
             Gets the last timestamp any axis was active.
-            NOTE: If comparing time against mCurrent time, always compare to ReInput.time.unscaledTime.
+            NOTE: If comparing time against current time, always compare to ReInput.time.unscaledTime.
             </summary>
             <returns>Timestamp</returns>
         </member>
         <member name="M:Rewired.ControllerWithAxes.GetLastTimeAnyAxisActive(System.Boolean)">
             <summary>
             Gets the last timestamp any axis was active.
-            NOTE: If comparing time against mCurrent time, always compare to ReInput.time.unscaledTime.
+            NOTE: If comparing time against current time, always compare to ReInput.time.unscaledTime.
             </summary>
             <param name="useRawValues">Use raw axis values</param>
             <returns>Timestamp</returns>
@@ -3670,14 +3670,14 @@
         <member name="M:Rewired.ControllerWithAxes.GetLastTimeAnyAxisChanged">
             <summary>
             Gets the last timestamp any axis changed value.
-            NOTE: If comparing time against mCurrent time, always compare to ReInput.time.unscaledTime.
+            NOTE: If comparing time against current time, always compare to ReInput.time.unscaledTime.
             </summary>
             <returns>Timestamp</returns>
         </member>
         <member name="M:Rewired.ControllerWithAxes.GetLastTimeAnyAxisChanged(System.Boolean)">
             <summary>
             Gets the last timestamp any axis changed value.
-            NOTE: If comparing time against mCurrent time, always compare to ReInput.time.unscaledTime.
+            NOTE: If comparing time against current time, always compare to ReInput.time.unscaledTime.
             </summary>
             <param name="useRawValues">Use raw axis values</param>
             <returns>Timestamp</returns>
@@ -3969,7 +3969,7 @@
         </member>
         <member name="M:Rewired.ControllerExtensions.DualShock4Extension.GetLightColor">
             <summary>
-            Gets the mCurrent light color.
+            Gets the current light color.
             </summary>
             <returns></returns>
         </member>
@@ -4079,7 +4079,7 @@
             Gets the touch id for the touch at the specified index.
             </summary>
             <param name="index"></param>
-            <returns>Touch id. Returns -1 if there is no mCurrent touch at the specified index.</returns>
+            <returns>Touch id. Returns -1 if there is no current touch at the specified index.</returns>
         </member>
         <member name="M:Rewired.ControllerExtensions.DualShock4Extension.GetTouchPosition(System.Int32,UnityEngine.Vector2@)">
             <summary>
@@ -4087,7 +4087,7 @@
             </summary>
             <param name="index">The index of the touch for which to return position.</param>
             <param name="position">X/Y position of the touch [0 - 1]</param>
-            <returns>True if the touch at index is mCurrently touching. False if there is no touch at index.</returns>
+            <returns>True if the touch at index is currently touching. False if there is no touch at index.</returns>
         </member>
         <member name="M:Rewired.ControllerExtensions.DualShock4Extension.GetTouchPositionByTouchId(System.Int32,UnityEngine.Vector2@)">
             <summary>
@@ -4095,7 +4095,7 @@
             </summary>
             <param name="touchId">The id of the touch for which to return position.</param>
             <param name="position">X/Y position of the touch [0 - 1]</param>
-            <returns>True if the touch at touchId is mCurrently touching. False if there is no touch at touchId.</returns>
+            <returns>True if the touch at touchId is currently touching. False if there is no touch at touchId.</returns>
         </member>
         <member name="M:Rewired.ControllerExtensions.DualShock4Extension.GetTouchPositionAbsolute(System.Int32,UnityEngine.Vector2@)">
             <summary>
@@ -4103,7 +4103,7 @@
             </summary>
             <param name="index">The index of the touch for which to return position.</param>
             <param name="position">X/Y position of the touch in absolute units.</param>
-            <returns>True if the touch at index is mCurrently touching. False if there is no touch at index.</returns>
+            <returns>True if the touch at index is currently touching. False if there is no touch at index.</returns>
         </member>
         <member name="M:Rewired.ControllerExtensions.DualShock4Extension.GetTouchPositionAbsoluteByTouchId(System.Int32,UnityEngine.Vector2@)">
             <summary>
@@ -4111,18 +4111,18 @@
             </summary>
             <param name="touchId">The id of the touch for which to return position.</param>
             <param name="position">X/Y position of the touch in absolute units.</param>
-            <returns>True if the touch at touchId is mCurrently touching. False if there is no touch at touchId.</returns>
+            <returns>True if the touch at touchId is currently touching. False if there is no touch at touchId.</returns>
         </member>
         <member name="M:Rewired.ControllerExtensions.DualShock4Extension.IsTouching(System.Int32)">
             <summary>
-            Determines if the mCurrent touch id is valid for any mCurrently active touch.
+            Determines if the current touch id is valid for any currently active touch.
             </summary>
             <param name="index">The index of the touch</param>
             <returns>True/False</returns>
         </member>
         <member name="M:Rewired.ControllerExtensions.DualShock4Extension.IsTouchingByTouchId(System.Int32)">
             <summary>
-            Determines if the mCurrent touch id is valid for any mCurrently active touch.
+            Determines if the current touch id is valid for any currently active touch.
             </summary>
             <param name="touchId">The id of the touch</param>
             <returns>True/False</returns>
@@ -4256,61 +4256,61 @@
         </member>
         <member name="M:Rewired.ControllerExtensions.SteamControllerExtension.GetAnalogActionValue(System.String)">
             <summary>
-            Get the mCurrent value of an analog Steam action.
+            Get the current value of an analog Steam action.
             </summary>
             <param name="actionName">Name of the Steam action</param>
             <returns>X/Y value</returns>
         </member>
         <member name="M:Rewired.ControllerExtensions.SteamControllerExtension.GetAnalogActionValue(System.UInt64)">
             <summary>
-            Get the mCurrent value of an analog Steam action.
+            Get the current value of an analog Steam action.
             </summary>
             <param name="actionHandle">Handle of the Steam action</param>
             <returns>X/Y value</returns>
         </member>
         <member name="M:Rewired.ControllerExtensions.SteamControllerExtension.GetDigitalActionValue(System.String)">
             <summary>
-            Get the mCurrent value of a digital Steam action.
+            Get the current value of a digital Steam action.
             </summary>
             <param name="actionName">Name of the Steam action</param>
             <returns>True/False</returns>
         </member>
         <member name="M:Rewired.ControllerExtensions.SteamControllerExtension.GetDigitalActionValue(System.UInt64)">
             <summary>
-            Get the mCurrent value of a digital Steam action.
+            Get the current value of a digital Steam action.
             </summary>
             <param name="actionHandle">Handle of the Steam action</param>
             <returns>True/False</returns>
         </member>
         <member name="M:Rewired.ControllerExtensions.SteamControllerExtension.SetActiveActionSet(System.UInt64)">
             <summary>
-            Set the mCurrent active Steam action set.
+            Set the current active Steam action set.
             </summary>
             <param name="actionSetHandle">Handle of the Steam action set</param>
             <returns>Success/Failure</returns>
         </member>
         <member name="M:Rewired.ControllerExtensions.SteamControllerExtension.SetActiveActionSet(System.String)">
             <summary>
-            Set the mCurrent active Steam action set.
+            Set the current active Steam action set.
             </summary>
             <param name="actionSetName">Name of the Steam action set</param>
             <returns>Success/Failure</returns>
         </member>
         <member name="M:Rewired.ControllerExtensions.SteamControllerExtension.GetActiveActionSetHandle">
             <summary>
-            Get the mCurrent active Steam action set handle.
+            Get the current active Steam action set handle.
             </summary>
             <returns>Action set handle</returns>
         </member>
         <member name="M:Rewired.ControllerExtensions.SteamControllerExtension.GetActiveActionSetName">
             <summary>
-            Get the mCurrent active Steam action set name.
+            Get the current active Steam action set name.
             </summary>
             <returns>Action set name</returns>
         </member>
         <member name="M:Rewired.ControllerExtensions.SteamControllerExtension.ShowBindingPanel">
             <summary>
-            Show the Steam control binding panel for the mCurrent controller.
+            Show the Steam control binding panel for the current controller.
             </summary>
         </member>
         <member name="M:Rewired.ControllerExtensions.SteamControllerExtension.SetHapticPulse(Rewired.ControllerExtensions.SteamControllerPadType,System.Single)">
@@ -4432,7 +4432,7 @@
         </member>
         <member name="P:Rewired.Joystick.systemId">
             <summary>
-            The id of the device in the underlying input source. The meaning of this value is determined by the mCurrent input source.
+            The id of the device in the underlying input source. The meaning of this value is determined by the current input source.
             This may include Unity input, Raw Input, Direct Input, OSX I/O Kit, XBoxOneInput, Ouya input, and others.
             Generally, you should never need to use this, but it is exposed for advanced uses.
             Returns null if there is no system id associated with this joystick.
@@ -4459,7 +4459,7 @@
             affects the reliability of this value for device assignment persistence.
             A value of Guid.Empty means the device or input source has no reliable unique identifier so persistant assignment
             isn't possible using this value. Even if a Guid is provided, reliability when multiple identical controllers are
-            attached depends greatly on the platform and input source(s) mCurrently in use.
+            attached depends greatly on the platform and input source(s) currently in use.
             </summary>
         </member>
         <member name="P:Rewired.Joystick.supportsVibration">
@@ -4534,7 +4534,7 @@
         </member>
         <member name="P:Rewired.Mouse.screenPosition">
             <summary>
-            The mCurrent position of the mouse pointer on the screen in pixels.
+            The current position of the mouse pointer on the screen in pixels.
             </summary>
         </member>
         <member name="P:Rewired.Mouse.screenPositionPrev">
@@ -5677,7 +5677,7 @@
         </member>
         <member name="P:Rewired.Internal.StandaloneAxis.valueRawDelta">
             <summary>
-            The difference between the mCurrent raw value and the previous raw value.
+            The difference between the current raw value and the previous raw value.
             </summary>
         </member>
         <member name="P:Rewired.Internal.StandaloneAxis.value">
@@ -5692,7 +5692,7 @@
         </member>
         <member name="P:Rewired.Internal.StandaloneAxis.valueDelta">
             <summary>
-            The difference between the mCurrent calibrated value and the previous calibrated value.
+            The difference between the current calibrated value and the previous calibrated value.
             </summary>
         </member>
         <member name="P:Rewired.Internal.StandaloneAxis.rawButtonValue">
@@ -5783,7 +5783,7 @@
         </member>
         <member name="P:Rewired.Internal.StandaloneAxis2D.valueDelta">
             <summary>
-            The difference between the mCurrent calibrated value and previous calibrated value.
+            The difference between the current calibrated value and previous calibrated value.
             Note: Previous is not necessarily the value in the previous frame, but rather the previous value that was input into the axes.
             </summary>
         </member>
@@ -5800,7 +5800,7 @@
         </member>
         <member name="P:Rewired.Internal.StandaloneAxis2D.rawValueDelta">
             <summary>
-            The difference between the mCurrent raw value and previous raw value.
+            The difference between the current raw value and previous raw value.
             Note: Previous is not necessarily the value in the previous frame, but rather the previous value that was input into the axes.
             </summary>
         </member>
@@ -7101,7 +7101,7 @@
         </member>
         <member name="P:Rewired.ControllerMap.name">
             <summary>
-            The name of this controller map. (This is mCurrently unused and will always be blank.)
+            The name of this controller map. (This is currently unused and will always be blank.)
             </summary>
         </member>
         <member name="P:Rewired.ControllerMap.hardwareGuid">
@@ -7631,13 +7631,13 @@
         </member>
         <member name="P:Rewired.InputBehavior.digitalAxisSnap">
             <summary>
-            When input is received in the opposite direction of the mCurrent flow, snap axis value to 0 and continue from there.
+            When input is received in the opposite direction of the current flow, snap axis value to 0 and continue from there.
             This only affects axis values generated by button and key presses.
             </summary>
         </member>
         <member name="P:Rewired.InputBehavior.digitalAxisInstantReverse">
             <summary>
-            When input is received in the opposite direction of the mCurrent flow, reverse the mCurrent value to the opposite sign and continue from there.
+            When input is received in the opposite direction of the current flow, reverse the current value to the opposite sign and continue from there.
             This only affects axis values generated by button and key presses.
             </summary>
         </member>
@@ -7827,7 +7827,7 @@
         </member>
         <member name="P:Rewired.InputMapper.status">
             <summary>
-            The mCurrent status of the mapper.
+            The current status of the mapper.
             </summary>
         </member>
         <member name="P:Rewired.InputMapper.timeRemaining">
@@ -8101,7 +8101,7 @@
         </member>
         <member name="P:Rewired.InputMapper.Options.checkForConflictsWithSelf">
             <summary>
-            Should assignment conflicts be checked with the mCurrent Player?
+            Should assignment conflicts be checked with the current Player?
             </summary>
         </member>
         <member name="P:Rewired.InputMapper.Options.checkForConflictsWithSystemPlayer">
@@ -8786,28 +8786,28 @@
         </member>
         <member name="M:Rewired.Player.GetButtonTimePressed(System.String)">
             <summary>
-            Gets the length of time in seconds that a button has been continuously held down. Returns 0 if the button is not mCurrently pressed.
+            Gets the length of time in seconds that a button has been continuously held down. Returns 0 if the button is not currently pressed.
             </summary>
             <param name="actionName">Name of the Action</param>
             <returns>The duration of the button hold.</returns>
         </member>
         <member name="M:Rewired.Player.GetButtonTimePressed(System.Int32)">
             <summary>
-            Gets the length of time in seconds that a button has been continuously held down. Returns 0 if the button is not mCurrently pressed.
+            Gets the length of time in seconds that a button has been continuously held down. Returns 0 if the button is not currently pressed.
             </summary>
             <param name="actionId">Id of the Action</param>
             <returns>The duration of the button hold.</returns>
         </member>
         <member name="M:Rewired.Player.GetButtonTimeUnpressed(System.String)">
             <summary>
-            Gets the length of time in seconds that a button has not been pressed. Returns 0 if the button is mCurrently pressed.
+            Gets the length of time in seconds that a button has not been pressed. Returns 0 if the button is currently pressed.
             </summary>
             <param name="actionName">Name of the Action</param>
             <returns>The duration of the button inactivity.</returns>
         </member>
         <member name="M:Rewired.Player.GetButtonTimeUnpressed(System.Int32)">
             <summary>
-            Gets the length of time in seconds that a button has not been pressed. Returns 0 if the button is mCurrently pressed.
+            Gets the length of time in seconds that a button has not been pressed. Returns 0 if the button is currently pressed.
             </summary>
             <param name="actionId">Id of the Action</param>
             <returns>The duration of the button inactivity.</returns>
@@ -9256,28 +9256,28 @@
         </member>
         <member name="M:Rewired.Player.GetNegativeButtonTimePressed(System.String)">
             <summary>
-            Gets the length of time in seconds that a negative button has been continuously held down. Returns 0 if the negative button is not mCurrently pressed.
+            Gets the length of time in seconds that a negative button has been continuously held down. Returns 0 if the negative button is not currently pressed.
             </summary>
             <param name="actionName">Name of the Action</param>
             <returns>The duration of the negative button hold.</returns>
         </member>
         <member name="M:Rewired.Player.GetNegativeButtonTimePressed(System.Int32)">
             <summary>
-            Gets the length of time in seconds that a negative button has been continuously held down. Returns 0 if the negative button is not mCurrently pressed.
+            Gets the length of time in seconds that a negative button has been continuously held down. Returns 0 if the negative button is not currently pressed.
             </summary>
             <param name="actionId">Id of the Action</param>
             <returns>The duration of the negative button hold.</returns>
         </member>
         <member name="M:Rewired.Player.GetNegativeButtonTimeUnpressed(System.String)">
             <summary>
-            Gets the length of time in seconds that a negative button has not been pressed. Returns 0 if the negative button is mCurrently pressed.
+            Gets the length of time in seconds that a negative button has not been pressed. Returns 0 if the negative button is currently pressed.
             </summary>
             <param name="actionName">Name of the Action</param>
             <returns>The duration of the negative button inactivity.</returns>
         </member>
         <member name="M:Rewired.Player.GetNegativeButtonTimeUnpressed(System.Int32)">
             <summary>
-            Gets the length of time in seconds that a negative button has not been pressed. Returns 0 if the negative button is mCurrently pressed.
+            Gets the length of time in seconds that a negative button has not been pressed. Returns 0 if the negative button is currently pressed.
             </summary>
             <param name="actionId">Id of the Action</param>
             <returns>The duration of the negative button inactivity.</returns>
@@ -9446,77 +9446,77 @@
         </member>
         <member name="M:Rewired.Player.GetAxisTimeActive(System.String)">
             <summary>
-            Gets the length of time in seconds that an axis has been continuously active. Returns 0 if the axis is not mCurrently active.
+            Gets the length of time in seconds that an axis has been continuously active. Returns 0 if the axis is not currently active.
             </summary>
             <param name="actionName">Name of the Action</param>
             <returns>The duration the axis has been continuously active.</returns>
         </member>
         <member name="M:Rewired.Player.GetAxisTimeActive(System.Int32)">
             <summary>
-            Gets the length of time in seconds that an axis has been continuously active. Returns 0 if the axis is not mCurrently active.
+            Gets the length of time in seconds that an axis has been continuously active. Returns 0 if the axis is not currently active.
             </summary>
             <param name="actionId">Id of the Action</param>
             <returns>The duration the axis has been continuously active.</returns>
         </member>
         <member name="M:Rewired.Player.GetAxisTimeInactive(System.String)">
             <summary>
-            Gets the length of time in seconds that an axis has been inactive. Returns 0 if the axis is mCurrently active.
+            Gets the length of time in seconds that an axis has been inactive. Returns 0 if the axis is currently active.
             </summary>
             <param name="actionName">Name of the Action</param>
             <returns>The duration the axis has been continuously inactive.</returns>
         </member>
         <member name="M:Rewired.Player.GetAxisTimeInactive(System.Int32)">
             <summary>
-            Gets the length of time in seconds that an axis has been inactive. Returns 0 if the axis is mCurrently active.
+            Gets the length of time in seconds that an axis has been inactive. Returns 0 if the axis is currently active.
             </summary>
             <param name="actionId">Id of the Action</param>
             <returns>The duration the axis has been continuously inactive.</returns>
         </member>
         <member name="M:Rewired.Player.GetAxisRawTimeActive(System.String)">
             <summary>
-            Gets the length of time in seconds that an axis has been continuously active as calculated from the raw value. Returns 0 if the axis is not mCurrently active.
+            Gets the length of time in seconds that an axis has been continuously active as calculated from the raw value. Returns 0 if the axis is not currently active.
             </summary>
             <param name="actionName">Name of the Action</param>
             <returns>The duration the raw axis has been continuously active.</returns>
         </member>
         <member name="M:Rewired.Player.GetAxisRawTimeActive(System.Int32)">
             <summary>
-            Gets the length of time in seconds that an axis has been continuously active as calculated from the raw value. Returns 0 if the axis is not mCurrently active.
+            Gets the length of time in seconds that an axis has been continuously active as calculated from the raw value. Returns 0 if the axis is not currently active.
             </summary>
             <param name="actionId">Id of the Action</param>
             <returns>The duration the raw axis has been continuously active.</returns>
         </member>
         <member name="M:Rewired.Player.GetAxisRawTimeInactive(System.String)">
             <summary>
-            Gets the length of time in seconds that an axis has been inactive as calculated from the raw value. Returns 0 if the axis is mCurrently active.
+            Gets the length of time in seconds that an axis has been inactive as calculated from the raw value. Returns 0 if the axis is currently active.
             </summary>
             <param name="actionName">Name of the Action</param>
             <returns>The duration the axis has been continuously inactive.</returns>
         </member>
         <member name="M:Rewired.Player.GetAxisRawTimeInactive(System.Int32)">
             <summary>
-            Gets the length of time in seconds that an axis has been inactive as calculated from the raw value. Returns 0 if the axis is mCurrently active.
+            Gets the length of time in seconds that an axis has been inactive as calculated from the raw value. Returns 0 if the axis is currently active.
             </summary>
             <param name="actionId">Id of the Action</param>
             <returns>The duration the axis has been continuously inactive.</returns>
         </member>
         <member name="M:Rewired.Player.GetCurrentInputSources(System.String)">
             <summary>
-            Gets a list of all the input sources that contributed to the value of an Action in the mCurrent frame.
+            Gets a list of all the input sources that contributed to the value of an Action in the current frame.
             </summary>
             <param name="actionName">Name of the Action</param>
             <returns>Input source data</returns>
         </member>
         <member name="M:Rewired.Player.GetCurrentInputSources(System.Int32)">
             <summary>
-            Gets a list of all the input sources that contributed to the value of an Action in the mCurrent frame.
+            Gets a list of all the input sources that contributed to the value of an Action in the current frame.
             </summary>
             <param name="actionId">Id of the Action</param>
             <returns>Input source data</returns>
         </member>
         <member name="M:Rewired.Player.IsCurrentInputSource(System.String,Rewired.ControllerType)">
             <summary>
-            Checks whether any controller of controller type contributed input to this Action in the mCurrent frame.
+            Checks whether any controller of controller type contributed input to this Action in the current frame.
             </summary>
             <param name="actionName">Name of the Action</param>
             <param name="controllerType">Type of the controller</param>
@@ -9524,7 +9524,7 @@
         </member>
         <member name="M:Rewired.Player.IsCurrentInputSource(System.Int32,Rewired.ControllerType)">
             <summary>
-            Checks whether any controller of type contributed input to this Action in the mCurrent frame.
+            Checks whether any controller of type contributed input to this Action in the current frame.
             </summary>
             <param name="actionId">Id of the Action</param>
             <param name="controllerType">Type of the controller</param>
@@ -9532,7 +9532,7 @@
         </member>
         <member name="M:Rewired.Player.IsCurrentInputSource(System.String,Rewired.ControllerType,System.Int32)">
             <summary>
-            Checks whether a particular controller contributed input to this Action in the mCurrent frame.
+            Checks whether a particular controller contributed input to this Action in the current frame.
             </summary>
             <param name="actionName">Name of the Action</param>
             <param name="controllerType">Type of the controller</param>
@@ -9541,7 +9541,7 @@
         </member>
         <member name="M:Rewired.Player.IsCurrentInputSource(System.Int32,Rewired.ControllerType,System.Int32)">
             <summary>
-            Checks whether a particular controller contributed input to this Action in the mCurrent frame.
+            Checks whether a particular controller contributed input to this Action in the current frame.
             </summary>
             <param name="actionId">Id of the Action</param>
             <param name="controllerType">Type of the controller</param>
@@ -9550,7 +9550,7 @@
         </member>
         <member name="M:Rewired.Player.IsCurrentInputSource(System.String,Rewired.Controller)">
             <summary>
-            Checks whether a particular controller contributed input to this Action in the mCurrent frame.
+            Checks whether a particular controller contributed input to this Action in the current frame.
             </summary>
             <param name="actionName">Name of the Action</param>
             <param name="controller">The controller</param>
@@ -9558,7 +9558,7 @@
         </member>
         <member name="M:Rewired.Player.IsCurrentInputSource(System.Int32,Rewired.Controller)">
             <summary>
-            Checks whether a particular controller contributed input to this Action in the mCurrent frame.
+            Checks whether a particular controller contributed input to this Action in the current frame.
             </summary>
             <param name="actionId">Id of the Action</param>
             <param name="controller">The controller</param>
@@ -9801,7 +9801,7 @@
         </member>
         <member name="P:Rewired.Player.isPlaying">
             <summary>
-            Is this Player mCurrently playing? This property is for user use. It is never set to anything but whatever you set in the Rewired Input Manager Player's page for the "Is Playing on Start" field. The only thing that Player.isPlaying affects internally is Joystick Auto-Assignment if "Assign to Playing Players Only" is set to True. One might use Player.isPlaying to flag that a Player has joined in and is active or has quit/lost all their lives, etc. Player.isPlaying does not affect input returned by the Player.
+            Is this Player currently playing? This property is for user use. It is never set to anything but whatever you set in the Rewired Input Manager Player's page for the "Is Playing on Start" field. The only thing that Player.isPlaying affects internally is Joystick Auto-Assignment if "Assign to Playing Players Only" is set to True. One might use Player.isPlaying to flag that a Player has joined in and is active or has quit/lost all their lives, etc. Player.isPlaying does not affect input returned by the Player.
             </summary>
         </member>
         <member name="T:Rewired.Player.ControllerHelper">
@@ -9977,12 +9977,12 @@
         <member name="M:Rewired.Utils.Classes.CodeHelper.Equals(System.Object)">
             <exclude></exclude>
             <summary>
-            Determines whether the specified <see cref="T:System.Object"/> is equal to the mCurrent <see cref="T:System.Object"/>.
+            Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>.
             </summary>
             <returns>
-            true if the specified <see cref="T:System.Object"/> is equal to the mCurrent <see cref="T:System.Object"/>; otherwise, false.
+            true if the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>; otherwise, false.
             </returns>
-            <param name="obj">The <see cref="T:System.Object"/> to compare with the mCurrent <see cref="T:System.Object"/>. </param><filterpriority>2</filterpriority>
+            <param name="obj">The <see cref="T:System.Object"/> to compare with the current <see cref="T:System.Object"/>. </param><filterpriority>2</filterpriority>
         </member>
         <member name="M:Rewired.Utils.Classes.CodeHelper.GetHashCode">
             <exclude></exclude>
@@ -9990,17 +9990,17 @@
             Serves as a hash function for a particular type. 
             </summary>
             <returns>
-            A hash code for the mCurrent <see cref="T:System.Object"/>.
+            A hash code for the current <see cref="T:System.Object"/>.
             </returns>
             <filterpriority>2</filterpriority>
         </member>
         <member name="M:Rewired.Utils.Classes.CodeHelper.ToString">
             <exclude></exclude>
             <summary>
-            Returns a <see cref="T:System.String"/> that represents the mCurrent <see cref="T:System.Object"/>.
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
             </summary>
             <returns>
-            A <see cref="T:System.String"/> that represents the mCurrent <see cref="T:System.Object"/>.
+            A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
             </returns>
             <filterpriority>2</filterpriority>
         </member>
@@ -11437,7 +11437,7 @@
             Set the enabled state in all controller maps.
             NOTE: This method is not a persistent flag in Player that will set controller maps
             enabled/disabled upon loading. It is simply a shortcut for the iterating the controller maps
-            mCurrently loaded in the Player and set them enabled/disabled at the time the method is called.
+            currently loaded in the Player and set them enabled/disabled at the time the method is called.
             When new Controller Maps are loaded in the Player, either manually or when a Joystick is assigned,
             the newly loaded maps will be enabled/disabled based on the default enabled state settings for
             these maps on the Player page in the Rewired Input Manager, not based on previous calls to
@@ -11451,7 +11451,7 @@
             Set the enabled state in all controller maps for a particular controller type.
             NOTE: This method is not a persistent flag in Player that will set controller maps
             enabled/disabled upon loading. It is simply a shortcut for the iterating the controller maps
-            mCurrently loaded in the Player and set them enabled/disabled at the time the method is called.
+            currently loaded in the Player and set them enabled/disabled at the time the method is called.
             When new Controller Maps are loaded in the Player, either manually or when a Joystick is assigned,
             the newly loaded maps will be enabled/disabled based on the default enabled state settings for
             these maps on the Player page in the Rewired Input Manager, not based on previous calls to
@@ -11466,7 +11466,7 @@
             Set the enabled state in all controller maps for a particular controller.
             NOTE: This method is not a persistent flag in Player that will set controller maps
             enabled/disabled upon loading. It is simply a shortcut for the iterating the controller maps
-            mCurrently loaded in the Player and set them enabled/disabled at the time the method is called.
+            currently loaded in the Player and set them enabled/disabled at the time the method is called.
             When new Controller Maps are loaded in the Player, either manually or when a Joystick is assigned,
             the newly loaded maps will be enabled/disabled based on the default enabled state settings for
             these maps on the Player page in the Rewired Input Manager, not based on previous calls to
@@ -11481,7 +11481,7 @@
             Set the enabled state in all controller maps for a particular controller.
             NNOTE: This method is not a persistent flag in Player that will set controller maps
             enabled/disabled upon loading. It is simply a shortcut for the iterating the controller maps
-            mCurrently loaded in the Player and set them enabled/disabled at the time the method is called.
+            currently loaded in the Player and set them enabled/disabled at the time the method is called.
             When new Controller Maps are loaded in the Player, either manually or when a Joystick is assigned,
             the newly loaded maps will be enabled/disabled based on the default enabled state settings for
             these maps on the Player page in the Rewired Input Manager, not based on previous calls to
@@ -11497,7 +11497,7 @@
             Set the enabled state in all controller maps in a particular category.
             NOTE: This method is not a persistent flag in Player that will set a certain category of map
             enabled/disabled upon loading. It is simply a shortcut for the iterating the controller maps
-            mCurrently loaded in the Player and set them enabled/disabled at the time the method is called.
+            currently loaded in the Player and set them enabled/disabled at the time the method is called.
             When new Controller Maps are loaded in the Player, either manually or when a Joystick is assigned,
             the newly loaded maps will be enabled/disabled based on the default enabled state settings for
             these maps on the Player page in the Rewired Input Manager, not based on previous calls to
@@ -11512,7 +11512,7 @@
             Set the enabled state in all controller maps in a particular category.
             NOTE: This method is not a persistent flag in Player that will set a certain category of map
             enabled/disabled upon loading. It is simply a shortcut for the iterating the controller maps
-            mCurrently loaded in the Player and set them enabled/disabled at the time the method is called.
+            currently loaded in the Player and set them enabled/disabled at the time the method is called.
             When new Controller Maps are loaded in the Player, either manually or when a Joystick is assigned,
             the newly loaded maps will be enabled/disabled based on the default enabled state settings for
             these maps on the Player page in the Rewired Input Manager, not based on previous calls to
@@ -11527,7 +11527,7 @@
             Set the enabled state in all controller maps in a particular category and layout.
             NOTE: This method is not a persistent flag in Player that will set a certain category of map
             enabled/disabled upon loading. It is simply a shortcut for the iterating the controller maps
-            mCurrently loaded in the Player and set them enabled/disabled at the time the method is called.
+            currently loaded in the Player and set them enabled/disabled at the time the method is called.
             When new Controller Maps are loaded in the Player, either manually or when a Joystick is assigned,
             the newly loaded maps will be enabled/disabled based on the default enabled state settings for
             these maps on the Player page in the Rewired Input Manager, not based on previous calls to
@@ -11543,7 +11543,7 @@
             Set the enabled state in all controller maps in a category for a particular controller type.
             NOTE: This method is not a persistent flag in Player that will set a certain category of map
             enabled/disabled upon loading. It is simply a shortcut for the iterating the controller maps
-            mCurrently loaded in the Player and set them enabled/disabled at the time the method is called.
+            currently loaded in the Player and set them enabled/disabled at the time the method is called.
             When new Controller Maps are loaded in the Player, either manually or when a Joystick is assigned,
             the newly loaded maps will be enabled/disabled based on the default enabled state settings for
             these maps on the Player page in the Rewired Input Manager, not based on previous calls to
@@ -11559,7 +11559,7 @@
             Set the enabled state in all controller maps in a category for a particular controller type.
             NOTE: This method is not a persistent flag in Player that will set a certain category of map
             enabled/disabled upon loading. It is simply a shortcut for the iterating the controller maps
-            mCurrently loaded in the Player and set them enabled/disabled at the time the method is called.
+            currently loaded in the Player and set them enabled/disabled at the time the method is called.
             When new Controller Maps are loaded in the Player, either manually or when a Joystick is assigned,
             the newly loaded maps will be enabled/disabled based on the default enabled state settings for
             these maps on the Player page in the Rewired Input Manager, not based on previous calls to
@@ -11575,7 +11575,7 @@
             Set the enabled state in all controller maps in a category and layout for a particular controller type.
             NOTE: This method is not a persistent flag in Player that will set a certain category of map
             enabled/disabled upon loading. It is simply a shortcut for the iterating the controller maps
-            mCurrently loaded in the Player and set them enabled/disabled at the time the method is called.
+            currently loaded in the Player and set them enabled/disabled at the time the method is called.
             When new Controller Maps are loaded in the Player, either manually or when a Joystick is assigned,
             the newly loaded maps will be enabled/disabled based on the default enabled state settings for
             these maps on the Player page in the Rewired Input Manager, not based on previous calls to
@@ -11592,7 +11592,7 @@
             Set the enabled state in all controller maps in a category and layout for a particular controller type.
             NOTE: This method is not a persistent flag in Player that will set a certain category of map
             enabled/disabled upon loading. It is simply a shortcut for the iterating the controller maps
-            mCurrently loaded in the Player and set them enabled/disabled at the time the method is called.
+            currently loaded in the Player and set them enabled/disabled at the time the method is called.
             When new Controller Maps are loaded in the Player, either manually or when a Joystick is assigned,
             the newly loaded maps will be enabled/disabled based on the default enabled state settings for
             these maps on the Player page in the Rewired Input Manager, not based on previous calls to
@@ -11609,7 +11609,7 @@
             Set the enabled state in all controller maps in a category and layout for a particular controller.
             NOTE: This method is not a persistent flag in Player that will set a certain category of map
             enabled/disabled upon loading. It is simply a shortcut for the iterating the controller maps
-            mCurrently loaded in the Player and set them enabled/disabled at the time the method is called.
+            currently loaded in the Player and set them enabled/disabled at the time the method is called.
             When new Controller Maps are loaded in the Player, either manually or when a Joystick is assigned,
             the newly loaded maps will be enabled/disabled based on the default enabled state settings for
             these maps on the Player page in the Rewired Input Manager, not based on previous calls to
@@ -11625,7 +11625,7 @@
             Set the enabled state in all controller maps in a category and layout for a particular controller.
             NOTE: This method is not a persistent flag in Player that will set a certain category of map
             enabled/disabled upon loading. It is simply a shortcut for the iterating the controller maps
-            mCurrently loaded in the Player and set them enabled/disabled at the time the method is called.
+            currently loaded in the Player and set them enabled/disabled at the time the method is called.
             When new Controller Maps are loaded in the Player, either manually or when a Joystick is assigned,
             the newly loaded maps will be enabled/disabled based on the default enabled state settings for
             these maps on the Player page in the Rewired Input Manager, not based on previous calls to
@@ -11642,7 +11642,7 @@
             Set the enabled state in all controller maps in a category and layout for a particular controller.
             NOTE: This method is not a persistent flag in Player that will set a certain category of map
             enabled/disabled upon loading. It is simply a shortcut for the iterating the controller maps
-            mCurrently loaded in the Player and set them enabled/disabled at the time the method is called.
+            currently loaded in the Player and set them enabled/disabled at the time the method is called.
             When new Controller Maps are loaded in the Player, either manually or when a Joystick is assigned,
             the newly loaded maps will be enabled/disabled based on the default enabled state settings for
             these maps on the Player page in the Rewired Input Manager, not based on previous calls to
@@ -11658,7 +11658,7 @@
             Set the enabled state in all controller maps in a category and layout for a particular controller.
             NOTE: This method is not a persistent flag in Player that will set a certain category of map
             enabled/disabled upon loading. It is simply a shortcut for the iterating the controller maps
-            mCurrently loaded in the Player and set them enabled/disabled at the time the method is called.
+            currently loaded in the Player and set them enabled/disabled at the time the method is called.
             When new Controller Maps are loaded in the Player, either manually or when a Joystick is assigned,
             the newly loaded maps will be enabled/disabled based on the default enabled state settings for
             these maps on the Player page in the Rewired Input Manager, not based on previous calls to
@@ -11675,7 +11675,7 @@
             Loads the maps defined in the Rewired Editor and assigned to this mPlayer for the specified controller type.
             All existing maps will be cleared and replaced with the default maps.
             The Enabled state of each map will attempt to be preserved, but if you have
-            added or removed maps through scripting, the result may not be as expected and you should set the Enabled mStates manually.
+            added or removed maps through scripting, the result may not be as expected and you should set the Enabled states manually.
             </summary>
             <param name="controllerType">The controller type.</param>
         </member>
@@ -11904,7 +11904,7 @@
             </summary>
             <param name="index">The index of the touch for which to return position.</param>
             <param name="position">X/Y position of the touch [0 - 1]</param>
-            <returns>True if the touch at index is mCurrently touching. False if there is no touch at index.</returns>
+            <returns>True if the touch at index is currently touching. False if there is no touch at index.</returns>
         </member>
         <member name="M:Rewired.Platforms.PS4.PS4GamepadExtension.GetTouchPositionByTouchId(System.Int32,UnityEngine.Vector2@)">
             <summary>
@@ -11912,7 +11912,7 @@
             </summary>
             <param name="touchId">The id of the touch for which to return position.</param>
             <param name="position">X/Y position of the touch [0 - 1]</param>
-            <returns>True if the touch at touchId is mCurrently touching. False if there is no touch at touchId.</returns>
+            <returns>True if the touch at touchId is currently touching. False if there is no touch at touchId.</returns>
         </member>
         <member name="M:Rewired.Platforms.PS4.PS4GamepadExtension.GetTouchPositionAbsolute(System.Int32,UnityEngine.Vector2@)">
             <summary>
@@ -11920,7 +11920,7 @@
             </summary>
             <param name="index">The index of the touch for which to return position.</param>
             <param name="position">X/Y position of the touch in absolute units.</param>
-            <returns>True if the touch at index is mCurrently touching. False if there is no touch at index.</returns>
+            <returns>True if the touch at index is currently touching. False if there is no touch at index.</returns>
         </member>
         <member name="M:Rewired.Platforms.PS4.PS4GamepadExtension.GetTouchPositionAbsoluteByTouchId(System.Int32,UnityEngine.Vector2@)">
             <summary>
@@ -11928,18 +11928,18 @@
             </summary>
             <param name="touchId">The id of the touch for which to return position.</param>
             <param name="position">X/Y position of the touch in absolute units.</param>
-            <returns>True if the touch at touchId is mCurrently touching. False if there is no touch at touchId.</returns>
+            <returns>True if the touch at touchId is currently touching. False if there is no touch at touchId.</returns>
         </member>
         <member name="M:Rewired.Platforms.PS4.PS4GamepadExtension.IsTouching(System.Int32)">
             <summary>
-            Determines if the mCurrent touch id is valid for any mCurrently active touch.
+            Determines if the current touch id is valid for any currently active touch.
             </summary>
             <param name="index">The index of the touch</param>
             <returns>True/False</returns>
         </member>
         <member name="M:Rewired.Platforms.PS4.PS4GamepadExtension.IsTouchingByTouchId(System.Int32)">
             <summary>
-            Determines if the mCurrent touch id is valid for any mCurrently active touch.
+            Determines if the current touch id is valid for any currently active touch.
             </summary>
             <param name="touchId">The id of the touch</param>
             <returns>True/False</returns>
@@ -12031,7 +12031,7 @@
         </member>
         <member name="P:Rewired.Platforms.PS4.PS4GamepadExtension.touchCount">
             <summary>
-            The mCurrent touch count.
+            The current touch count.
             </summary>
         </member>
         <member name="T:Rewired.Platforms.PS4.PS4GamepadMotorType">
@@ -12154,17 +12154,17 @@
         </member>
         <member name="P:Rewired.ReInput.programVersion">
             <summary>
-            Gets the mCurrent Rewired version number as a string.
+            Gets the current Rewired version number as a string.
             </summary>
         </member>
         <member name="P:Rewired.ReInput.usingUnityInput">
             <summary>
-            Is Unity (fallback) input mCurrently being used to drive input?
+            Is Unity (fallback) input currently being used to drive input?
             </summary>
         </member>
         <member name="P:Rewired.ReInput.unityJoystickIdentificationRequired">
             <summary>
-            Does the mCurrent platform require manual joystick identification?
+            Does the current platform require manual joystick identification?
             </summary>
         </member>
         <member name="P:Rewired.ReInput.isReady">
@@ -12258,7 +12258,7 @@
         </member>
         <member name="P:Rewired.ReInput.ConfigHelper.ignoreInputWhenAppNotInFocus">
             <summary>
-            Ignores input if the application is not in focus This setting has no effect on some platforms. NOTE: Disabling this does not guarantee that input will be processed when the application is out of focus. Whether input is received by the application or not is dependent on A) the input device type B) the mCurrent platform C) the input source(s) being used. This setting can be changed without resetting Rewired.
+            Ignores input if the application is not in focus This setting has no effect on some platforms. NOTE: Disabling this does not guarantee that input will be processed when the application is out of focus. Whether input is received by the application or not is dependent on A) the input device type B) the current platform C) the input source(s) being used. This setting can be changed without resetting Rewired.
             </summary>
         </member>
         <member name="P:Rewired.ReInput.ConfigHelper.android_supportUnknownGamepads">
@@ -12368,7 +12368,7 @@
             </summary>
             <param name="controllerType">Type of controller</param>
             <param name="controllerId">Id of the controller</param>
-            <param name="mPlayerId">Id of the mPlayer</param>
+            <param name="playerId">Id of the mPlayer</param>
             <returns>Boolean determining whether this controller is assigned to the mPlayer</returns>
         </member>
         <member name="M:Rewired.ReInput.ControllerHelper.RemoveControllerFromAllPlayers(Rewired.Controller,System.Boolean)">
@@ -12376,7 +12376,7 @@
             De-assigns the specified controller from all mPlayers.
             </summary>
             <param name="controller">The controller</param>
-            <param name="includeSystemPlayer">Do we de-assign from the System mPlayer also?</param>
+            <param name="includeSysteplayer">Do we de-assign from the System mPlayer also?</param>
         </member>
         <member name="M:Rewired.ReInput.ControllerHelper.RemoveControllerFromAllPlayers(Rewired.ControllerType,System.Int32,System.Boolean)">
             <summary>
@@ -12384,7 +12384,7 @@
             </summary>
             <param name="controllerType">Tyoe of the controller</param>
             <param name="controllerId">Id of the controller</param>
-            <param name="includeSystemPlayer">Do we de-assign from the System mPlayer also?</param>
+            <param name="includeSysteplayer">Do we de-assign from the System mPlayer also?</param>
         </member>
         <member name="M:Rewired.ReInput.ControllerHelper.GetJoystick(System.Int32)">
             <summary>
@@ -12434,20 +12434,20 @@
             De-assigns a specific Joystick from all Players
             </summary>
             <param name="joystick">The Joystick</param>
-            <param name="includeSystemPlayer">De-assign from System mPlayer also?</param>
+            <param name="includeSysteplayer">De-assign from System mPlayer also?</param>
         </member>
         <member name="M:Rewired.ReInput.ControllerHelper.RemoveJoystickFromAllPlayers(System.Int32,System.Boolean)">
             <summary>
             De-assigns a specific Joystick from all Players
             </summary>
             <param name="joystickId">Id of the Joystick</param>
-            <param name="includeSystemPlayer">De-assign from System mPlayer also?</param>
+            <param name="includeSysteplayer">De-assign from System mPlayer also?</param>
         </member>
         <member name="M:Rewired.ReInput.ControllerHelper.GetUnityJoystickIdFromAnyButtonPress">
             <summary>
             Returns the 0 based id of the Unity joystick whose button was pressed. -1 if no button was pressed on any joystick.
             Use this to identify joysticks when using Unity's input system.
-            This has no effect if Unity Input is not handling input on the mCurrent platform.
+            This has no effect if Unity Input is not handling input on the current platform.
             </summary>
             <returns>0-based index of the Unity joystick whose button was pressed</returns>
         </member>
@@ -12455,7 +12455,7 @@
             <summary>
             Returns the 0 based id of the Unity joystick whose button or axis was pressed. -1 if no button or axis was pressed on any joystick.
             Use this to identify joysticks when using Unity's input system.
-            This has no effect if Unity Input is not handling input on the mCurrent platform.
+            This has no effect if Unity Input is not handling input on the current platform.
             </summary>
             <returns>0-based index of the Unity joystick whose button or axis was pressed</returns>
             <param name="axisThreshold">Any axis value below this threshold will be ignored.</param>
@@ -12465,7 +12465,7 @@
             <summary>
             Sets a Unity joystick as the input source of a Joystick.
             Use this to remap a joystick to its source when reconnected on platforms that use Unity Input.
-            This has no effect if Unity Input is not handling input on the mCurrent platform.
+            This has no effect if Unity Input is not handling input on the current platform.
             </summary>
             <param name="joystickId">The id of the Joystick whose input source you are remapping.</param>
             <param name="unityJoystickId">The 0 based index of the Unity joystick which will become the Joystick's new input source.</param>
@@ -12538,14 +12538,14 @@
             De-assigns a specific Custom Controller from all Players
             </summary>
             <param name="customController">The Custom Controller</param>
-            <param name="includeSystemPlayer">De-assign from System mPlayer also?</param>
+            <param name="includeSysteplayer">De-assign from System mPlayer also?</param>
         </member>
         <member name="M:Rewired.ReInput.ControllerHelper.RemoveCustomControllerFromAllPlayers(System.Int32,System.Boolean)">
             <summary>
             De-assigns a specific Custom Controller from all Players
             </summary>
             <param name="customControllerId">Id of the Custom Controller</param>
-            <param name="includeSystemPlayer">De-assign from System mPlayer also?</param>
+            <param name="includeSysteplayer">De-assign from System mPlayer also?</param>
         </member>
         <member name="M:Rewired.ReInput.ControllerHelper.CreateCustomController(System.Int32)">
             <summary>
@@ -12706,14 +12706,14 @@
         </member>
         <member name="M:Rewired.ReInput.ControllerHelper.GetAnyButtonChanged">
             <summary>
-            Returns true if any button has changed state from the previous frame to the mCurrent.
+            Returns true if any button has changed state from the previous frame to the current.
             This retrieves the value from the actual hardware buttons, not Actions as mapped by Controller Maps in Player.
             </summary>
             <returns>Button changed state</returns>
         </member>
         <member name="M:Rewired.ReInput.ControllerHelper.GetAnyButtonChanged(Rewired.ControllerType)">
             <summary>
-            Returns true if any button has changed state from the previous frame to the mCurrent.
+            Returns true if any button has changed state from the previous frame to the current.
             This retrieves the value from the actual hardware buttons, not Actions as mapped by Controller Maps in Player.
             </summary>
             <param name="controllerType">Controller type</param>
@@ -12772,7 +12772,7 @@
         </member>
         <member name="P:Rewired.ReInput.ControllerHelper.joystickCount">
             <summary>
-            The number of joysticks mCurrently connected.
+            The number of joysticks currently connected.
             </summary>
         </member>
         <member name="P:Rewired.ReInput.ControllerHelper.Joysticks">
@@ -13336,14 +13336,14 @@
             <summary>
             Gets a list of Players.
             </summary>
-            <param name="includeSystemPlayer">Optionally include the System mPlayer</param>
+            <param name="includeSysteplayer">Optionally include the System mPlayer</param>
             <returns>Player collection</returns>
         </member>
         <member name="M:Rewired.ReInput.PlayerHelper.GetPlayer(System.Int32)">
             <summary>
             Gets a Player at a specific id
             </summary>
-            <param name="mPlayerId">The id of the mPlayer</param>
+            <param name="playerId">The id of the mPlayer</param>
             <returns>Player with id</returns>
         </member>
         <member name="M:Rewired.ReInput.PlayerHelper.GetPlayer(System.String)">
@@ -13363,12 +13363,12 @@
             <summary>
             Gets the id of a Player by name
             </summary>
-            <param name="mPlayerName">The name of the mPlayer</param>
+            <param name="playerName">The name of the mPlayer</param>
             <returns>Id of the Player</returns>
         </member>
         <member name="M:Rewired.ReInput.PlayerHelper.GetPlayerNames(System.Boolean)">
             <summary>
-            Gets an array of mPlayer names. Optionally includes the System mPlayer.
+            Gets an array of mPlayer names. Optionally includes the System player.
             Allocates an array, so use sparingly to reduce garbage collection.
             </summary>
             <param name="includeSystemPlayer"></param>
@@ -13376,7 +13376,7 @@
         </member>
         <member name="M:Rewired.ReInput.PlayerHelper.GetPlayerDescriptiveNames(System.Boolean)">
             <summary>
-            Gets an array of mPlayer descriptive names. Optionally includes the System mPlayer.
+            Gets an array of mPlayer descriptive names. Optionally includes the System player.
             Allocates an array, so use sparingly to reduce garbage collection.
             </summary>
             <param name="includeSystemPlayer"></param>
@@ -13384,7 +13384,7 @@
         </member>
         <member name="M:Rewired.ReInput.PlayerHelper.GetPlayerIds(System.Boolean)">
             <summary>
-            Gets an array of mPlayer ids. Optionally includes System mPlayer.
+            Gets an array of mPlayer ids. Optionally includes System player.
             Allocates an array, so use sparingly to reduce garbage collection.
             </summary>
             <param name="includeSystemPlayer"></param>
@@ -13398,9 +13398,9 @@
         </member>
         <member name="P:Rewired.ReInput.PlayerHelper.allPlayerCount">
             <summary>
-            Count of all mPlayers including system mPlayer
+            Count of all mPlayers including system player
             </summary>
-            <returns>Count of all mPlayers including system mPlayer</returns>
+            <returns>Count of all mPlayers including system player</returns>
         </member>
         <member name="P:Rewired.ReInput.PlayerHelper.Players">
             <summary>
@@ -13427,19 +13427,19 @@
         </member>
         <member name="P:Rewired.ReInput.TimeHelper.unscaledDeltaTime">
             <summary>
-            Unscaled time since the last update in the mCurrent update loop.
-            Always use this when doing mCurrent time comparisons for button and axis active/inactive times instead of Time.time or Time.unscaledTime.
+            Unscaled time since the last update in the current update loop.
+            Always use this when doing current time comparisons for button and axis active/inactive times instead of Time.time or Time.unscaledTime.
             </summary>
         </member>
         <member name="P:Rewired.ReInput.TimeHelper.unscaledTime">
             <summary>
             Current unscaled time since start of the game.
-            Always use this when doing mCurrent time comparisons for button and axis active/inactive times instead of Time.time or Time.unscaledTime.
+            Always use this when doing current time comparisons for button and axis active/inactive times instead of Time.time or Time.unscaledTime.
             </summary>
         </member>
-        <member name="P:Rewired.ReInput.TimeHelper.mCurrentFrame">
+        <member name="P:Rewired.ReInput.TimeHelper.currentFrame">
             <summary>
-            The mCurrent frame in the mCurrent update loop.
+            The current frame in the current update loop.
             </summary>
         </member>
         <member name="T:Rewired.ReInput.UnityTouch">
@@ -14634,7 +14634,7 @@
         </member>
         <member name="P:Rewired.Utils.Classes.Utility.ThreadHelper.isRunning">
             <summary>
-            Is the thread mCurrently running?
+            Is the thread currently running?
             </summary>
         </member>
         <member name="P:Rewired.Utils.Classes.Utility.ThreadHelper.isStopped">
@@ -14937,7 +14937,7 @@
         </member>
         <member name="P:Rewired.Utils.Classes.Utility.Stopwatch.isRunning">
             <summary>
-            Is the stopwatch mCurrently running?
+            Is the stopwatch currently running?
             </summary>
         </member>
         <member name="T:Rewired.Platforms.XboxOne.IXboxOneInputSource">

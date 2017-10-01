@@ -35,14 +35,30 @@ public class PlayerScript : MonoBehaviour {
         spellRoutines.Add(spellRoutine);
     }
 
-	public float movementAcceleration = 10;    
-	public float aimSpeed = 10;    
+	public float movementAcceleration = 10;  
+	[Tooltip("Degrees per seconds")]
+	public float aimSpeed = 360;    
 	public float jumpStrength = 5;
+
 	private Rigidbody rigid;
 
 	public Vector3 moveInputForce;
+	public float yAim = 0;
+
+	public Vector3 lookDirection;
 
 	protected Rewired.Player rewiredPlayer;
+
+	public PlayerCamera cameraRig;
+	public Transform handTransform;
+
+	void Awake()
+	{
+		if(cameraRig == null)
+		{
+			Debug.LogWarning("No camera rig assigned, consider creating one during runtime? Or don't. I'm not your boss. kthx");
+		}
+	}
 
 	// Use this for initialization
 	void Start ()
@@ -82,25 +98,72 @@ public class PlayerScript : MonoBehaviour {
 
 		//store the input values
 		Vector2 movementInput = rewiredPlayer.GetAxis2D("MoveHorizontal", "MoveVertical");
-		movementInput *= Time.deltaTime * movementAcceleration;
 
+		//store the aim input, either mouse or right analog stick
 		Vector2 aimInput = rewiredPlayer.GetAxis2D("AimHorizontal", "AimVertical");
+		//take framerate into consideration
 		aimInput *= Time.deltaTime * aimSpeed;
 
+		//rotate the entire player along its y-axis
+		transform.Rotate(0,aimInput.x,0);
+		//prevent spinning around the z-Axis (no backflips allowed)
+		yAim = Mathf.Clamp(yAim + aimInput.y, -89, 89);
+		//calculate the lookDirection vector with the current forward vector as a basis, rotating up or down
+		lookDirection = Quaternion.AngleAxis(-yAim, transform.right) * transform.forward;
+
+		#if UNITY_EDITOR 
+		Debug.DrawRay(transform.position+Vector3.up*1.8f, lookDirection, Color.red);
+		#endif
+
+		//propergate various inputs to the statesystems
+		#region Input
 		if(rewiredPlayer.GetButtonDown("Jump"))
 		{
 			inputStateSystem.current.Jump();
 		}
 
         inputStateSystem.current.Move(movementInput);
-		inputStateSystem.current.Aim(aimInput);
+		//inputStateSystem.current.Aim(aimInput);
+
+		//TODO: define mouse & keyboard / controller schemes, "CastSpell" not final axis name
+		if(rewiredPlayer.GetButtonDown("CastSpell"))
+		{
+			inputStateSystem.current.Cast_Spell_1();
+		}
+
+        inputStateSystem.current.Move(movementInput);
+		#endregion
+	}
+
+	//TODO: delete this method, testing purpose only
+	/// <summary>
+	/// !TESTING PURPOSE ONLY! 
+	/// This methods creates a GameObject with a LineRenderer to display the line between Hand and Raycast Hit by mouse.
+	/// </summary>
+	/// <param name="worldSpacePosition">World space position.</param>
+	public void DebugRayFromHandToPosition(Vector3 worldSpacePosition)
+	{
+//		Debug.DrawLine(handTransform.position, worldSpacePosition, Color.yellow, 10);
+		GameObject lineGO = new GameObject("line");
+
+		LineRenderer line = lineGO.AddComponent<LineRenderer>();
+		line.positionCount = 2;
+		line.SetPosition(0,handTransform.position);
+		line.SetPosition(1,worldSpacePosition);
+		line.widthMultiplier = .1f;
+
+		Destroy(lineGO,10);
 	}
 		
 	void FixedUpdate()
 	{
-		rigid.MovePosition(rigid.position + moveInputForce);
+		//move the character
+		rigid.MovePosition(rigid.position + (moveInputForce * Time.deltaTime * movementAcceleration));
 	}
 
+	/// <summary>
+	/// Let's the character jump with the default jumpStength
+	/// </summary>
 	public void Jump()
 	{
         //TODO delete this evetually
@@ -109,6 +172,17 @@ public class PlayerScript : MonoBehaviour {
 		//TODO grounded
 		rigid.AddForce(Vector3.up*jumpStrength,ForceMode.Impulse);
 
+		Jump(jumpStrength);
+	}
+
+	/// <summary>
+	/// Let's the character jump with a specified jumpStrength
+	/// </summary>
+	/// <param name="jumpForce">Jump force.</param>
+	public void Jump(float jumpStrength)
+	{
+		//TODO grounded
+		rigid.AddForce(Vector3.up * jumpStrength,ForceMode.VelocityChange);
 	}
 
     private void DecreaseCooldowns()

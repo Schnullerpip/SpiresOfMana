@@ -123,7 +123,6 @@ public class PlayerScript : MonoBehaviour {
 		}
 
         inputStateSystem.current.Move(movementInput);
-		//inputStateSystem.current.Aim(aimInput);
 
 		//TODO: define mouse & keyboard / controller schemes, "CastSpell" not final axis name
 		if(rewiredPlayer.GetButtonDown("CastSpell"))

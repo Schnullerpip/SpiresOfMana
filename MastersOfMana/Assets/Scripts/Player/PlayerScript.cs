@@ -39,6 +39,8 @@ public class PlayerScript : MonoBehaviour {
 	[Tooltip("Degrees per seconds")]
 	public float aimSpeed = 360;    
 	public float jumpStrength = 5;
+	public float minDistanceToGround = 0.1f;
+	private bool mIsGrounded = false;
 
 	private Rigidbody rigid;
 
@@ -158,6 +160,9 @@ public class PlayerScript : MonoBehaviour {
 	{
 		//move the character
 		rigid.MovePosition(rigid.position + (moveInputForce * Time.deltaTime * movementAcceleration));
+
+		//check if the character is on the ground, by raycasting from the feet toward the ground
+		mIsGrounded = Physics.Raycast(transform.position, Vector3.down, minDistanceToGround);
 	}
 
 	/// <summary>
@@ -166,10 +171,10 @@ public class PlayerScript : MonoBehaviour {
 	public void Jump()
 	{
         //TODO delete this evetually
-        spellSlot_1.Cast(this);
+//        spellSlot_1.Cast(this);
 
 		//TODO grounded
-		rigid.AddForce(Vector3.up*jumpStrength,ForceMode.Impulse);
+//		rigid.AddForce(Vector3.up*jumpStrength,ForceMode.Impulse);
 
 		Jump(jumpStrength);
 	}
@@ -181,7 +186,10 @@ public class PlayerScript : MonoBehaviour {
 	public void Jump(float jumpStrength)
 	{
 		//TODO grounded
-		rigid.AddForce(Vector3.up * jumpStrength,ForceMode.VelocityChange);
+		if(mIsGrounded)
+		{
+			rigid.AddForce(Vector3.up * jumpStrength,ForceMode.VelocityChange);
+		}
 	}
 
     private void DecreaseCooldowns()

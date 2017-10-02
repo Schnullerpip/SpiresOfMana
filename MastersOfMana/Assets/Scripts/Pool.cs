@@ -33,7 +33,6 @@ public class Pool {
     //----------------------------------the implemented strategys
     private GameObject OnMissSubjoinElements() {
         GameObject found = SubjoinElements();
-        found.SetActive(true);
         return found;
     }
     private GameObject OnMissReturnNull() {
@@ -89,6 +88,8 @@ public class Pool {
         return newElements[0];
     }
 
+
+    public enum Activation { ReturnNonActivated, ReturnActivated};
     /// <summary>
     /// returns an object of the pool according to the used strategy in this pool
     /// if no elements are ready to be returned there are several strategies to use
@@ -96,18 +97,26 @@ public class Pool {
     /// 2. OnMissSubjoinElements --> creates new instances and then returns a new one
     /// 3. OnMissRoundRobin --> returns first found inactive element
     /// </summary>
+    /// <param name="activateOnReturn"> if true found Instance is activated even before Get returns to caller </param>
     /// <returns></returns>
-    public GameObject Get() {
+    public GameObject Get(Activation activateOnReturn = Activation.ReturnNonActivated) {
         GameObject found = null;
         for(int i = 0; i < mSize; ++i){
             found = mObjects[i];
-            if (!found.activeSelf) {
-                found.SetActive(true);
-                return found;
+            if (!found.activeSelf)
+            {
+                break;
             }
         }
 
         //Miss! - no active element was found
-        return OnMissBehaviour();
+        found =  OnMissBehaviour();
+
+        if (activateOnReturn == Activation.ReturnActivated)
+        {
+            found.SetActive(true);
+        }
+
+        return found;
     }
 }

@@ -24,7 +24,9 @@ public class PlayerScript : NetworkBehaviour
         spellSlot_3;
 
     //TODO delete this eventually
-    public A_Spell debug_spell;
+    public A_Spell debug_spell_1;
+    public A_Spell debug_spell_2;
+    public A_Spell debug_spell_3;
 
     /// <summary>
     /// holds references to all the coroutines a spell is running, so they can bes stopped/interrupted when a player is for example hit
@@ -72,7 +74,17 @@ public class PlayerScript : NetworkBehaviour
 	    spellSlot_1 = new SpellSlot()
 	    {
 	        cooldown = 0,
-	        spell = debug_spell
+	        spell = debug_spell_1
+	    };
+	    spellSlot_2 = new SpellSlot()
+	    {
+	        cooldown = 0,
+	        spell = debug_spell_2
+	    };
+	    spellSlot_3 = new SpellSlot()
+	    {
+	        cooldown = 0,
+	        spell = debug_spell_3
 	    };
 
 
@@ -108,6 +120,16 @@ public class PlayerScript : NetworkBehaviour
         DecreaseCooldowns();
 
         //STEP 2
+        //TODO this is not how the spells should be polled!!!!! only for testing!!!! DELETE THIS EVENTUALLY
+        if (Input.GetKeyDown("z")) {
+            spellSlot_1.Cast(this);
+        }
+        if (Input.GetKeyDown("u")) {
+            spellSlot_2.Cast(this);
+        }
+        if (Input.GetKeyDown("i")) {
+            spellSlot_3.Cast(this);
+        }
 
         //STEP 3
 
@@ -185,9 +207,6 @@ public class PlayerScript : NetworkBehaviour
 	/// </summary>
 	public void Jump()
 	{
-        //TODO delete this evetually
-//        spellSlot_1.Cast(this);
-
 		//TODO grounded
 //		rigid.AddForce(Vector3.up*jumpStrength,ForceMode.Impulse);
 

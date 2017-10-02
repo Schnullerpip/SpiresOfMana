@@ -9,7 +9,9 @@ public class Effect : A_Spell
 
 	public override void Cast (PlayerScript caster)
 	{
-		throw new System.NotImplementedException ();
+        foreach (var sb in SpellBehaviours) {
+            sb.Execute(caster);
+        }
 	}
 
 	#endregion

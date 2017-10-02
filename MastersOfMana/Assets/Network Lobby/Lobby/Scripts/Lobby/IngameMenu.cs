@@ -28,7 +28,7 @@ public class IngameMenu : MonoBehaviour {
 
     void Update()
     {
-        if (mRewiredPlayer != null && mRewiredPlayer.GetButtonDown(4) && lobbyManager.isInGame)
+        if (mRewiredPlayer != null && mRewiredPlayer.GetButtonDown("IngameMenu"))
         {
             toggleVisibility();
         }

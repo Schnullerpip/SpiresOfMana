@@ -561,33 +561,55 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1150590166
+--- !u!1001 &1026912017
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 114922128089411982, guid: e2fe44ebee90347749b4cc2c108bdf83,
-        type: 2}
-      propertyPath: _userData.actions.Array.size
-      value: 5
+    - target: {fileID: 4950728180032190, guid: 3a3cc762de0e03a4bb4c47c72098c11f, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 114922128089411982, guid: e2fe44ebee90347749b4cc2c108bdf83,
-        type: 2}
-      propertyPath: _userData.keyboardMaps.Array.data[0].actionElementMaps.Array.size
-      value: 5
+    - target: {fileID: 4950728180032190, guid: 3a3cc762de0e03a4bb4c47c72098c11f, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 114922128089411982, guid: e2fe44ebee90347749b4cc2c108bdf83,
-        type: 2}
-      propertyPath: _userData.joystickMaps.Array.data[0].actionElementMaps.Array.size
-      value: 4
+    - target: {fileID: 4950728180032190, guid: 3a3cc762de0e03a4bb4c47c72098c11f, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 114922128089411982, guid: e2fe44ebee90347749b4cc2c108bdf83,
-        type: 2}
-      propertyPath: _userData.actionCategoryMap.list.Array.data[0].actionIds.Array.size
-      value: 5
+    - target: {fileID: 4950728180032190, guid: 3a3cc762de0e03a4bb4c47c72098c11f, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4950728180032190, guid: 3a3cc762de0e03a4bb4c47c72098c11f, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4950728180032190, guid: 3a3cc762de0e03a4bb4c47c72098c11f, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4950728180032190, guid: 3a3cc762de0e03a4bb4c47c72098c11f, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4950728180032190, guid: 3a3cc762de0e03a4bb4c47c72098c11f, type: 2}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 3a3cc762de0e03a4bb4c47c72098c11f, type: 2}
+  m_IsPrefabParent: 0
+--- !u!1001 &1083818212
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
     - target: {fileID: 4139996462114812, guid: e2fe44ebee90347749b4cc2c108bdf83, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -618,81 +640,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4139996462114812, guid: e2fe44ebee90347749b4cc2c108bdf83, type: 2}
       propertyPath: m_RootOrder
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 1035436956626758, guid: e2fe44ebee90347749b4cc2c108bdf83, type: 2}
-      propertyPath: m_Name
-      value: Rewired Input Manager (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 114922128089411982, guid: e2fe44ebee90347749b4cc2c108bdf83,
-        type: 2}
-      propertyPath: _userData.actions.Array.data[4]._id
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 114922128089411982, guid: e2fe44ebee90347749b4cc2c108bdf83,
-        type: 2}
-      propertyPath: _userData.actions.Array.data[4]._name
-      value: IngameMenu
-      objectReference: {fileID: 0}
-    - target: {fileID: 114922128089411982, guid: e2fe44ebee90347749b4cc2c108bdf83,
-        type: 2}
-      propertyPath: _userData.actions.Array.data[4]._type
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114922128089411982, guid: e2fe44ebee90347749b4cc2c108bdf83,
-        type: 2}
-      propertyPath: _userData.actions.Array.data[4]._descriptiveName
-      value: IngameMenu
-      objectReference: {fileID: 0}
-    - target: {fileID: 114922128089411982, guid: e2fe44ebee90347749b4cc2c108bdf83,
-        type: 2}
-      propertyPath: _userData.actions.Array.data[4]._userAssignable
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114922128089411982, guid: e2fe44ebee90347749b4cc2c108bdf83,
-        type: 2}
-      propertyPath: _userData.actionCategoryMap.list.Array.data[0].actionIds.Array.data[4]
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 114922128089411982, guid: e2fe44ebee90347749b4cc2c108bdf83,
-        type: 2}
-      propertyPath: _userData.actionIdCounter
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 114922128089411982, guid: e2fe44ebee90347749b4cc2c108bdf83,
-        type: 2}
-      propertyPath: _userData.keyboardMaps.Array.data[0].actionElementMaps.Array.data[4]._actionId
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 114922128089411982, guid: e2fe44ebee90347749b4cc2c108bdf83,
-        type: 2}
-      propertyPath: _userData.keyboardMaps.Array.data[0].actionElementMaps.Array.data[4]._elementType
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114922128089411982, guid: e2fe44ebee90347749b4cc2c108bdf83,
-        type: 2}
-      propertyPath: _userData.keyboardMaps.Array.data[0].actionElementMaps.Array.data[4]._elementIdentifierId
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114922128089411982, guid: e2fe44ebee90347749b4cc2c108bdf83,
-        type: 2}
-      propertyPath: _userData.keyboardMaps.Array.data[0].actionElementMaps.Array.data[4]._keyboardKeyCode
-      value: 27
-      objectReference: {fileID: 0}
-    - target: {fileID: 114922128089411982, guid: e2fe44ebee90347749b4cc2c108bdf83,
-        type: 2}
-      propertyPath: _userData.joystickMaps.Array.data[0].actionElementMaps.Array.data[4]._actionId
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114922128089411982, guid: e2fe44ebee90347749b4cc2c108bdf83,
-        type: 2}
-      propertyPath: _userData.joystickMaps.Array.data[0].actionElementMaps.Array.data[4]._elementType
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114922128089411982, guid: e2fe44ebee90347749b4cc2c108bdf83,
-        type: 2}
-      propertyPath: _userData.joystickMaps.Array.data[0].actionElementMaps.Array.data[4]._elementIdentifierId
-      value: -1
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e2fe44ebee90347749b4cc2c108bdf83, type: 2}
@@ -800,7 +748,7 @@ RectTransform:
   - {fileID: 127362924}
   - {fileID: 254506377}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1207,7 +1155,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1876471772
 GameObject:

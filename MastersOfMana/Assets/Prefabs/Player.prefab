@@ -204,7 +204,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4467387514677664}
-  - component: {fileID: 114446606973805764}
   - component: {fileID: 54888276362292440}
   - component: {fileID: 114235553052326292}
   - component: {fileID: 114581584314824656}
@@ -850,7 +849,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1099510739358622}
-  m_LocalRotation: {x: -0.7933307, y: -0.1524551, z: 0.28550392, w: 0.51562726}
+  m_LocalRotation: {x: -0.7933306, y: -0.15245509, z: 0.2855039, w: 0.5156272}
   m_LocalPosition: {x: -0.00000002142042, y: 1e-15, z: 0.000000007450581}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -1161,25 +1160,6 @@ MonoBehaviour:
     i15: 245
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
---- !u!114 &114446606973805764
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1285255658560174}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43de72ef4a20ece46bc62b90687d8559, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movementAcceleration: 5
-  aimSpeed: 360
-  jumpStrength: 6
-  moveInputForce: {x: 0, y: 0, z: 0}
-  yAim: 0
-  lookDirection: {x: 0, y: 0, z: 0}
-  cameraRig: {fileID: 0}
-  handTransform: {fileID: 4974142991844500}
 --- !u!114 &114581584314824656
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1204,7 +1184,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41fd90c150c87df48a3986418dec8555, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debug_spell: {fileID: 0}
+  debug_spell_1: {fileID: 0}
+  debug_spell_2: {fileID: 0}
+  debug_spell_3: {fileID: 0}
   movementAcceleration: 10
   aimSpeed: 360
   jumpStrength: 5
@@ -1212,9 +1194,9 @@ MonoBehaviour:
   moveInputForce: {x: 0, y: 0, z: 0}
   yAim: 0
   lookDirection: {x: 0, y: 0, z: 0}
-  cameraRig: {fileID: 114371251292269686, guid: 1e9ddec0cf4225b4f9102d4eea816bbf,
+  cameraRig: {fileID: 114371251292269686, guid: 21611dcaa52d8441ba40cf1e83852a1e,
     type: 2}
-  handTransform: {fileID: 0}
+  handTransform: {fileID: 4974142991844500}
 --- !u!136 &136896862093126628
 CapsuleCollider:
   m_ObjectHideFlags: 1

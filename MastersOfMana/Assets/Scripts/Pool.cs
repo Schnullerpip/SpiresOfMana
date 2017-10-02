@@ -107,10 +107,13 @@ public class Pool {
             {
                 break;
             }
+            found = null;
         }
 
         //Miss! - no active element was found
-        found =  OnMissBehaviour();
+        if (!found) {
+            found =  OnMissBehaviour();
+        }
 
         if (activateOnReturn == Activation.ReturnActivated)
         {

@@ -9,7 +9,6 @@ public class PlayerCamera : MonoBehaviour {
 
 	public Transform joint;
 	public PlayerScript followTarget;
-	public bool keepOffset;
 
 	[Range(0,1)]
 	public float movementDamping = .2f;
@@ -35,13 +34,11 @@ public class PlayerCamera : MonoBehaviour {
 			Debug.LogWarning("No Follow Target assigned.", this.gameObject);
 //			enabled = false;
 		}
-
-		mOffset = transform.position - followTarget.transform.position;
 	}
 
 	void FixedUpdate()
 	{
-		Vector3 targetPosition = followTarget.transform.position + (keepOffset ? mOffset : Vector3.zero);
+		Vector3 targetPosition = followTarget.transform.position;
 
 		transform.position = Vector3.SmoothDamp(transform.position, targetPosition ,ref movementVelocity, movementDamping);
 	}

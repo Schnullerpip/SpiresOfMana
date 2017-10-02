@@ -13,7 +13,6 @@ public class PlayerCamera : MonoBehaviour {
 	[Range(0,1)]
 	public float movementDamping = .2f;
 
-	[ReadOnlyAttribute]
 	public Vector3 movementVelocity; 
 
 	private Vector3 mOffset;

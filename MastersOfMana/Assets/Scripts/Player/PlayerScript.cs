@@ -193,7 +193,8 @@ public class PlayerScript : NetworkBehaviour
 	void FixedUpdate()
 	{
 		Vector3 dir;
-		if(!mIsGrounded)
+//		if(!mIsGrounded)
+		if(true)
 		{
 			dir = moveInputForce * Time.deltaTime * movementAcceleration;
 		}

@@ -204,8 +204,10 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4467387514677664}
-  - component: {fileID: 114446606973805764}
   - component: {fileID: 54888276362292440}
+  - component: {fileID: 114235553052326292}
+  - component: {fileID: 114581584314824656}
+  - component: {fileID: 114612807110646480}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1126,7 +1128,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114446606973805764
+--- !u!114 &114235553052326292
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -1134,14 +1136,67 @@ MonoBehaviour:
   m_GameObject: {fileID: 1285255658560174}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43de72ef4a20ece46bc62b90687d8559, type: 3}
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 77
+    i1: 37
+    i2: 37
+    i3: 226
+    i4: 51
+    i5: 179
+    i6: 244
+    i7: 60
+    i8: 59
+    i9: 18
+    i10: 135
+    i11: 106
+    i12: 244
+    i13: 195
+    i14: 143
+    i15: 245
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
+--- !u!114 &114581584314824656
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1285255658560174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a555b539d9ebc349b8a9358aaf89087, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  currentHealth: 100
+--- !u!114 &114612807110646480
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1285255658560174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41fd90c150c87df48a3986418dec8555, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debug_spell_1: {fileID: 0}
+  debug_spell_2: {fileID: 0}
+  debug_spell_3: {fileID: 0}
   movementAcceleration: 10
-  aimSpeed: 100
-  jumpStrength: 8
-  rigid: {fileID: 0}
+  aimSpeed: 360
+  jumpStrength: 5
+  minDistanceToGround: 0.1
   moveInputForce: {x: 0, y: 0, z: 0}
+  yAim: 0
+  lookDirection: {x: 0, y: 0, z: 0}
+  cameraRig: {fileID: 114371251292269686, guid: 21611dcaa52d8441ba40cf1e83852a1e,
+    type: 2}
+  handTransform: {fileID: 4974142991844500}
 --- !u!136 &136896862093126628
 CapsuleCollider:
   m_ObjectHideFlags: 1

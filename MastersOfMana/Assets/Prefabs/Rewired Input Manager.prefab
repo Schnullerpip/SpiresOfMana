@@ -235,6 +235,24 @@ MonoBehaviour:
       _behaviorId: 0
       _userAssignable: 1
       _categoryId: 0
+    - _id: 5
+      _name: CastSpell
+      _type: 1
+      _descriptiveName: Action, that starts the casting process
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 0
+    - _id: 6
+      _name: IngameMenu
+      _type: 1
+      _descriptiveName: IngameMenu
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 0
     actionCategories:
     - _name: Default
       _descriptiveName: Default
@@ -244,7 +262,7 @@ MonoBehaviour:
     actionCategoryMap:
       list:
       - categoryId: 0
-        actionIds: 0000000001000000020000000300000004000000
+        actionIds: 00000000010000000200000003000000040000000500000006000000
     inputBehaviors:
     - _id: 0
       _name: Default
@@ -256,7 +274,7 @@ MonoBehaviour:
       _digitalAxisSensitivity: 3
       _mouseXYAxisMode: 0
       _mouseOtherAxisMode: 0
-      _mouseXYAxisSensitivity: 1
+      _mouseXYAxisSensitivity: 0.15
       _mouseXYAxisDeltaCalc: 0
       _mouseOtherAxisSensitivity: 1
       _customControllerAxisSensitivity: 1
@@ -419,6 +437,17 @@ MonoBehaviour:
         _modifierKey1: 0
         _modifierKey2: 0
         _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 6
+        _elementType: 1
+        _elementIdentifierId: -1
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 27
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
     mouseMaps:
     - id: 0
       categoryId: 0
@@ -449,10 +478,21 @@ MonoBehaviour:
         _modifierKey1: 0
         _modifierKey2: 0
         _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 5
+        _elementType: 1
+        _elementIdentifierId: 3
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 0
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
     customControllerMaps: []
     customControllers: []
     playerIdCounter: 2
-    actionIdCounter: 5
+    actionIdCounter: 7
     actionCategoryIdCounter: 1
     inputBehaviorIdCounter: 1
     mapCategoryIdCounter: 1

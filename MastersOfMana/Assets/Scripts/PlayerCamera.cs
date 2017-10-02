@@ -7,8 +7,8 @@ using UnityEngine;
 /// </summary>
 public class PlayerCamera : MonoBehaviour {
 
+	public Transform joint;
 	public PlayerScript followTarget;
-	public bool keepOffset;
 
 	[Range(0,1)]
 	public float movementDamping = .2f;
@@ -18,20 +18,27 @@ public class PlayerCamera : MonoBehaviour {
 
 	private Vector3 mOffset;
 
+	private Camera mCamera;
+
+	public Camera GetCamera()
+	{
+		return mCamera;
+	}
+
 	void Awake()
 	{
+		mCamera = GetComponentInChildren<Camera>();
+
 		if(followTarget == null)
 		{
-			Debug.LogWarning("No Follow Target assigned. Script is turned off",this.gameObject);
-			enabled = false;
+			Debug.LogWarning("No Follow Target assigned.", this.gameObject);
+//			enabled = false;
 		}
-
-		mOffset = transform.position - followTarget.transform.position;
 	}
 
 	void FixedUpdate()
 	{
-		Vector3 targetPosition = followTarget.transform.position + (keepOffset ? mOffset : Vector3.zero);
+		Vector3 targetPosition = followTarget.transform.position;
 
 		transform.position = Vector3.SmoothDamp(transform.position, targetPosition ,ref movementVelocity, movementDamping);
 	}
@@ -40,7 +47,6 @@ public class PlayerCamera : MonoBehaviour {
 	{
 		Quaternion targetRotation = Quaternion.LookRotation(followTarget.lookDirection,followTarget.transform.up);
 
-		transform.rotation = targetRotation;
-
+		joint.rotation = targetRotation;
 	}
 }

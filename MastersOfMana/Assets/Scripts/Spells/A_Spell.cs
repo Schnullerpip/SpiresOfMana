@@ -4,9 +4,18 @@ using UnityEngine;
 
 public abstract class A_Spell : ScriptableObject 
 {
-	public UnityEngine.UI.Image mIcon;
-	public GameObject[] mSpawningObjects;
+    //Spelldata
+	public UnityEngine.UI.Image icon;
+    public float coolDownInSeconds;
 
-	public abstract void Cast();
+    //holds prefabs, representing actual manifests of spells like a fireball - technically a dash spell will have a meshless prefab only holding the behaviour for example
+    public A_SpellBehaviour[] SpellBehaviours;
+
+
+
+    /// <summary>
+    /// unified interface for calling a Spell
+    /// </summary>
+    /// <param name="caster"></param>
+    public abstract void Cast(PlayerScript caster);
 }
-

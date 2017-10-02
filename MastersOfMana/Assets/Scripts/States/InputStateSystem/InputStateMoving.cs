@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class InputStateMoving : A_InputState
 {
@@ -12,8 +13,8 @@ public class InputStateMoving : A_InputState
 
 		if(input.sqrMagnitude <= float.Epsilon)
 		{
-		    player.mInputStateSystem.SetState(InputStateSystem.InputStateID.Normal);
-			player.mInputStateSystem.current.Move(input);
+		    player.inputStateSystem.SetState(InputStateSystem.InputStateID.Normal);
+			player.inputStateSystem.current.Move(input);
 			player.moveInputForce = Vector3.zero;
 			return;
 		}

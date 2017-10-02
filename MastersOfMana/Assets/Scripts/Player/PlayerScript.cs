@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Rewired;
+using UnityEngine.Networking;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(PlayerHealthScript))]
 /// <summary>
 /// Defines the basic properties for a player
 /// </summary>
-public class PlayerScript : MonoBehaviour {
+public class PlayerScript : NetworkBehaviour
+{
 
     //member
     public InputStateSystem inputStateSystem;
@@ -41,6 +43,8 @@ public class PlayerScript : MonoBehaviour {
 	[Tooltip("Degrees per seconds")]
 	public float aimSpeed = 360;    
 	public float jumpStrength = 5;
+	public float minDistanceToGround = 0.1f;
+	private bool mIsGrounded = false;
 
 	private Rigidbody rigid;
 
@@ -95,9 +99,22 @@ public class PlayerScript : MonoBehaviour {
 		rigid = GetComponent<Rigidbody>();
 	}
 
-	// Update is called once per frame
-	void Update () 
+    // Use this for initialization on local Player only
+    override public void OnStartLocalPlayer()
+    {
+        if (isLocalPlayer)
+        {
+            cameraRig = Instantiate(cameraRig);
+            cameraRig.GetComponent<PlayerCamera>().followTarget = this;
+        }
+    }
+
+    // Update is called once per frame
+    void Update () 
 	{
+        // Update only on the local player
+        if (!isLocalPlayer)
+            return;
 
         //STEP 1 - Decrease the cooldown in the associated spellslots
         DecreaseCooldowns();
@@ -180,6 +197,9 @@ public class PlayerScript : MonoBehaviour {
 	{
 		//move the character
 		rigid.MovePosition(rigid.position + (moveInputForce * Time.deltaTime * movementAcceleration));
+
+		//check if the character is on the ground, by raycasting from the feet toward the ground
+		mIsGrounded = Physics.Raycast(transform.position, Vector3.down, minDistanceToGround);
 	}
 
 	/// <summary>
@@ -188,7 +208,7 @@ public class PlayerScript : MonoBehaviour {
 	public void Jump()
 	{
 		//TODO grounded
-		rigid.AddForce(Vector3.up*jumpStrength,ForceMode.Impulse);
+//		rigid.AddForce(Vector3.up*jumpStrength,ForceMode.Impulse);
 
 		Jump(jumpStrength);
 	}
@@ -200,7 +220,10 @@ public class PlayerScript : MonoBehaviour {
 	public void Jump(float jumpStrength)
 	{
 		//TODO grounded
-		rigid.AddForce(Vector3.up * jumpStrength,ForceMode.VelocityChange);
+		if(mIsGrounded)
+		{
+			rigid.AddForce(Vector3.up * jumpStrength,ForceMode.VelocityChange);
+		}
 	}
 
     private void DecreaseCooldowns()

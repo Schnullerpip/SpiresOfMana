@@ -39,27 +39,33 @@ public class PlayerScript : NetworkBehaviour
         spellRoutines.Add(spellRoutine);
     }
 
+	[Header("Movement")]
 	public float movementAcceleration = 10;  
+	public float jumpStrength = 5;
+	public float fallGravityMultiplier = 1.2f;
+	[HideInInspector]
+	public Vector3 moveInputForce;
+	public FeetGroundCheck feet;
+
+	[Header("Aim")]
 	[Tooltip("Degrees per seconds")]
 	public float aimSpeed = 360;    
-	public float jumpStrength = 5;
-	public float minDistanceToGround = 0.1f;
-	private bool mIsGrounded = false;
-
-	private Rigidbody rigid;
-
-	public Vector3 moveInputForce;
+	[HideInInspector]
 	public float yAim = 0;
-
+	[HideInInspector]
 	public Vector3 lookDirection;
-
-	protected Rewired.Player rewiredPlayer;
-
 	public PlayerCamera cameraRig;
 	public Transform handTransform;
 
+
+	private Rigidbody rigid;
+
+	protected Rewired.Player rewiredPlayer;
+
 	void Awake()
 	{
+		lookDirection = transform.forward;
+
 		if(cameraRig == null)
 		{
 			Debug.LogWarning("No camera rig assigned, consider creating one during runtime? Or don't. I'm not your boss. kthx");
@@ -161,7 +167,6 @@ public class PlayerScript : NetworkBehaviour
 			inputStateSystem.current.Jump();
 		}
 
-		mIsGrounded = false;
 
         inputStateSystem.current.Move(movementInput);
 
@@ -173,7 +178,7 @@ public class PlayerScript : NetworkBehaviour
 
         inputStateSystem.current.Move(movementInput);
 		#endregion
-	}
+ 	}
 
 	//TODO: delete this method, testing purpose only
 	/// <summary>
@@ -195,40 +200,40 @@ public class PlayerScript : NetworkBehaviour
 		Destroy(lineGO,10);
 	}
 
-	public Collider feetCollider;
-	public Vector3 groundNormal;
 
 	void OnCollisionStay(Collision collisionInfo)
 	{
 		foreach (ContactPoint contact in collisionInfo.contacts) 
 		{
-			if(contact.thisCollider == feetCollider)
+			if(contact.thisCollider == feet.collider)
 			{
-				Debug.DrawRay(contact.point, contact.normal, Color.white, 100);
-				groundNormal = contact.normal;
-				if(Vector3.Angle(Vector3.up, groundNormal) < 80)
-				{
-					mIsGrounded = true;
-				}
+				feet.Collision(contact);
 			}
 		}
 	}
 		
 	void FixedUpdate()
 	{
-		Vector3 dir;
-//		if(!mIsGrounded)
-		if(true)
+		
+		feet.PhysicsUpdate();
+
+		if(feet.IsGrounded())
 		{
-			dir = moveInputForce * Time.deltaTime * movementAcceleration;
-		}
-		else //if(Vector3.Angle(Vector3.up,groundNormal) < 45)
-		{
-			dir = Quaternion.FromToRotation(Vector3.up,groundNormal) * moveInputForce * Time.deltaTime * movementAcceleration;
+			Debug.DrawRay(transform.position, feet.GetGroundNormal(), (feet.currentSlopeAngle < feet.maxSlope ? Color.white : Color.magenta), 10);
 		}
 
-		Debug.DrawRay(transform.position + Vector3.up, dir * 30, Color.cyan);
-		rigid.MovePosition(rigid.position + dir);	
+		Vector3 direction = moveInputForce * Time.deltaTime * movementAcceleration;
+
+		Debug.DrawRay(transform.position + Vector3.up, direction * 30, Color.cyan);
+
+		//increase the falling speed to make it feel a bit less floaty
+		if(rigid.velocity.y < 0)
+		{
+			rigid.velocity += Physics.gravity * fallGravityMultiplier * Time.deltaTime;
+		}
+
+		//move the character
+		rigid.MovePosition(rigid.position + direction);
 	}
 
 	/// <summary>
@@ -236,9 +241,6 @@ public class PlayerScript : NetworkBehaviour
 	/// </summary>
 	public void Jump()
 	{
-		//TODO grounded
-//		rigid.AddForce(Vector3.up*jumpStrength,ForceMode.Impulse);
-
 		Jump(jumpStrength);
 	}
 
@@ -248,8 +250,7 @@ public class PlayerScript : NetworkBehaviour
 	/// <param name="jumpForce">Jump force.</param>
 	public void Jump(float jumpStrength)
 	{
-		//TODO grounded
-		if(mIsGrounded)
+		if(feet.IsGrounded())
 		{
 			rigid.AddForce(Vector3.up * jumpStrength,ForceMode.VelocityChange);
 		}

@@ -146,7 +146,7 @@ GameObject:
   - component: {fileID: 114581584314824656}
   - component: {fileID: 114235553052326292}
   - component: {fileID: 54888276362292440}
-  - component: {fileID: 135659848251551540}
+  - component: {fileID: 135183805199999266}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1398,19 +1398,21 @@ MonoBehaviour:
   debug_spell_1: {fileID: 11400000, guid: d41a648d6ad49334090f1c47fbc8cd34, type: 2}
   debug_spell_2: {fileID: 11400000, guid: 611a54db86ce0d947bd50c5a12f8aeb0, type: 2}
   debug_spell_3: {fileID: 11400000, guid: e233f7ca8bad7cc4482f17316c60348f, type: 2}
-  movementAcceleration: 10
-  aimSpeed: 360
+  movementAcceleration: 3
   jumpStrength: 5
-  minDistanceToGround: 0.1
+  fallGravityMultiplier: 1.2
   moveInputForce: {x: 0, y: 0, z: 0}
+  feet:
+    collider: {fileID: 135183805199999266}
+    maxSlope: 60
+    currentSlopeAngle: 0
+  aimSpeed: 360
   yAim: 0
   lookDirection: {x: 0, y: 0, z: 0}
   cameraRig: {fileID: 114371251292269686, guid: 21611dcaa52d8441ba40cf1e83852a1e,
     type: 2}
   handTransform: {fileID: 4216665367181332}
-  feetCollider: {fileID: 135659848251551540}
-  groundNormal: {x: 0, y: 0, z: 0}
---- !u!135 &135659848251551540
+--- !u!135 &135183805199999266
 SphereCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}

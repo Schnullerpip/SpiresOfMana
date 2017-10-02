@@ -23,11 +23,6 @@ public class PlayerScript : NetworkBehaviour
         spellSlot_2,
         spellSlot_3;
 
-    //TODO delete this eventually
-    public A_Spell debug_spell_1;
-    public A_Spell debug_spell_2;
-    public A_Spell debug_spell_3;
-
     /// <summary>
     /// holds references to all the coroutines a spell is running, so they can bes stopped/interrupted when a player is for example hit
     /// and can therefore not continue to cast the spell
@@ -69,25 +64,6 @@ public class PlayerScript : NetworkBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-
-        //TODO delete this eventually
-	    spellSlot_1 = new SpellSlot()
-	    {
-	        cooldown = 0,
-	        spell = debug_spell_1
-	    };
-	    spellSlot_2 = new SpellSlot()
-	    {
-	        cooldown = 0,
-	        spell = debug_spell_2
-	    };
-	    spellSlot_3 = new SpellSlot()
-	    {
-	        cooldown = 0,
-	        spell = debug_spell_3
-	    };
-
-
         //initialize the statesystems
         inputStateSystem = new InputStateSystem(this);
         effectStateSystem = new EffectStateSystem(this);
@@ -275,6 +251,7 @@ public class PlayerScript : NetworkBehaviour
 	/// <summary>
 	/// Simple Datacontainer (inner class) for a Pair of Spell and cooldown
 	/// </summary>
+    [System.Serializable]
 	public struct SpellSlot {
 		public A_Spell spell;
 		public float cooldown;

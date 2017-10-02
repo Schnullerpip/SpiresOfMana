@@ -124,6 +124,8 @@ public class PlayerScript : MonoBehaviour {
 			inputStateSystem.current.Jump();
 		}
 
+		mIsGrounded = false;
+
         inputStateSystem.current.Move(movementInput);
 
 		//TODO: define mouse & keyboard / controller schemes, "CastSpell" not final axis name
@@ -155,14 +157,40 @@ public class PlayerScript : MonoBehaviour {
 
 		Destroy(lineGO,10);
 	}
+
+	public Collider feetCollider;
+	public Vector3 groundNormal;
+
+	void OnCollisionStay(Collision collisionInfo)
+	{
+		foreach (ContactPoint contact in collisionInfo.contacts) 
+		{
+			if(contact.thisCollider == feetCollider)
+			{
+				Debug.DrawRay(contact.point, contact.normal, Color.white, 100);
+				groundNormal = contact.normal;
+				if(Vector3.Angle(Vector3.up, groundNormal) < 80)
+				{
+					mIsGrounded = true;
+				}
+			}
+		}
+	}
 		
 	void FixedUpdate()
 	{
-		//move the character
-		rigid.MovePosition(rigid.position + (moveInputForce * Time.deltaTime * movementAcceleration));
+		Vector3 dir;
+		if(!mIsGrounded)
+		{
+			dir = moveInputForce * Time.deltaTime * movementAcceleration;
+		}
+		else //if(Vector3.Angle(Vector3.up,groundNormal) < 45)
+		{
+			dir = Quaternion.FromToRotation(Vector3.up,groundNormal) * moveInputForce * Time.deltaTime * movementAcceleration;
+		}
 
-		//check if the character is on the ground, by raycasting from the feet toward the ground
-		mIsGrounded = Physics.Raycast(transform.position, Vector3.down, minDistanceToGround);
+		Debug.DrawRay(transform.position + Vector3.up, dir * 30, Color.cyan);
+		rigid.MovePosition(rigid.position + dir);	
 	}
 
 	/// <summary>
@@ -207,7 +235,7 @@ public class PlayerScript : MonoBehaviour {
             spellSlot_3.cooldown = 0;
         }
     }
-
+		
 	//useful asstes for the PlayerScript
 
 	/// <summary>

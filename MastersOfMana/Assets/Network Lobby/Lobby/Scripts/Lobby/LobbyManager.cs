@@ -230,7 +230,7 @@ namespace Prototype.NetworkLobby
         public override void OnStartHost()
         {
             base.OnStartHost();
-
+            GameManager.ResetMessages();
             ChangeTo(mainMenu.lobbyPanel);
             backDelegate = StopHostClbk;
             SetServerInfo("Hosting", networkAddress);
@@ -327,9 +327,7 @@ namespace Prototype.NetworkLobby
             //Tell gamemanager, everyones has finished loading
             if(mLoadedPlayers.Count == numPlayers)
             {
-                GameManager obj = GameObject.FindObjectOfType<GameManager>();
-                if(obj && obj.gameObject.activeSelf) //Make sure we're on the server
-                    obj.StartGame(mLoadedPlayers);
+                GameManager.SetPlayers(mLoadedPlayers);
             }
 
             //This hook allows you to apply state data from the lobby-player to the game-player
@@ -388,8 +386,11 @@ namespace Prototype.NetworkLobby
                 if (lobbySlots[i] != null)
                 {
                     (lobbySlots[i] as LobbyPlayer).RpcUpdateCountdown(0);
+                    GameManager.AddPlayerMessageCounter();
                 }
             }
+
+
             
             ServerChangeScene(playScene);
         }

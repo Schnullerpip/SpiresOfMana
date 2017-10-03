@@ -81,11 +81,18 @@ public class PlayerScript : NetworkBehaviour
 		rigid = GetComponent<Rigidbody>();
     }
 
+    [Command]
+    private void CmdGiveGo()
+    {
+        GameManager.Go();
+    }
+
     // Use this for initialization on local Player only
     override public void OnStartLocalPlayer()
     {
         if (isLocalPlayer)
         {
+            CmdGiveGo();
             cameraRig = Instantiate(cameraRig);
             cameraRig.GetComponent<PlayerCamera>().followTarget = this;
         }
@@ -94,7 +101,6 @@ public class PlayerScript : NetworkBehaviour
     [Command]
     public void CmdCast()
     {
-        Debug.Log("Cast");
         spellSlot_1.Cast(this);
     }
 

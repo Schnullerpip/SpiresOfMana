@@ -54,7 +54,7 @@ public class Pool : NetworkBehaviour {
         mOriginal = original;
         mGrowth = size;
 
-        //SubjoinElements();
+        SubjoinElements();
 
         //define the pools strategy
         switch (strategy) {
@@ -81,9 +81,12 @@ public class Pool : NetworkBehaviour {
             GameObject newObject;
             newObject = GameObject.Instantiate(mOriginal);
             NetworkServer.Spawn(newObject);
-            ClientScene.FindLocalObject(newObject.GetComponent<NetworkIdentity>().netId).SetActive(false);
-            //newObject.SetActive(false);
-            //RpcSetObjectActive(newObject.transform, false);
+            A_SummoningBehaviour summoning = newObject.GetComponent<A_SummoningBehaviour>();
+            if (summoning)
+            {
+                newObject.SetActive(false);
+                summoning.RpcSetActive(false);
+            }
             newElements.Add(newObject);
         }
 
@@ -91,13 +94,6 @@ public class Pool : NetworkBehaviour {
 
         return newElements[0];
     }
-
-    //[ClientRpc]
-    //public void RpcSetObjectActive(Transform transform, bool active)
-    //{
-    //    Debug.Log(transform);
-    //    transform.gameObject.SetActive(active);
-    //}
 
 
     public enum Activation { ReturnNonActivated, ReturnActivated};
@@ -113,24 +109,15 @@ public class Pool : NetworkBehaviour {
     public GameObject Get(Activation activateOnReturn = Activation.ReturnNonActivated) {
         GameObject found = null;
 
-        if (mObjects.Count == 0)
+        for (int i = 0; i < mSize; ++i)
         {
-            SubjoinElements();
-        }
-        else
-        {
-            for (int i = 0; i < mSize; ++i)
+            found = mObjects[i];
+            if (!found.activeSelf)
             {
-                found = mObjects[i];
-                if (!found.activeSelf)
-                {
-                    break;
-                }
-                found = null;
+                break;
             }
-        }
-
-        
+            found = null;
+        }        
 
         //Miss! - no active element was found
         if (!found) {
@@ -139,7 +126,11 @@ public class Pool : NetworkBehaviour {
 
         if (activateOnReturn == Activation.ReturnActivated)
         {
-            found.SetActive(true);
+            A_SummoningBehaviour summoning = found.GetComponent<A_SummoningBehaviour>();
+            if(summoning)
+            {
+                summoning.RpcSetActive(true);
+            }
         }
         
         return found;

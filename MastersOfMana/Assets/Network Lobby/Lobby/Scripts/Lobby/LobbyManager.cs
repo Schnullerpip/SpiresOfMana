@@ -327,7 +327,9 @@ namespace Prototype.NetworkLobby
             //Tell gamemanager, everyones has finished loading
             if(loadedPlayers.Count == numPlayers)
             {
-
+                GameManager obj = GameObject.FindObjectOfType<GameManager>();
+                if(obj && obj.gameObject.activeSelf) //Make sure we're on the server
+                    obj.StartGame(loadedPlayers);
             }
 
             //This hook allows you to apply state data from the lobby-player to the game-player

@@ -21,7 +21,7 @@ public class GameManager : NetworkBehaviour
 		
 	}
 
-    public void IsReady(List<PlayerScript> allPlayers)
+    public void StartGame(List<PlayerScript> allPlayers)
     {
         mPlayers = allPlayers;
 

@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Finds the nearest object beneath the caster and instantiates a wall, coming out of the floor
 /// </summary>
-public class EarthwallBehaviour : A_SpellBehaviour {
+public class EarthwallBehaviour : A_SummoningBehaviour {
 
     //TODO exchange magic numbers with actual data
     public override void Execute(PlayerScript caster)

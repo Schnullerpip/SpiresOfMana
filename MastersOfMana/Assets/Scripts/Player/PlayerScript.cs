@@ -190,7 +190,6 @@ public class PlayerScript : NetworkBehaviour
 		
 	void FixedUpdate()
 	{
-		
 		feet.PhysicsUpdate();
 
 		if(feet.IsGrounded())
@@ -200,8 +199,6 @@ public class PlayerScript : NetworkBehaviour
 
 		Vector3 direction = moveInputForce * Time.deltaTime * movementAcceleration;
 
-		Debug.DrawRay(transform.position + Vector3.up, direction * 30, Color.cyan);
-
 		//increase the falling speed to make it feel a bit less floaty
 		if(rigid.velocity.y < 0)
 		{
@@ -210,6 +207,18 @@ public class PlayerScript : NetworkBehaviour
 
 		//move the character
 		rigid.MovePosition(rigid.position + direction);
+
+		Debug.DrawRay(transform.position+Vector3.up, moveInputForce, Color.cyan);
+		Debug.DrawRay(transform.position+Vector3.up, rigid.velocity, Color.green);
+
+		//if the player gets input
+		if(direction.sqrMagnitude > 0)
+		{
+			//calculate the angle between the movemement and external forces
+			float angle = Vector2.Angle(rigid.velocity.xz(),direction.xz());
+			//move the rigidbody's velocity towards zero in the xz plane, proportional to the angle
+			rigid.velocity = Vector3.MoveTowards(rigid.velocity, new Vector3(0,rigid.velocity.y,0), movementAcceleration * Time.deltaTime * angle / 180);
+		}
 	}
 
 	/// <summary>

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -441,7 +441,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 0
-  m_Text: Masters of Mana
+  m_Text: Spires of Mana
 --- !u!222 &208673092
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2219,7 +2219,9 @@ MonoBehaviour:
   m_PlayerSpawnMethod: 1
   m_OfflineScene: arne_menu
   m_OnlineScene: 
-  m_SpawnPrefabs: []
+  m_SpawnPrefabs:
+  - {fileID: 1748008529846994, guid: 184b117c165eb62478ca66015ed29b21, type: 2}
+  - {fileID: 1559168603325644, guid: b1c47d2710842e842be7e57dedbe5131, type: 2}
   m_CustomConfig: 0
   m_MaxConnections: 4
   m_ConnectionConfig:
@@ -2289,8 +2291,8 @@ MonoBehaviour:
   prematchCountdown: 1
   mainMenu: {fileID: 560370118}
   isInGame: 0
-  _playerNumber: 0
-  _isMatchmaking: 0
+  playerNumber: 0
+  mIsMatchmaking: 0
 --- !u!224 &1321811818
 RectTransform:
   m_ObjectHideFlags: 0

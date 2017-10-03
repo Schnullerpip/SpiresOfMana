@@ -12,5 +12,6 @@ public class DirectHostHack : MonoBehaviour {
 	void Start ()
     {
         GetComponentInParent<NetworkManager>().StartHost();
+        GameManager.SetPlayers(new List<PlayerScript>(GameObject.FindObjectsOfType<PlayerScript>()));
     }
 }

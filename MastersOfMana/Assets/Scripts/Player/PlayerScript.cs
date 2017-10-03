@@ -273,6 +273,13 @@ public class PlayerScript : NetworkBehaviour
             spellSlot_3.cooldown = 0;
         }
     }
+
+    //Remote Procedure Calls!
+    [ClientRpc]
+    public void RpcChangeInputState(InputStateSystem.InputStateID newStateID)
+    {
+        inputStateSystem.SetState(newStateID);
+    }
 		
 	//useful asstes for the PlayerScript
 

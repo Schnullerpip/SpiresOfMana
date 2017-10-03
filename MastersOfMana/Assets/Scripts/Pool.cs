@@ -54,7 +54,7 @@ public class Pool : NetworkBehaviour {
         mOriginal = original;
         mGrowth = size;
 
-        SubjoinElements();
+        //SubjoinElements();
 
         //define the pools strategy
         switch (strategy) {
@@ -112,14 +112,25 @@ public class Pool : NetworkBehaviour {
     /// <returns></returns>
     public GameObject Get(Activation activateOnReturn = Activation.ReturnNonActivated) {
         GameObject found = null;
-        for(int i = 0; i < mSize; ++i){
-            found = mObjects[i];
-            if (!found.activeSelf)
-            {
-                break;
-            }
-            found = null;
+
+        if (mObjects.Count == 0)
+        {
+            SubjoinElements();
         }
+        else
+        {
+            for (int i = 0; i < mSize; ++i)
+            {
+                found = mObjects[i];
+                if (!found.activeSelf)
+                {
+                    break;
+                }
+                found = null;
+            }
+        }
+
+        
 
         //Miss! - no active element was found
         if (!found) {

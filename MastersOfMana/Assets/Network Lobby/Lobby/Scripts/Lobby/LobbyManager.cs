@@ -41,6 +41,7 @@ namespace Prototype.NetworkLobby
 
         protected LobbyHook _lobbyHooks;
         protected List<LobbyPlayer> _players = new List<LobbyPlayer>();
+        protected List<PlayerScript> loadedPlayers = new List<PlayerScript>();
 
 
         void Start()
@@ -217,10 +218,7 @@ namespace Prototype.NetworkLobby
         {
             conn.Send(MsgKicked, new KickMsg());
         }
-
-
-
-
+        
         public void KickedMessageHandler(NetworkMessage netMsg)
         {
             mainMenu.infoPanel.Display("Kicked by Server", "Close", null);
@@ -323,9 +321,17 @@ namespace Prototype.NetworkLobby
 
         public override bool OnLobbyServerSceneLoadedForPlayer(GameObject lobbyPlayer, GameObject gamePlayer)
         {
+            //Keep track of players that finished loading
+            loadedPlayers.Add(gamePlayer.GetComponent<PlayerScript>());
+
+            //Tell gamemanager, everyones has finished loading
+            if(loadedPlayers.Count == numPlayers)
+            {
+
+            }
+
             //This hook allows you to apply state data from the lobby-player to the game-player
             //just subclass "LobbyHook" and add it to the lobby object.
-
             if (_lobbyHooks)
                 _lobbyHooks.OnLobbyServerSceneLoadedForPlayer(this, lobbyPlayer, gamePlayer);
 
@@ -342,6 +348,8 @@ namespace Prototype.NetworkLobby
 				if(lobbySlots[i] != null)
 					allready &= lobbySlots[i].readyToBegin;
 			}
+
+            loadedPlayers.Clear();
 
 			if(allready)
 				StartCoroutine(ServerCountdownCoroutine());

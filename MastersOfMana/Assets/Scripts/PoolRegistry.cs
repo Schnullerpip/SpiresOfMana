@@ -11,8 +11,6 @@ public class PoolRegistry : NetworkBehaviour {
 
 	// Use this for initialization
 	public void Start () {
-        Debug.Log("Is Server " + isServer);
-        Debug.Log("Is Client " + isClient);
         if (!isServer)
         {
             return;

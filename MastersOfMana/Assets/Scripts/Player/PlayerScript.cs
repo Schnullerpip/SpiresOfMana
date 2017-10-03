@@ -52,7 +52,7 @@ public class PlayerScript : NetworkBehaviour
 	[Header("Aim")]
 	[Tooltip("Degrees per seconds")]
 	public float aimSpeed = 360;    
-	public float aimAssist = 10;
+	public float aimAssistInUnits = 1.0f;
 	[HideInInspector]
 	public float yAim = 0;
 	[HideInInspector]
@@ -196,7 +196,7 @@ public class PlayerScript : NetworkBehaviour
 
 	public void StartFocus()
 	{
-		mFocusedTarget = FocusAssistTarget(aimAssist);
+		mFocusedTarget = FocusAssistTarget(aimAssistInUnits);
 	}
 
 	public void StopFocus()
@@ -210,20 +210,38 @@ public class PlayerScript : NetworkBehaviour
 	/// </summary>
 	/// <returns>The assist target.</returns>
 	/// <param name="maxAngle">Max angle.</param>
-	private HealthScript FocusAssistTarget(float maxAngle)
+	private HealthScript FocusAssistTarget(float maxUnitsOff)
 	{
+		//TODO: cache this, maybe gamemanager?
 		HealthScript[] allHealthScripts = GameObject.FindObjectsOfType<HealthScript>();
 
+		//iterate through all healthscripts
+		//TODO: early exit 
 		foreach (HealthScript potentialTarget in allHealthScripts) 
 		{
-			if(potentialTarget.gameObject == this)
+			//skip player him/herself
+			if(potentialTarget.gameObject == this.gameObject)
+			{
 				continue;
+			}
+			
+			//skip if the target is behind the player
+			if(transform.InverseTransformPoint(potentialTarget.transform.position).z < 0)
+			{
+				continue;
+			}
 
+			//get the vector to the target, from the position of the camera
 			Vector3 dirToTarget = potentialTarget.transform.position - cameraRig.GetCamera().transform.position;
-			if(Vector3.Angle(dirToTarget,lookDirection) < maxAngle)
+
+			//priject the direction vector to the target onto a plane, defined by the lookDirection
+			//this way it acts as if the target hat a kind of 2d hitbox (circle) that expands maxUnitsOff into every direciton 
+			if(Vector3.ProjectOnPlane(dirToTarget, - lookDirection).sqrMagnitude < maxUnitsOff * maxUnitsOff)
 			{
 				RaycastHit hit;
-				if(Physics.Raycast(cameraRig.GetCamera().transform.position,dirToTarget,out hit))
+
+				//add the lookdirection to the camera position to combat the obstruction by the playemrodel
+				if(Physics.Raycast(cameraRig.GetCamera().transform.position + lookDirection, dirToTarget, out hit))
 				{
 					if(hit.collider.gameObject == potentialTarget.gameObject)
 					{

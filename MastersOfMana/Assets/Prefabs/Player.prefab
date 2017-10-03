@@ -1426,7 +1426,7 @@ MonoBehaviour:
   spellSlot_3:
     spell: {fileID: 11400000, guid: d41a648d6ad49334090f1c47fbc8cd34, type: 2}
     cooldown: 1
-  movementAcceleration: 4
+  speed: 4
   jumpStrength: 5
   fallGravityMultiplier: 1.2
   amountOfReverseSlowdown: 0.25
@@ -1437,6 +1437,7 @@ MonoBehaviour:
     maxSlope: 50
     currentSlopeAngle: 0
   aimSpeed: 360
+  aimAssistInUnits: 2
   yAim: 0
   lookDirection: {x: 0, y: 0, z: 0}
   cameraRig: {fileID: 114371251292269686, guid: 21611dcaa52d8441ba40cf1e83852a1e,

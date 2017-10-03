@@ -36,7 +36,7 @@ public abstract class A_InputState : A_State{
 	private RaycastHit CameraRaycast()
 	{
 		Camera cam = player.cameraRig.GetCamera();
-		Ray ray = cam.ScreenPointToRay(new Vector3(cam.pixelWidth*.5f, cam.pixelHeight*.5f, 0));
+		Ray ray = cam.ViewportPointToRay(new Vector3(.5f, .5f, 0));
 		RaycastHit hit;
 		Physics.Raycast(ray, out hit);
 		return hit;

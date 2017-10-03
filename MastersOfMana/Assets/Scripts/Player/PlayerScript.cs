@@ -38,6 +38,13 @@ public class PlayerScript : NetworkBehaviour
 	public float movementAcceleration = 10;  
 	public float jumpStrength = 5;
 	public float fallGravityMultiplier = 1.2f;
+	[Range(0.0f,1.0f)]
+	[Tooltip("How much slower is the player when he/she walks backwards? 0 = no slowdown, 1 = fullstop")]
+	public float amountOfReverseSlowdown = 0.0f;
+	[Range(0.0f,180.0f)]
+	[Tooltip("At which angle does the player still move with fullspeed?")]
+	public int maxFullspeedAngle = 90;
+
 	[HideInInspector]
 	public Vector3 moveInputForce;
 	public FeetGroundCheck feet;
@@ -119,9 +126,12 @@ public class PlayerScript : NetworkBehaviour
 
 		//store the input values
 		Vector2 movementInput = rewiredPlayer.GetAxis2D("MoveHorizontal", "MoveVertical");
+		movementInput = Vector3.ClampMagnitude(movementInput,1);
 
 		//store the aim input, either mouse or right analog stick
 		Vector2 aimInput = rewiredPlayer.GetAxis2D("AimHorizontal", "AimVertical");
+		aimInput = Vector3.ClampMagnitude(aimInput,1);
+
 		//take framerate into consideration
 		aimInput *= Time.deltaTime * aimSpeed;
 
@@ -164,7 +174,6 @@ public class PlayerScript : NetworkBehaviour
 	/// <param name="worldSpacePosition">World space position.</param>
 	public void DebugRayFromHandToPosition(Vector3 worldSpacePosition)
 	{
-//		Debug.DrawLine(handTransform.position, worldSpacePosition, Color.yellow, 10);
 		GameObject lineGO = new GameObject("line");
 
 		LineRenderer line = lineGO.AddComponent<LineRenderer>();
@@ -198,6 +207,14 @@ public class PlayerScript : NetworkBehaviour
 		}
 
 		Vector3 direction = moveInputForce * Time.deltaTime * movementAcceleration;
+		Vector2 directionXZ = direction.xz();
+
+		//calculate the amount of slowdown, by comparing the direction with the forward vector of the character
+		Vector2 forwardXZ = transform.forward.xz();
+		//value between 0 and 1, 1 being total reversaldamping, 0 being no damping
+		float reverseDamping = Mathf.Clamp01((Vector2.Angle (forwardXZ, directionXZ) - maxFullspeedAngle) / 180 * 2);
+		reverseDamping *= amountOfReverseSlowdown;
+		direction *= 1 - reverseDamping;
 
 		//increase the falling speed to make it feel a bit less floaty
 		if(rigid.velocity.y < 0)
@@ -215,7 +232,7 @@ public class PlayerScript : NetworkBehaviour
 		if(direction.sqrMagnitude > 0)
 		{
 			//calculate the angle between the movemement and external forces
-			float angle = Vector2.Angle(rigid.velocity.xz(),direction.xz());
+			float angle = Vector2.Angle(rigid.velocity.xz(),directionXZ);
 			//move the rigidbody's velocity towards zero in the xz plane, proportional to the angle
 			rigid.velocity = Vector3.MoveTowards(rigid.velocity, new Vector3(0,rigid.velocity.y,0), movementAcceleration * Time.deltaTime * angle / 180);
 		}

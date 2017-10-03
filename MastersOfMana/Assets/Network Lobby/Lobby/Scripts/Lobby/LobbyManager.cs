@@ -29,25 +29,25 @@ namespace Prototype.NetworkLobby
         //Client numPlayers from NetworkManager is always 0, so we count (throught connect/destroy in LobbyPlayer) the number
         //of players, so that even client know how many player there is.
         [HideInInspector]
-        public int _playerNumber = 0;
+        public int playerNumber = 0;
 
         //used to disconnect a client properly when exiting the matchmaker
         [HideInInspector]
-        public bool _isMatchmaking = false;
+        public bool mIsMatchmaking = false;
 
-        protected bool _disconnectServer = false;
+        protected bool mDisconnectServer = false;
         
-        protected ulong _currentMatchID;
+        protected ulong mCurrentMatchID;
 
-        protected LobbyHook _lobbyHooks;
-        protected List<LobbyPlayer> _players = new List<LobbyPlayer>();
-        protected List<PlayerScript> loadedPlayers = new List<PlayerScript>();
+        protected LobbyHook mLobbyHooks;
+        protected List<LobbyPlayer> mPlayers = new List<LobbyPlayer>();
+        protected List<PlayerScript> mLoadedPlayers = new List<PlayerScript>();
 
 
         void Start()
         {
             s_Singleton = this;
-            _lobbyHooks = GetComponent<Prototype.NetworkLobby.LobbyHook>();
+            mLobbyHooks = GetComponent<Prototype.NetworkLobby.LobbyHook>();
             currentPanel = mainMenu.mainMenuPanel;
 
             mainMenu.backButton.gameObject.SetActive(false);
@@ -66,7 +66,7 @@ namespace Prototype.NetworkLobby
                 if (isInGame)
                 {
                     ChangeTo(mainMenu.lobbyPanel);
-                    if (_isMatchmaking)
+                    if (mIsMatchmaking)
                     {
                         if (conn.playerControllers[0].unetView.isServer)
                         {
@@ -129,7 +129,7 @@ namespace Prototype.NetworkLobby
             {
                 mainMenu.backButton.gameObject.SetActive(false);
                 //SetServerInfo("Offline", "None");
-                _isMatchmaking = false;
+                mIsMatchmaking = false;
             }
         }
 
@@ -181,10 +181,10 @@ namespace Prototype.NetworkLobby
                  
         public void StopHostClbk()
         {
-            if (_isMatchmaking)
+            if (mIsMatchmaking)
             {
-				matchMaker.DestroyMatch((NetworkID)_currentMatchID, 0, OnDestroyMatch);
-				_disconnectServer = true;
+				matchMaker.DestroyMatch((NetworkID)mCurrentMatchID, 0, OnDestroyMatch);
+				mDisconnectServer = true;
             }
             else
             {
@@ -199,7 +199,7 @@ namespace Prototype.NetworkLobby
         {
             StopClient();
 
-            if (_isMatchmaking)
+            if (mIsMatchmaking)
             {
                 StopMatchMaker();
             }
@@ -239,13 +239,13 @@ namespace Prototype.NetworkLobby
 		public override void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo)
 		{
 			base.OnMatchCreate(success, extendedInfo, matchInfo);
-            _currentMatchID = (System.UInt64)matchInfo.networkId;
+            mCurrentMatchID = (System.UInt64)matchInfo.networkId;
 		}
 
 		public override void OnDestroyMatch(bool success, string extendedInfo)
 		{
 			base.OnDestroyMatch(success, extendedInfo);
-			if (_disconnectServer)
+			if (mDisconnectServer)
             {
                 StopMatchMaker();
                 StopHost();
@@ -255,7 +255,7 @@ namespace Prototype.NetworkLobby
         //allow to handle the (+) button to add/remove player
         public void OnPlayersNumberModified(int count)
         {
-            _playerNumber += count;
+            playerNumber += count;
 
             int localPlayerCount = 0;
             foreach (PlayerController p in ClientScene.localPlayers)
@@ -322,20 +322,20 @@ namespace Prototype.NetworkLobby
         public override bool OnLobbyServerSceneLoadedForPlayer(GameObject lobbyPlayer, GameObject gamePlayer)
         {
             //Keep track of players that finished loading
-            loadedPlayers.Add(gamePlayer.GetComponent<PlayerScript>());
+            mLoadedPlayers.Add(gamePlayer.GetComponent<PlayerScript>());
 
             //Tell gamemanager, everyones has finished loading
-            if(loadedPlayers.Count == numPlayers)
+            if(mLoadedPlayers.Count == numPlayers)
             {
                 GameManager obj = GameObject.FindObjectOfType<GameManager>();
                 if(obj && obj.gameObject.activeSelf) //Make sure we're on the server
-                    obj.StartGame(loadedPlayers);
+                    obj.StartGame(mLoadedPlayers);
             }
 
             //This hook allows you to apply state data from the lobby-player to the game-player
             //just subclass "LobbyHook" and add it to the lobby object.
-            if (_lobbyHooks)
-                _lobbyHooks.OnLobbyServerSceneLoadedForPlayer(this, lobbyPlayer, gamePlayer);
+            if (mLobbyHooks)
+                mLobbyHooks.OnLobbyServerSceneLoadedForPlayer(this, lobbyPlayer, gamePlayer);
 
             return true;
         }
@@ -351,7 +351,7 @@ namespace Prototype.NetworkLobby
 					allready &= lobbySlots[i].readyToBegin;
 			}
 
-            loadedPlayers.Clear();
+            mLoadedPlayers.Clear();
 
 			if(allready)
 				StartCoroutine(ServerCountdownCoroutine());

@@ -31,7 +31,7 @@ public class GameManager : NetworkBehaviour
         //enable the players to actually do stuff
         foreach (var p in mPlayers)
         {
-            p.inputStateSystem.current = p.inputStateSystem.GetState(InputStateSystem.InputStateID.Normal);
+            p.RpcChangeInputState(InputStateSystem.InputStateID.Normal);
         }
     }
 }

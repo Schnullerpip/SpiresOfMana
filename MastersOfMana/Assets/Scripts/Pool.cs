@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 /// <summary>
 /// Pool, for instances that handles Object insantiation
@@ -9,7 +10,7 @@ using UnityEngine;
 /// 2. OnMissSubjoinElements --> creates new instances and then returns a new one
 /// 3. OnMissRoundRobin --> returns first found inactive element
 /// </summary>
-public class Pool {
+public class Pool : NetworkBehaviour {
 
     //important members 
 
@@ -79,7 +80,10 @@ public class Pool {
         for (int i = 0; i < mGrowth; ++i) {
             GameObject newObject;
             newObject = GameObject.Instantiate(mOriginal);
-            newObject.SetActive(false);
+            NetworkServer.Spawn(newObject);
+            ClientScene.FindLocalObject(newObject.GetComponent<NetworkIdentity>().netId).SetActive(false);
+            //newObject.SetActive(false);
+            //RpcSetObjectActive(newObject.transform, false);
             newElements.Add(newObject);
         }
 
@@ -87,6 +91,13 @@ public class Pool {
 
         return newElements[0];
     }
+
+    //[ClientRpc]
+    //public void RpcSetObjectActive(Transform transform, bool active)
+    //{
+    //    Debug.Log(transform);
+    //    transform.gameObject.SetActive(active);
+    //}
 
 
     public enum Activation { ReturnNonActivated, ReturnActivated};
@@ -119,7 +130,7 @@ public class Pool {
         {
             found.SetActive(true);
         }
-
+        
         return found;
     }
 }

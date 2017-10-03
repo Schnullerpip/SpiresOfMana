@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class FireballBehaviour : A_SpellBehaviour
+public class FireballBehaviour : A_SummoningBehaviour
 {
     private Rigidbody mRigid;
 

@@ -24,7 +24,7 @@ public class PlayerCamera : MonoBehaviour {
 		return mCamera;
 	}
 
-	void Awake()
+	void Start()
 	{
 		mCamera = GetComponentInChildren<Camera>();
 

@@ -44,4 +44,14 @@ public abstract class A_InputState : A_State{
 
     public virtual void Cast_Spell_2() { }
     public virtual void Cast_Spell_3() { }
+
+	public virtual void StartFocus()
+	{
+		player.StartFocus();
+	}
+
+	public virtual void StopFocus()
+	{
+		player.StopFocus();
+	}
 }

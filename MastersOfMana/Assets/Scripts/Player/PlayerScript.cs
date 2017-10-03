@@ -35,7 +35,7 @@ public class PlayerScript : NetworkBehaviour
     }
 
 	[Header("Movement")]
-	public float movementAcceleration = 10;  
+	public float speed = 4;  
 	public float jumpStrength = 5;
 	public float fallGravityMultiplier = 1.2f;
 	[Range(0.0f,1.0f)]
@@ -52,6 +52,7 @@ public class PlayerScript : NetworkBehaviour
 	[Header("Aim")]
 	[Tooltip("Degrees per seconds")]
 	public float aimSpeed = 360;    
+	public float aimAssist = 10;
 	[HideInInspector]
 	public float yAim = 0;
 	[HideInInspector]
@@ -59,10 +60,10 @@ public class PlayerScript : NetworkBehaviour
 	public PlayerCamera cameraRig;
 	public Transform handTransform;
 
-
-	private Rigidbody rigid;
+	private Rigidbody mRigidbody;
 
 	protected Rewired.Player rewiredPlayer;
+	private HealthScript mFocusedTarget = null;
 
 	void Awake()
 	{
@@ -85,7 +86,7 @@ public class PlayerScript : NetworkBehaviour
         //initialize Inpur handler
 	    rewiredPlayer = ReInput.players.GetPlayer(0);
 
-		rigid = GetComponent<Rigidbody>();
+		mRigidbody = GetComponent<Rigidbody>();
 	}
 
     // Use this for initialization on local Player only
@@ -128,24 +129,6 @@ public class PlayerScript : NetworkBehaviour
 		Vector2 movementInput = rewiredPlayer.GetAxis2D("MoveHorizontal", "MoveVertical");
 		movementInput = Vector3.ClampMagnitude(movementInput,1);
 
-		//store the aim input, either mouse or right analog stick
-		Vector2 aimInput = rewiredPlayer.GetAxis2D("AimHorizontal", "AimVertical");
-		aimInput = Vector3.ClampMagnitude(aimInput,1);
-
-		//take framerate into consideration
-		aimInput *= Time.deltaTime * aimSpeed;
-
-		//rotate the entire player along its y-axis
-		transform.Rotate(0,aimInput.x,0);
-		//prevent spinning around the z-Axis (no backflips allowed)
-		yAim = Mathf.Clamp(yAim + aimInput.y, -89, 89);
-		//calculate the lookDirection vector with the current forward vector as a basis, rotating up or down
-		lookDirection = Quaternion.AngleAxis(-yAim, transform.right) * transform.forward;
-
-		#if UNITY_EDITOR 
-		Debug.DrawRay(transform.position+Vector3.up*1.8f, lookDirection, Color.red);
-		#endif
-
 		//propergate various inputs to the statesystems
 		#region Input
 		if(rewiredPlayer.GetButtonDown("Jump"))
@@ -154,7 +137,7 @@ public class PlayerScript : NetworkBehaviour
 		}
 
 
-        inputStateSystem.current.Move(movementInput);
+		inputStateSystem.current.Move(movementInput);
 
 		//TODO: define mouse & keyboard / controller schemes, "CastSpell" not final axis name
 		if(rewiredPlayer.GetButtonDown("CastSpell"))
@@ -162,9 +145,96 @@ public class PlayerScript : NetworkBehaviour
 			inputStateSystem.current.Cast_Spell_1();
 		}
 
-        inputStateSystem.current.Move(movementInput);
+		inputStateSystem.current.Move(movementInput);
+
+		if(rewiredPlayer.GetButtonDown("Focus"))
+		{
+			inputStateSystem.current.StartFocus();
+		}
+
+		if(rewiredPlayer.GetButtonUp("Focus"))
+		{
+			inputStateSystem.current.StopFocus();
+		}
 		#endregion
+
+
+		#region Aiming
+		//store the aim input, either mouse or right analog stick
+		Vector2 aimInput = rewiredPlayer.GetAxis2D("AimHorizontal", "AimVertical");
+		aimInput = Vector3.ClampMagnitude(aimInput,1);
+
+		//take framerate into consideration
+		aimInput *= Time.deltaTime * aimSpeed;
+
+		if(mFocusedTarget != null)
+		{
+			//get the direction to the target, from the actual cameras position
+			Vector3 dirToTarget = mFocusedTarget.transform.position - cameraRig.GetCamera().transform.position;
+			//rotate towards the target
+			float yRotation = Mathf.Atan2 (dirToTarget.x, dirToTarget.z) * Mathf.Rad2Deg;
+			transform.rotation = Quaternion.AngleAxis (yRotation, Vector3.up);
+			yAim = -Vector3.SignedAngle(transform.forward,dirToTarget,transform.right);
+		}
+		else
+		{
+			//rotate the entire player along its y-axis
+			transform.Rotate(0,aimInput.x,0);
+			//prevent spinning around the z-Axis (no backflips allowed)
+			yAim = Mathf.Clamp(yAim + aimInput.y, -89, 89);
+		}
+
+		//calculate the lookDirection vector with the current forward vector as a basis, rotating up or down
+		lookDirection = Quaternion.AngleAxis(-yAim, transform.right) * transform.forward;
+
+		#endregion
+
+		#if UNITY_EDITOR 
+		Debug.DrawRay(transform.position+Vector3.up*1.8f, lookDirection, Color.red);
+		#endif
  	}
+
+	public void StartFocus()
+	{
+		mFocusedTarget = FocusAssistTarget(aimAssist);
+	}
+
+	public void StopFocus()
+	{
+		mFocusedTarget = null;
+	}
+
+	/// <summary>
+	/// Returns a HealthScript thats within the specified 
+	/// maxAngle of the camera and that is not obstructed.
+	/// </summary>
+	/// <returns>The assist target.</returns>
+	/// <param name="maxAngle">Max angle.</param>
+	private HealthScript FocusAssistTarget(float maxAngle)
+	{
+		HealthScript[] allHealthScripts = GameObject.FindObjectsOfType<HealthScript>();
+
+		foreach (HealthScript potentialTarget in allHealthScripts) 
+		{
+			if(potentialTarget.gameObject == this)
+				continue;
+
+			Vector3 dirToTarget = potentialTarget.transform.position - cameraRig.GetCamera().transform.position;
+			if(Vector3.Angle(dirToTarget,lookDirection) < maxAngle)
+			{
+				RaycastHit hit;
+				if(Physics.Raycast(cameraRig.GetCamera().transform.position,dirToTarget,out hit))
+				{
+					if(hit.collider.gameObject == potentialTarget.gameObject)
+					{
+						return potentialTarget;
+					}
+				}
+			}
+		}
+
+		return null;
+	}
 
 	//TODO: delete this method, testing purpose only
 	/// <summary>
@@ -206,7 +276,7 @@ public class PlayerScript : NetworkBehaviour
 			Debug.DrawRay(transform.position, feet.GetGroundNormal(), (feet.currentSlopeAngle < feet.maxSlope ? Color.white : Color.magenta), 10);
 		}
 
-		Vector3 direction = moveInputForce * Time.deltaTime * movementAcceleration;
+		Vector3 direction = moveInputForce * Time.deltaTime * speed;
 		Vector2 directionXZ = direction.xz();
 
 		//calculate the amount of slowdown, by comparing the direction with the forward vector of the character
@@ -217,24 +287,24 @@ public class PlayerScript : NetworkBehaviour
 		direction *= 1 - reverseDamping;
 
 		//increase the falling speed to make it feel a bit less floaty
-		if(rigid.velocity.y < 0)
+		if(mRigidbody.velocity.y < 0)
 		{
-			rigid.velocity += Physics.gravity * fallGravityMultiplier * Time.deltaTime;
+			mRigidbody.velocity += Physics.gravity * fallGravityMultiplier * Time.deltaTime;
 		}
 
 		//move the character
-		rigid.MovePosition(rigid.position + direction);
+		mRigidbody.MovePosition(mRigidbody.position + direction);
 
 		Debug.DrawRay(transform.position+Vector3.up, moveInputForce, Color.cyan);
-		Debug.DrawRay(transform.position+Vector3.up, rigid.velocity, Color.green);
+		Debug.DrawRay(transform.position+Vector3.up, mRigidbody.velocity, Color.green);
 
 		//if the player gets input
 		if(direction.sqrMagnitude > 0)
 		{
 			//calculate the angle between the movemement and external forces
-			float angle = Vector2.Angle(rigid.velocity.xz(),directionXZ);
+			float angle = Vector2.Angle(mRigidbody.velocity.xz(),directionXZ);
 			//move the rigidbody's velocity towards zero in the xz plane, proportional to the angle
-			rigid.velocity = Vector3.MoveTowards(rigid.velocity, new Vector3(0,rigid.velocity.y,0), movementAcceleration * Time.deltaTime * angle / 180);
+			mRigidbody.velocity = Vector3.MoveTowards(mRigidbody.velocity, new Vector3(0,mRigidbody.velocity.y,0), speed * Time.deltaTime * angle / 180);
 		}
 	}
 
@@ -254,7 +324,7 @@ public class PlayerScript : NetworkBehaviour
 	{
 		if(feet.IsGrounded())
 		{
-			rigid.AddForce(Vector3.up * jumpStrength,ForceMode.VelocityChange);
+			mRigidbody.AddForce(Vector3.up * jumpStrength,ForceMode.VelocityChange);
 		}
 	}
 

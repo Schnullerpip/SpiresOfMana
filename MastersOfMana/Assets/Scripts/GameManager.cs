@@ -6,25 +6,40 @@ using UnityEngine.Networking;
 public class GameManager : NetworkBehaviour
 {
 
-    private List<PlayerScript> mPlayers;
+    private static List<PlayerScript> mPlayers;
 
-    private PoolRegistry mPoolRegistry;
+    private static PoolRegistry mPoolRegistry;
 
-	// Use this for initialization
-	void Start ()
-	{
-	   mPoolRegistry = FindObjectOfType<PoolRegistry>();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    private static int mNumberOfGoMessages = 0;
+    private static int mNeededToGo = 1; //Magic Number to allow for GO from poolRegistry
 
-    public void IsReady(List<PlayerScript> allPlayers)
+    public static void ResetMessages()
+    {
+        mNumberOfGoMessages = 0;
+    }
+
+    public static void Go()
+    {
+        mNumberOfGoMessages++;
+        if(mNumberOfGoMessages == mNeededToGo)
+        {
+            StartGame();
+        }
+    }
+
+    public static void SetPlayers(List<PlayerScript> allPlayers)
     {
         mPlayers = allPlayers;
+    }
 
+    public static void AddPlayerMessageCounter()
+    {
+        mNeededToGo++;
+    }
+
+    public static void StartGame()
+    {
+	    mPoolRegistry = FindObjectOfType<PoolRegistry>();
         //activate the pools, to start isntantiating, now that all the players have joined the game
         mPoolRegistry.CreatePools();
 

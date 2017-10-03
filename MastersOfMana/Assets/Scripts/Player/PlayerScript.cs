@@ -89,14 +89,27 @@ public class PlayerScript : NetworkBehaviour
 		mRigidbody = GetComponent<Rigidbody>();
 	}
 
+    [Command]
+    private void CmdGiveGo()
+    {
+        GameManager.Go();
+    }
+
     // Use this for initialization on local Player only
     override public void OnStartLocalPlayer()
     {
         if (isLocalPlayer)
         {
+            CmdGiveGo();
             cameraRig = Instantiate(cameraRig);
             cameraRig.GetComponent<PlayerCamera>().followTarget = this;
         }
+    }
+
+    [Command]
+    public void CmdCast()
+    {
+        spellSlot_1.Cast(this);
     }
 
     // Update is called once per frame
@@ -112,7 +125,7 @@ public class PlayerScript : NetworkBehaviour
         //STEP 2
         //TODO this is not how the spells should be polled!!!!! only for testing!!!! DELETE THIS EVENTUALLY
         if (Input.GetKeyDown("z")) {
-            spellSlot_1.Cast(this);
+            CmdCast();
         }
         if (Input.GetKeyDown("u")) {
             spellSlot_2.Cast(this);
@@ -386,11 +399,11 @@ public class PlayerScript : NetworkBehaviour
         /// <param name="caster"></param>
 	    public void Cast(PlayerScript caster)
 	    {
-	        if (cooldown <= 0)
-	        {
+	        //if (cooldown <= 0)
+	        //{
 	            cooldown = spell.coolDownInSeconds;
                 spell.Cast(caster);
-	        }
+	        //}
 	    }
 	}
 }

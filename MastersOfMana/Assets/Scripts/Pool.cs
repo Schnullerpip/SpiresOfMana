@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 /// <summary>
 /// Pool, for instances that handles Object insantiation
@@ -9,7 +10,7 @@ using UnityEngine;
 /// 2. OnMissSubjoinElements --> creates new instances and then returns a new one
 /// 3. OnMissRoundRobin --> returns first found inactive element
 /// </summary>
-public class Pool {
+public class Pool : NetworkBehaviour {
 
     //important members 
 
@@ -79,7 +80,13 @@ public class Pool {
         for (int i = 0; i < mGrowth; ++i) {
             GameObject newObject;
             newObject = GameObject.Instantiate(mOriginal);
-            newObject.SetActive(false);
+            NetworkServer.Spawn(newObject);
+            A_SummoningBehaviour summoning = newObject.GetComponent<A_SummoningBehaviour>();
+            if (summoning)
+            {
+                newObject.SetActive(false);
+                summoning.RpcSetActive(false);
+            }
             newElements.Add(newObject);
         }
 
@@ -101,14 +108,16 @@ public class Pool {
     /// <returns></returns>
     public GameObject Get(Activation activateOnReturn = Activation.ReturnNonActivated) {
         GameObject found = null;
-        for(int i = 0; i < mSize; ++i){
+
+        for (int i = 0; i < mSize; ++i)
+        {
             found = mObjects[i];
             if (!found.activeSelf)
             {
                 break;
             }
             found = null;
-        }
+        }        
 
         //Miss! - no active element was found
         if (!found) {
@@ -117,9 +126,13 @@ public class Pool {
 
         if (activateOnReturn == Activation.ReturnActivated)
         {
-            found.SetActive(true);
+            A_SummoningBehaviour summoning = found.GetComponent<A_SummoningBehaviour>();
+            if(summoning)
+            {
+                summoning.RpcSetActive(true);
+            }
         }
-
+        
         return found;
     }
 }

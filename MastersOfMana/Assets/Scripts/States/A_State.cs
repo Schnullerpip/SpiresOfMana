@@ -19,4 +19,7 @@ public class A_State
 
 	// Use this for continuous statechecks
 	public virtual void Update () {}
+
+    //statemethods each statesystem will need
+    public virtual void Hurt(float amount) { }
 }

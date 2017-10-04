@@ -24,7 +24,7 @@ public class PlayerScript : NetworkBehaviour
         spellSlot_3;
 
     /// <summary>
-    /// holds references to all the coroutines a spell is running, so they can bes stopped/interrupted when a player is for example hit
+    /// holds references to all the coroutines a spell is running, so they can bes stopped/interrupted w4hen a player is for example hit
     /// and can therefore not continue to cast the spell
     /// </summary>
     public List<IEnumerator> spellRoutines = new List<IEnumerator>();
@@ -112,6 +112,22 @@ public class PlayerScript : NetworkBehaviour
         spellSlot_1.Cast(this);
     }
 
+    [Command]
+    public void CmdCastSpellslot_1()
+    {
+        spellSlot_1.Cast(this);
+    }
+    [Command]
+    public void CmdCastSpellslot_2()
+    {
+        spellSlot_2.Cast(this);
+    }
+    [Command]
+    public void CmdCastSpellslot_3()
+    {
+        spellSlot_3.Cast(this);
+    }
+
     // Update is called once per frame
     void Update () 
 	{
@@ -125,13 +141,13 @@ public class PlayerScript : NetworkBehaviour
         //STEP 2
         //TODO this is not how the spells should be polled!!!!! only for testing!!!! DELETE THIS EVENTUALLY
         if (Input.GetKeyDown("z")) {
-            CmdCast();
+            CmdCastSpellslot_1();
         }
         if (Input.GetKeyDown("u")) {
-            spellSlot_2.Cast(this);
+            CmdCastSpellslot_2();
         }
         if (Input.GetKeyDown("i")) {
-            spellSlot_3.Cast(this);
+            CmdCastSpellslot_3();
         }
 
         //STEP 3
@@ -399,11 +415,11 @@ public class PlayerScript : NetworkBehaviour
         /// <param name="caster"></param>
 	    public void Cast(PlayerScript caster)
 	    {
-	        //if (cooldown <= 0)
-	        //{
-	            cooldown = spell.coolDownInSeconds;
+            if (cooldown <= 0)
+            {
+                cooldown = spell.coolDownInSeconds;
                 spell.Cast(caster);
-	        //}
-	    }
+            }
+        }
 	}
 }

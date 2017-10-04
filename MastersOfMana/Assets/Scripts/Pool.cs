@@ -10,7 +10,7 @@ using UnityEngine.Networking;
 /// 2. OnMissSubjoinElements --> creates new instances and then returns a new one
 /// 3. OnMissRoundRobin --> returns first found inactive element
 /// </summary>
-public class Pool : NetworkBehaviour {
+public class Pool {
 
     //important members 
 

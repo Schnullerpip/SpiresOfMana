@@ -11,7 +11,7 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
     //relevant data like damage, manacost etc.
     public A_Spell referencedSpell;
 
-    public void Start()
+    public virtual void Start()
     {
         //make sure referencedSpell was attached in Editor
         if (!referencedSpell)

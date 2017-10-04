@@ -12,6 +12,11 @@ public class PlayerHealthScript : HealthScript {
     }
 
     public override void TakeDamage(float amount) {
-        player.inputStateSystem.current.Hurt(amount);
+        player.effectStateSystem.current.Hurt(amount);
+
+        if (GetCurrentHealth() <= 0) {
+            //this player is dead!!! tell the Gamemanager, that one is down
+            //TODO send Cmd to GameManager
+        }
     }
 }

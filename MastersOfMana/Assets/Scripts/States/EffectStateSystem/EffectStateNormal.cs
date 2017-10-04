@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EffectStateNormal : A_EffectState {
-    public EffectStateNormal(PlayerScript player) : base(player) { }
+    private PlayerHealthScript mHealth;
+    public EffectStateNormal(PlayerScript player) : base(player) {
+        mHealth = player.GetComponent<PlayerHealthScript>();
+    }
 
     /*behaviour distinction
      * those are keptempty on purpose because they're ment to be implemented in the subclasses
@@ -11,4 +14,7 @@ public class EffectStateNormal : A_EffectState {
      */
 
     //TODO...
+    public override void Hurt(float amount)
+    {
+    }
 }

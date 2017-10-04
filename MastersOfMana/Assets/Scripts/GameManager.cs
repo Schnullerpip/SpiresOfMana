@@ -2,20 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 public class GameManager : NetworkBehaviour
 {
 
     private static List<PlayerScript> mPlayers;
+    private static List<PlayerHealthScript> mPlayerHealths;
 
     private static PoolRegistry mPoolRegistry;
 
-    private static int mNumberOfGoMessages = 0;
+    private static int mNumberOfGoMessages = 0,
+                       mNumberOfDeadPlayers = 0;
     private static int mNeededToGo = 1; //Magic Number to allow for GO from poolRegistry
 
     public static void ResetMessages()
     {
         mNumberOfGoMessages = 0;
+        mNumberOfDeadPlayers = 0;
     }
 
     public static void Go()
@@ -48,5 +52,25 @@ public class GameManager : NetworkBehaviour
         {
             p.RpcChangeInputState(InputStateSystem.InputStateID.Normal);
         }
+    }
+
+    // INGAME
+
+    public static void PlayerDown() {
+        ++mNumberOfDeadPlayers;
+
+        if (mNumberOfDeadPlayers > (mPlayers.Count - 1)) { //only one player left -> he/she won the game!
+
+        }
+
+    }
+    IEnumerator PostGameLobby(PlayerScript winner, List<PlayerScript> others) {
+        yield return new WaitForSeconds(5.0f);
+        //TODO change to postGameLobbyScene
+        //SceneManager.LoadSceneAsync(indexOfPostGameLobbyScene);
+    }
+
+    public void Update()
+    {
     }
 }

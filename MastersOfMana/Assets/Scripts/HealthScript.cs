@@ -40,4 +40,8 @@ public class HealthScript : MonoBehaviour
         currentHealth = maxHealth;
         isAlive = true;
     }
+
+    public float GetCurrentHealth() {
+        return currentHealth;
+    }
 }

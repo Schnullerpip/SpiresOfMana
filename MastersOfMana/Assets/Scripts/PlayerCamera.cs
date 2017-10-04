@@ -48,4 +48,27 @@ public class PlayerCamera : MonoBehaviour {
 
 		joint.rotation = targetRotation;
 	}
+
+	/// <summary>
+	/// Shoots a ray from the center of the viewport.
+	/// </summary>
+	/// <returns><c>true</c>, if raycast hit something, <c>false</c> otherwise.</returns>
+	/// <param name="hit">Hit.</param>
+	public bool CenterRaycast(out RaycastHit hit)
+	{
+		return Physics.Raycast(mCamera.ViewportPointToRay(new Vector3(.5f, .5f, 0)), out hit);
+	}
+
+	/// <summary>
+	/// Shoots a ray from the 3D position of the camera, offset by its approx. distance to the players head.
+	/// </summary>
+	/// <returns><c>true</c>, if the raycast hit, <c>false</c> otherwise.</returns>
+	/// <param name="position">Position.</param>
+	/// <param name="hit">Hit.</param>
+	public bool RaycastCheck(Vector3 position, out RaycastHit hit)
+	{
+		Vector3 rayStart = mCamera.transform.position + mCamera.transform.forward * (-mCamera.transform.localPosition.z + .5f);
+		Vector3 direction = position - rayStart;
+		return Physics.Raycast(rayStart, direction, out hit);
+	}
 }

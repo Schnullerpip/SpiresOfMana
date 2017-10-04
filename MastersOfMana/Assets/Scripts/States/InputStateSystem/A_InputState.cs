@@ -15,6 +15,10 @@ public abstract class A_InputState : A_State{
      */
     public virtual void Hurt(float amount) { }
 	public virtual void Move(Vector2 input) { }
+	public virtual void Aim(Vector2 aimInput) 
+	{
+		
+	}
 
     public virtual void Jump() 
 	{
@@ -22,7 +26,8 @@ public abstract class A_InputState : A_State{
 	}
     public virtual void Cast_Spell_1() 
 	{  
-		RaycastHit hit = CameraRaycast();
+		RaycastHit hit;
+		player.cameraRig.CenterRaycast(out hit);
 		if(hit.collider != null)
 		{
 			player.DebugRayFromHandToPosition(hit.point);
@@ -31,15 +36,6 @@ public abstract class A_InputState : A_State{
 		{
 			Debug.Log("No RaycastHit");
 		}
-	}
-
-	private RaycastHit CameraRaycast()
-	{
-		Camera cam = player.cameraRig.GetCamera();
-		Ray ray = cam.ViewportPointToRay(new Vector3(.5f, .5f, 0));
-		RaycastHit hit;
-		Physics.Raycast(ray, out hit);
-		return hit;
 	}
 
     public virtual void Cast_Spell_2() { }

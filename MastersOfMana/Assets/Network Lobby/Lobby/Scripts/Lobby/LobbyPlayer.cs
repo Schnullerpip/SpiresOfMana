@@ -38,6 +38,19 @@ namespace Prototype.NetworkLobby
         static Color ReadyColor = new Color(0.0f, 204.0f / 255.0f, 204.0f / 255.0f, 1.0f);
         static Color TransparentColor = new Color(0, 0, 0, 0);
 
+        public Button 
+            spellButton1,
+            spellButton2,
+            spellButton3;
+
+        //spellslots
+        public A_Spell
+            spell_1,
+            spell_2,
+            spell_3;
+
+        public Sprite test;
+
         //static Color OddRowColor = new Color(250.0f / 255.0f, 250.0f / 255.0f, 250.0f / 255.0f, 1.0f);
         //static Color EvenRowColor = new Color(180.0f / 255.0f, 180.0f / 255.0f, 180.0f / 255.0f, 1.0f);
 
@@ -131,6 +144,10 @@ namespace Prototype.NetworkLobby
 
             readyButton.onClick.RemoveAllListeners();
             readyButton.onClick.AddListener(OnReadyClicked);
+
+            spellButton1.transform.GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Spellicons/" + spell_1.name + "icon");
+            spellButton2.transform.GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Spellicons/" + spell_2.name + "icon");
+            spellButton3.transform.GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Spellicons/" + spell_3.name + "icon");
 
             //when OnClientEnterLobby is called, the loval PlayerController is not yet created, so we need to redo that here to disable
             //the add button if we reach maxLocalPlayer. We pass 0, as it was already counted on OnClientEnterLobby

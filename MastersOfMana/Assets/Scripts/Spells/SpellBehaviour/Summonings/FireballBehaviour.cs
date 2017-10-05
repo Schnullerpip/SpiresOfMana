@@ -9,9 +9,10 @@ public class FireballBehaviour : A_SummoningBehaviour
     private Rigidbody mRigid;
     [SerializeField]
     private float mSpeed = 5.0f;
+    [SerializeField]
     private float mDamage = 5.0f;
 
-    override public void Start()
+    public override void Start()
     {
         base.Start();
         mRigid = GetComponent<Rigidbody>();
@@ -31,11 +32,7 @@ public class FireballBehaviour : A_SummoningBehaviour
         fireball.GetComponent<Rigidbody>().velocity = caster.lookDirection*mSpeed;
     }
 
-    public void OnCollisionEnter(Collision collision)
-    {
-        if (!isServer) {
-            return;
-        }
+    protected override void ExecuteCollisionOnServer(Collision collision) {
         RpcSetActive(false);
         HealthScript hs = collision.gameObject.GetComponent<HealthScript>();
         if (hs) {

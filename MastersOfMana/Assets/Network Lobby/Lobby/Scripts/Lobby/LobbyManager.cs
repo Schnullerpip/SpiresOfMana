@@ -230,7 +230,7 @@ namespace Prototype.NetworkLobby
         public override void OnStartHost()
         {
             base.OnStartHost();
-            GameManager.ResetMessages();
+            GameManager.ResetLocalGameState();
             ChangeTo(mainMenu.lobbyPanel);
             backDelegate = StopHostClbk;
             SetServerInfo("Hosting", networkAddress);

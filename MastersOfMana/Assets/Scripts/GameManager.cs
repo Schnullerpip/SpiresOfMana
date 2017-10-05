@@ -16,7 +16,7 @@ public class GameManager : NetworkBehaviour
                        mNumberOfDeadPlayers = 0;
     private static int mNeededToGo = 1; //Magic Number to allow for GO from poolRegistry
 
-    public static void ResetMessages()
+    public static void ResetLocalGameState()
     {
         mNumberOfGoMessages = 0;
         mNumberOfDeadPlayers = 0;
@@ -55,12 +55,11 @@ public class GameManager : NetworkBehaviour
     }
 
     // INGAME
-
     public static void PlayerDown() {
         ++mNumberOfDeadPlayers;
 
         if (mNumberOfDeadPlayers > (mPlayers.Count - 1)) { //only one player left -> he/she won the game!
-
+            ResetLocalGameState();
         }
 
     }

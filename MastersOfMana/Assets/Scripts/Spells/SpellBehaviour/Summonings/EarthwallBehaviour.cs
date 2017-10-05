@@ -20,4 +20,9 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
             wall.transform.rotation = caster.transform.rotation;
         }
     }
+
+    protected override void ExecuteCollisionOnServer(Collision collision)
+    {
+        //should a collision with a wall really do anything?
+    }
 }

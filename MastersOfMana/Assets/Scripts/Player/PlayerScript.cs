@@ -73,6 +73,7 @@ public class PlayerScript : NetworkBehaviour
 		{
 			Debug.LogWarning("No camera rig assigned, consider creating one during runtime? Or don't. I'm not your boss. kthx");
 		}
+//		Cursor.lockState = CursorLockMode.Locked;
 	}
 
 	// Use this for initialization
@@ -198,6 +199,17 @@ public class PlayerScript : NetworkBehaviour
 
 		if(mFocusedTarget != null)
 		{
+			RaycastHit hit;
+
+			cameraRig.RaycastCheck(mFocusedTarget.transform.position,out hit);
+			if(hit.collider.gameObject != mFocusedTarget.gameObject)
+			{
+				mFocusedTarget = null;
+			}
+		}
+
+		if(mFocusedTarget != null)
+		{
 			//get the direction to the target, from the actual cameras position
 			Vector3 dirToTarget = mFocusedTarget.transform.position - cameraRig.GetCamera().transform.position;
 			//rotate towards the target
@@ -241,11 +253,39 @@ public class PlayerScript : NetworkBehaviour
 	/// <param name="maxAngle">Max angle.</param>
 	private HealthScript FocusAssistTarget(float maxUnitsOff)
 	{
-		//TODO: cache this, maybe gamemanager?
-		HealthScript[] allHealthScripts = GameObject.FindObjectsOfType<HealthScript>();
+		//shoot a raycast in the middle of the screen
+		RaycastHit hit;
+		if(cameraRig.CenterRaycast(out hit))
+		{
+			//if we hit a healthscript, take that as our aim assist target
+			HealthScript h = hit.collider.GetComponent<HealthScript>();
+			if(h != null)
+			{
+				return h;
+			}
+		}
 
+		//TODO: cache this, maybe gamemanager?
+		List<HealthScript> allHealthScripts = new List<HealthScript>(GameObject.FindObjectsOfType<HealthScript>());
+
+//		//sort by distance 
+//		allHealthScripts.Sort(
+//			delegate(HealthScript a, HealthScript b) 
+//			{
+//				return Vector3.Distance(transform.position,a.transform.position).CompareTo(Vector3.Distance(transform.position,b.transform.position));
+//			}
+//		);
+
+		//sort by angle
+		allHealthScripts.Sort(
+			delegate(HealthScript a, HealthScript b) 
+			{
+				return Vector3.Angle(lookDirection, a.transform.position - cameraRig.GetCamera().transform.position)
+					.CompareTo(Vector3.Angle(lookDirection, b.transform.position - cameraRig.GetCamera().transform.position));
+			}
+		);
+			
 		//iterate through all healthscripts
-		//TODO: early exit 
 		foreach (HealthScript potentialTarget in allHealthScripts) 
 		{
 			//skip player him/herself
@@ -267,10 +307,7 @@ public class PlayerScript : NetworkBehaviour
 			//this way it acts as if the target hat a kind of 2d hitbox (circle) that expands maxUnitsOff into every direciton 
 			if(Vector3.ProjectOnPlane(dirToTarget, - lookDirection).sqrMagnitude < maxUnitsOff * maxUnitsOff)
 			{
-				RaycastHit hit;
-
-				//add the lookdirection to the camera position to combat the obstruction by the playemrodel
-				if(Physics.Raycast(cameraRig.GetCamera().transform.position + lookDirection, dirToTarget, out hit))
+				if(cameraRig.RaycastCheck(potentialTarget.transform.position, out hit))
 				{
 					if(hit.collider.gameObject == potentialTarget.gameObject)
 					{
@@ -280,6 +317,7 @@ public class PlayerScript : NetworkBehaviour
 			}
 		}
 
+		//nothing found
 		return null;
 	}
 

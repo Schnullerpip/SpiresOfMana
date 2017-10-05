@@ -15,9 +15,19 @@ public abstract class A_InputState : A_State{
      */
     public virtual void Hurt(float amount) { }
 	public virtual void Move(Vector2 input) { }
+
 	public virtual void Aim(Vector2 aimInput) 
 	{
-		
+		player.ValidateFocusTargetView();
+
+		if(player.HasFocusTarget())
+		{
+			player.RotateTowardsFocusTarget();	
+		}
+		else
+		{
+			player.Aim(aimInput);
+		}
 	}
 
     public virtual void Jump() 
@@ -27,8 +37,8 @@ public abstract class A_InputState : A_State{
     public virtual void Cast_Spell_1() 
 	{  
 		RaycastHit hit;
-		player.cameraRig.CenterRaycast(out hit);
-		if(hit.collider != null)
+
+		if(player.cameraRig.CenterRaycast(out hit))
 		{
 			player.DebugRayFromHandToPosition(hit.point);
 		}

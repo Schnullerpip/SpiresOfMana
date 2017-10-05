@@ -14,6 +14,10 @@ public class PlayerCamera : MonoBehaviour {
 	public float movementDamping = .2f;
 
 	public Vector3 movementVelocity; 
+	public float zoomedInFOV = 30;
+	public float zoomSpeed = 1;
+
+	private float startFOV;
 
 	private Vector3 mOffset;
 
@@ -27,11 +31,11 @@ public class PlayerCamera : MonoBehaviour {
 	void Start()
 	{
 		mCamera = GetComponentInChildren<Camera>();
+		startFOV = mCamera.fieldOfView;
 
 		if(followTarget == null)
 		{
 			Debug.LogWarning("No Follow Target assigned.", this.gameObject);
-//			enabled = false;
 		}
 	}
 
@@ -46,6 +50,14 @@ public class PlayerCamera : MonoBehaviour {
 	{
 		Quaternion targetRotation = Quaternion.LookRotation(followTarget.lookDirection,followTarget.transform.up);
 
+		if(followTarget.IsFocused())
+		{
+			mCamera.fieldOfView = Mathf.MoveTowards(mCamera.fieldOfView, zoomedInFOV, Time.deltaTime * zoomSpeed);
+		}
+		else
+		{
+			mCamera.fieldOfView = Mathf.MoveTowards(mCamera.fieldOfView, startFOV, Time.deltaTime * zoomSpeed);
+		}
 		joint.rotation = targetRotation;
 	}
 

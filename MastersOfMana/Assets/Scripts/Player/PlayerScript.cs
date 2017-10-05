@@ -36,6 +36,8 @@ public class PlayerScript : NetworkBehaviour
 
 	[Header("Movement")]
 	public float speed = 4;  
+	[Range(0,1)]
+	public float focusSpeedSlowdown = .25f;
 	public float jumpStrength = 5;
 	public float fallGravityMultiplier = 1.2f;
 	[Range(0.0f,1.0f)]
@@ -53,12 +55,15 @@ public class PlayerScript : NetworkBehaviour
 	[Tooltip("Degrees per seconds")]
 	public float aimSpeed = 360;    
 	public float aimAssistInUnits = 1.0f;
+	[Range(0,1)]
+	public float focusAimSlowdown = .25f;
 	[HideInInspector]
 	public float yAim = 0;
 	[HideInInspector]
 	public Vector3 lookDirection;
 	public PlayerCamera cameraRig;
 	public Transform handTransform;
+	private bool mFocusActive = false;
 
 	private Rigidbody mRigidbody;
 
@@ -186,62 +191,104 @@ public class PlayerScript : NetworkBehaviour
 		{
 			inputStateSystem.current.StopFocus();
 		}
-		#endregion
 
-
-		#region Aiming
 		//store the aim input, either mouse or right analog stick
 		Vector2 aimInput = rewiredPlayer.GetAxis2D("AimHorizontal", "AimVertical");
 		aimInput = Vector3.ClampMagnitude(aimInput,1);
 
 		//take framerate into consideration
-		aimInput *= Time.deltaTime * aimSpeed;
+		aimInput *= Time.deltaTime * aimSpeed * (mFocusActive ? focusAimSlowdown : 1);
 
-		if(mFocusedTarget != null)
-		{
-			RaycastHit hit;
-
-			cameraRig.RaycastCheck(mFocusedTarget.transform.position,out hit);
-			if(hit.collider.gameObject != mFocusedTarget.gameObject)
-			{
-				mFocusedTarget = null;
-			}
-		}
-
-		if(mFocusedTarget != null)
-		{
-			//get the direction to the target, from the actual cameras position
-			Vector3 dirToTarget = mFocusedTarget.transform.position - cameraRig.GetCamera().transform.position;
-			//rotate towards the target
-			float yRotation = Mathf.Atan2 (dirToTarget.x, dirToTarget.z) * Mathf.Rad2Deg;
-			transform.rotation = Quaternion.AngleAxis (yRotation, Vector3.up);
-			yAim = -Vector3.SignedAngle(transform.forward,dirToTarget,transform.right);
-		}
-		else
-		{
-			//rotate the entire player along its y-axis
-			transform.Rotate(0,aimInput.x,0);
-			//prevent spinning around the z-Axis (no backflips allowed)
-			yAim = Mathf.Clamp(yAim + aimInput.y, -89, 89);
-		}
-
-		//calculate the lookDirection vector with the current forward vector as a basis, rotating up or down
-		lookDirection = Quaternion.AngleAxis(-yAim, transform.right) * transform.forward;
+		inputStateSystem.current.Aim(aimInput);
 
 		#endregion
+
+		lookDirection = Quaternion.AngleAxis(-yAim, transform.right) * transform.forward;
 
 		#if UNITY_EDITOR 
 		Debug.DrawRay(transform.position+Vector3.up*1.8f, lookDirection, Color.red);
 		#endif
  	}
 
+	/// <summary>
+	/// Determines whether this instance has a focus target.
+	/// </summary>
+	/// <returns><c>true</c> if this instance has focus target; otherwise, <c>false</c>.</returns>
+	public bool HasFocusTarget()
+	{
+		return mFocusedTarget != null;
+	}
+
+	/// <summary>
+	/// Validates if the focus target is in view. Sets the FocusTarget to null if not in free view.
+	/// </summary>
+	/// <returns><c>true</c>, if focus target view was validated, <c>false</c> otherwise.</returns>
+	public bool ValidateFocusTargetView ()
+	{
+		if(mFocusedTarget == null)
+		{
+			return false;
+		}
+		RaycastHit hit;
+		//check if the focus target is still in view
+		cameraRig.RaycastCheck (mFocusedTarget.transform.position, out hit);
+		if (hit.collider.gameObject != mFocusedTarget.gameObject) 
+		{
+			mFocusedTarget = null;
+			return false;
+		}
+		return true;
+	}
+
+	/// <summary>
+	/// Aims the player by the specified aimMovement.
+	/// </summary>
+	/// <param name="aimMovement">Aim movement.</param>
+	public void Aim (Vector2 aimMovement)
+	{
+		//rotate the entire player along its y-axis
+		transform.Rotate (0, aimMovement.x, 0);
+		//prevent spinning around the z-Axis (no backflips allowed)
+		yAim = Mathf.Clamp (yAim + aimMovement.y, -89, 89);
+	}
+
+	/// <summary>
+	/// Rotates the player towards the focus target.
+	/// </summary>
+	public void RotateTowardsFocusTarget ()
+	{
+		//get the direction to the target, from the actual cameras position
+		Vector3 dirToTarget = mFocusedTarget.transform.position - cameraRig.GetCamera().transform.position;
+		//rotate towards the target
+		float yRotation = Mathf.Atan2 (dirToTarget.x, dirToTarget.z) * Mathf.Rad2Deg;
+		transform.rotation = Quaternion.AngleAxis (yRotation, Vector3.up);
+		yAim = -Vector3.SignedAngle (transform.forward, dirToTarget, transform.right);
+	}
+
+	/// <summary>
+	/// Determines whether the player is focused.
+	/// </summary>
+	/// <returns><c>true</c> if this instance is focused; otherwise, <c>false</c>.</returns>
+	public bool IsFocused()
+	{
+		return mFocusActive;
+	}
+
+	/// <summary>
+	/// Starts the focus. Sets FocusActive to true and looks for a potential FocusTarget. Does not guarantee a FocusTarget.
+	/// </summary>
 	public void StartFocus()
 	{
+		mFocusActive = true;
 		mFocusedTarget = FocusAssistTarget(aimAssistInUnits);
 	}
 
+	/// <summary>
+	/// Stops the focus. Sets FocusActive to false and the FocusTarget to null.
+	/// </summary>
 	public void StopFocus()
 	{
+		mFocusActive = false;
 		mFocusedTarget = null;
 	}
 
@@ -361,7 +408,7 @@ public class PlayerScript : NetworkBehaviour
 			Debug.DrawRay(transform.position, feet.GetGroundNormal(), (feet.currentSlopeAngle < feet.maxSlope ? Color.white : Color.magenta), 10);
 		}
 
-		Vector3 direction = moveInputForce * Time.deltaTime * speed;
+		Vector3 direction = moveInputForce * Time.deltaTime * speed * (mFocusActive ? focusSpeedSlowdown : 1);
 		Vector2 directionXZ = direction.xz();
 
 		//calculate the amount of slowdown, by comparing the direction with the forward vector of the character

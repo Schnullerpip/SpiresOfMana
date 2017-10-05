@@ -18,7 +18,7 @@ public class InputStateSystem
 	/// if a state change occures the 'new' state can be adressed through the player's
 	/// dictionary with the respective InputStateID as the key
 	/// </summary>
-    public enum InputStateID {Normal, Moving, Hurt, Idle};
+    public enum InputStateID {Normal, Hurt, Idle};
 
 
 
@@ -29,7 +29,6 @@ public class InputStateSystem
         states = new List<A_InputState>()
         {
             new InputStateNormal(player),
-            new InputStateMoving(player),
             new InputStateHurt(player),
             new InputStateIdle(player),
         };

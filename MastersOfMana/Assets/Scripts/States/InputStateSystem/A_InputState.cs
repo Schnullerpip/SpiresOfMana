@@ -21,14 +21,16 @@ public abstract class A_InputState : A_State{
 
 		if(player.HasFocusTarget())
 		{
-			player.RotateTowardsFocusTarget();	
+			player.RefineAim(aimInput);
+			player.RotateTowardsFocusTarget();
 		}
 		else
 		{
+			player.ResetRefinement();
 			player.Aim(aimInput);
 		}
 	}
-
+		
     public virtual void Jump() 
 	{
 		player.Jump();

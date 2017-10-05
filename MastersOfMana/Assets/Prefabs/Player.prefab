@@ -1427,6 +1427,7 @@ MonoBehaviour:
     spell: {fileID: 11400000, guid: d41a648d6ad49334090f1c47fbc8cd34, type: 2}
     cooldown: 0
   speed: 4
+  focusSpeedSlowdown: 0.25
   jumpStrength: 5
   fallGravityMultiplier: 1.2
   amountOfReverseSlowdown: 0.25
@@ -1438,11 +1439,13 @@ MonoBehaviour:
     currentSlopeAngle: 0
   aimSpeed: 360
   aimAssistInUnits: 2
+  focusAimSlowdown: 0.1
   yAim: 0
   lookDirection: {x: 0, y: 0, z: 0}
   cameraRig: {fileID: 114371251292269686, guid: 21611dcaa52d8441ba40cf1e83852a1e,
     type: 2}
   handTransform: {fileID: 4216665367181332}
+  aimOffset: {x: 0, y: 0, z: 0}
 --- !u!135 &135659848251551540
 SphereCollider:
   m_ObjectHideFlags: 1

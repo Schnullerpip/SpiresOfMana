@@ -40,11 +40,11 @@ public class PlayerScript : NetworkBehaviour
 	public float focusSpeedSlowdown = .25f;
 	public float jumpStrength = 5;
 	public float fallGravityMultiplier = 1.2f;
-	[Range(0.0f,1.0f)]
 	[Tooltip("How much slower is the player when he/she walks backwards? 0 = no slowdown, 1 = fullstop")]
+	[Range(0.0f,1.0f)]
 	public float amountOfReverseSlowdown = 0.0f;
-	[Range(0.0f,180.0f)]
 	[Tooltip("At which angle does the player still move with fullspeed?")]
+	[Range(0.0f,180.0f)]
 	public int maxFullspeedAngle = 90;
 
 	[HideInInspector]
@@ -55,20 +55,23 @@ public class PlayerScript : NetworkBehaviour
 	[Tooltip("Degrees per seconds")]
 	public float aimSpeed = 360;    
 	public float aimAssistInUnits = 1.0f;
+	[Tooltip("How fast is the aim when focused? 0 = freeze, 1 = no slowdown")]
 	[Range(0,1)]
-	public float focusAimSlowdown = .25f;
+	public float focusAimSpeedFactor = .25f;
+	[Tooltip("How many units can the player move the cursor when locked on?")]
+	public float maxAimRefinementMagnitude = 1f;
 	[HideInInspector]
 	public float yAim = 0;
 	[HideInInspector]
 	public Vector3 lookDirection;
 	public PlayerCamera cameraRig;
 	public Transform handTransform;
+	private Vector3 mAimRefinement;
+
 	private bool mFocusActive = false;
-
 	private Rigidbody mRigidbody;
-
-	protected Rewired.Player rewiredPlayer;
 	private HealthScript mFocusedTarget = null;
+	protected Rewired.Player rewiredPlayer;
 
 	void Awake()
 	{
@@ -197,7 +200,7 @@ public class PlayerScript : NetworkBehaviour
 		aimInput = Vector3.ClampMagnitude(aimInput,1);
 
 		//take framerate into consideration
-		aimInput *= Time.deltaTime * aimSpeed * (mFocusActive ? focusAimSlowdown : 1);
+		aimInput *= Time.deltaTime * aimSpeed * (mFocusActive ? focusAimSpeedFactor : 1);
 
 		inputStateSystem.current.Aim(aimInput);
 
@@ -253,12 +256,40 @@ public class PlayerScript : NetworkBehaviour
 	}
 
 	/// <summary>
+	/// Refines the aim.
+	/// </summary>
+	/// <param name="aimInput">Aim input.</param>
+	public void RefineAim (Vector2 aimInput)
+	{
+		//convert from local to worldspace and reduces the input by pi/2 since it was parameterized for angular movement of player
+		mAimRefinement += transform.TransformDirection (aimInput) / Mathf.PI * .5f;
+		//clamp to 
+		mAimRefinement = Vector3.ClampMagnitude (mAimRefinement, maxAimRefinementMagnitude);
+
+		//get the current controller
+		Rewired.Controller lastController = rewiredPlayer.controllers.GetLastActiveController();
+		if(lastController != null && lastController.type == ControllerType.Joystick)
+		{
+			//do this snapback only for joystick controls
+			if (aimInput.sqrMagnitude <= 0) 
+			{
+				mAimRefinement = Vector3.MoveTowards (mAimRefinement, Vector3.zero, Time.deltaTime * aimSpeed * Time.deltaTime);
+			}
+		}
+	}
+
+	public void ResetRefinement()
+	{
+		mAimRefinement = Vector3.zero;
+	}
+
+	/// <summary>
 	/// Rotates the player towards the focus target.
 	/// </summary>
 	public void RotateTowardsFocusTarget ()
 	{
 		//get the direction to the target, from the actual cameras position
-		Vector3 dirToTarget = mFocusedTarget.transform.position - cameraRig.GetCamera().transform.position;
+		Vector3 dirToTarget = (mFocusedTarget.transform.position + mAimRefinement) - cameraRig.GetCamera().transform.position;
 		//rotate towards the target
 		float yRotation = Mathf.Atan2 (dirToTarget.x, dirToTarget.z) * Mathf.Rad2Deg;
 		transform.rotation = Quaternion.AngleAxis (yRotation, Vector3.up);

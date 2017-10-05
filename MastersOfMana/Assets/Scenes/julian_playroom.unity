@@ -108,6 +108,28 @@ NavMeshSettings:
     tileSize: 256
     accuratePlacement: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &79622588 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1158603164407814, guid: 3a3cc762de0e03a4bb4c47c72098c11f,
+    type: 2}
+  m_PrefabInternal: {fileID: 1883702547}
+--- !u!95 &79622593
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 79622588}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 78402537757cd9849abc64647fb9db4c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1001 &477143526
 Prefab:
   m_ObjectHideFlags: 0
@@ -232,6 +254,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: -9.991, y: 0, z: 0}
+--- !u!1 &703450706 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1164052453046962, guid: 7b13270c78cfdcd419ee053a78a3ad25,
+    type: 2}
+  m_PrefabInternal: {fileID: 477143526}
+--- !u!95 &703450710
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 703450706}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: fce3bd62084c079479249e05839e7afa, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &980572298
 GameObject:
   m_ObjectHideFlags: 0

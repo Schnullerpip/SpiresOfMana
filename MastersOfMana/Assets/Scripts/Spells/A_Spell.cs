@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class A_Spell : ScriptableObject 
 {
     //Spelldata
-	public UnityEngine.UI.Image icon;
+	public Sprite icon;
     public float coolDownInSeconds;
 
     //holds prefabs, representing actual manifests of spells like a fireball - technically a dash spell will have a meshless prefab only holding the behaviour for example

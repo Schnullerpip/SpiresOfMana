@@ -18,6 +18,7 @@ namespace Prototype.NetworkLobby
         public RectTransform lobbyPanel;
         public LobbyInfoPanel infoPanel;
         public LobbyCountdownPanel countdownPanel;
+        public RectTransform spellSelectionPanel;
 
         public InputField matchNameInput;
         public Button backButton;

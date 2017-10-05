@@ -73,6 +73,7 @@ public class PlayerScript : NetworkBehaviour
 		{
 			Debug.LogWarning("No camera rig assigned, consider creating one during runtime? Or don't. I'm not your boss. kthx");
 		}
+//		Cursor.lockState = CursorLockMode.Locked;
 	}
 
 	// Use this for initialization
@@ -238,12 +239,14 @@ public class PlayerScript : NetworkBehaviour
 	{
 		//shoot a raycast in the middle of the screen
 		RaycastHit hit;
-		cameraRig.CenterRaycast(out hit);
-		//if we hit a healthscript, take that as our aim assist target
-		HealthScript h = hit.collider.GetComponent<HealthScript>();
-		if(h != null)
+		if(cameraRig.CenterRaycast(out hit))
 		{
-			return h;
+			//if we hit a healthscript, take that as our aim assist target
+			HealthScript h = hit.collider.GetComponent<HealthScript>();
+			if(h != null)
+			{
+				return h;
+			}
 		}
 
 		//TODO: cache this, maybe gamemanager?

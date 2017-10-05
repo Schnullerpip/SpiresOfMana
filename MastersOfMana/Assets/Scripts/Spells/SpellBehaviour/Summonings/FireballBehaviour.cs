@@ -25,11 +25,15 @@ public class FireballBehaviour : A_SummoningBehaviour
 
     public override void Execute(PlayerScript caster)
     {
+        //Get a fireballinstance out of the pool
         GameObject fireball = PoolRegistry.FireballPool.Get(Pool.Activation.ReturnActivated);
+
+        //position the fireball to 'spawn' at the casters hand, including an offset so it does not collide instantly with the hand
         fireball.transform.position = caster.handTransform.position + caster.lookDirection * .5f;
         fireball.transform.rotation = caster.transform.rotation;
         
-        fireball.GetComponent<Rigidbody>().velocity = caster.lookDirection*mSpeed;
+        //speed up the fireball to fly into the lookdirection of the player
+        //fireball.GetComponent<Rigidbody>().velocity = 
     }
 
     protected override void ExecuteCollisionOnServer(Collision collision) {

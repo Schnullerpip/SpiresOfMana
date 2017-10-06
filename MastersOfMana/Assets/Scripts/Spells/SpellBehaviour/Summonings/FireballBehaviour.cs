@@ -32,17 +32,8 @@ public class FireballBehaviour : A_SummoningBehaviour
         fireball.transform.position = caster.handTransform.position + caster.GetAimDirection() * 1.5f;
         fireball.transform.rotation = caster.transform.rotation;
 
-        //Debug.Log("Pool " + PoolRegistry.FireballPool);
-        //Debug.Log("Fireball " + fireball);
-        //Debug.Log("isServer " + isServer);
-        //Debug.Log("isClient " + isClient);
-        //Debug.Log("caster position " + caster.transform.position);
-        //Debug.Log("caster hand " + caster.handTransform.position);
-        //Debug.Log("caster look " + caster.lookDirection);
-
         //speed up the fireball to fly into the lookdirection of the player
         fireball.GetComponent<Rigidbody>().velocity = caster.GetAimDirection() * mSpeed;
-        //fireball.GetComponent<Rigidbody>().velocity = caster.lookDirection * mSpeed;
     }
 
     protected override void ExecuteCollisionOnServer(Collision collision) {

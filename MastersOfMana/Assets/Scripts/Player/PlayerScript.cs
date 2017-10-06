@@ -161,12 +161,17 @@ public class PlayerScript : NetworkBehaviour
     // Update is called once per frame
     void Update () 
 	{
-        // Update only on the local player
-        if (!isLocalPlayer)
-            return;
-
+        //To be run on the server
         //STEP 1 - Decrease the cooldown in the associated spellslots
         DecreaseCooldowns();
+
+        // Update only on the local player
+	    if (!isLocalPlayer)
+	    {
+            return;
+	    }
+
+        //To be run on the clients
 
         //STEP 2
         //TODO this is not how the spells should be polled!!!!! only for testing!!!! DELETE THIS EVENTUALLY
@@ -442,6 +447,9 @@ public class PlayerScript : NetworkBehaviour
 		}
 	}
 
+    /// <summary>
+    /// Is supposed to be placed inside the update loop of the player, yet only to be executed on the server
+    /// </summary>
     private void DecreaseCooldowns()
     {
         if ((spellSlot_1.cooldown -= Time.deltaTime) < 0)

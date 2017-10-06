@@ -35,8 +35,9 @@ public class PlayerScript : NetworkBehaviour
         spellRoutines.Add(spellRoutine);
     }
 
-	[Header("Movement")]
+	[Header("Movement")][SyncVar]
 	public float speed = 4;  
+    [SyncVar]
 	public float jumpStrength = 5;
 	public float fallGravityMultiplier = 1.2f;
 	[Range(0.0f,1.0f)]

@@ -96,7 +96,7 @@ public class Pool {
     }
 
 
-    public enum Activation { ReturnNonActivated, ReturnActivated};
+    public enum Activation { ReturnDeactivated, ReturnActivated};
     /// <summary>
     /// returns an object of the pool according to the used strategy in this pool
     /// if no elements are ready to be returned there are several strategies to use
@@ -106,7 +106,7 @@ public class Pool {
     /// </summary>
     /// <param name="activateOnReturn"> if true found Instance is activated even before Get returns to caller </param>
     /// <returns></returns>
-    public GameObject Get(Activation activateOnReturn = Activation.ReturnNonActivated) {
+    public GameObject Get(Activation activateOnReturn = Activation.ReturnDeactivated) {
         GameObject found = null;
 
         for (int i = 0; i < mSize; ++i)
@@ -127,9 +127,19 @@ public class Pool {
         if (activateOnReturn == Activation.ReturnActivated)
         {
             A_SummoningBehaviour summoning = found.GetComponent<A_SummoningBehaviour>();
-            if(summoning)
+            if (summoning)
             {
+                Rigidbody rigid = summoning.GetComponent<Rigidbody>();
+                if (rigid)
+                {
+                    rigid.velocity = new Vector3();
+                }
+
                 summoning.RpcSetActive(true);
+            }
+            else
+            {
+                found.SetActive(true);
             }
         }
         

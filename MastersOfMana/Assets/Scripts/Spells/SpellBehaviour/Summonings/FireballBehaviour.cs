@@ -37,10 +37,11 @@ public class FireballBehaviour : A_SummoningBehaviour
     }
 
     protected override void ExecuteCollisionOnServer(Collision collision) {
-        //RpcSetActive(false);
-        //HealthScript hs = collision.gameObject.GetComponent<HealthScript>();
-        //if (hs) {
-        //    hs.TakeDamage(mDamage);
-        //}
+        HealthScript hs = collision.gameObject.GetComponent<HealthScript>();
+        if (hs)
+        {
+            hs.TakeDamage(mDamage);
+        }
+        RpcSetActive(false);
     }
 }

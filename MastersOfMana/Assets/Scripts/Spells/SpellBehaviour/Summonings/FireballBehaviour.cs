@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// The specific behaviour of the fireball, that is manifested in the scene
+/// </summary>
 [RequireComponent(typeof(Rigidbody))]
 public class FireballBehaviour : A_SummoningBehaviour
 {
@@ -43,9 +46,8 @@ public class FireballBehaviour : A_SummoningBehaviour
         {
             hs.TakeDamage(mDamage);
         }
-        RpcPreventInterpolationIssues();
 
-        gameObject.SetActive(false);
+        RpcPreventInterpolationIssues();
         RpcSetActive(false);
     }
 }

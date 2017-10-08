@@ -2,7 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DashBehaviour : A_SpellBehaviour {
+/// <summary>
+/// Specifies, how the dash spell works 
+/// it takes the casters original speed and enhances it for a distinct period of time, then reverts the speed value of the player to the previously cached value
+/// !!! THIS COULD BE BETTER -> there probably should be an original speed constant in the playerscript class that is referenced instead of caching a value on the effect start
+/// </summary>
+public class DashBehaviour : A_EffectBehaviour {
 
     IEnumerator SlowDownAgain(PlayerScript caster) {
         //cache the original speed

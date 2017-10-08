@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Abstract base class to describe spells, scriptable object classes can extend this, to further divide into classes with different traits
+/// </summary>
 public abstract class A_Spell : ScriptableObject 
 {
     //Spelldata

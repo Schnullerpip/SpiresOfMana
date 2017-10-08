@@ -23,6 +23,10 @@ public abstract class A_SummoningBehaviour : A_SpellBehaviour {
         mRigid = GetComponent<Rigidbody>();
     }
 
+    /// <summary>
+    /// invokes de/activation on all clients for this object
+    /// </summary>
+    /// <param name="activationState"></param>
     [ClientRpc]
     public void RpcSetActive(bool activationState)
     {
@@ -50,9 +54,8 @@ public abstract class A_SummoningBehaviour : A_SpellBehaviour {
     protected abstract void ExecuteCollisionOnServer(Collision collision);
 
     /// <summary>
-    /// positions the summoning far far away, mainly to overcome weird network interpolation issues
+    /// positions the summoning far far away to overcome weird network interpolation issues
     /// when positioning the object far away, the snapping property of a networktransform will rather 'snap' the object into place, than interpolate its movement 
-    /// <param name="rigid">if passed a rigidbody, that rigid body is reset also</param>
     /// </summary>
     [ClientRpc]
     protected void RpcPreventInterpolationIssues()

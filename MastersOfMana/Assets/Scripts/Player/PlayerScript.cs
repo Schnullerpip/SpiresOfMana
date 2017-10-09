@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Rewired;
@@ -34,10 +35,11 @@ public class PlayerScript : NetworkBehaviour
         spellRoutines.Add(spellRoutine);
     }
 
-	[Header("Movement")]
+	[Header("Movement")][SyncVar]
 	public float speed = 4;  
 	[Range(0,1)]
 	public float focusSpeedSlowdown = .25f;
+    [SyncVar]
 	public float jumpStrength = 5;
 	public float fallGravityMultiplier = 1.2f;
 	[Tooltip("How much slower is the player when he/she walks backwards? 0 = no slowdown, 1 = fullstop")]
@@ -62,7 +64,7 @@ public class PlayerScript : NetworkBehaviour
 	public float maxAimRefinementMagnitude = 1f;
 	[HideInInspector]
 	public float yAim = 0;
-	[HideInInspector]
+	[HideInInspector][SyncVar]
 	public Vector3 lookDirection;
 	public PlayerCamera cameraRig;
 	public Transform handTransform;
@@ -115,48 +117,81 @@ public class PlayerScript : NetworkBehaviour
         }
     }
 
-    [Command]
-    public void CmdCast()
+    /// <summary>
+    /// the direction the player aims during a cast (this field only is valid, during a cast routine, on the server!
+    /// </summary>
+    private Vector3 mAimDirection;
+    public Vector3 GetAimDirection()
     {
-        spellSlot_1.Cast(this);
+        return mAimDirection;
+    }
+    /// <summary>
+    /// Calculates the aim direction for a player considering its camerarig, that is only o the local player! The resulting Vector3 can 
+    /// be passed to the spell Commands, so the server can update its aiming direction, the moment it is supposed to cast a spell
+    /// </summary>
+    private Vector3 CalculateAimDirection()
+    {
+        RaycastHit hit;
+        return cameraRig.CenterRaycast(out hit) ? Vector3.Normalize(hit.point - handTransform.position) : lookDirection;
+    }
+
+    public void CastCmdSpellslot_1()
+    {
+        CmdSpellslot_1(CalculateAimDirection());
+    }
+    public void CastCmdSpellslot_2()
+    {
+        CmdSpellslot_2(CalculateAimDirection());
+    }
+    public void CastCmdSpellslot_3()
+    {
+        CmdSpellslot_3(CalculateAimDirection());
     }
 
     [Command]
-    public void CmdCastSpellslot_1()
+    public void CmdSpellslot_1(Vector3 castDirection)
     {
+        mAimDirection = castDirection; //update the aimdirection
         spellSlot_1.Cast(this);
     }
     [Command]
-    public void CmdCastSpellslot_2()
+    public void CmdSpellslot_2(Vector3 castDirection)
     {
+        mAimDirection = castDirection;//update the aimdirection
         spellSlot_2.Cast(this);
     }
     [Command]
-    public void CmdCastSpellslot_3()
+    public void CmdSpellslot_3(Vector3 castDirection)
     {
+        mAimDirection = castDirection;//update the aimdirection
         spellSlot_3.Cast(this);
     }
 
     // Update is called once per frame
     void Update () 
 	{
-        // Update only on the local player
-        if (!isLocalPlayer)
-            return;
-
+        //To be run on the server
         //STEP 1 - Decrease the cooldown in the associated spellslots
         DecreaseCooldowns();
+
+        // Update only on the local player
+	    if (!isLocalPlayer)
+	    {
+            return;
+	    }
+
+        //To be run on the clients
 
         //STEP 2
         //TODO this is not how the spells should be polled!!!!! only for testing!!!! DELETE THIS EVENTUALLY
         if (Input.GetKeyDown("z")) {
-            CmdCastSpellslot_1();
+            CastCmdSpellslot_1();
         }
         if (Input.GetKeyDown("u")) {
-            CmdCastSpellslot_2();
+            CastCmdSpellslot_2();
         }
         if (Input.GetKeyDown("i")) {
-            CmdCastSpellslot_3();
+            CastCmdSpellslot_3();
         }
 
         //STEP 3
@@ -328,7 +363,7 @@ public class PlayerScript : NetworkBehaviour
 	/// maxAngle of the camera and that is not obstructed.
 	/// </summary>
 	/// <returns>The assist target.</returns>
-	/// <param name="maxAngle">Max angle.</param>
+	/// <SpellslotLambda name="maxAngle">Max angle.</SpellslotLambda>
 	private HealthScript FocusAssistTarget(float maxUnitsOff)
 	{
 		//shoot a raycast in the middle of the screen
@@ -404,7 +439,7 @@ public class PlayerScript : NetworkBehaviour
 	/// !TESTING PURPOSE ONLY! 
 	/// This methods creates a GameObject with a LineRenderer to display the line between Hand and Raycast Hit by mouse.
 	/// </summary>
-	/// <param name="worldSpacePosition">World space position.</param>
+	/// <SpellslotLambda name="worldSpacePosition">World space position.</SpellslotLambda>
 	public void DebugRayFromHandToPosition(Vector3 worldSpacePosition)
 	{
 		GameObject lineGO = new GameObject("line");
@@ -482,7 +517,7 @@ public class PlayerScript : NetworkBehaviour
 	/// <summary>
 	/// Let's the character jump with a specified jumpStrength
 	/// </summary>
-	/// <param name="jumpForce">Jump force.</param>
+	/// <SpellslotLambda name="jumpForce">Jump force.</SpellslotLambda>
 	public void Jump(float jumpStrength)
 	{
 		if(feet.IsGrounded())
@@ -491,6 +526,9 @@ public class PlayerScript : NetworkBehaviour
 		}
 	}
 
+    /// <summary>
+    /// Is supposed to be placed inside the update loop of the player, yet only to be executed on the server
+    /// </summary>
     private void DecreaseCooldowns()
     {
         if ((spellSlot_1.cooldown -= Time.deltaTime) < 0)
@@ -528,7 +566,7 @@ public class PlayerScript : NetworkBehaviour
         /// casts the spell inside the slot and also adjusts the cooldown accordingly
         /// This automatically assumes, that the overlaying PlayerScript's update routine decreases the spellslot's cooldown continuously
         /// </summary>
-        /// <param name="caster"></param>
+        /// <SpellslotLambda name="caster"></SpellslotLambda>
 	    public void Cast(PlayerScript caster)
 	    {
             if (cooldown <= 0)

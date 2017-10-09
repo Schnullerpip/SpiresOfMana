@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// The specific behaviour of the fireball, that is manifested in the scene
+/// </summary>
 [RequireComponent(typeof(Rigidbody))]
 public class FireballBehaviour : A_SummoningBehaviour
 {
-    private Rigidbody mRigid;
     [SerializeField]
     private float mSpeed = 5.0f;
     [SerializeField]
@@ -15,7 +17,6 @@ public class FireballBehaviour : A_SummoningBehaviour
     public override void Start()
     {
         base.Start();
-        mRigid = GetComponent<Rigidbody>();
         if (!mRigid)
         {
             //cant find a rigid body!!!
@@ -26,29 +27,27 @@ public class FireballBehaviour : A_SummoningBehaviour
     public override void Execute(PlayerScript caster)
     {
         //Get a fireballinstance out of the pool
-        GameObject fireball = PoolRegistry.FireballPool.Get(Pool.Activation.ReturnActivated);
+        GameObject fireball = PoolRegistry.FireballPool.Get(Pool.Activation.ReturnDeactivated);
 
         //position the fireball to 'spawn' at the casters hand, including an offset so it does not collide instantly with the hand
-        fireball.transform.position = caster.handTransform.position + caster.lookDirection * 1.5f;
+        fireball.transform.position = caster.handTransform.position + caster.GetAimDirection() * 1.5f;
         fireball.transform.rotation = caster.transform.rotation;
 
+        //now activate it, so no weird interpolation errors occcur
+        fireball.GetComponent<A_SummoningBehaviour>().RpcSetActive(true);
+
         //speed up the fireball to fly into the lookdirection of the player
-        RaycastHit hit;
-        if (caster.cameraRig.CenterRaycast(out hit))
-        {
-            fireball.GetComponent<Rigidbody>().velocity = Vector3.Normalize(hit.point - fireball.transform.position)*mSpeed;
-        }
-        else
-        {
-            fireball.GetComponent<Rigidbody>().velocity = caster.lookDirection*mSpeed;
-        }
+        fireball.GetComponent<Rigidbody>().velocity = caster.GetAimDirection() * mSpeed;
     }
 
     protected override void ExecuteCollisionOnServer(Collision collision) {
-        RpcSetActive(false);
         HealthScript hs = collision.gameObject.GetComponent<HealthScript>();
-        if (hs) {
+        if (hs)
+        {
             hs.TakeDamage(mDamage);
         }
+
+        RpcPreventInterpolationIssues();
+        RpcSetActive(false);
     }
 }

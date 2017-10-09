@@ -63,6 +63,7 @@ public class GameManager : NetworkBehaviour
         }
 
     }
+
     IEnumerator PostGameLobby(PlayerScript winner, List<PlayerScript> others) {
         yield return new WaitForSeconds(5.0f);
         //TODO change to postGameLobbyScene

@@ -20,12 +20,12 @@ GameObject:
   m_Component:
   - component: {fileID: 4681844289261802}
   - component: {fileID: 114261153593763400}
+  - component: {fileID: 114772597142026698}
   - component: {fileID: 33630972847147096}
   - component: {fileID: 135791680678174964}
   - component: {fileID: 23968940259556934}
   - component: {fileID: 54855802289307994}
   - component: {fileID: 114107375314558366}
-  - component: {fileID: 114772597142026698}
   m_Layer: 0
   m_Name: Fireball
   m_TagString: Untagged
@@ -145,6 +145,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   referencedSpell: {fileID: 11400000, guid: d41a648d6ad49334090f1c47fbc8cd34, type: 2}
   mSpeed: 15
+  mDamage: 5
 --- !u!114 &114772597142026698
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -157,15 +158,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_TransformSyncMode: 3
-  m_SendInterval: 0.1
+  m_SendInterval: 0.033333335
   m_SyncRotationAxis: 7
   m_RotationSyncCompression: 0
   m_SyncSpin: 0
   m_MovementTheshold: 0.001
   m_VelocityThreshold: 0.0001
-  m_SnapThreshold: 5
+  m_SnapThreshold: 4
   m_InterpolateRotation: 1
-  m_InterpolateMovement: 1
+  m_InterpolateMovement: 0.5
 --- !u!135 &135791680678174964
 SphereCollider:
   m_ObjectHideFlags: 1

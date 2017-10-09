@@ -72,7 +72,7 @@ public class PlayerScript : NetworkBehaviour
 
 	private bool mFocusActive = false;
 	private Rigidbody mRigidbody;
-	private HealthScript mFocusedTarget = null;
+	private Collider mFocusedTarget = null;
 	protected Rewired.Player rewiredPlayer;
 
 	void Awake()
@@ -269,7 +269,7 @@ public class PlayerScript : NetworkBehaviour
 		}
 		RaycastHit hit;
 		//check if the focus target is still in view
-		cameraRig.RaycastCheck (mFocusedTarget.transform.position, out hit);
+		cameraRig.RaycastCheck (mFocusedTarget.bounds.center, out hit);
 		if (hit.collider.gameObject != mFocusedTarget.gameObject) 
 		{
 			mFocusedTarget = null;
@@ -324,7 +324,7 @@ public class PlayerScript : NetworkBehaviour
 	public void RotateTowardsFocusTarget ()
 	{
 		//get the direction to the target, from the actual cameras position
-		Vector3 dirToTarget = (mFocusedTarget.transform.position + mAimRefinement) - cameraRig.GetCamera().transform.position;
+		Vector3 dirToTarget = (mFocusedTarget.bounds.center + mAimRefinement) - cameraRig.GetCamera().transform.position;
 		//rotate towards the target
 		float yRotation = Mathf.Atan2 (dirToTarget.x, dirToTarget.z) * Mathf.Rad2Deg;
 		transform.rotation = Quaternion.AngleAxis (yRotation, Vector3.up);
@@ -359,22 +359,21 @@ public class PlayerScript : NetworkBehaviour
 	}
 
 	/// <summary>
-	/// Returns a HealthScript thats within the specified 
-	/// maxAngle of the camera and that is not obstructed.
-	/// </summary>
+	/// Returns a Collider thats within the specified 
+	/// maxAngle of the camera and that is not obstructed.	/// </summary>
 	/// <returns>The assist target.</returns>
-	/// <SpellslotLambda name="maxAngle">Max angle.</SpellslotLambda>
-	private HealthScript FocusAssistTarget(float maxUnitsOff)
+	/// <param name="maxUnitsOff">Max units off.</param>
+	private Collider FocusAssistTarget(float maxUnitsOff)
 	{
 		//shoot a raycast in the middle of the screen
 		RaycastHit hit;
 		if(cameraRig.CenterRaycast(out hit))
 		{
 			//if we hit a healthscript, take that as our aim assist target
-			HealthScript h = hit.collider.GetComponent<HealthScript>();
+			HealthScript h = hit.collider.GetComponentInParent<HealthScript>();
 			if(h != null)
 			{
-				return h;
+				return hit.collider;
 			}
 		}
 
@@ -399,32 +398,35 @@ public class PlayerScript : NetworkBehaviour
 		);
 			
 		//iterate through all healthscripts
-		foreach (HealthScript potentialTarget in allHealthScripts) 
+		foreach (HealthScript aHealthScript in allHealthScripts) 
 		{
 			//skip player him/herself
-			if(potentialTarget.gameObject == this.gameObject)
+			if(aHealthScript.gameObject == this.gameObject)
 			{
 				continue;
 			}
 			
 			//skip if the target is behind the player
-			if(transform.InverseTransformPoint(potentialTarget.transform.position).z < 0)
+			if(transform.InverseTransformPoint(aHealthScript.transform.position).z < 0)
 			{
 				continue;
 			}
 
+			Collider healthScriptCollider = aHealthScript.GetComponentInChildren<Collider>();
+
 			//get the vector to the target, from the position of the camera
-			Vector3 dirToTarget = potentialTarget.transform.position - cameraRig.GetCamera().transform.position;
+			Vector3 dirToTarget = healthScriptCollider.bounds.center - cameraRig.GetCamera().transform.position;
 
 			//priject the direction vector to the target onto a plane, defined by the lookDirection
 			//this way it acts as if the target hat a kind of 2d hitbox (circle) that expands maxUnitsOff into every direciton 
 			if(Vector3.ProjectOnPlane(dirToTarget, - lookDirection).sqrMagnitude < maxUnitsOff * maxUnitsOff)
 			{
-				if(cameraRig.RaycastCheck(potentialTarget.transform.position, out hit))
+				if(cameraRig.RaycastCheck(healthScriptCollider.bounds.center, out hit))
 				{
-					if(hit.collider.gameObject == potentialTarget.gameObject)
+					//TODO find a better method to varify target, perhabs tags?
+					if(hit.collider.GetComponentInParent<HealthScript>() == aHealthScript)
 					{
-						return potentialTarget;
+						return hit.collider;
 					}
 				}
 			}

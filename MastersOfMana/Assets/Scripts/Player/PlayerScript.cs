@@ -184,13 +184,13 @@ public class PlayerScript : NetworkBehaviour
 
         //STEP 2
         //TODO this is not how the spells should be polled!!!!! only for testing!!!! DELETE THIS EVENTUALLY
-        if (Input.GetKeyDown("z")) {
+        if (rewiredPlayer.GetButtonDown("CastSpell1")) {
             CastCmdSpellslot_1();
         }
-        if (Input.GetKeyDown("u")) {
+		if (rewiredPlayer.GetButtonDown("CastSpell2")) {
             CastCmdSpellslot_2();
         }
-        if (Input.GetKeyDown("i")) {
+		if (rewiredPlayer.GetButtonDown("CastSpell3")) {
             CastCmdSpellslot_3();
         }
 

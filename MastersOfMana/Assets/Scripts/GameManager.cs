@@ -52,8 +52,11 @@ public class GameManager : NetworkBehaviour
         //enable the players to actually do stuff
         foreach (var p in mPlayers)
         {
-            p.RpcShareSpellselection();
             p.RpcChangeInputState(InputStateSystem.InputStateID.Normal);
+            if (p.isLocalPlayer)
+            {
+                p.RpcShareSpellselection();
+            }
         }
     }
 
@@ -63,17 +66,14 @@ public class GameManager : NetworkBehaviour
 
         if (mNumberOfDeadPlayers > (mPlayers.Count - 1)) { //only one player left -> he/she won the game!
             ResetLocalGameState();
+            //TODO: Who's still alive, who won?
+            PostGameLobby(mPlayers[0], mPlayers);
         }
-
     }
 
-    IEnumerator PostGameLobby(PlayerScript winner, List<PlayerScript> others) {
-        yield return new WaitForSeconds(5.0f);
-        //TODO change to postGameLobbyScene
-        //SceneManager.LoadSceneAsync(indexOfPostGameLobbyScene);
-    }
-
-    public void Update()
-    {
+    public static IEnumerator PostGameLobby(PlayerScript winner, List<PlayerScript> others) {
+        yield return new WaitForSeconds(3.0f);
+        //TODO show correct winner in UI
+        SceneManager.LoadSceneAsync(2,LoadSceneMode.Additive);
     }
 }

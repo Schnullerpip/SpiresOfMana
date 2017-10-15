@@ -574,8 +574,7 @@ public class PlayerScript : NetworkBehaviour
     [ClientRpc]
     public void RpcShareSpellselection()
     {
-        if(isLocalPlayer)
-            CmdUpdateSpells(spellSlot_1.spell.spellID, spellSlot_2.spell.spellID, spellSlot_3.spell.spellID);
+         CmdUpdateSpells(spellSlot_1.spell.spellID, spellSlot_2.spell.spellID, spellSlot_3.spell.spellID);
     }
 
     /// <summary>

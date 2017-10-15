@@ -10,8 +10,6 @@ public class CustomLobbyHook : Prototype.NetworkLobby.LobbyHook
         PlayerScript gamePlayerScript = gamePlayer.GetComponent<PlayerScript>();
         Prototype.NetworkLobby.LobbyPlayer lobbyPlayerScript = lobbyPlayer.GetComponent<Prototype.NetworkLobby.LobbyPlayer>();
 
-        gamePlayerScript.spellSlot_1.spell = lobbyPlayerScript.spells[0];
-        gamePlayerScript.spellSlot_2.spell = lobbyPlayerScript.spells[1];
-        gamePlayerScript.spellSlot_3.spell = lobbyPlayerScript.spells[2];
+        gamePlayerScript.UpdateSpells(lobbyPlayerScript.spells[0].spellID, lobbyPlayerScript.spells[1].spellID, lobbyPlayerScript.spells[2].spellID);
     }
 }

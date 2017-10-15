@@ -18,8 +18,9 @@ public class SpellSelectionPanel : MonoBehaviour {
 
         initialized = true;
 
-        foreach(A_Spell spell in spellregistry.SpellList)
+        for(int i = 0; i < spellregistry.SpellList.Count; i++)
         {
+            A_Spell spell = spellregistry.SpellList[i];
             Button spellButton = GameObject.Instantiate(spellButtonPrefab);
             Image image = spellButton.transform.GetChild(0).GetComponent<Image>();
             if(image)
@@ -27,6 +28,7 @@ public class SpellSelectionPanel : MonoBehaviour {
                 image.sprite = spell.icon;
             }
             spellButton.transform.SetParent(spellList);
+            spellButton.transform.localScale = new Vector3(1, 1, 1);
             spellButton.onClick.AddListener(delegate { player.tradeSpells(spell); });
         }
     }

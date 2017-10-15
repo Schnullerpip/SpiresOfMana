@@ -14,10 +14,12 @@ public class GameManager : NetworkBehaviour
 
     private static int mNumberOfGoMessages = 0,
                        mNumberOfDeadPlayers = 0;
-    private static int mNeededToGo = 1; //Magic Number to allow for GO from poolRegistry
+    private static int mInitialNeededToGo = 1; //Need to remember this for resets; Magic Number to allow for GO from poolRegistry
+    private static int mNeededToGo = mInitialNeededToGo; 
 
     public static void ResetLocalGameState()
     {
+        mNeededToGo = mInitialNeededToGo;
         mNumberOfGoMessages = 0;
         mNumberOfDeadPlayers = 0;
     }
@@ -50,6 +52,7 @@ public class GameManager : NetworkBehaviour
         //enable the players to actually do stuff
         foreach (var p in mPlayers)
         {
+            p.RpcShareSpellselection();
             p.RpcChangeInputState(InputStateSystem.InputStateID.Normal);
         }
     }

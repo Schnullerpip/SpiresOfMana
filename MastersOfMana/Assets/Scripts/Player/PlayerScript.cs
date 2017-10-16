@@ -615,12 +615,18 @@ public class PlayerScript : NetworkBehaviour
         /// <summary>
         /// casts the spell inside the slot and also adjusts the cooldown accordingly
         /// This automatically assumes, that the overlaying PlayerScript's update routine decreases the spellslot's cooldown continuously
+        /// This should only be called on the server!!
         /// </summary>
         /// <SpellslotLambda name="caster"></SpellslotLambda>
 	    public void Cast(PlayerScript caster)
 	    {
             if (cooldown <= 0)
             {
+
+                //TODO set player in casting mode (state and animation)
+
+                //TODO wait until the casting timer is done and invoke the "actually shoot stuff out of your hands" animation
+
                 cooldown = spell.coolDownInSeconds;
                 spell.Cast(caster);
             }

@@ -59,6 +59,7 @@ public class GameManager : NetworkBehaviour
         ++mNumberOfDeadPlayers;
 
         if (mNumberOfDeadPlayers > (mPlayers.Count - 1)) { //only one player left -> he/she won the game!
+            Debug.Log("Last Mage standing");
             ResetLocalGameState();
         }
 

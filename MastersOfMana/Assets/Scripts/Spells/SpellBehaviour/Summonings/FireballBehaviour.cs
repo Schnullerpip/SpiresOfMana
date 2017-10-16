@@ -27,7 +27,7 @@ public class FireballBehaviour : A_SummoningBehaviour
     public override void Execute(PlayerScript caster)
     {
         //Get a fireballinstance out of the pool
-        GameObject fireball = PoolRegistry.FireballPool.Get(Pool.Activation.ReturnDeactivated);
+        GameObject fireball = PoolRegistry.FireballPool.Get();
 
         //position the fireball to 'spawn' at the casters hand, including an offset so it does not collide instantly with the hand
         fireball.transform.position = caster.handTransform.position + caster.GetAimDirection() * 1.5f;

@@ -1011,7 +1011,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1290557209774456}
-  m_LocalRotation: {x: -0.7933306, y: -0.15245509, z: 0.2855039, w: 0.5156272}
+  m_LocalRotation: {x: -0.7933307, y: -0.1524551, z: 0.28550392, w: 0.51562726}
   m_LocalPosition: {x: -0.00000002142042, y: 1e-15, z: 0.000000007450581}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -1404,8 +1404,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a555b539d9ebc349b8a9358aaf89087, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
-  currentHealth: 100
+  mMaxHealth: 1
+  mCurrentHealth: 0
 --- !u!114 &114612807110646480
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1418,23 +1418,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spellSlot_1:
-    spell: {fileID: 11400000, guid: e233f7ca8bad7cc4482f17316c60348f, type: 2}
-    cooldown: 2
+    spell: {fileID: 11400000, guid: d41a648d6ad49334090f1c47fbc8cd34, type: 2}
+    cooldown: 0
   spellSlot_2:
     spell: {fileID: 11400000, guid: 611a54db86ce0d947bd50c5a12f8aeb0, type: 2}
-    cooldown: 0.5
+    cooldown: 0
   spellSlot_3:
-    spell: {fileID: 11400000, guid: d41a648d6ad49334090f1c47fbc8cd34, type: 2}
-    cooldown: 1
-  movementAcceleration: 4
+    spell: {fileID: 11400000, guid: e233f7ca8bad7cc4482f17316c60348f, type: 2}
+    cooldown: 0
+  speed: 4
+  focusSpeedSlowdown: 0.25
   jumpStrength: 5
   fallGravityMultiplier: 1.2
+  amountOfReverseSlowdown: 0.25
+  maxFullspeedAngle: 90
   moveInputForce: {x: 0, y: 0, z: 0}
   feet:
     collider: {fileID: 135659848251551540}
-    maxSlope: 60
+    maxSlope: 50
     currentSlopeAngle: 0
-  aimSpeed: 360
+  aimSpeed: 180
+  aimAssistInUnits: 2
+  focusAimSpeedFactor: 0.25
+  maxAimRefinementMagnitude: 1
   yAim: 0
   lookDirection: {x: 0, y: 0, z: 0}
   cameraRig: {fileID: 114371251292269686, guid: 21611dcaa52d8441ba40cf1e83852a1e,

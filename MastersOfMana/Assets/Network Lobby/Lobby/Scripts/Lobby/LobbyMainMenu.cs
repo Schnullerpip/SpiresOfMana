@@ -18,6 +18,7 @@ namespace Prototype.NetworkLobby
         public RectTransform lobbyPanel;
         public LobbyInfoPanel infoPanel;
         public LobbyCountdownPanel countdownPanel;
+        public RectTransform spellSelectionPanel;
 
         public InputField matchNameInput;
         public Button backButton;
@@ -75,7 +76,7 @@ namespace Prototype.NetworkLobby
 				lobbyManager.OnMatchCreate);
 
             lobbyManager.backDelegate = lobbyManager.StopHost;
-            lobbyManager._isMatchmaking = true;
+            lobbyManager.mIsMatchmaking = true;
             lobbyManager.DisplayIsConnecting();
 
             lobbyManager.SetServerInfo("Matchmaker Host", lobbyManager.matchHost);

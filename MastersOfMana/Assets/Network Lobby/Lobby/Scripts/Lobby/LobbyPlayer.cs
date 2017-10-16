@@ -38,6 +38,16 @@ namespace Prototype.NetworkLobby
         static Color ReadyColor = new Color(0.0f, 204.0f / 255.0f, 204.0f / 255.0f, 1.0f);
         static Color TransparentColor = new Color(0, 0, 0, 0);
 
+        public Button 
+            spellButton1,
+            spellButton2,
+            spellButton3;
+
+        //spellslots
+        public List<A_Spell> spells;
+
+        private int mSpellToChange;
+
         //static Color OddRowColor = new Color(250.0f / 255.0f, 250.0f / 255.0f, 250.0f / 255.0f, 1.0f);
         //static Color EvenRowColor = new Color(180.0f / 255.0f, 180.0f / 255.0f, 180.0f / 255.0f, 1.0f);
 
@@ -132,9 +142,44 @@ namespace Prototype.NetworkLobby
             readyButton.onClick.RemoveAllListeners();
             readyButton.onClick.AddListener(OnReadyClicked);
 
+            UpdateSpellButtons();
+
             //when OnClientEnterLobby is called, the loval PlayerController is not yet created, so we need to redo that here to disable
             //the add button if we reach maxLocalPlayer. We pass 0, as it was already counted on OnClientEnterLobby
             if (LobbyManager.s_Singleton != null) LobbyManager.s_Singleton.OnPlayersNumberModified(0);
+        }
+
+        public void UpdateSpellButtons()
+        {
+            spellButton1.transform.GetChild(0).GetComponent<Image>().sprite = spells[0].icon;
+            spellButton2.transform.GetChild(0).GetComponent<Image>().sprite = spells[1].icon;
+            spellButton3.transform.GetChild(0).GetComponent<Image>().sprite = spells[2].icon;
+        }
+
+        public void OnSpellButtonClicked(int spellButton)
+        {
+            mSpellToChange = spellButton;
+            RectTransform spellSelectionPanel;
+            spellSelectionPanel = LobbyManager.s_Singleton.mainMenu.spellSelectionPanel;
+            spellSelectionPanel.GetComponent<SpellSelectionPanel>().player = this;
+            spellSelectionPanel.gameObject.SetActive(true);
+        }
+
+        public void tradeSpells(A_Spell spell)
+        {
+           for(int i = 0; i < spells.Count; i++)
+            {
+                //Check if the chosen spell is already used
+                if (spells[i] == spell && i != mSpellToChange)
+                {
+                    //If the spell is already used, just swap the spell to change with the old position of the new spell
+                    spells[i] = spells[mSpellToChange];
+                    break;
+                }
+            }
+            spells[mSpellToChange] = spell;
+            LobbyManager.s_Singleton.mainMenu.spellSelectionPanel.gameObject.SetActive(false);
+            UpdateSpellButtons();
         }
 
         //This enable/disable the remove button depending on if that is the only local player or not

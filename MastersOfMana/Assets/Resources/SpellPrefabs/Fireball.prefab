@@ -19,11 +19,13 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4681844289261802}
+  - component: {fileID: 114261153593763400}
+  - component: {fileID: 114772597142026698}
   - component: {fileID: 33630972847147096}
   - component: {fileID: 135791680678174964}
   - component: {fileID: 23968940259556934}
-  - component: {fileID: 114261153593763400}
   - component: {fileID: 54855802289307994}
+  - component: {fileID: 114107375314558366}
   m_Layer: 0
   m_Name: Fireball
   m_TagString: Untagged
@@ -98,6 +100,38 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &114107375314558366
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1748008529846994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 24
+    i1: 75
+    i2: 17
+    i3: 124
+    i4: 22
+    i5: 94
+    i6: 182
+    i7: 36
+    i8: 120
+    i9: 202
+    i10: 102
+    i11: 1
+    i12: 94
+    i13: 210
+    i14: 155
+    i15: 33
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!114 &114261153593763400
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -110,6 +144,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referencedSpell: {fileID: 11400000, guid: d41a648d6ad49334090f1c47fbc8cd34, type: 2}
+  mSpeed: 15
+  mDamage: 5
+--- !u!114 &114772597142026698
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1748008529846994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 3
+  m_SendInterval: 0
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_VelocityThreshold: 0.0001
+  m_SnapThreshold: 7
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 0.5
 --- !u!135 &135791680678174964
 SphereCollider:
   m_ObjectHideFlags: 1

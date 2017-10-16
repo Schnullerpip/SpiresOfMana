@@ -19,4 +19,20 @@ public class A_State
 
 	// Use this for continuous statechecks
 	public virtual void Update () {}
+
+    //statemethods each statesystem will need
+
+    /// <summary>
+    /// Handles internal statechanges in the case of "I am Taking damage right now!"
+    /// </summary>
+    /// <param name="amount"></param>
+    /// <returns>
+    /// the amount of damage, that will be subtracted from the current health
+    /// the state may decide or have an effect on how much damage is dealt in this situation,
+    /// but it may never actually touch the health field. This is the responsibility of the PlayerHealthScript
+    /// </returns>
+    public virtual float Hurt(float amount)
+    {
+        return amount;
+    }
 }

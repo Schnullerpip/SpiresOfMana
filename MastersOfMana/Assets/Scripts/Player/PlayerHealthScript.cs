@@ -4,14 +4,20 @@ using UnityEngine;
 
 public class PlayerHealthScript : HealthScript {
 
-    private PlayerScript player;
+    private PlayerScript mPlayer;
 
-    public void Start()
+    public override void Start()
     {
-        player = GetComponent<PlayerScript>();
+        mPlayer = GetComponent<PlayerScript>();
+        base.Start();
     }
 
     public override void TakeDamage(float amount) {
-        player.inputStateSystem.current.Hurt(amount);
+        base.TakeDamage(mPlayer.effectStateSystem.current.Hurt(amount));
+
+        if (!IsAlive()) {
+            //this mPlayer is dead!!! tell the Gamemanager, that one is down
+            GameManager.PlayerDown();
+        }
     }
 }

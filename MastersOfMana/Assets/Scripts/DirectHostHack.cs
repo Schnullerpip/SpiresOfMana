@@ -9,8 +9,9 @@ using UnityEngine.Networking;
 public class DirectHostHack : MonoBehaviour {
 
 	// Use this for initialization
-	void Start ()
+	public void Start ()
     {
         GetComponentInParent<NetworkManager>().StartHost();
+        GameManager.SetPlayers(new List<PlayerScript>(GameObject.FindObjectsOfType<PlayerScript>()));
     }
 }

@@ -13,17 +13,33 @@ public abstract class A_InputState : A_State{
      * those are kept empty on purpose because they're ment to be implemented in the subclasses
      * implementations inside the abstract A_Spell should only describe default behaviour
      */
-    public virtual void Hurt(float amount) { }
 	public virtual void Move(Vector2 input) { }
 
+	public virtual void Aim(Vector2 aimInput) 
+	{
+		player.ValidateFocusTargetView();
+
+		if(player.HasFocusTarget())
+		{
+			player.RefineAim(aimInput);
+			player.RotateTowardsFocusTarget();
+		}
+		else
+		{
+			player.ResetRefinement();
+			player.Aim(aimInput);
+		}
+	}
+		
     public virtual void Jump() 
 	{
 		player.Jump();
 	}
     public virtual void Cast_Spell_1() 
 	{  
-		RaycastHit hit = CameraRaycast();
-		if(hit.collider != null)
+		RaycastHit hit;
+
+		if(player.cameraRig.CenterRaycast(out hit))
 		{
 			player.DebugRayFromHandToPosition(hit.point);
 		}
@@ -33,15 +49,16 @@ public abstract class A_InputState : A_State{
 		}
 	}
 
-	private RaycastHit CameraRaycast()
-	{
-		Camera cam = player.cameraRig.GetCamera();
-		Ray ray = cam.ScreenPointToRay(new Vector3(cam.pixelWidth*.5f, cam.pixelHeight*.5f, 0));
-		RaycastHit hit;
-		Physics.Raycast(ray, out hit);
-		return hit;
-	}
-
     public virtual void Cast_Spell_2() { }
     public virtual void Cast_Spell_3() { }
+
+	public virtual void StartFocus()
+	{
+		player.StartFocus();
+	}
+
+	public virtual void StopFocus()
+	{
+		player.StopFocus();
+	}
 }

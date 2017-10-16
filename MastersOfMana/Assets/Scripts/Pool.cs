@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 /// <summary>
 /// Pool, for instances that handles Object insantiation
@@ -11,10 +12,12 @@ using UnityEngine;
 /// </summary>
 public class Pool {
 
+
     //important members 
+    private int mRoundRobinIdx = 0;
 
     //the original that is copied whenever new elements are instantiated into the pool
-    private GameObject mOriginal;
+    private readonly GameObject mOriginal;
 
     //the list with the actual objects
     private List<GameObject> mObjects = new List<GameObject>();
@@ -24,6 +27,8 @@ public class Pool {
     private int mGrowth = 0;
 
     public enum PoolingStrategy { OnMissSubjoinElements, OnMissReturnNull, OnMissRoundRobin };
+
+
 
 
 
@@ -38,12 +43,8 @@ public class Pool {
     private GameObject OnMissReturnNull() {
         return null;
     }
-    private int mRoundRobinIdx = 0;
     private GameObject OnMissRoundRobin() {
-        if (mRoundRobinIdx >= mSize) {
-            mRoundRobinIdx = 0;
-        }
-        return mObjects[mRoundRobinIdx++];
+        return mObjects[mRoundRobinIdx];
     }
     //----------------------------------the implemented strategys
 
@@ -72,14 +73,32 @@ public class Pool {
         }
     }
 
-    //The method to call, whenever new elements need to be put into the objects list
+    //The method to call, whenever new elements need to be put into the mObjects list
     private GameObject SubjoinElements() {
+        mRoundRobinIdx = mSize;
         mSize += mGrowth;
         List<GameObject> newElements = new List<GameObject>();
         for (int i = 0; i < mGrowth; ++i) {
+            //create a new Instance of the original
             GameObject newObject;
             newObject = GameObject.Instantiate(mOriginal);
-            newObject.SetActive(false);
+
+            //put the new instance to somewhere far far away, e.g. to reduce network interpolation problems
+            newObject.transform.position = A_SummoningBehaviour.OBLIVION;
+
+            //create the instance on the clients
+            NetworkServer.Spawn(newObject);
+
+            //deactivate the poolinstance per default
+            A_SummoningBehaviour summoning = newObject.GetComponent<A_SummoningBehaviour>();
+            if (summoning)
+            {
+                summoning.RpcSetActive(false);
+            }
+            else
+            {
+                newObject.SetActive(false);
+            }
             newElements.Add(newObject);
         }
 
@@ -89,7 +108,7 @@ public class Pool {
     }
 
 
-    public enum Activation { ReturnNonActivated, ReturnActivated};
+    public enum Activation { ReturnDeactivated, ReturnActivated};
     /// <summary>
     /// returns an object of the pool according to the used strategy in this pool
     /// if no elements are ready to be returned there are several strategies to use
@@ -99,27 +118,31 @@ public class Pool {
     /// </summary>
     /// <param name="activateOnReturn"> if true found Instance is activated even before Get returns to caller </param>
     /// <returns></returns>
-    public GameObject Get(Activation activateOnReturn = Activation.ReturnNonActivated) {
+    public GameObject Get(Activation activateOnReturn = Activation.ReturnDeactivated) {
         GameObject found = null;
-        for(int i = 0; i < mSize; ++i){
-            found = mObjects[i];
-            if (!found.activeSelf)
-            {
-                break;
-            }
-            found = null;
-        }
 
-        //Miss! - no active element was found
-        if (!found) {
-            found =  OnMissBehaviour();
-        }
-
-        if (activateOnReturn == Activation.ReturnActivated)
+        //point to the next object
+        if ((++mRoundRobinIdx) >= mSize)
         {
-            found.SetActive(true);
+            mRoundRobinIdx = 0;
         }
 
+        //if the current index poitns to an inactive instance take it, else invoke the OnMissBehaviour
+        found = !mObjects[mRoundRobinIdx].activeSelf ? mObjects[mRoundRobinIdx] : OnMissBehaviour();
+
+        if (found && (activateOnReturn == Activation.ReturnActivated))
+        {
+            A_SummoningBehaviour summoning = found.GetComponent<A_SummoningBehaviour>();
+            if (summoning)
+            {
+                summoning.RpcSetActive(true);
+            }
+            else
+            {
+                found.SetActive(true);
+            }
+        }
+        
         return found;
     }
 }

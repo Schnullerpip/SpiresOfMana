@@ -36,7 +36,7 @@ public class FireballBehaviour : A_SummoningBehaviour
         fireball.transform.position = caster.handTransform.position + caster.GetAimDirection() * 1.5f;
         fireball.transform.rotation = caster.transform.rotation;
 
-        //now activate it, so no weird interpolation errors occcur
+        //now activate it, so no weird interpolation errors occcure
         //TODO delete this eventually - RPCs are just too slow
         //fireball.GetComponent<A_SummoningBehaviour>().RpcSetActive(true);
         fireball.SetActive(true);
@@ -55,14 +55,8 @@ public class FireballBehaviour : A_SummoningBehaviour
             hs.TakeDamage(mDamage);
         }
 
-        RpcPreventInterpolationIssues();
+        //RpcPreventInterpolationIssues();
         gameObject.SetActive(false);
-        //TODO delete this eventually - RPCs are just too slow
-        //RpcSetActive(false);
-        RpcDestroyClientObject();
-    }
-
-    protected override void ExecuteCollision_Local(Collision collision) {
-        //Destroy(gameObject);
+        NetworkServer.UnSpawn(gameObject);
     }
 }

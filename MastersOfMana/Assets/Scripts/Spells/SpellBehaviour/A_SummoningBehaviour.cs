@@ -75,10 +75,10 @@ public abstract class A_SummoningBehaviour : A_SpellBehaviour {
     protected abstract void ExecuteCollision_Host(Collision collision);
 
     /// <summary>
-    /// actually handles the collision, but should only ever be invoked on the local client
+    /// handles collision on client side ONLY IF ABSOLUTELY NECCSSARY!!! this should usually NOT be the case!!!!
     /// </summary>
     /// <param name="collision"></param>
-    protected abstract void ExecuteCollision_Local(Collision collision);
+    protected virtual void ExecuteCollision_Local(Collision collision) {}
 
     /// <summary>
     /// positions the summoning far far away to overcome weird network interpolation issues

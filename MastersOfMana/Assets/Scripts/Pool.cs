@@ -12,12 +12,12 @@ using UnityEngine.Networking;
 /// </summary>
 public class Pool {
 
-
     //important members 
     private int mRoundRobinIdx = 0;
 
     //the original that is copied whenever new elements are instantiated into the pool
     private readonly GameObject mOriginal;
+    private NetworkHash128 assetID;
 
     //the list with the actual objects
     private List<GameObject> mObjects = new List<GameObject>();
@@ -28,13 +28,10 @@ public class Pool {
 
     public enum PoolingStrategy { OnMissSubjoinElements, OnMissReturnNull, OnMissRoundRobin };
 
-
-
-
-
     //delegate to the used pooling strategy
     private delegate GameObject mStrategy();
     private mStrategy OnMissBehaviour;
+
     //----------------------------------the implemented strategys
     private GameObject OnMissSubjoinElements() {
         GameObject found = SubjoinElements();
@@ -54,7 +51,13 @@ public class Pool {
         mOriginal = original;
         mGrowth = size;
 
+        //get the originals assetID
+        assetID = original.GetComponent<NetworkIdentity>().assetId;
+
+        //create some elements
         SubjoinElements();
+
+        ClientScene.RegisterSpawnHandler(assetID, SpawnObject, UnspawnObject);
 
         //define the pools strategy
         switch (strategy) {
@@ -81,27 +84,21 @@ public class Pool {
         for (int i = 0; i < mGrowth; ++i) {
             //create a new Instance of the original
             GameObject newObject;
-            newObject = GameObject.Instantiate(mOriginal);
-
             //put the new instance to somewhere far far away, e.g. to reduce network interpolation problems
-            newObject.transform.position = A_SummoningBehaviour.OBLIVION;
+            newObject = GameObject.Instantiate(mOriginal, A_SummoningBehaviour.OBLIVION, Quaternion.identity);
 
             //create the instance on the clients
             //NetworkServer.Spawn(newObject); this will now happen ingame... lame i know...
 
+
             //deactivate the poolinstance per default
-            A_SummoningBehaviour summoning = newObject.GetComponent<A_SummoningBehaviour>();
-            if (summoning)
-            {
-                summoning.RpcSetActive(false);
-            }
-            else
-            {
-                newObject.SetActive(false);
-            }
+            newObject.SetActive(false);
+
+            //add the new element to the new list
             newElements.Add(newObject);
         }
 
+        //add the new elements to elements
         mObjects.AddRange(newElements);
 
         return newElements[0];
@@ -111,6 +108,7 @@ public class Pool {
     public enum Activation { ReturnDeactivated, ReturnActivated};
     /// <summary>
     /// returns an object of the pool according to the used strategy in this pool
+    /// this does    NOT   spawn the object on the clients! if you want to do this you need to manually call NetworkServer.Spawn(pool.Get())
     /// if no elements are ready to be returned there are several strategies to use
     /// 1. OnMissReturnNull --> returns null on a miss
     /// 2. OnMissSubjoinElements --> creates new instances and then returns a new one
@@ -132,17 +130,29 @@ public class Pool {
 
         if (found && (activateOnReturn == Activation.ReturnActivated))
         {
-            A_SummoningBehaviour summoning = found.GetComponent<A_SummoningBehaviour>();
-            if (summoning)
-            {
-                summoning.RpcSetActive(true);
-            }
-            else
-            {
-                found.SetActive(true);
-            }
+            found.SetActive(true);
         }
         
         return found;
+    }
+
+    /// <summary>
+    /// handles spawning
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="assetID"></param>
+    /// <returns></returns>
+    public GameObject SpawnObject(Vector3 position, NetworkHash128 assetID)
+    {
+        //return Get();
+        return null;
+    }
+    /// <summary>
+    /// handles despawning
+    /// </summary>
+    /// <param name="spawned"></param>
+    public void UnspawnObject(GameObject spawned)
+    {
+        spawned.SetActive(false);
     }
 }

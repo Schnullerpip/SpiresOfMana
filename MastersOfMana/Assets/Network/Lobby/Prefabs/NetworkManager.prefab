@@ -9,44 +9,44 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1997745783768698}
+  m_RootGameObject: {fileID: 1087798453436564}
   m_IsPrefabParent: 1
---- !u!1 &1997745783768698
+--- !u!1 &1087798453436564
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 4352911368931666}
-  - component: {fileID: 114290195013812880}
-  - component: {fileID: 114558257401688750}
+  - component: {fileID: 4924862482472448}
+  - component: {fileID: 114975205808249818}
+  - component: {fileID: 114252064024479736}
   m_Layer: 0
-  m_Name: GameManager
+  m_Name: NetworkManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4352911368931666
+--- !u!4 &4924862482472448
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1997745783768698}
+  m_GameObject: {fileID: 1087798453436564}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 612.5, y: 290.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114290195013812880
+--- !u!114 &114252064024479736
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1997745783768698}
+  m_GameObject: {fileID: 1087798453436564}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
@@ -73,15 +73,14 @@ MonoBehaviour:
     i15: 0
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
---- !u!114 &114558257401688750
+--- !u!114 &114975205808249818
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1997745783768698}
+  m_GameObject: {fileID: 1087798453436564}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b80e17390ca09145b74e1c74a565016, type: 3}
+  m_Script: {fileID: 11500000, guid: 8cbe5562d5ffc8546860f7ba6d0c0254, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  winnerName: 

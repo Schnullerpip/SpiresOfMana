@@ -10,7 +10,7 @@ public class PoolRegistry : MonoBehaviour {
 
     public void Start()
     {
-        GameManager.Go();
+        GameManager.instance.Go();
     }
 
     // Use this for initialization

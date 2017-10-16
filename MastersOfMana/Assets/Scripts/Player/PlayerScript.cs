@@ -70,14 +70,13 @@ public class PlayerScript : NetworkBehaviour
 	public Transform handTransform;
 	private Vector3 mAimRefinement;
 
-	[Header("Animation")]
-	public Animator animator;
-	public Transform headJoint;
-
 	private bool mFocusActive = false;
 	private Rigidbody mRigidbody;
 	private Collider mFocusedTarget = null;
 	protected Rewired.Player rewiredPlayer;
+    public string playerName;
+
+    public PlayerHealthScript healthScript;
 
 	void Awake()
 	{
@@ -87,10 +86,17 @@ public class PlayerScript : NetworkBehaviour
 		{
 			Debug.LogWarning("No camera rig assigned, consider creating one during runtime? Or don't. I'm not your boss. kthx");
 		}
-	}
+        cameraRig.gameObject.SetActive(true);
+    }
 
-	// Use this for initialization
-	void Start ()
+    private void OnDisable()
+    {
+        // Fix issue with LateUpdate on camera referencing the player
+        cameraRig.gameObject.SetActive(false);
+    }
+
+    // Use this for initialization
+    void Start ()
 	{
         //initialize the statesystems
         inputStateSystem = new InputStateSystem(this);
@@ -101,12 +107,14 @@ public class PlayerScript : NetworkBehaviour
 	    rewiredPlayer = ReInput.players.GetPlayer(0);
 
 		mRigidbody = GetComponent<Rigidbody>();
-	}
+        healthScript = GetComponent<PlayerHealthScript>();
+
+    }
 
     [Command]
     private void CmdGiveGo()
     {
-        GameManager.Go();
+        GameManager.instance.Go();
     }
 
     // Use this for initialization on local Player only
@@ -479,8 +487,6 @@ public class PlayerScript : NetworkBehaviour
 			Debug.DrawRay(transform.position, feet.GetGroundNormal(), (feet.currentSlopeAngle < feet.maxSlope ? Color.white : Color.magenta), 10);
 		}
 
-		animator.SetBool("grounded", feet.IsGrounded());
-
 		Vector3 direction = moveInputForce * Time.deltaTime * speed * (mFocusActive ? focusSpeedSlowdown : 1);
 		Vector2 directionXZ = direction.xz();
 
@@ -497,34 +503,20 @@ public class PlayerScript : NetworkBehaviour
 			mRigidbody.velocity += Physics.gravity * fallGravityMultiplier * Time.deltaTime;
 		}
 
-		float directionSqrMag = direction.sqrMagnitude;
-
 		//move the character
 		mRigidbody.MovePosition(mRigidbody.position + direction);
-
-		Vector3 localDirection = transform.InverseTransformVector(direction);
-		animator.SetFloat("speed_forward",localDirection.x);
-		animator.SetFloat("speed_right",localDirection.z);
-
-		animator.SetFloat("velocity",directionSqrMag);
 
 		Debug.DrawRay(transform.position+Vector3.up, moveInputForce, Color.cyan);
 		Debug.DrawRay(transform.position+Vector3.up, mRigidbody.velocity, Color.green);
 
 		//if the player gets input
-		if(directionSqrMag > 0)
+		if(direction.sqrMagnitude > 0)
 		{
 			//calculate the angle between the movemement and external forces
 			float angle = Vector2.Angle(mRigidbody.velocity.xz(),directionXZ);
 			//move the rigidbody's velocity towards zero in the xz plane, proportional to the angle
 			mRigidbody.velocity = Vector3.MoveTowards(mRigidbody.velocity, new Vector3(0,mRigidbody.velocity.y,0), speed * Time.deltaTime * angle / 180);
 		}
-	}
-
-	void LateUpdate()
-	{
-		//rotate the head joint, do this in the lateupdate to override the animation (?)
-		headJoint.localRotation = Quaternion.AngleAxis(-yAim,Vector3.right); 
 	}
 
 	/// <summary>
@@ -544,7 +536,6 @@ public class PlayerScript : NetworkBehaviour
 		if(feet.IsGrounded())
 		{
 			mRigidbody.AddForce(Vector3.up * jumpStrength,ForceMode.VelocityChange);
-			animator.SetTrigger("jump");
 		}
 	}
 
@@ -645,11 +636,5 @@ public class PlayerScript : NetworkBehaviour
                 spell.Cast(caster);
             }
         }
-	}
-
-	//get default parameters
-	void Reset()
-	{
-		animator = GetComponentInChildren<Animator>();
 	}
 }

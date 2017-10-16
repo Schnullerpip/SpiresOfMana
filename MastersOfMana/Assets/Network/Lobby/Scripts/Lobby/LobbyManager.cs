@@ -15,6 +15,7 @@ namespace Prototype.NetworkLobby
         static short MsgKicked = MsgType.Highest + 1;
 
         static public LobbyManager s_Singleton;
+        public GameObject netManager;
 
         [Header("Unity UI Lobby")]
         [Tooltip("Time in second between all players ready & match start")]
@@ -51,10 +52,8 @@ namespace Prototype.NetworkLobby
             currentPanel = mainMenu.mainMenuPanel;
 
             mainMenu.backButton.gameObject.SetActive(false);
-            //GetComponent<Canvas>().enabled = true;
 
             DontDestroyOnLoad(gameObject);
-
             SetServerInfo("Offline", "None");
         }
 
@@ -146,13 +145,13 @@ namespace Prototype.NetworkLobby
             //hostInfo.text = host;
         }
 
-        void OnLevelWasLoaded(int sceneId)
-        {
-            if (mainMenu == null && sceneId == 0)
-            {
-                mainMenu = GameObject.FindObjectOfType<LobbyMainMenu>();
-            }
-        }
+        //void OnLevelWasLoaded(int sceneId)
+        //{
+        //    if (mainMenu == null && sceneId == 0)
+        //    {
+        //        mainMenu = GameObject.FindObjectOfType<LobbyMainMenu>();
+        //    }
+        //}
 
         public delegate void BackButtonDelegate();
         public BackButtonDelegate backDelegate;
@@ -230,7 +229,7 @@ namespace Prototype.NetworkLobby
         public override void OnStartHost()
         {
             base.OnStartHost();
-            GameManager.ResetLocalGameState();
+            GameManager.instance.ResetLocalGameState();
             ChangeTo(mainMenu.lobbyPanel);
             backDelegate = StopHostClbk;
             SetServerInfo("Hosting", networkAddress);
@@ -327,7 +326,7 @@ namespace Prototype.NetworkLobby
             //Tell gamemanager, everyones has finished loading
             if(mLoadedPlayers.Count == numPlayers)
             {
-                GameManager.SetPlayers(mLoadedPlayers);
+                GameManager.instance.SetPlayers(mLoadedPlayers);
             }
 
             //This hook allows you to apply state data from the lobby-player to the game-player
@@ -386,10 +385,9 @@ namespace Prototype.NetworkLobby
                 if (lobbySlots[i] != null)
                 {
                     (lobbySlots[i] as LobbyPlayer).RpcUpdateCountdown(0);
-                    GameManager.AddPlayerMessageCounter();
+                    GameManager.instance.AddPlayerMessageCounter();
                 }
             }
-
 			//lock the mouse
 			Cursor.lockState = CursorLockMode.Locked;
             
@@ -412,8 +410,7 @@ namespace Prototype.NetworkLobby
                 SetServerInfo("Client", networkAddress);
             }
         }
-
-
+        
         public override void OnClientDisconnect(NetworkConnection conn)
         {
             base.OnClientDisconnect(conn);
@@ -423,7 +420,7 @@ namespace Prototype.NetworkLobby
         public override void OnClientError(NetworkConnection conn, int errorCode)
         {
             ChangeTo(mainMenu.mainMenuPanel);
-            mainMenu.infoPanel.Display("Cient error : " + (errorCode == 6 ? "timeout" : errorCode.ToString()), "Close", null);
+            mainMenu.infoPanel.Display("Client error : " + (errorCode == 6 ? "timeout" : errorCode.ToString()), "Close", null);
         }
     }
 }

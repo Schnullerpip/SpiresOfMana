@@ -17,7 +17,7 @@ public class Pool {
 
     //the original that is copied whenever new elements are instantiated into the pool
     private readonly GameObject mOriginal;
-    private NetworkHash128 assetID;
+    public NetworkHash128 assetID;
 
     //the list with the actual objects
     private List<GameObject> mObjects = new List<GameObject>();

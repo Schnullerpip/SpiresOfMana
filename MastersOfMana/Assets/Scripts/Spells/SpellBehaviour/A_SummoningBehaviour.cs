@@ -84,8 +84,7 @@ public abstract class A_SummoningBehaviour : A_SpellBehaviour {
     /// positions the summoning far far away to overcome weird network interpolation issues
     /// when positioning the object far away, the snapping property of a networktransform will rather 'snap' the object into place, than interpolate its movement 
     /// </summary>
-    [ClientRpc]
-    protected void RpcPreventInterpolationIssues()
+    protected void PreventInterpolationIssues()
     {
         if (mRigid)
         {

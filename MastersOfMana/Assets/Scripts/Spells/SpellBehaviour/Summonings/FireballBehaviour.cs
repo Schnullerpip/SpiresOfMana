@@ -45,7 +45,7 @@ public class FireballBehaviour : A_SummoningBehaviour
         fireball.GetComponent<Rigidbody>().velocity = caster.GetAimDirection() * mSpeed;
 
         //create an instance of this fireball on the client's machine
-        NetworkServer.Spawn(fireball);
+        NetworkServer.Spawn(fireball, PoolRegistry.FireballPool.assetID);
     }
 
     protected override void ExecuteCollision_Host(Collision collision) {
@@ -55,7 +55,7 @@ public class FireballBehaviour : A_SummoningBehaviour
             hs.TakeDamage(mDamage);
         }
 
-        //RpcPreventInterpolationIssues();
+        PreventInterpolationIssues();
         gameObject.SetActive(false);
         NetworkServer.UnSpawn(gameObject);
     }

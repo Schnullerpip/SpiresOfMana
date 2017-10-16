@@ -390,7 +390,8 @@ namespace Prototype.NetworkLobby
                 }
             }
 
-
+			//lock the mouse
+			Cursor.lockState = CursorLockMode.Locked;
             
             ServerChangeScene(playScene);
         }

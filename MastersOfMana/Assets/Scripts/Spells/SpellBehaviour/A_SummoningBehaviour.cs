@@ -35,6 +35,7 @@ public abstract class A_SummoningBehaviour : A_SpellBehaviour {
     [ClientRpc]
     public void RpcSetActive(bool activationState)
     {
+        Debug.Log("just activated a thing");
         gameObject.SetActive(activationState);
     }
 

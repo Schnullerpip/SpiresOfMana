@@ -30,10 +30,10 @@ public class FireballBehaviour : A_SummoningBehaviour
     public override void Execute(PlayerScript caster)
     {
         //Get a fireballinstance out of the pool
-        GameObject fireball1 = PoolRegistry.FireballPool.Get();
+        GameObject fireball = PoolRegistry.FireballPool.Get();
 
         //TODO delete this
-        GameObject fireball = Instantiate(original);
+        //GameObject fireball = Instantiate(original);
         
 
         //position the fireball to 'spawn' at the casters hand, including an offset so it does not collide instantly with the hand
@@ -48,7 +48,7 @@ public class FireballBehaviour : A_SummoningBehaviour
 
 
         //TODO delete this
-        NetworkServer.Spawn(fireball);
+        //NetworkServer.Spawn(fireball);
     }
 
     protected override void ExecuteCollisionOnServer(Collision collision) {

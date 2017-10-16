@@ -30,7 +30,7 @@ public class FireballBehaviour : A_SummoningBehaviour
     public override void Execute(PlayerScript caster)
     {
         //Get a fireballinstance out of the pool
-        //GameObject fireball = PoolRegistry.FireballPool.Get();
+        GameObject fireball1 = PoolRegistry.FireballPool.Get();
 
         //TODO delete this
         GameObject fireball = Instantiate(original);

@@ -14,10 +14,12 @@ public class GameManager : NetworkBehaviour
 
     private static int mNumberOfGoMessages = 0,
                        mNumberOfDeadPlayers = 0;
-    private static int mNeededToGo = 1; //Magic Number to allow for GO from poolRegistry
+    private static int mInitialNeededToGo = 1; //Need to remember this for resets; Magic Number to allow for GO from poolRegistry
+    private static int mNeededToGo = mInitialNeededToGo; 
 
     public static void ResetLocalGameState()
     {
+        mNeededToGo = mInitialNeededToGo;
         mNumberOfGoMessages = 0;
         mNumberOfDeadPlayers = 0;
     }
@@ -51,6 +53,10 @@ public class GameManager : NetworkBehaviour
         foreach (var p in mPlayers)
         {
             p.RpcChangeInputState(InputStateSystem.InputStateID.Normal);
+            if (p.isLocalPlayer)
+            {
+                p.RpcShareSpellselection();
+            }
         }
     }
 
@@ -61,17 +67,14 @@ public class GameManager : NetworkBehaviour
         if (mNumberOfDeadPlayers > (mPlayers.Count - 1)) { //only one player left -> he/she won the game!
             Debug.Log("Last Mage standing");
             ResetLocalGameState();
+            //TODO: Who's still alive, who won?
+            PostGameLobby(mPlayers[0], mPlayers);
         }
-
     }
 
-    IEnumerator PostGameLobby(PlayerScript winner, List<PlayerScript> others) {
-        yield return new WaitForSeconds(5.0f);
-        //TODO change to postGameLobbyScene
-        //SceneManager.LoadSceneAsync(indexOfPostGameLobbyScene);
-    }
-
-    public void Update()
-    {
+    public static IEnumerator PostGameLobby(PlayerScript winner, List<PlayerScript> others) {
+        yield return new WaitForSeconds(3.0f);
+        //TODO show correct winner in UI
+        SceneManager.LoadSceneAsync(2,LoadSceneMode.Additive);
     }
 }

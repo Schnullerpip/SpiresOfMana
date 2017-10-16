@@ -72,7 +72,7 @@ public class PlayerScript : NetworkBehaviour
 
 	private bool mFocusActive = false;
 	private Rigidbody mRigidbody;
-	private HealthScript mFocusedTarget = null;
+	private Collider mFocusedTarget = null;
 	protected Rewired.Player rewiredPlayer;
 
 	void Awake()
@@ -184,13 +184,13 @@ public class PlayerScript : NetworkBehaviour
 
         //STEP 2
         //TODO this is not how the spells should be polled!!!!! only for testing!!!! DELETE THIS EVENTUALLY
-        if (Input.GetKeyDown("z")) {
+        if (rewiredPlayer.GetButtonDown("CastSpell1")) {
             CastCmdSpellslot_1();
         }
-        if (Input.GetKeyDown("u")) {
+		if (rewiredPlayer.GetButtonDown("CastSpell2")) {
             CastCmdSpellslot_2();
         }
-        if (Input.GetKeyDown("i")) {
+		if (rewiredPlayer.GetButtonDown("CastSpell3")) {
             CastCmdSpellslot_3();
         }
 
@@ -269,7 +269,7 @@ public class PlayerScript : NetworkBehaviour
 		}
 		RaycastHit hit;
 		//check if the focus target is still in view
-		cameraRig.RaycastCheck (mFocusedTarget.transform.position, out hit);
+		cameraRig.RaycastCheck (mFocusedTarget.bounds.center, out hit);
 		if (hit.collider.gameObject != mFocusedTarget.gameObject) 
 		{
 			mFocusedTarget = null;
@@ -324,7 +324,7 @@ public class PlayerScript : NetworkBehaviour
 	public void RotateTowardsFocusTarget ()
 	{
 		//get the direction to the target, from the actual cameras position
-		Vector3 dirToTarget = (mFocusedTarget.transform.position + mAimRefinement) - cameraRig.GetCamera().transform.position;
+		Vector3 dirToTarget = (mFocusedTarget.bounds.center + mAimRefinement) - cameraRig.GetCamera().transform.position;
 		//rotate towards the target
 		float yRotation = Mathf.Atan2 (dirToTarget.x, dirToTarget.z) * Mathf.Rad2Deg;
 		transform.rotation = Quaternion.AngleAxis (yRotation, Vector3.up);
@@ -359,22 +359,21 @@ public class PlayerScript : NetworkBehaviour
 	}
 
 	/// <summary>
-	/// Returns a HealthScript thats within the specified 
-	/// maxAngle of the camera and that is not obstructed.
-	/// </summary>
+	/// Returns a Collider thats within the specified 
+	/// maxAngle of the camera and that is not obstructed.	/// </summary>
 	/// <returns>The assist target.</returns>
-	/// <SpellslotLambda name="maxAngle">Max angle.</SpellslotLambda>
-	private HealthScript FocusAssistTarget(float maxUnitsOff)
+	/// <param name="maxUnitsOff">Max units off.</param>
+	private Collider FocusAssistTarget(float maxUnitsOff)
 	{
 		//shoot a raycast in the middle of the screen
 		RaycastHit hit;
 		if(cameraRig.CenterRaycast(out hit))
 		{
 			//if we hit a healthscript, take that as our aim assist target
-			HealthScript h = hit.collider.GetComponent<HealthScript>();
+			HealthScript h = hit.collider.GetComponentInParent<HealthScript>();
 			if(h != null)
 			{
-				return h;
+				return hit.collider;
 			}
 		}
 
@@ -399,32 +398,35 @@ public class PlayerScript : NetworkBehaviour
 		);
 			
 		//iterate through all healthscripts
-		foreach (HealthScript potentialTarget in allHealthScripts) 
+		foreach (HealthScript aHealthScript in allHealthScripts) 
 		{
 			//skip player him/herself
-			if(potentialTarget.gameObject == this.gameObject)
+			if(aHealthScript.gameObject == this.gameObject)
 			{
 				continue;
 			}
 			
 			//skip if the target is behind the player
-			if(transform.InverseTransformPoint(potentialTarget.transform.position).z < 0)
+			if(transform.InverseTransformPoint(aHealthScript.transform.position).z < 0)
 			{
 				continue;
 			}
 
+			Collider healthScriptCollider = aHealthScript.GetComponentInChildren<Collider>();
+
 			//get the vector to the target, from the position of the camera
-			Vector3 dirToTarget = potentialTarget.transform.position - cameraRig.GetCamera().transform.position;
+			Vector3 dirToTarget = healthScriptCollider.bounds.center - cameraRig.GetCamera().transform.position;
 
 			//priject the direction vector to the target onto a plane, defined by the lookDirection
 			//this way it acts as if the target hat a kind of 2d hitbox (circle) that expands maxUnitsOff into every direciton 
 			if(Vector3.ProjectOnPlane(dirToTarget, - lookDirection).sqrMagnitude < maxUnitsOff * maxUnitsOff)
 			{
-				if(cameraRig.RaycastCheck(potentialTarget.transform.position, out hit))
+				if(cameraRig.RaycastCheck(healthScriptCollider.bounds.center, out hit))
 				{
-					if(hit.collider.gameObject == potentialTarget.gameObject)
+					//TODO find a better method to varify target, perhabs tags?
+					if(hit.collider.GetComponentInParent<HealthScript>() == aHealthScript)
 					{
-						return potentialTarget;
+						return hit.collider;
 					}
 				}
 			}
@@ -551,12 +553,60 @@ public class PlayerScript : NetworkBehaviour
     {
         inputStateSystem.SetState(newStateID);
     }
-		
-	//useful asstes for the PlayerScript
 
-	/// <summary>
-	/// Simple Datacontainer (inner class) for a Pair of Spell and cooldown
-	/// </summary>
+    /// <summary>
+    /// This method actually updates the spells
+    /// </summary>
+    /// <param name="spell1"></param>
+    /// <param name="spell2"></param>
+    /// <param name="spell3"></param>
+    public void UpdateSpells(int spell1, int spell2, int spell3)
+    {
+        SpellRegistry spellregistry = Prototype.NetworkLobby.LobbyManager.s_Singleton.mainMenu.spellSelectionPanel.GetComponent<SpellSelectionPanel>().spellregistry;
+        spellSlot_1.spell = spellregistry.GetSpellByID(spell1);
+        spellSlot_2.spell = spellregistry.GetSpellByID(spell2);
+        spellSlot_3.spell = spellregistry.GetSpellByID(spell3);
+    }
+
+    /// <summary>
+    /// This is called by the gamemanager once all player are loaded. It will then send the selected spells to the server, which will distribute it to alle local clients
+    /// </summary>
+    [ClientRpc]
+    public void RpcShareSpellselection()
+    {
+         CmdUpdateSpells(spellSlot_1.spell.spellID, spellSlot_2.spell.spellID, spellSlot_3.spell.spellID);
+    }
+
+    /// <summary>
+    /// Update spells on Server side and trigger update on all clients
+    /// </summary>
+    /// <param name="spell1"></param>
+    /// <param name="spell2"></param>
+    /// <param name="spell3"></param>
+    [Command]
+    public void CmdUpdateSpells(int spell1, int spell2, int spell3)
+    {
+        UpdateSpells(spell1, spell2, spell3);
+        RpcUpdateSpells(spell1, spell2, spell3);
+    }
+
+    /// <summary>
+    /// Update spells on client side
+    /// </summary>
+    /// <param name="spell1"></param>
+    /// <param name="spell2"></param>
+    /// <param name="spell3"></param>
+    [ClientRpc]
+    public void RpcUpdateSpells(int spell1, int spell2, int spell3)
+    {
+        UpdateSpells(spell1, spell2, spell3);
+    }
+
+    //useful asstes for the PlayerScript
+
+    /// <summary>
+    /// Simple Datacontainer (inner class) for a Pair of Spell and cooldown
+    /// </summary>
     [System.Serializable]
 	public struct SpellSlot {
 		public A_Spell spell;

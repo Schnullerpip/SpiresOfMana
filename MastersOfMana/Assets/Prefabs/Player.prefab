@@ -1437,15 +1437,15 @@ MonoBehaviour:
     collider: {fileID: 135659848251551540}
     maxSlope: 50
     currentSlopeAngle: 0
-  aimSpeed: 360
+  aimSpeed: 180
   aimAssistInUnits: 2
-  focusAimSlowdown: 0.1
+  focusAimSpeedFactor: 0.25
+  maxAimRefinementMagnitude: 1
   yAim: 0
   lookDirection: {x: 0, y: 0, z: 0}
   cameraRig: {fileID: 114371251292269686, guid: 21611dcaa52d8441ba40cf1e83852a1e,
     type: 2}
   handTransform: {fileID: 4216665367181332}
-  aimOffset: {x: 0, y: 0, z: 0}
 --- !u!135 &135659848251551540
 SphereCollider:
   m_ObjectHideFlags: 1

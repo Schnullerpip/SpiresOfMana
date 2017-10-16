@@ -1,30 +1,43 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 
-public class GameManager : NetworkBehaviour
+public class GameManager : MonoBehaviour
 {
+    private List<PlayerScript> mPlayers;
 
-    private static List<PlayerScript> mPlayers;
-    private static List<PlayerHealthScript> mPlayerHealths;
+    private PoolRegistry mPoolRegistry;
 
-    private static PoolRegistry mPoolRegistry;
+    private int mNumberOfGoMessages = 0,
+                mNumberOfDeadPlayers = 0;
+    private int mInitialNeededToGo = 1; //Need to remember this for resets; Magic Number to allow for GO from poolRegistry
+    private int mNeededToGo = 1;
 
-    private static int mNumberOfGoMessages = 0,
-                       mNumberOfDeadPlayers = 0;
-    private static int mInitialNeededToGo = 1; //Need to remember this for resets; Magic Number to allow for GO from poolRegistry
-    private static int mNeededToGo = mInitialNeededToGo; 
+    public static GameManager instance;
+    public string winnerName;
 
-    public static void ResetLocalGameState()
+    public void Start()
+    {
+        if (instance)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            instance = this;
+            DontDestroyOnLoad(this);
+        }
+    }
+
+    public void ResetLocalGameState()
     {
         mNeededToGo = mInitialNeededToGo;
         mNumberOfGoMessages = 0;
         mNumberOfDeadPlayers = 0;
     }
 
-    public static void Go()
+    public void Go()
     {
         mNumberOfGoMessages++;
         if(mNumberOfGoMessages == mNeededToGo)
@@ -33,20 +46,20 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-    public static void SetPlayers(List<PlayerScript> allPlayers)
+    public void SetPlayers(List<PlayerScript> allPlayers)
     {
         mPlayers = allPlayers;
     }
 
-    public static void AddPlayerMessageCounter()
+    public void AddPlayerMessageCounter()
     {
         mNeededToGo++;
     }
 
-    public static void StartGame()
+    public void StartGame()
     {
-	    mPoolRegistry = FindObjectOfType<PoolRegistry>();
         //activate the pools, to start isntantiating, now that all the players have joined the game
+        mPoolRegistry = GameObject.FindObjectOfType<PoolRegistry>();
         mPoolRegistry.CreatePools();
 
         //enable the players to actually do stuff
@@ -61,20 +74,29 @@ public class GameManager : NetworkBehaviour
     }
 
     // INGAME
-    public static void PlayerDown() {
+    // This is only executed on the Server
+    public void PlayerDown() {
         ++mNumberOfDeadPlayers;
 
         if (mNumberOfDeadPlayers > (mPlayers.Count - 1)) { //only one player left -> he/she won the game!
             Debug.Log("Last Mage standing");
             ResetLocalGameState();
-            //TODO: Who's still alive, who won?
-            PostGameLobby(mPlayers[0], mPlayers);
+
+            //Find out who has won and call post game screen
+            foreach (var p in mPlayers)
+            {
+                if(p.healthScript.IsAlive())
+                {
+                    winnerName = p.playerName;
+                    break;
+                }
+            }
+            StartCoroutine(PostGameLobby(winnerName));
         }
     }
 
-    public static IEnumerator PostGameLobby(PlayerScript winner, List<PlayerScript> others) {
+    public IEnumerator PostGameLobby(string winner) {
         yield return new WaitForSeconds(3.0f);
-        //TODO show correct winner in UI
-        SceneManager.LoadSceneAsync(2,LoadSceneMode.Additive);
+        NetManager.instance.RpcLoadPostGameScreen(winner);
     }
 }

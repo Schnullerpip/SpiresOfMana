@@ -48,6 +48,7 @@ public class FireballBehaviour : A_SummoningBehaviour
         }
 
         RpcPreventInterpolationIssues();
+        gameObject.SetActive(false);
         RpcSetActive(false);
     }
 }

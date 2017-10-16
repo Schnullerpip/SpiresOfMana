@@ -19,6 +19,11 @@ public abstract class A_SummoningBehaviour : A_SpellBehaviour {
     {
         base.Start();
 
+        if (isLocalPlayer)
+        {
+            GetComponent<Collider>().enabled = false;
+        }
+
         //summonings usually have rigid bodies - if so cache theirs in mRigid
         mRigid = GetComponent<Rigidbody>();
     }

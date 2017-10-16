@@ -132,6 +132,8 @@ public class Pool {
 
         if (found && (activateOnReturn == Activation.ReturnActivated))
         {
+            //TODO delete this comment
+            Debug.Log("shouldnt be in here!");
             A_SummoningBehaviour summoning = found.GetComponent<A_SummoningBehaviour>();
             if (summoning)
             {

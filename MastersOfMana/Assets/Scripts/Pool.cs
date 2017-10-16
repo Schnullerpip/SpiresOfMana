@@ -87,7 +87,7 @@ public class Pool {
             newObject.transform.position = A_SummoningBehaviour.OBLIVION;
 
             //create the instance on the clients
-            NetworkServer.Spawn(newObject);
+            //NetworkServer.Spawn(newObject); this will now happen ingame... lame i know...
 
             //deactivate the poolinstance per default
             A_SummoningBehaviour summoning = newObject.GetComponent<A_SummoningBehaviour>();
@@ -132,8 +132,6 @@ public class Pool {
 
         if (found && (activateOnReturn == Activation.ReturnActivated))
         {
-            //TODO delete this comment
-            Debug.Log("shouldnt be in here!");
             A_SummoningBehaviour summoning = found.GetComponent<A_SummoningBehaviour>();
             if (summoning)
             {

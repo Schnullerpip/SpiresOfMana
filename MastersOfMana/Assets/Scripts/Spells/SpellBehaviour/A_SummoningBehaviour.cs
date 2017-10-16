@@ -10,7 +10,7 @@ using UnityEngine.Networking;
 public abstract class A_SummoningBehaviour : A_SpellBehaviour {
 
     //the initial position of any spawned object
-    public static readonly Vector3 OBLIVION = new Vector3(1000000, 1000000, 1000000);
+    public static readonly Vector3 OBLIVION = new Vector3(1000000, -1000000, 1000000);
 
     //important members
     protected Rigidbody mRigid;
@@ -29,14 +29,26 @@ public abstract class A_SummoningBehaviour : A_SpellBehaviour {
     }
 
     /// <summary>
-    /// invokes de/activation on all clients for this object
+    /// invokes de/activation on all clients for this object - THIS IS RATHER SLOW so it shouldn't be used frequently!
     /// </summary>
     /// <param name="activationState"></param>
     [ClientRpc]
     public void RpcSetActive(bool activationState)
     {
-        Debug.Log("just activated a thing");
         gameObject.SetActive(activationState);
+    }
+
+    /// <summary>
+    /// destroys an object instance on all clients, that are not the server - this should only aver be invoked on the server!!!
+    /// we want to destroy them on the clients locally, so they don't diverge in behaviour with our server state, yet we want to keep the server object's so they can be pooled
+    /// </summary>
+    [ClientRpc]
+    public void RpcDestroyClientObject()
+    {
+        if (!isServer)
+        {
+            Destroy(gameObject);
+        }
     }
 
     /// <summary>
@@ -46,18 +58,27 @@ public abstract class A_SummoningBehaviour : A_SpellBehaviour {
     /// <param name="collision"></param>
     public void OnCollisionEnter(Collision collision)
     {
-        if (!isServer)
+        if (isServer)
         {
-            return;
+            ExecuteCollision_Host(collision);
         }
-        ExecuteCollisionOnServer(collision);
+        else
+        {
+            ExecuteCollision_Local(collision);
+        }
     }
 
     /// <summary>
     /// actually handles the collision, but should only ever be invoked from the OnCollision method of the A_SummoningBehaviour super class
     /// </summary>
     /// <param name="collision"></param>
-    protected abstract void ExecuteCollisionOnServer(Collision collision);
+    protected abstract void ExecuteCollision_Host(Collision collision);
+
+    /// <summary>
+    /// actually handles the collision, but should only ever be invoked on the local client
+    /// </summary>
+    /// <param name="collision"></param>
+    protected abstract void ExecuteCollision_Local(Collision collision);
 
     /// <summary>
     /// positions the summoning far far away to overcome weird network interpolation issues

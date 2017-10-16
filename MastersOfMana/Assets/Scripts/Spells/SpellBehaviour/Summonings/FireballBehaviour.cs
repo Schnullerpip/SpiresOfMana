@@ -32,26 +32,23 @@ public class FireballBehaviour : A_SummoningBehaviour
         //Get a fireballinstance out of the pool
         GameObject fireball = PoolRegistry.FireballPool.Get();
 
-        //TODO delete this
-        //GameObject fireball = Instantiate(original);
-        
-
         //position the fireball to 'spawn' at the casters hand, including an offset so it does not collide instantly with the hand
         fireball.transform.position = caster.handTransform.position + caster.GetAimDirection() * 1.5f;
         fireball.transform.rotation = caster.transform.rotation;
 
         //now activate it, so no weird interpolation errors occcur
-        fireball.GetComponent<A_SummoningBehaviour>().RpcSetActive(true);
+        //TODO delete this eventually - RPCs are just too slow
+        //fireball.GetComponent<A_SummoningBehaviour>().RpcSetActive(true);
+        fireball.SetActive(true);
 
         //speed up the fireball to fly into the lookdirection of the player
         fireball.GetComponent<Rigidbody>().velocity = caster.GetAimDirection() * mSpeed;
 
-
-        //TODO delete this
-        //NetworkServer.Spawn(fireball);
+        //create an instance of this fireball on the client's machine
+        NetworkServer.Spawn(fireball);
     }
 
-    protected override void ExecuteCollisionOnServer(Collision collision) {
+    protected override void ExecuteCollision_Host(Collision collision) {
         HealthScript hs = collision.gameObject.GetComponent<HealthScript>();
         if (hs)
         {
@@ -60,6 +57,12 @@ public class FireballBehaviour : A_SummoningBehaviour
 
         RpcPreventInterpolationIssues();
         gameObject.SetActive(false);
-        RpcSetActive(false);
+        //TODO delete this eventually - RPCs are just too slow
+        //RpcSetActive(false);
+        RpcDestroyClientObject();
+    }
+
+    protected override void ExecuteCollision_Local(Collision collision) {
+        //Destroy(gameObject);
     }
 }

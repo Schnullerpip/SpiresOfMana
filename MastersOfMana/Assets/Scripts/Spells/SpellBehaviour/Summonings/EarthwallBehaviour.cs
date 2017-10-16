@@ -19,7 +19,14 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
         }
     }
 
-    protected override void ExecuteCollisionOnServer(Collision collision)
+    protected override void ExecuteCollision_Host(Collision collision)
+    {
+        //should a collision with a wall really do anything?
+        //TODO this should be deleted
+        //RpcDestroyClientObject();
+    }
+
+    protected override void ExecuteCollision_Local(Collision collision)
     {
         //should a collision with a wall really do anything?
     }

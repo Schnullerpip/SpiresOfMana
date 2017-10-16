@@ -7,16 +7,19 @@ public class IngameMenu : MonoBehaviour {
     public Canvas canvas;
     protected Rewired.Player mRewiredPlayer;
 
-    public void toggleVisibility()
+	private bool mIsMenuActive = false;
+
+	public bool GetIsMenuActive()
+	{
+		return mIsMenuActive;
+	}
+
+    public void ToggleVisibility()
     {
-        if (canvas.enabled)
-        {
-            canvas.enabled = false;// gameObject.SetActive(false);
-        }
-        else
-        {
-            canvas.enabled = true;// gameObject.SetActive(true);
-        }
+		mIsMenuActive = !mIsMenuActive;
+		canvas.enabled = mIsMenuActive;
+
+		Cursor.lockState = mIsMenuActive ? CursorLockMode.None : CursorLockMode.Locked;
     }
 
     void OnEnable()
@@ -30,7 +33,7 @@ public class IngameMenu : MonoBehaviour {
     {
         if (mRewiredPlayer != null && mRewiredPlayer.GetButtonDown("IngameMenu"))
         {
-            toggleVisibility();
+            ToggleVisibility();
         }
     }
 
@@ -46,6 +49,6 @@ public class IngameMenu : MonoBehaviour {
     public void GoToMainMenu()
     {
         lobbyManager.GoBackButton();
-        toggleVisibility();
+        ToggleVisibility();
     }
 }

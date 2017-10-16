@@ -388,6 +388,8 @@ namespace Prototype.NetworkLobby
                     GameManager.instance.AddPlayerMessageCounter();
                 }
             }
+			//lock the mouse
+			Cursor.lockState = CursorLockMode.Locked;
             
             ServerChangeScene(playScene);
         }

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 /// <summary>
 /// The specific behaviour of the fireball, that is manifested in the scene
@@ -13,6 +14,8 @@ public class FireballBehaviour : A_SummoningBehaviour
     private float mSpeed = 5.0f;
     [SerializeField]
     private float mDamage = 5.0f;
+    [SerializeField]
+    private GameObject original;
 
     public override void Start()
     {
@@ -27,7 +30,11 @@ public class FireballBehaviour : A_SummoningBehaviour
     public override void Execute(PlayerScript caster)
     {
         //Get a fireballinstance out of the pool
-        GameObject fireball = PoolRegistry.FireballPool.Get();
+        //GameObject fireball = PoolRegistry.FireballPool.Get();
+
+        //TODO delete this
+        GameObject fireball = Instantiate(original);
+        
 
         //position the fireball to 'spawn' at the casters hand, including an offset so it does not collide instantly with the hand
         fireball.transform.position = caster.handTransform.position + caster.GetAimDirection() * 1.5f;
@@ -38,6 +45,10 @@ public class FireballBehaviour : A_SummoningBehaviour
 
         //speed up the fireball to fly into the lookdirection of the player
         fireball.GetComponent<Rigidbody>().velocity = caster.GetAimDirection() * mSpeed;
+
+
+        //TODO delete this
+        NetworkServer.Spawn(fireball);
     }
 
     protected override void ExecuteCollisionOnServer(Collision collision) {

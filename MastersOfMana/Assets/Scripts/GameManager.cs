@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     public delegate void GameStarted();
     public static event GameStarted OnGameStarted;
 
-    public void Start()
+    public void Awake()
     {
         if (instance)
         {

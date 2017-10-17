@@ -568,6 +568,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4706927827683324}
   - component: {fileID: 137256217633221522}
+  - component: {fileID: 136495351825505162}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -1855,7 +1856,7 @@ MonoBehaviour:
   speed: 4
   focusSpeedSlowdown: 0.25
   jumpStrength: 5
-  fallGravityMultiplier: 1.2
+  additionalFallGravityMultiplier: 1
   amountOfReverseSlowdown: 0.25
   maxFullspeedAngle: 90
   moveInputForce: {x: 0, y: 0, z: 0}
@@ -1863,6 +1864,7 @@ MonoBehaviour:
     collider: {fileID: 135659848251551540}
     maxSlope: 50
     currentSlopeAngle: 0
+    tolerance: 2
   aimSpeed: 180
   aimAssistInUnits: 2
   focusAimSpeedFactor: 0.25
@@ -1872,6 +1874,8 @@ MonoBehaviour:
   cameraRig: {fileID: 114371251292269686, guid: 21611dcaa52d8441ba40cf1e83852a1e,
     type: 2}
   handTransform: {fileID: 4790305223929858}
+  playerName: 
+  healthScript: {fileID: 0}
   animator: {fileID: 95637651589858840}
   headJoint: {fileID: 4496500260466464}
 --- !u!135 &135659848251551540
@@ -1884,8 +1888,21 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.27
-  m_Center: {x: 0, y: 0.21, z: 0}
+  m_Radius: 0.18
+  m_Center: {x: 0, y: 0.15, z: 0}
+--- !u!136 &136495351825505162
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1704584394658102}
+  m_Material: {fileID: 13400000, guid: 55e659729acb1465084bc64a012fd48f, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.23
+  m_Height: 1.88
+  m_Direction: 1
+  m_Center: {x: 0.002525121, y: 1.08, z: 0.001025442}
 --- !u!137 &137256217633221522
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

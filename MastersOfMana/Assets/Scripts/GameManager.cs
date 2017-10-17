@@ -11,17 +11,21 @@ public class GameManager : MonoBehaviour
 
     private int mNumberOfGoMessages = 0,
                 mNumberOfDeadPlayers = 0;
-    private int mInitialNeededToGo = 1; //Need to remember this for resets; Magic Number to allow for GO from poolRegistry
+    private int mInitialNeededToGo = 1; //Need to remember this for resets; Magic Number to allow for GO from poolRegistry and NetManager
     private int mNeededToGo = 1;
 
     public static GameManager instance;
     public string winnerName;
+    public PlayerScript localPlayer;
+
+    public delegate void GameStarted();
+    public static event GameStarted OnGameStarted;
 
     public void Start()
     {
         if (instance)
         {
-            Destroy(this);
+            Destroy(this.gameObject);
         }
         else
         {
@@ -66,10 +70,22 @@ public class GameManager : MonoBehaviour
         foreach (var p in mPlayers)
         {
             p.RpcChangeInputState(InputStateSystem.InputStateID.Normal);
-            if (p.isLocalPlayer)
-            {
-                p.RpcShareSpellselection();
-            }
+        }
+
+        //Let everyone know who chose which spells
+        localPlayer.RpcShareSpellselection();
+        if (GameManager.OnGameStarted != null)
+        {
+            GameManager.OnGameStarted();
+        }
+        NetManager.instance.RpcTriggerGameStarted();
+    }
+
+    public void TriggerGameStarted()
+    {
+        if (GameManager.OnGameStarted != null)
+        {
+            GameManager.OnGameStarted();
         }
     }
 

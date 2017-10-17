@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerHealthScript : HealthScript {
 
     private PlayerScript mPlayer;
+    public HealthHUD healthHUD;
 
     public override void Start()
     {
@@ -19,5 +20,10 @@ public class PlayerHealthScript : HealthScript {
             //this mPlayer is dead!!! tell the Gamemanager, that one is down
             GameManager.instance.PlayerDown();
         }
+    }
+
+    public override void OnHealthChanged(float newHealth)
+    {
+        healthHUD.SetHealth(newHealth);
     }
 }

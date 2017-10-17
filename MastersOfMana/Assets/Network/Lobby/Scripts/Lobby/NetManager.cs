@@ -8,12 +8,11 @@ public class NetManager : NetworkBehaviour {
     {
         if(instance)
         {
-            Destroy(this);
+            Destroy(this.gameObject);
         }
         else
         {
             instance = this;
-            DontDestroyOnLoad(this);
         }
     }
 
@@ -22,5 +21,11 @@ public class NetManager : NetworkBehaviour {
     {
         GameManager.instance.winnerName = winner;
         SceneManager.LoadSceneAsync(2, LoadSceneMode.Additive);
+    }
+
+    [ClientRpc]
+    public void RpcTriggerGameStarted()
+    {
+        GameManager.instance.TriggerGameStarted();
     }
 }

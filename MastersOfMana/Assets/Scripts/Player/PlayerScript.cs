@@ -122,6 +122,7 @@ public class PlayerScript : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
+            GameManager.instance.localPlayer = this;
             CmdGiveGo();
             cameraRig = Instantiate(cameraRig);
             cameraRig.GetComponent<PlayerCamera>().followTarget = this;
@@ -585,7 +586,10 @@ public class PlayerScript : NetworkBehaviour
     [ClientRpc]
     public void RpcShareSpellselection()
     {
-         CmdUpdateSpells(spellSlot_1.spell.spellID, spellSlot_2.spell.spellID, spellSlot_3.spell.spellID);
+        if(isLocalPlayer)
+        {
+            CmdUpdateSpells(spellSlot_1.spell.spellID, spellSlot_2.spell.spellID, spellSlot_3.spell.spellID);
+        }
     }
 
     /// <summary>

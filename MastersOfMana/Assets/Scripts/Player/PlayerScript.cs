@@ -612,6 +612,15 @@ public class PlayerScript : NetworkBehaviour
 		public A_Spell spell;
 		public float cooldown;
 
+        private IEnumerator WaitForCastDuration(PlayerScript caster, float castDuration)
+        {
+            Debug.Log("started casting");
+            yield return new WaitForSeconds(castDuration);
+            Debug.Log("finished casting");
+            cooldown = spell.coolDownInSeconds;
+            spell.Cast(caster);
+        }
+
         /// <summary>
         /// casts the spell inside the slot and also adjusts the cooldown accordingly
         /// This automatically assumes, that the overlaying PlayerScript's update routine decreases the spellslot's cooldown continuously
@@ -622,14 +631,12 @@ public class PlayerScript : NetworkBehaviour
 	    {
             if (cooldown <= 0)
             {
-
+                caster.StartCoroutine(WaitForCastDuration(caster, spell.castDurationInSeconds));
                 //TODO set player in casting mode (state and animation)
 
                 //TODO wait until the casting timer is done and invoke the "actually shoot stuff out of your hands" animation
-
-                cooldown = spell.coolDownInSeconds;
-                spell.Cast(caster);
             }
         }
 	}
+
 }

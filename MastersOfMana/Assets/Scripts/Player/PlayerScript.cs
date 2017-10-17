@@ -28,9 +28,9 @@ public class PlayerScript : NetworkBehaviour
     /// holds references to all the coroutines a spell is running, so they can bes stopped/interrupted w4hen a player is for example hit
     /// and can therefore not continue to cast the spell
     /// </summary>
-    public List<IEnumerator> spellRoutines = new List<IEnumerator>();
+    public List<Coroutine> spellRoutines = new List<Coroutine>();
 
-    public void EnlistCoroutine(IEnumerator spellRoutine)
+    public void EnlistCoroutine(Coroutine spellRoutine)
     {
         spellRoutines.Add(spellRoutine);
     }
@@ -612,12 +612,22 @@ public class PlayerScript : NetworkBehaviour
 		public A_Spell spell;
 		public float cooldown;
 
-        private IEnumerator WaitForCastDuration(PlayerScript caster, float castDuration)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="caster"></param>
+        /// <param name="castDuration"></param>
+        /// <returns></returns>
+        private IEnumerator CastRoutine(PlayerScript caster, float castDuration)
         {
-            Debug.Log("started casting");
-            yield return new WaitForSeconds(castDuration);
-            Debug.Log("finished casting");
+            //apply the spells cooldown -> even if the castprocedure isinterrupted, the cooldown will be applied
             cooldown = spell.coolDownInSeconds;
+            //wait for the respective castDuration, while te generic 'i cast something' animation is applied
+            //TODO set player in casting mode (state and animation)
+            yield return new WaitForSeconds(castDuration);
+
+            //actually cast the spell
+            //TODO invoke the "actually shoot stuff out of your hands" animation
             spell.Cast(caster);
         }
 
@@ -631,10 +641,7 @@ public class PlayerScript : NetworkBehaviour
 	    {
             if (cooldown <= 0)
             {
-                caster.StartCoroutine(WaitForCastDuration(caster, spell.castDurationInSeconds));
-                //TODO set player in casting mode (state and animation)
-
-                //TODO wait until the casting timer is done and invoke the "actually shoot stuff out of your hands" animation
+                caster.EnlistCoroutine(caster.StartCoroutine(CastRoutine(caster, spell.castDurationInSeconds)));
             }
         }
 	}

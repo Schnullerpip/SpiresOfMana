@@ -74,6 +74,9 @@ public class PlayerScript : NetworkBehaviour
 	private Rigidbody mRigidbody;
 	private Collider mFocusedTarget = null;
 	protected Rewired.Player rewiredPlayer;
+    public string playerName;
+
+    public PlayerHealthScript healthScript;
 
 	void Awake()
 	{
@@ -83,11 +86,17 @@ public class PlayerScript : NetworkBehaviour
 		{
 			Debug.LogWarning("No camera rig assigned, consider creating one during runtime? Or don't. I'm not your boss. kthx");
 		}
-//		Cursor.lockState = CursorLockMode.Locked;
-	}
+        cameraRig.gameObject.SetActive(true);
+    }
 
-	// Use this for initialization
-	void Start ()
+    private void OnDisable()
+    {
+        // Fix issue with LateUpdate on camera referencing the player
+        cameraRig.gameObject.SetActive(false);
+    }
+
+    // Use this for initialization
+    void Start ()
 	{
         //initialize the statesystems
         inputStateSystem = new InputStateSystem(this);
@@ -98,12 +107,14 @@ public class PlayerScript : NetworkBehaviour
 	    rewiredPlayer = ReInput.players.GetPlayer(0);
 
 		mRigidbody = GetComponent<Rigidbody>();
-	}
+        healthScript = GetComponent<PlayerHealthScript>();
+
+    }
 
     [Command]
     private void CmdGiveGo()
     {
-        GameManager.Go();
+        GameManager.instance.Go();
     }
 
     // Use this for initialization on local Player only

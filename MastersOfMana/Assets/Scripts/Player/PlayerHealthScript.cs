@@ -17,7 +17,7 @@ public class PlayerHealthScript : HealthScript {
 
         if (!IsAlive()) {
             //this mPlayer is dead!!! tell the Gamemanager, that one is down
-            GameManager.PlayerDown();
+            GameManager.instance.PlayerDown();
         }
     }
 }

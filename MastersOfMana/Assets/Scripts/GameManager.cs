@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public string winnerName;
 
-    public void Start()
+    public void Awake()
     {
         if (instance)
         {

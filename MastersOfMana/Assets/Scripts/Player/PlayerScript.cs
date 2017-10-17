@@ -41,7 +41,7 @@ public class PlayerScript : NetworkBehaviour
 	public float focusSpeedSlowdown = .25f;
     [SyncVar]
 	public float jumpStrength = 5;
-	public float fallGravityMultiplier = 1.2f;
+	public float additionalFallGravityMultiplier = 1f;
 	[Tooltip("How much slower is the player when he/she walks backwards? 0 = no slowdown, 1 = fullstop")]
 	[Range(0.0f,1.0f)]
 	public float amountOfReverseSlowdown = 0.0f;
@@ -78,6 +78,10 @@ public class PlayerScript : NetworkBehaviour
 
     public PlayerHealthScript healthScript;
 
+	[Header("Animation")]
+	public Animator animator;
+	public Transform headJoint;
+
 	void Awake()
 	{
 		lookDirection = transform.forward;
@@ -92,7 +96,10 @@ public class PlayerScript : NetworkBehaviour
     private void OnDisable()
     {
         // Fix issue with LateUpdate on camera referencing the player
-        cameraRig.gameObject.SetActive(false);
+		if(cameraRig != null)
+		{
+			cameraRig.gameObject.SetActive(false);
+		}
     }
 
     // Use this for initialization
@@ -484,8 +491,10 @@ public class PlayerScript : NetworkBehaviour
 
 		if(feet.IsGrounded())
 		{
-			Debug.DrawRay(transform.position, feet.GetGroundNormal(), (feet.currentSlopeAngle < feet.maxSlope ? Color.white : Color.magenta), 10);
+//			Debug.DrawRay(transform.position, feet.GetGroundNormal(), (feet.currentSlopeAngle < feet.maxSlope ? Color.white : Color.magenta), 10);
 		}
+
+		animator.SetBool("grounded", feet.IsGrounded());
 
 		Vector3 direction = moveInputForce * Time.deltaTime * speed * (mFocusActive ? focusSpeedSlowdown : 1);
 		Vector2 directionXZ = direction.xz();
@@ -500,17 +509,25 @@ public class PlayerScript : NetworkBehaviour
 		//increase the falling speed to make it feel a bit less floaty
 		if(mRigidbody.velocity.y < 0)
 		{
-			mRigidbody.velocity += Physics.gravity * fallGravityMultiplier * Time.deltaTime;
+			mRigidbody.velocity += Physics.gravity * additionalFallGravityMultiplier * Time.deltaTime;
 		}
+
+		float directionSqrMag = direction.sqrMagnitude;
 
 		//move the character
 		mRigidbody.MovePosition(mRigidbody.position + direction);
+
+		Vector3 localDirection = transform.InverseTransformVector(direction);
+		animator.SetFloat("speed_forward",localDirection.x);
+		animator.SetFloat("speed_right",localDirection.z);
+
+		animator.SetFloat("velocity",directionSqrMag);
 
 		Debug.DrawRay(transform.position+Vector3.up, moveInputForce, Color.cyan);
 		Debug.DrawRay(transform.position+Vector3.up, mRigidbody.velocity, Color.green);
 
 		//if the player gets input
-		if(direction.sqrMagnitude > 0)
+		if(directionSqrMag > 0)
 		{
 			//calculate the angle between the movemement and external forces
 			float angle = Vector2.Angle(mRigidbody.velocity.xz(),directionXZ);
@@ -518,6 +535,13 @@ public class PlayerScript : NetworkBehaviour
 			mRigidbody.velocity = Vector3.MoveTowards(mRigidbody.velocity, new Vector3(0,mRigidbody.velocity.y,0), speed * Time.deltaTime * angle / 180);
 		}
 	}
+
+	void LateUpdate()
+	{
+		//rotate the head joint, do this in the lateupdate to override the animation (?)
+		headJoint.localRotation = Quaternion.AngleAxis(-yAim,Vector3.right); 
+	}
+
 
 	/// <summary>
 	/// Let's the character jump with the default jumpStength
@@ -536,6 +560,7 @@ public class PlayerScript : NetworkBehaviour
 		if(feet.IsGrounded())
 		{
 			mRigidbody.AddForce(Vector3.up * jumpStrength,ForceMode.VelocityChange);
+			animator.SetTrigger("jump");
 		}
 	}
 
@@ -636,5 +661,11 @@ public class PlayerScript : NetworkBehaviour
                 spell.Cast(caster);
             }
         }
+	}
+
+	//get default parameters
+	void Reset()
+	{
+		animator = GetComponentInChildren<Animator>();
 	}
 }

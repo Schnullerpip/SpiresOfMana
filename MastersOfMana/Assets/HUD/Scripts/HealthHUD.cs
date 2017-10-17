@@ -5,6 +5,7 @@ public class HealthHUD : MonoBehaviour
 {
     private PlayerHealthScript localPlayerHealthScript;
     public Text healthText;
+    public Canvas canvas;
 
     // Use this for initialization
     void OnEnable()
@@ -18,6 +19,14 @@ public class HealthHUD : MonoBehaviour
         // Set this UI Script in HealthScript so that HealtScript can update us
         localPlayerHealthScript.healthHUD = this;
         SetHealth(localPlayerHealthScript.GetCurrentHealth());
+        canvas = GetComponentInParent<Canvas>();
+        canvas.enabled = true;
+    }
+
+    void OnDisable()
+    {
+        GameManager.OnGameStarted -= Init;
+        //canvas.enabled = false;
     }
 
     public void SetHealth(float health)

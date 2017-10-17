@@ -432,7 +432,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1157224023}
-        m_MethodName: toggleVisibility
+        m_MethodName: ToggleVisibility
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -576,36 +576,9 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1873515211363010, guid: bad6fea5c541cd94b9db0f96c47efbe6, type: 2}
-      propertyPath: m_Name
-      value: HealthHUD
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bad6fea5c541cd94b9db0f96c47efbe6, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &392907243 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1873515211363010, guid: bad6fea5c541cd94b9db0f96c47efbe6,
-    type: 2}
-  m_PrefabInternal: {fileID: 392907242}
---- !u!114 &392907244 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114241457663879790, guid: bad6fea5c541cd94b9db0f96c47efbe6,
-    type: 2}
-  m_PrefabInternal: {fileID: 392907242}
-  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
---- !u!114 &392907245
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 392907243}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79972c4914505324ebe1e664831e7797, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  healthText: {fileID: 392907244}
 --- !u!1001 &656098040
 Prefab:
   m_ObjectHideFlags: 0

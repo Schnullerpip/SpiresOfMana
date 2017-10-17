@@ -74,7 +74,7 @@ public class PlayerScript : NetworkBehaviour
 	private Rigidbody mRigidbody;
 	private Collider mFocusedTarget = null;
 	protected Rewired.Player rewiredPlayer;
-    public string playerName;
+    [SyncVar] public string playerName;
 
     public PlayerHealthScript healthScript;
 

@@ -24,6 +24,10 @@ public class PlayerHealthScript : HealthScript {
 
     public override void OnHealthChanged(float newHealth)
     {
-        healthHUD.SetHealth(newHealth);
+        //At game start healthHud might not be available yet
+        if(healthHUD)
+        {
+            healthHUD.SetHealth(newHealth);
+        }
     }
 }

@@ -142,6 +142,10 @@ namespace Prototype.NetworkLobby
             readyButton.onClick.RemoveAllListeners();
             readyButton.onClick.AddListener(OnReadyClicked);
 
+
+            spellButton1.gameObject.SetActive(true);
+            spellButton2.gameObject.SetActive(true);
+            spellButton3.gameObject.SetActive(true);
             UpdateSpellButtons();
 
             //when OnClientEnterLobby is called, the loval PlayerController is not yet created, so we need to redo that here to disable

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 /// <summary>
 /// Finds the nearest object beneath the caster and instantiates a wall, coming out of the floor
@@ -16,10 +17,11 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
             GameObject wall = PoolRegistry.EarthwallPool.Get(Pool.Activation.ReturnActivated);
             wall.transform.position = hit.point;
             wall.transform.rotation = caster.transform.rotation;
+            NetworkServer.Spawn(wall);
         }
     }
 
-    protected override void ExecuteCollisionOnServer(Collision collision)
+    protected override void ExecuteCollision_Host(Collision collision)
     {
         //should a collision with a wall really do anything?
     }

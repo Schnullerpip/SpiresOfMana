@@ -16,7 +16,7 @@ public class PlayerScript : NetworkBehaviour
     //member
     public InputStateSystem inputStateSystem;
     public EffectStateSystem effectStateSystem;
-    public CastStateSystem cCastStateSystem;
+    public CastStateSystem castStateSystem;
 
     //spellslots
     public SpellSlot
@@ -28,9 +28,9 @@ public class PlayerScript : NetworkBehaviour
     /// holds references to all the coroutines a spell is running, so they can bes stopped/interrupted w4hen a player is for example hit
     /// and can therefore not continue to cast the spell
     /// </summary>
-    public List<IEnumerator> spellRoutines = new List<IEnumerator>();
+    public List<Coroutine> spellRoutines = new List<Coroutine>();
 
-    public void EnlistCoroutine(IEnumerator spellRoutine)
+    public void EnlistCoroutine(Coroutine spellRoutine)
     {
         spellRoutines.Add(spellRoutine);
     }
@@ -101,7 +101,7 @@ public class PlayerScript : NetworkBehaviour
         //initialize the statesystems
         inputStateSystem = new InputStateSystem(this);
         effectStateSystem = new EffectStateSystem(this);
-        cCastStateSystem = new CastStateSystem(this);
+        castStateSystem = new CastStateSystem(this);
 
         //initialize Inpur handler
 	    rewiredPlayer = ReInput.players.GetPlayer(0);
@@ -128,6 +128,22 @@ public class PlayerScript : NetworkBehaviour
         }
     }
 
+    [ClientRpc]
+    public void RpcSetInputState(InputStateSystem.InputStateID id)
+    {
+        inputStateSystem.SetState(id);
+    }
+    [ClientRpc]
+    public void RpcSetCastState(CastStateSystem.CastStateID id)
+    {
+        castStateSystem.SetState(id);
+    }
+    [ClientRpc]
+    public void RpcSetEffectState(EffectStateSystem.EffectStateID id)
+    {
+        effectStateSystem.SetState(id);
+    }
+
     /// <summary>
     /// the direction the player aims during a cast (this field only is valid, during a cast routine, on the server!
     /// </summary>
@@ -135,28 +151,6 @@ public class PlayerScript : NetworkBehaviour
     public Vector3 GetAimDirection()
     {
         return mAimDirection;
-    }
-    /// <summary>
-    /// Calculates the aim direction for a player considering its camerarig, that is only o the local player! The resulting Vector3 can 
-    /// be passed to the spell Commands, so the server can update its aiming direction, the moment it is supposed to cast a spell
-    /// </summary>
-    private Vector3 CalculateAimDirection()
-    {
-        RaycastHit hit;
-        return cameraRig.CenterRaycast(out hit) ? Vector3.Normalize(hit.point - handTransform.position) : lookDirection;
-    }
-
-    public void CastCmdSpellslot_1()
-    {
-        CmdSpellslot_1(CalculateAimDirection());
-    }
-    public void CastCmdSpellslot_2()
-    {
-        CmdSpellslot_2(CalculateAimDirection());
-    }
-    public void CastCmdSpellslot_3()
-    {
-        CmdSpellslot_3(CalculateAimDirection());
     }
 
     [Command]
@@ -183,7 +177,7 @@ public class PlayerScript : NetworkBehaviour
 	{
         //To be run on the server
         //STEP 1 - Decrease the cooldown in the associated spellslots
-        DecreaseCooldowns();
+        castStateSystem.current.ReduceCooldowns();
 
         // Update only on the local player
 	    if (!isLocalPlayer)
@@ -196,13 +190,13 @@ public class PlayerScript : NetworkBehaviour
         //STEP 2
         //TODO this is not how the spells should be polled!!!!! only for testing!!!! DELETE THIS EVENTUALLY
         if (rewiredPlayer.GetButtonDown("CastSpell1")) {
-            CastCmdSpellslot_1();
+            inputStateSystem.current.Cast_Spell_1();
         }
 		if (rewiredPlayer.GetButtonDown("CastSpell2")) {
-            CastCmdSpellslot_2();
+            inputStateSystem.current.Cast_Spell_2();
         }
 		if (rewiredPlayer.GetButtonDown("CastSpell3")) {
-            CastCmdSpellslot_3();
+            inputStateSystem.current.Cast_Spell_3();
         }
 
         //STEP 3
@@ -539,25 +533,6 @@ public class PlayerScript : NetworkBehaviour
 		}
 	}
 
-    /// <summary>
-    /// Is supposed to be placed inside the update loop of the player, yet only to be executed on the server
-    /// </summary>
-    private void DecreaseCooldowns()
-    {
-        if ((spellSlot_1.cooldown -= Time.deltaTime) < 0)
-        {
-            spellSlot_1.cooldown = 0;
-        }
-        if ((spellSlot_2.cooldown -= Time.deltaTime) < 0)
-        {
-            spellSlot_2.cooldown = 0;
-        }
-        if ((spellSlot_3.cooldown -= Time.deltaTime) < 0)
-        {
-            spellSlot_3.cooldown = 0;
-        }
-    }
-
     //Remote Procedure Calls!
     [ClientRpc]
     public void RpcChangeInputState(InputStateSystem.InputStateID newStateID)
@@ -624,17 +599,40 @@ public class PlayerScript : NetworkBehaviour
 		public float cooldown;
 
         /// <summary>
+        /// actually coreographs the casting procedure - this should only ever be called on the server!
+        /// </summary>
+        /// <param name="caster"></param>
+        /// <param name="castDuration"></param>
+        /// <returns></returns>
+        private IEnumerator CastRoutine(PlayerScript caster, float castDuration)
+        {
+            //wait for the respective castDuration, during the generic 'i cast something' animation is applied
+            //TODO invoke castnig animation
+            caster.RpcSetCastState(CastStateSystem.CastStateID.Casting);
+            yield return new WaitForSeconds(castDuration);
+
+            //actually cast the spell
+            //TODO invoke the "actually shoot stuff out of your hands" animation
+            spell.Cast(caster);
+
+            caster.RpcSetCastState(CastStateSystem.CastStateID.Normal);
+        }
+
+        /// <summary>
         /// casts the spell inside the slot and also adjusts the cooldown accordingly
         /// This automatically assumes, that the overlaying PlayerScript's update routine decreases the spellslot's cooldown continuously
+        /// This should only be called on the server!!
         /// </summary>
-        /// <SpellslotLambda name="caster"></SpellslotLambda>
 	    public void Cast(PlayerScript caster)
 	    {
             if (cooldown <= 0)
             {
+                //apply the spells cooldown -> even if the castprocedure is interrupted, the cooldown will be applied
                 cooldown = spell.coolDownInSeconds;
-                spell.Cast(caster);
+
+                caster.EnlistCoroutine(caster.StartCoroutine(CastRoutine(caster, spell.castDurationInSeconds)));
             }
         }
 	}
+
 }

@@ -16,7 +16,7 @@ public class CastStateSystem
     /*Each Player will hold his or her specific state instances in a dictionary
      * if a state change occures the 'new' state can be adressed through the player's
      * dictionary with the respective CastStateID as the key */
-    public enum CastStateID { Normal };
+    public enum CastStateID { Normal, Casting };
 
 
 
@@ -27,6 +27,7 @@ public class CastStateSystem
         states = new List<A_CastState>()
         {
             new CastStateNormal(player),
+            new CastStateCasting(player),
         };
 
         current = states[0];

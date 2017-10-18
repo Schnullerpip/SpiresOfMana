@@ -35,11 +35,20 @@ public class PlayerScript : NetworkBehaviour
     /// holds references to all the coroutines a spell is running, so they can bes stopped/interrupted w4hen a player is for example hit
     /// and can therefore not continue to cast the spell
     /// </summary>
-    public List<Coroutine> spellRoutines = new List<Coroutine>();
+    private List<Coroutine> mSpellRoutines = new List<Coroutine>();
 
     public void EnlistSpellRoutine(Coroutine spellRoutine)
     {
-        spellRoutines.Add(spellRoutine);
+        mSpellRoutines.Add(spellRoutine);
+    }
+
+    public void FlushSpellroutines()
+    {
+        for (int i = 0; i < mSpellRoutines.Count; ++i)
+        {
+            StopCoroutine(mSpellRoutines[i]);
+        }
+        mSpellRoutines = new List<Coroutine>();
     }
 
 	[Header("Movement")][SyncVar]
@@ -650,10 +659,8 @@ public class PlayerScript : NetworkBehaviour
         /// <returns></returns>
         private IEnumerator CastRoutine(PlayerScript caster, float castDuration)
         {
-            //set caster in 'casting mode'
-            caster.RpcSetCastState(CastStateSystem.CastStateID.Casting);
-            //TODO invoke 'casting' animation
             yield return new WaitForSeconds(castDuration);
+            caster.animator.SetTrigger("holdSpell");
             //TODO invoke 'holding spell' animation
         }
 
@@ -671,6 +678,7 @@ public class PlayerScript : NetworkBehaviour
             spell.Resolve(caster);
             //set caster in 'normal mode'
             caster.RpcSetCastState(CastStateSystem.CastStateID.Normal);
+            //idle animation is triggered automatically
         }
 
         /// <summary>
@@ -684,8 +692,12 @@ public class PlayerScript : NetworkBehaviour
             {
                 //apply the spells cooldown -> even if the castprocedure is interrupted, the cooldown will be applied
                 cooldown = spell.coolDownInSeconds;
-                //TODO get timestamp mCastTime
+
                 //TODO invoke casting animation
+                caster.animator.SetBool("isCasting", true);
+
+                //set caster in 'casting mode'
+                caster.RpcSetCastState(CastStateSystem.CastStateID.Casting);
 
                 //start the casting animation and switch to 'holding spell' animation after the castduration
                 caster.EnlistSpellRoutine(caster.StartCoroutine(CastRoutine(caster, spell.castDurationInSeconds)));
@@ -700,10 +712,14 @@ public class PlayerScript : NetworkBehaviour
         public void Resolve(PlayerScript caster)
         {
             //if cast duration was met, resolve the spell - else cancel it
-            Debug.Log(caster.castStateSystem.current.GetCastDurationCount());
-            Debug.Log(spell.castDurationInSeconds);
             if (caster.castStateSystem.current.GetCastDurationCount() > spell.castDurationInSeconds)
             {
+
+                //tell the players animator to start the resolve animation
+                caster.animator.SetTrigger("resolve");
+                //tell player that its animator should no longer hold the state 'isHolding'
+                caster.animator.SetBool("isCasting", false);
+
                 //actually resolve the spell
                 caster.EnlistSpellRoutine(caster.StartCoroutine(ResolveRoutine(caster, spell.resolveDurationInSeconds)));
                 //TODO invoke 'resolve' animatino
@@ -714,6 +730,10 @@ public class PlayerScript : NetworkBehaviour
                 //trying to resolve before the castduration is met... cancel the spell...
                 //TODO set caster's state to 'normal'
                 caster.RpcSetCastState(CastStateSystem.CastStateID.Normal);
+
+                //tell player that its animator should no longer hold the state 'isHolding'
+                caster.animator.SetBool("isCasting", false);
+                caster.FlushSpellroutines();
             }
 
             //rese the castDurationCount so we cant prematurely resolve spells

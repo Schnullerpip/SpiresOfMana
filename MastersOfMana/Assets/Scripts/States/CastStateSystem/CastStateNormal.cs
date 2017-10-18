@@ -24,21 +24,12 @@ public class CastStateNormal : A_CastState{
     /// <summary>
     /// will invoke the spell that is maped at spellslot 1
     /// </summary>
-    public override void CastCmdSpellslot_1() {
-        player.CmdSpellslot_1(CalculateAimDirection());
+    public override void CastCmdSpell() {
+        player.CmdCastSpell();
     }
 
     /// <summary>
-    /// will invoke the spell that is maped at spellslot 2
+    /// in the normal state a spell cant resolve, since none was cast...
     /// </summary>
-    public override void CastCmdSpellslot_2() {
-        player.CmdSpellslot_2(CalculateAimDirection());
-    }
-
-    /// <summary>
-    /// will invoke the spell that is maped at spellslot 3
-    /// </summary>
-    public override void CastCmdSpellslot_3() {
-        player.CmdSpellslot_3(CalculateAimDirection());
-    }
+    public override void ResolveCmdSpell() {}
 }

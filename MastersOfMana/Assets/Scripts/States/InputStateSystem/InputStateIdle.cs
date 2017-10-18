@@ -5,7 +5,7 @@ using UnityEngine;
 public class InputStateIdle : A_InputState {
 
     override public void Jump() { }
-    override public void Cast_Spell_1() { }
+    override public void ChooseSpell_1() { }
 
     public InputStateIdle(PlayerScript player) : base(player) { }
 }

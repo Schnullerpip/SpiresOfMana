@@ -12,7 +12,7 @@ public class HealthScript : NetworkBehaviour
 {
     [SerializeField][SyncVar]
     private float mMaxHealth = 10;
-    [SerializeField][SyncVar]
+    [SerializeField][SyncVar(hook = "HealthHook")]
     private float mCurrentHealth;
 
     //states whether the GameObject is alive or not
@@ -28,8 +28,15 @@ public class HealthScript : NetworkBehaviour
     }
 
     //public interface
-
-    
+    /// <summary>
+    /// Calls whenever the health is changed
+    /// </summary>
+    public void HealthHook(float newHealth)
+    {
+        OnHealthChanged(newHealth);
+    }
+    public virtual void OnHealthChanged(float newHealth) {}
+        
     /// <summary>
     /// the only thing, that should be adressed, to actually hurt a GameObject, this should only ever be run on the server!!!
     /// </summary>
@@ -40,7 +47,7 @@ public class HealthScript : NetworkBehaviour
             isAlive = false;
         }
     }
-
+    
     //bring a GameObject to life
     public void Reset()
     {

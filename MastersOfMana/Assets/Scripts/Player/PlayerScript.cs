@@ -67,7 +67,7 @@ public class PlayerScript : NetworkBehaviour
 
 	[HideInInspector]
 	public Vector3 moveInputForce;
-	public FeetGroundCheck feet;
+	public FeetCollider feet;
 
 	[Header("Aim")]
 	[Tooltip("Degrees per seconds")]
@@ -500,22 +500,14 @@ public class PlayerScript : NetworkBehaviour
 		Destroy(lineGO,10);
 	}
 
-
 	void OnCollisionStay(Collision collisionInfo)
 	{
-		foreach (ContactPoint contact in collisionInfo.contacts) 
-		{
-			if(contact.thisCollider == feet.collider)
-			{
-				feet.Collision(contact);
-			}
-		}
+		//propagate the collsionenter event to the feet
+		feet.OnCollisionStay(collisionInfo);
 	}
 		
 	void FixedUpdate()
 	{
-		feet.PhysicsUpdate();
-
 		animator.SetBool("grounded", feet.IsGrounded());
 
 		Vector3 direction = moveInputForce * Time.deltaTime * speed * (mFocusActive ? focusSpeedSlowdown : 1);

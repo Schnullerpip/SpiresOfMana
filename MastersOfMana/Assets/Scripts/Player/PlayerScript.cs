@@ -254,10 +254,6 @@ public class PlayerScript : NetworkBehaviour
 		#endregion
 
 		lookDirection = Quaternion.AngleAxis(-yAim, transform.right) * transform.forward;
-
-		#if UNITY_EDITOR 
-		Debug.DrawRay(transform.position+Vector3.up*1.8f, lookDirection, Color.red);
-		#endif
  	}
 
 	/// <summary>
@@ -483,11 +479,6 @@ public class PlayerScript : NetworkBehaviour
 	{
 		feet.PhysicsUpdate();
 
-		if(feet.IsGrounded())
-		{
-//			Debug.DrawRay(transform.position, feet.GetGroundNormal(), (feet.currentSlopeAngle < feet.maxSlope ? Color.white : Color.magenta), 10);
-		}
-
 		animator.SetBool("grounded", feet.IsGrounded());
 
 		Vector3 direction = moveInputForce * Time.deltaTime * speed * (mFocusActive ? focusSpeedSlowdown : 1);
@@ -516,9 +507,6 @@ public class PlayerScript : NetworkBehaviour
 		animator.SetFloat("speed_right",localDirection.z);
 
 		animator.SetFloat("velocity",directionSqrMag);
-
-		Debug.DrawRay(transform.position+Vector3.up, moveInputForce, Color.cyan);
-		Debug.DrawRay(transform.position+Vector3.up, mRigidbody.velocity, Color.green);
 
 		//if the player gets input
 		if(directionSqrMag > 0)

@@ -36,20 +36,36 @@ public abstract class A_InputState : A_State{
 		player.Jump();
 	}
 
-    public virtual void Cast_Spell_1() 
+    //choosing a spell
+    public virtual void ChooseSpell_1() 
 	{  
-        player.castStateSystem.current.CastCmdSpellslot_1();
+        player.CmdChooseSpellslot_1();
 	}
 
-    public virtual void Cast_Spell_2()
+    public virtual void ChooseSpell_2()
     {
-        player.castStateSystem.current.CastCmdSpellslot_2();
+        player.CmdChooseSpellslot_2();
     }
 
-    public virtual void Cast_Spell_3()
+    public virtual void ChooseSpell_3()
     {
-        player.castStateSystem.current.CastCmdSpellslot_3();
+        player.CmdChooseSpellslot_3();
     }
+
+    //casting the chosen spell
+    public virtual void CastSpell()
+    {
+        player.castStateSystem.current.CastCmdSpell();
+    }
+
+    //resolving the chosen spell
+    public virtual void ResolveSpell() 
+	{  
+        player.castStateSystem.current.ResolveCmdSpell();
+	} 
+
+
+
 
 	public virtual void StartFocus()
 	{

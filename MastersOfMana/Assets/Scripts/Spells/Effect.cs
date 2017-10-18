@@ -10,7 +10,7 @@ public class Effect : A_Spell
 {
 	#region implemented abstract members of A_Spell
 
-	public override void Cast (PlayerScript caster)
+	public override void Resolve (PlayerScript caster)
 	{
         foreach (var sb in SpellBehaviours) {
             sb.Execute(caster);

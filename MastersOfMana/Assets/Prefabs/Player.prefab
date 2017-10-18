@@ -1833,6 +1833,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mMaxHealth: 1
   mCurrentHealth: 0
+  healthHUD: {fileID: 0}
 --- !u!114 &114612807110646480
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1864,7 +1865,7 @@ MonoBehaviour:
     collider: {fileID: 135659848251551540}
     maxSlope: 50
     currentSlopeAngle: 0
-    tolerance: 2
+    tolerance: 1.6
   aimSpeed: 180
   aimAssistInUnits: 2
   focusAimSpeedFactor: 0.25
@@ -1875,7 +1876,7 @@ MonoBehaviour:
     type: 2}
   handTransform: {fileID: 4790305223929858}
   playerName: 
-  healthScript: {fileID: 0}
+  healthScript: {fileID: 114581584314824656}
   animator: {fileID: 95637651589858840}
   headJoint: {fileID: 4496500260466464}
 --- !u!135 &135659848251551540

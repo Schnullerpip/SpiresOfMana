@@ -40,5 +40,6 @@ public class EffectStateSystem
     public void SetState(EffectStateID idx)
     {
         current = states[(int)idx];
+        current.Init();
     }
 }

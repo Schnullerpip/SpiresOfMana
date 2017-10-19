@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 /// <summary>
 /// Abstract base class to describe spells, scriptable object classes can extend this, to further divide into classes with different traits
 /// </summary>

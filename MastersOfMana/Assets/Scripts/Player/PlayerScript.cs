@@ -183,19 +183,19 @@ public class PlayerScript : NetworkBehaviour
     public void CmdChooseSpellslot_1()
     {
         mCurrentSpell = spellSlot_1;
-        castStateSystem.SetState(CastStateSystem.CastStateID.Normal);
+        RpcSetCastState(CastStateSystem.CastStateID.Normal);
     }
     [Command]
     public void CmdChooseSpellslot_2()
     {
         mCurrentSpell = spellSlot_2;
-        castStateSystem.SetState(CastStateSystem.CastStateID.Normal);
+        RpcSetCastState(CastStateSystem.CastStateID.Normal);
     }
     [Command]
     public void CmdChooseSpellslot_3()
     {
         mCurrentSpell = spellSlot_3;
-        castStateSystem.SetState(CastStateSystem.CastStateID.Normal);
+        RpcSetCastState(CastStateSystem.CastStateID.Normal);
     }
 
     //casting the chosen spell

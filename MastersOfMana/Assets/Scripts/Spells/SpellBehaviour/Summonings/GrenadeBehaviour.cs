@@ -19,9 +19,9 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 	public AnimateTransform explosionAnimation;
 	public GameObject grenadeMesh;
 
-    public override void Start()
+    public override void Awake()
     {
-        base.Start();
+        base.Awake();
         if (!mRigid)
         {
             //cant find a rigid body!!!
@@ -59,8 +59,6 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 	{
 		transform.position = pos;
 		transform.rotation = rot;
-		//TEMP FIX
-		Start();
 
 		mRigid.Reset();
 		mRigid.isKinematic = false;

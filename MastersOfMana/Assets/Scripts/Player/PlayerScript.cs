@@ -80,8 +80,9 @@ public class PlayerScript : NetworkBehaviour
 	public float yAim = 0;
 	[HideInInspector][SyncVar]
 	public Vector3 lookDirection;
-	public PlayerCamera cameraRig;
-	public Transform handTransform;
+	public PlayerCamera cameraRigPrefab;
+    public PlayerCamera cameraRig;
+    public Transform handTransform;
 	private Vector3 mAimRefinement;
 
 	private bool mFocusActive = false;
@@ -98,13 +99,7 @@ public class PlayerScript : NetworkBehaviour
 
 	void Awake()
 	{
-		lookDirection = transform.forward;
-
-		if(cameraRig == null)
-		{
-			Debug.LogWarning("No camera rig assigned, consider creating one during runtime? Or don't. I'm not your boss. kthx");
-		}
-        cameraRig.gameObject.SetActive(true);
+        lookDirection = transform.forward;
     }
 
     private void OnDisable()
@@ -143,13 +138,15 @@ public class PlayerScript : NetworkBehaviour
     // Use this for initialization on local Player only
     override public void OnStartLocalPlayer()
     {
-        if (isLocalPlayer)
+        GameManager.instance.localPlayer = this;
+        CmdGiveGo();
+        cameraRig = Instantiate(cameraRigPrefab);
+        cameraRig.GetComponent<PlayerCamera>().followTarget = this;
+        if (cameraRig == null)
         {
-            GameManager.instance.localPlayer = this;
-            CmdGiveGo();
-            cameraRig = Instantiate(cameraRig);
-            cameraRig.GetComponent<PlayerCamera>().followTarget = this;
+            Debug.LogWarning("No camera rig assigned, consider creating one during runtime? Or don't. I'm not your boss. kthx");
         }
+        cameraRig.gameObject.SetActive(true);
     }
 
     [ClientRpc]

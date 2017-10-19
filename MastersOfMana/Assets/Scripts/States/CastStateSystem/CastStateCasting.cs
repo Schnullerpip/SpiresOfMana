@@ -14,7 +14,7 @@ public class CastStateCasting : A_CastState {
         //reset states so the animations behave strangely
         var anim = player.animator;
         anim.ResetTrigger("holdSpell");
-        anim.ResetTrigger("resolveSpell");
+        anim.ResetTrigger("resolve");
         anim.SetBool("isCasting", false);//kinda useless, since its set again right after...
 
         //apply the spells cooldown -> even if the castprocedure is interrupted, the cooldown will be applied

@@ -15,9 +15,9 @@ public abstract class A_SummoningBehaviour : A_SpellBehaviour {
     //important members
     protected Rigidbody mRigid;
 
-    public override void Start()
+    public override void Awake()
     {
-        base.Start();
+        base.Awake();
 
         if (isLocalPlayer)
         {

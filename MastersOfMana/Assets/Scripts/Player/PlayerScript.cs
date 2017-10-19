@@ -13,6 +13,8 @@ using UnityEngine.Networking;
 public class PlayerScript : NetworkBehaviour
 {
 
+    //TODO einheitlicher zugriff auf animations-string-literals
+
     //member
     public InputStateSystem inputStateSystem;
     public EffectStateSystem effectStateSystem;

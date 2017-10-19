@@ -11,8 +11,4 @@ public class CastStateHolding : A_CastState {
         castDurationCount = player.castStateSystem.GetState(CastStateSystem.CastStateID.Casting).GetCastDurationCount();
         player.animator.SetTrigger(AnimationLiterals.ANIMATION_TRIGGER_HOLD);
     }
-
-    public override void ReduceCooldowns() { }
-
-    public override void CastCmdSpell() { }
 }

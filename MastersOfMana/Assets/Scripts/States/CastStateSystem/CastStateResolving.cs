@@ -15,8 +15,4 @@ public class CastStateResolving : A_CastState {
         //tell player that its animator should no longer hold the state 'isHolding'
         anim.SetBool(AnimationLiterals.ANIMATION_BOOL_CASTING, false);
     }
-
-    public override void ReduceCooldowns() { }
-
-    public override void CastCmdSpell() { }
 }

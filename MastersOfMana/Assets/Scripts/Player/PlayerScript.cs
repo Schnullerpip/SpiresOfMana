@@ -602,10 +602,17 @@ public class PlayerScript : NetworkBehaviour
     /// <param name="spell3"></param>
     public void UpdateSpells(int spell1, int spell2, int spell3)
     {
-        SpellRegistry spellregistry = Prototype.NetworkLobby.LobbyManager.s_Singleton.mainMenu.spellSelectionPanel.GetComponent<SpellSelectionPanel>().spellregistry;
-        spellSlot_1.spell = spellregistry.GetSpellByID(spell1);
-        spellSlot_2.spell = spellregistry.GetSpellByID(spell2);
-        spellSlot_3.spell = spellregistry.GetSpellByID(spell3);
+        Prototype.NetworkLobby.LobbyManager NetworkManager = Prototype.NetworkLobby.LobbyManager.s_Singleton;
+        if (NetworkManager)
+        { 
+            SpellRegistry spellregistry = NetworkManager.mainMenu.spellSelectionPanel.GetComponent<SpellSelectionPanel>().spellregistry;
+            if (spellregistry)
+            {
+                spellSlot_1.spell = spellregistry.GetSpellByID(spell1);
+                spellSlot_2.spell = spellregistry.GetSpellByID(spell2);
+                spellSlot_3.spell = spellregistry.GetSpellByID(spell3);
+            }
+        }
     }
 
     /// <summary>

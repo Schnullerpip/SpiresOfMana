@@ -12,7 +12,6 @@ using UnityEngine.Networking;
 /// </summary>
 public class PlayerScript : NetworkBehaviour
 {
-
     //member
     public InputStateSystem inputStateSystem;
     public EffectStateSystem effectStateSystem;
@@ -24,15 +23,31 @@ public class PlayerScript : NetworkBehaviour
         spellSlot_2,
         spellSlot_3;
 
+    //references the currently chosen spell, among the three available spellslots
+    private SpellSlot mCurrentSpell;
+    public SpellSlot Currentspell()
+    {
+        return mCurrentSpell;
+    }
+
     /// <summary>
     /// holds references to all the coroutines a spell is running, so they can bes stopped/interrupted w4hen a player is for example hit
     /// and can therefore not continue to cast the spell
     /// </summary>
-    public List<Coroutine> spellRoutines = new List<Coroutine>();
+    private List<Coroutine> mSpellRoutines = new List<Coroutine>();
 
-    public void EnlistCoroutine(Coroutine spellRoutine)
+    public void EnlistSpellRoutine(Coroutine spellRoutine)
     {
-        spellRoutines.Add(spellRoutine);
+        mSpellRoutines.Add(spellRoutine);
+    }
+
+    public void FlushSpellroutines()
+    {
+        for (int i = 0; i < mSpellRoutines.Count; ++i)
+        {
+            StopCoroutine(mSpellRoutines[i]);
+        }
+        mSpellRoutines = new List<Coroutine>();
     }
 
 	[Header("Movement")][SyncVar]
@@ -51,7 +66,7 @@ public class PlayerScript : NetworkBehaviour
 
 	[HideInInspector]
 	public Vector3 moveInputForce;
-	public FeetGroundCheck feet;
+	public FeetCollider feet;
 
 	[Header("Aim")]
 	[Tooltip("Degrees per seconds")]
@@ -66,15 +81,16 @@ public class PlayerScript : NetworkBehaviour
 	public float yAim = 0;
 	[HideInInspector][SyncVar]
 	public Vector3 lookDirection;
-	public PlayerCamera cameraRig;
-	public Transform handTransform;
+	public PlayerCamera cameraRigPrefab;
+    public PlayerCamera cameraRig;
+    public Transform handTransform;
 	private Vector3 mAimRefinement;
 
 	private bool mFocusActive = false;
 	private Rigidbody mRigidbody;
 	private Collider mFocusedTarget = null;
 	protected Rewired.Player rewiredPlayer;
-    public string playerName;
+    [SyncVar] public string playerName;
 
     public PlayerHealthScript healthScript;
 
@@ -84,13 +100,7 @@ public class PlayerScript : NetworkBehaviour
 
 	void Awake()
 	{
-		lookDirection = transform.forward;
-
-		if(cameraRig == null)
-		{
-			Debug.LogWarning("No camera rig assigned, consider creating one during runtime? Or don't. I'm not your boss. kthx");
-		}
-        cameraRig.gameObject.SetActive(true);
+        lookDirection = transform.forward;
     }
 
     private void OnDisable()
@@ -116,7 +126,9 @@ public class PlayerScript : NetworkBehaviour
 		mRigidbody = GetComponent<Rigidbody>();
         healthScript = GetComponent<PlayerHealthScript>();
 
-    }
+        //set the currently chosen spell to a default
+	    mCurrentSpell = spellSlot_1;
+	}
 
     [Command]
     private void CmdGiveGo()
@@ -127,12 +139,15 @@ public class PlayerScript : NetworkBehaviour
     // Use this for initialization on local Player only
     override public void OnStartLocalPlayer()
     {
-        if (isLocalPlayer)
+        GameManager.instance.localPlayer = this;
+        CmdGiveGo();
+        cameraRig = Instantiate(cameraRigPrefab);
+        cameraRig.GetComponent<PlayerCamera>().followTarget = this;
+        if (cameraRig == null)
         {
-            CmdGiveGo();
-            cameraRig = Instantiate(cameraRig);
-            cameraRig.GetComponent<PlayerCamera>().followTarget = this;
+            Debug.LogWarning("No camera rig assigned, consider creating one during runtime? Or don't. I'm not your boss. kthx");
         }
+        cameraRig.gameObject.SetActive(true);
     }
 
     [ClientRpc]
@@ -160,33 +175,51 @@ public class PlayerScript : NetworkBehaviour
         return mAimDirection;
     }
 
+    //choosing a spell
     [Command]
-    public void CmdSpellslot_1(Vector3 castDirection)
+    public void CmdChooseSpellslot_1()
     {
-        mAimDirection = castDirection; //update the aimdirection
-        spellSlot_1.Cast(this);
+        mCurrentSpell = spellSlot_1;
+        RpcSetCastState(CastStateSystem.CastStateID.Normal);
     }
     [Command]
-    public void CmdSpellslot_2(Vector3 castDirection)
+    public void CmdChooseSpellslot_2()
     {
-        mAimDirection = castDirection;//update the aimdirection
-        spellSlot_2.Cast(this);
+        mCurrentSpell = spellSlot_2;
+        RpcSetCastState(CastStateSystem.CastStateID.Normal);
     }
     [Command]
-    public void CmdSpellslot_3(Vector3 castDirection)
+    public void CmdChooseSpellslot_3()
     {
-        mAimDirection = castDirection;//update the aimdirection
-        spellSlot_3.Cast(this);
+        mCurrentSpell = spellSlot_3;
+        RpcSetCastState(CastStateSystem.CastStateID.Normal);
+    }
+
+    //casting the chosen spell
+    [Command]
+    public void CmdCastSpell()
+    {
+        mCurrentSpell.Cast(this);
+    }
+
+    //resolving the chosen spell
+    [Command]
+    public void CmdResolveSpell(Vector3 aimDirection)
+    {
+        mAimDirection = aimDirection;
+        mCurrentSpell.Resolve(this);
     }
 
     // Update is called once per frame
     void Update () 
 	{
-        //To be run on the server
-        //STEP 1 - Decrease the cooldown in the associated spellslots
+        //Decrease the cooldown in the associated spellslots
         castStateSystem.current.ReduceCooldowns();
 
-        // Update only on the local player
+        //increase the castdurationcount (if the player is casting right now) -> indicates how long the player holds the cast button
+        castStateSystem.current.IncrementCastDuration();
+
+	    // Update only on the local player
 	    if (!isLocalPlayer)
 	    {
             return;
@@ -195,15 +228,14 @@ public class PlayerScript : NetworkBehaviour
         //To be run on the clients
 
         //STEP 2
-        //TODO this is not how the spells should be polled!!!!! only for testing!!!! DELETE THIS EVENTUALLY
-        if (rewiredPlayer.GetButtonDown("CastSpell1")) {
-            inputStateSystem.current.Cast_Spell_1();
+        if (rewiredPlayer.GetButtonDown("ChooseSpell1")) {
+            inputStateSystem.current.ChooseSpell_1();
         }
-		if (rewiredPlayer.GetButtonDown("CastSpell2")) {
-            inputStateSystem.current.Cast_Spell_2();
+		if (rewiredPlayer.GetButtonDown("ChooseSpell2")) {
+            inputStateSystem.current.ChooseSpell_2();
         }
-		if (rewiredPlayer.GetButtonDown("CastSpell3")) {
-            inputStateSystem.current.Cast_Spell_3();
+		if (rewiredPlayer.GetButtonDown("ChooseSpell3")) {
+            inputStateSystem.current.ChooseSpell_3();
         }
 
         //STEP 3
@@ -227,7 +259,11 @@ public class PlayerScript : NetworkBehaviour
 		//TODO: define mouse & keyboard / controller schemes, "CastSpell" not final axis name
 		if(rewiredPlayer.GetButtonDown("CastSpell"))
 		{
-			inputStateSystem.current.Cast_Spell_1();
+            Debug.Log("[PayerScript]::keydown detected");
+			inputStateSystem.current.CastSpell();
+		}else if (rewiredPlayer.GetButtonUp("CastSpell"))
+		{
+		    inputStateSystem.current.ResolveSpell();
 		}
 
 		inputStateSystem.current.Move(movementInput);
@@ -254,10 +290,6 @@ public class PlayerScript : NetworkBehaviour
 		#endregion
 
 		lookDirection = Quaternion.AngleAxis(-yAim, transform.right) * transform.forward;
-
-		#if UNITY_EDITOR 
-		Debug.DrawRay(transform.position+Vector3.up*1.8f, lookDirection, Color.red);
-		#endif
  	}
 
 	/// <summary>
@@ -467,27 +499,14 @@ public class PlayerScript : NetworkBehaviour
 		Destroy(lineGO,10);
 	}
 
-
 	void OnCollisionStay(Collision collisionInfo)
 	{
-		foreach (ContactPoint contact in collisionInfo.contacts) 
-		{
-			if(contact.thisCollider == feet.collider)
-			{
-				feet.Collision(contact);
-			}
-		}
+		//propagate the collsionenter event to the feet
+		feet.OnCollisionStay(collisionInfo);
 	}
 		
 	void FixedUpdate()
 	{
-		feet.PhysicsUpdate();
-
-		if(feet.IsGrounded())
-		{
-//			Debug.DrawRay(transform.position, feet.GetGroundNormal(), (feet.currentSlopeAngle < feet.maxSlope ? Color.white : Color.magenta), 10);
-		}
-
 		animator.SetBool("grounded", feet.IsGrounded());
 
 		Vector3 direction = moveInputForce * Time.deltaTime * speed * (mFocusActive ? focusSpeedSlowdown : 1);
@@ -517,9 +536,6 @@ public class PlayerScript : NetworkBehaviour
 
 		animator.SetFloat("velocity",directionSqrMag);
 
-		Debug.DrawRay(transform.position+Vector3.up, moveInputForce, Color.cyan);
-		Debug.DrawRay(transform.position+Vector3.up, mRigidbody.velocity, Color.green);
-
 		//if the player gets input
 		if(directionSqrMag > 0)
 		{
@@ -540,18 +556,18 @@ public class PlayerScript : NetworkBehaviour
 	/// <summary>
 	/// Let's the character jump with the default jumpStength
 	/// </summary>
-	public void Jump()
+	public void Jump(bool onlyIfGrounded = true)
 	{
-		Jump(jumpStrength);
+		Jump(jumpStrength, onlyIfGrounded);
 	}
 
 	/// <summary>
 	/// Let's the character jump with a specified jumpStrength
 	/// </summary>
 	/// <SpellslotLambda name="jumpForce">Jump force.</SpellslotLambda>
-	public void Jump(float jumpStrength)
+	public void Jump(float jumpStrength, bool onlyIfGrounded = true)
 	{
-		if(feet.IsGrounded())
+		if(feet.IsGrounded() || !onlyIfGrounded)
 		{
 			mRigidbody.AddForce(Vector3.up * jumpStrength,ForceMode.VelocityChange);
 			animator.SetTrigger("jump");
@@ -573,32 +589,17 @@ public class PlayerScript : NetworkBehaviour
     /// <param name="spell3"></param>
     public void UpdateSpells(int spell1, int spell2, int spell3)
     {
-        SpellRegistry spellregistry = Prototype.NetworkLobby.LobbyManager.s_Singleton.mainMenu.spellSelectionPanel.GetComponent<SpellSelectionPanel>().spellregistry;
-        spellSlot_1.spell = spellregistry.GetSpellByID(spell1);
-        spellSlot_2.spell = spellregistry.GetSpellByID(spell2);
-        spellSlot_3.spell = spellregistry.GetSpellByID(spell3);
-    }
-
-    /// <summary>
-    /// This is called by the gamemanager once all player are loaded. It will then send the selected spells to the server, which will distribute it to alle local clients
-    /// </summary>
-    [ClientRpc]
-    public void RpcShareSpellselection()
-    {
-         CmdUpdateSpells(spellSlot_1.spell.spellID, spellSlot_2.spell.spellID, spellSlot_3.spell.spellID);
-    }
-
-    /// <summary>
-    /// Update spells on Server side and trigger update on all clients
-    /// </summary>
-    /// <param name="spell1"></param>
-    /// <param name="spell2"></param>
-    /// <param name="spell3"></param>
-    [Command]
-    public void CmdUpdateSpells(int spell1, int spell2, int spell3)
-    {
-        UpdateSpells(spell1, spell2, spell3);
-        RpcUpdateSpells(spell1, spell2, spell3);
+        Prototype.NetworkLobby.LobbyManager NetworkManager = Prototype.NetworkLobby.LobbyManager.s_Singleton;
+        if (NetworkManager)
+        { 
+            SpellRegistry spellregistry = NetworkManager.mainMenu.spellSelectionPanel.GetComponent<SpellSelectionPanel>().spellregistry;
+            if (spellregistry)
+            {
+                spellSlot_1.spell = spellregistry.GetSpellByID(spell1);
+                spellSlot_2.spell = spellregistry.GetSpellByID(spell2);
+                spellSlot_3.spell = spellregistry.GetSpellByID(spell3);
+            }
+        }
     }
 
     /// <summary>
@@ -619,28 +620,36 @@ public class PlayerScript : NetworkBehaviour
     /// Simple Datacontainer (inner class) for a Pair of Spell and cooldown
     /// </summary>
     [System.Serializable]
-	public struct SpellSlot {
+	public class SpellSlot {
 		public A_Spell spell;
 		public float cooldown;
 
         /// <summary>
-        /// actually coreographs the casting procedure - this should only ever be called on the server!
+        /// activates the casting animation, after the spells castduration it activates the 'holding spell' animation
         /// </summary>
         /// <param name="caster"></param>
         /// <param name="castDuration"></param>
         /// <returns></returns>
         private IEnumerator CastRoutine(PlayerScript caster, float castDuration)
         {
-            //wait for the respective castDuration, during the generic 'i cast something' animation is applied
-            //TODO invoke castnig animation
-            caster.RpcSetCastState(CastStateSystem.CastStateID.Casting);
             yield return new WaitForSeconds(castDuration);
+            caster.RpcSetCastState(CastStateSystem.CastStateID.Holding);
+        }
 
-            //actually cast the spell
-            //TODO invoke the "actually shoot stuff out of your hands" animation
-            spell.Cast(caster);
-
+        /// <summary>
+        /// activates the resolving animation, after the spell's resolveduration, takes the player to the normal state
+        /// </summary>
+        /// <param name="caster"></param>
+        /// <param name="resolveDuration"></param>
+        /// <returns></returns>
+        private IEnumerator ResolveRoutine(PlayerScript caster, float resolveDuration)
+        {
+            yield return new WaitForSeconds(resolveDuration);
+            //resolve the spell
+            spell.Resolve(caster);
+            //set caster in 'normal mode'
             caster.RpcSetCastState(CastStateSystem.CastStateID.Normal);
+            //idle animation is triggered automatically
         }
 
         /// <summary>
@@ -652,17 +661,44 @@ public class PlayerScript : NetworkBehaviour
 	    {
             if (cooldown <= 0)
             {
-                //apply the spells cooldown -> even if the castprocedure is interrupted, the cooldown will be applied
-                cooldown = spell.coolDownInSeconds;
+                //set caster in 'casting mode'
+                caster.RpcSetCastState(CastStateSystem.CastStateID.Casting);
 
-                caster.EnlistCoroutine(caster.StartCoroutine(CastRoutine(caster, spell.castDurationInSeconds)));
+                //start the switch to 'holding spell' animation after the castduration
+                caster.EnlistSpellRoutine(caster.StartCoroutine(CastRoutine(caster, spell.castDurationInSeconds)));
             }
+        }
+
+        /// <summary>
+        /// resolves the spell inside the slot
+        /// should only be called on the server!
+        /// </summary>
+        /// <param name="caster"></param>
+        public void Resolve(PlayerScript caster)
+        {
+            //if cast duration was met, resolve the spell - else cancel it
+            if (caster.castStateSystem.current.GetCastDurationCount() > spell.castDurationInSeconds)
+            {
+                //set caster in 'resolving mode'
+                caster.RpcSetCastState(CastStateSystem.CastStateID.Resolving);
+
+                //actually resolve the spell
+                caster.EnlistSpellRoutine(caster.StartCoroutine(ResolveRoutine(caster, spell.resolveDurationInSeconds)));
+            }
+            else
+            {
+                //trying to resolve before the castduration is met... cancel the spell...
+                caster.RpcSetCastState(CastStateSystem.CastStateID.Normal);
+            }
+
+            //rese the castDurationCount so we cant prematurely resolve spells
+            caster.castStateSystem.current.ResetCastDurationCount();
         }
 	}
 
 	//get default parameters
-	void Reset()
-	{
-		animator = GetComponentInChildren<Animator>();
-	}
+    void Reset()
+    {
+        animator = GetComponentInChildren<Animator>();
+    }
 }

@@ -14,6 +14,11 @@ public class A_State
         this.player = player;
     }
 
+    /// <summary>
+    /// The function that should be called after a statechange - so the 'new' state can re/set some properties - though few states really need to have this probably
+    /// </summary>
+    public virtual void Init() { }
+
     //prevent standard construction
     private A_State() {}
 

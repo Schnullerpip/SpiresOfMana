@@ -29,6 +29,7 @@ namespace Prototype.NetworkLobby
 
             //ipInput.onEndEdit.RemoveAllListeners();
             //ipInput.onEndEdit.AddListener(onEndEditIP);
+            Cursor.lockState = CursorLockMode.None;
 
             matchNameInput.onEndEdit.RemoveAllListeners();
             matchNameInput.onEndEdit.AddListener(onEndEditGameName);

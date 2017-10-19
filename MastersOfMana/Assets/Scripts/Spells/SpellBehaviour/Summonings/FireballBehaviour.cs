@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -14,12 +12,10 @@ public class FireballBehaviour : A_SummoningBehaviour
     private float mSpeed = 5.0f;
     [SerializeField]
     private float mDamage = 5.0f;
-    [SerializeField]
-    private GameObject original;
 
-    public override void Start()
+    public override void Awake()
     {
-        base.Start();
+        base.Awake();
         if (!mRigid)
         {
             //cant find a rigid body!!!
@@ -42,7 +38,8 @@ public class FireballBehaviour : A_SummoningBehaviour
         fireball.SetActive(true);
 
         //speed up the fireball to fly into the lookdirection of the player
-        fireball.GetComponent<Rigidbody>().velocity = caster.GetAimDirection() * mSpeed;
+        FireballBehaviour fb = fireball.GetComponent<FireballBehaviour>();
+        fb.mRigid.velocity = caster.GetAimDirection() * mSpeed;
 
         //create an instance of this fireball on the client's machine
         NetworkServer.Spawn(fireball, PoolRegistry.FireballPool.assetID);

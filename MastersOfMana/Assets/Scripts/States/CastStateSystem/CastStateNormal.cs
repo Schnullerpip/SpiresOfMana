@@ -21,24 +21,20 @@ public class CastStateNormal : A_CastState{
         }
     }
 
+    public override void Init()
+    {
+        player.FlushSpellroutines();
+        ResetCastDurationCount();
+
+        //tell player that its animator should no longer hold the state 'isHolding'
+        player.animator.SetBool(AnimationLiterals.ANIMATION_BOOL_CASTING, false);
+        player.animator.ResetTrigger(AnimationLiterals.ANIMATION_TRIGGER_HOLD);
+    }
+
     /// <summary>
     /// will invoke the spell that is maped at spellslot 1
     /// </summary>
-    public override void CastCmdSpellslot_1() {
-        player.CmdSpellslot_1(CalculateAimDirection());
-    }
-
-    /// <summary>
-    /// will invoke the spell that is maped at spellslot 2
-    /// </summary>
-    public override void CastCmdSpellslot_2() {
-        player.CmdSpellslot_2(CalculateAimDirection());
-    }
-
-    /// <summary>
-    /// will invoke the spell that is maped at spellslot 3
-    /// </summary>
-    public override void CastCmdSpellslot_3() {
-        player.CmdSpellslot_3(CalculateAimDirection());
+    public override void CastCmdSpell() {
+        player.CmdCastSpell();
     }
 }

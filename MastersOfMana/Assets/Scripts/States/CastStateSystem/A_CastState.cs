@@ -1,10 +1,28 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class A_CastState : A_State{
-    public A_CastState(PlayerScript player) : base(player) { }
+    public A_CastState(PlayerScript player) : base(player)
+    {
+        castDurationCount = 0;
+    }
 
+    /// <summary>
+    /// will store the time in milliseconds, that a character is casting already, to validate that a spell can resolve now
+    /// </summary>
+    protected float castDurationCount;
+
+    public float GetCastDurationCount()
+    {
+        return castDurationCount;
+    }
+
+    public void ResetCastDurationCount()
+    {
+        castDurationCount = 0;
+    }
     /*
      * handy helper methods 
      */
@@ -24,23 +42,26 @@ public abstract class A_CastState : A_State{
      */
 
     /// <summary>
+    /// should incerase the castDurationCount by the deltatime
+    /// </summary>
+    public virtual void IncrementCastDuration() { }
+
+    /// <summary>
     /// the method that handles reducing the spells' cooldowns so they can be cast again
     /// </summary>
-    public abstract void ReduceCooldowns();
+    public virtual void ReduceCooldowns() {}
 
     /// <summary>
     /// will invoke the spell that is maped at spellslot 1
     /// </summary>
-    public abstract void CastCmdSpellslot_1();
+    public virtual void CastCmdSpell() {}
+
 
     /// <summary>
-    /// will invoke the spell that is maped at spellslot 2
+    /// will resolve the spell that is maped at spellslot 1
     /// </summary>
-    public abstract void CastCmdSpellslot_2();
-
-    /// <summary>
-    /// will invoke the spell that is maped at spellslot 3
-    /// </summary>
-    public abstract void CastCmdSpellslot_3();
-
+    public virtual void ResolveCmdSpell()
+    {
+        player.CmdResolveSpell(CalculateAimDirection());
+    }
 }

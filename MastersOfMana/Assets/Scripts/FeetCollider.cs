@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-[System.Serializable]
-public class FeetGroundCheck
+[RequireComponent(typeof(SphereCollider))]
+public class FeetCollider : MonoBehaviour 
 {
-	public SphereCollider collider;
 	[Tooltip("Maximum degree which should be considered 'firmly grounded'")]
 	public float maxSlope = 60;
 	public float currentSlopeAngle;
@@ -15,6 +16,46 @@ public class FeetGroundCheck
 	private bool mHadContactThisFrame = false;
 	private bool mIsGrounded = false;
 	private Vector3 mGroundNormal;
+	private SphereCollider sphereCollider;
+
+	void Awake()
+	{
+		sphereCollider = GetComponent<SphereCollider>();
+	}
+		
+	public void OnCollisionStay(Collision collisionInfo)
+	{
+		foreach (ContactPoint contact in collisionInfo.contacts) 
+		{
+			if(contact.thisCollider == sphereCollider)
+			{
+				Collision(contact);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Calculates wether or not the Collision on the specified contact should be considered stirdy ground. 
+	/// This can happen multiple times per physics step. The normal with the lowest angle is considered ground.
+	/// </summary>
+	/// <param name="contact">Contact.</param>
+	public void Collision(ContactPoint contact)
+	{
+		mHadContactThisFrame = true;
+
+		float tempSlope = Vector3.Angle(Vector3.up, contact.normal);
+
+		if(tempSlope < currentSlopeAngle)
+		{
+			currentSlopeAngle = tempSlope;
+			mGroundNormal = contact.normal;
+		}
+	}
+
+	void FixedUpdate()
+	{
+		PhysicsUpdate();
+	}
 
 	/// <summary>
 	/// Clears certain flags and validates if the ground was really touched since the last PhysicsUpdate(). This method should be called once per FixecUpdate()
@@ -29,7 +70,7 @@ public class FeetGroundCheck
 		{
 			mIsGrounded = false;
 		}
-			
+
 		//reset the values for the next collision checks
 		currentSlopeAngle = float.MaxValue;
 		mHadContactThisFrame = false;
@@ -42,10 +83,10 @@ public class FeetGroundCheck
 	private bool CheckWithTolerance()
 	{
 		//transform from local to worldspace
-		Vector3 worldSpacePosition = collider.transform.TransformPoint (collider.center);
+		Vector3 worldSpacePosition = transform.position;
 
 		RaycastHit hit;
-		bool hitGround = Physics.Raycast (worldSpacePosition, -mGroundNormal, out hit, collider.radius * tolerance);
+		bool hitGround = Physics.Raycast (worldSpacePosition, -mGroundNormal, out hit, sphereCollider.radius * tolerance);
 
 		if(hitGround)
 		{
@@ -71,23 +112,5 @@ public class FeetGroundCheck
 	public Vector3 GetGroundNormal()
 	{
 		return mGroundNormal;
-	}
-
-	/// <summary>
-	/// Calculates wether or not the Collision on the specified contact should be considered stirdy ground. 
-	/// This can happen multiple times per physics step. The normal with the lowest angle is considered ground.
-	/// </summary>
-	/// <param name="contact">Contact.</param>
-	public void Collision(ContactPoint contact)
-	{
-		mHadContactThisFrame = true;
-
-		float tempSlope = Vector3.Angle(Vector3.up, contact.normal);
-
-		if(tempSlope < currentSlopeAngle)
-		{
-			currentSlopeAngle = tempSlope;
-			mGroundNormal = contact.normal;
-		}
 	}
 }

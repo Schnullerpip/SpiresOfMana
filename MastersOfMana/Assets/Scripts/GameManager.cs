@@ -11,17 +11,21 @@ public class GameManager : MonoBehaviour
 
     private int mNumberOfGoMessages = 0,
                 mNumberOfDeadPlayers = 0;
-    private int mInitialNeededToGo = 1; //Need to remember this for resets; Magic Number to allow for GO from poolRegistry
+    private int mInitialNeededToGo = 1; //Need to remember this for resets; Magic Number to allow for GO from poolRegistry and NetManager
     private int mNeededToGo = 1;
 
     public static GameManager instance;
     public string winnerName;
+    public PlayerScript localPlayer;
+
+    public delegate void GameStarted();
+    public static event GameStarted OnGameStarted;
 
     public void Awake()
     {
         if (instance)
         {
-            Destroy(this);
+            Destroy(this.gameObject);
         }
         else
         {
@@ -53,6 +57,7 @@ public class GameManager : MonoBehaviour
 
     public void AddPlayerMessageCounter()
     {
+
         mNeededToGo++;
     }
 
@@ -62,14 +67,25 @@ public class GameManager : MonoBehaviour
         mPoolRegistry = GameObject.FindObjectOfType<PoolRegistry>();
         mPoolRegistry.CreatePools();
 
-        //enable the players to actually do stuff
+        //enable the players to actually do stuff and update the chosen Spells
         foreach (var p in mPlayers)
         {
             p.RpcChangeInputState(InputStateSystem.InputStateID.Normal);
-            if (p.isLocalPlayer)
-            {
-                p.RpcShareSpellselection();
-            }
+            p.RpcUpdateSpells(p.spellSlot_1.spell.spellID, p.spellSlot_2.spell.spellID, p.spellSlot_3.spell.spellID);
+        }
+
+        if (GameManager.OnGameStarted != null)
+        {
+            GameManager.OnGameStarted();
+        }
+        NetManager.instance.RpcTriggerGameStarted();
+    }
+
+    public void TriggerGameStarted()
+    {
+        if (GameManager.OnGameStarted != null)
+        {
+            GameManager.OnGameStarted();
         }
     }
 
@@ -78,7 +94,8 @@ public class GameManager : MonoBehaviour
     public void PlayerDown() {
         ++mNumberOfDeadPlayers;
 
-        if (mNumberOfDeadPlayers > (mPlayers.Count - 1)) { //only one player left -> he/she won the game!
+        //TODO: What happens if both die simultaniously?
+        if (mNumberOfDeadPlayers >= (mPlayers.Count - 1)) { //only one player left -> he/she won the game!
             Debug.Log("Last Mage standing");
             ResetLocalGameState();
 

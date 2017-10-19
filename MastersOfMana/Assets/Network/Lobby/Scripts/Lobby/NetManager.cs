@@ -1,19 +1,20 @@
-﻿using UnityEngine.SceneManagement;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
 
 public class NetManager : NetworkBehaviour {
     public static NetManager instance;
+    public bool initialized = false;
 
-    private void Start()
+    private void Awake()
     {
-        if(instance)
+        if (instance)
         {
-            Destroy(this);
+            Destroy(this.gameObject);
         }
         else
         {
             instance = this;
-            DontDestroyOnLoad(this);
         }
     }
 
@@ -22,5 +23,11 @@ public class NetManager : NetworkBehaviour {
     {
         GameManager.instance.winnerName = winner;
         SceneManager.LoadSceneAsync(2, LoadSceneMode.Additive);
+    }
+
+    [ClientRpc]
+    public void RpcTriggerGameStarted()
+    {
+        GameManager.instance.TriggerGameStarted();
     }
 }

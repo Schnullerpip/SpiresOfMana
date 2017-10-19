@@ -557,18 +557,18 @@ public class PlayerScript : NetworkBehaviour
 	/// <summary>
 	/// Let's the character jump with the default jumpStength
 	/// </summary>
-	public void Jump()
+	public void Jump(bool onlyIfGrounded = true)
 	{
-		Jump(jumpStrength);
+		Jump(jumpStrength, onlyIfGrounded);
 	}
 
 	/// <summary>
 	/// Let's the character jump with a specified jumpStrength
 	/// </summary>
 	/// <SpellslotLambda name="jumpForce">Jump force.</SpellslotLambda>
-	public void Jump(float jumpStrength)
+	public void Jump(float jumpStrength, bool onlyIfGrounded = true)
 	{
-		if(feet.IsGrounded())
+		if(feet.IsGrounded() || !onlyIfGrounded)
 		{
 			mRigidbody.AddForce(Vector3.up * jumpStrength,ForceMode.VelocityChange);
 			animator.SetTrigger("jump");

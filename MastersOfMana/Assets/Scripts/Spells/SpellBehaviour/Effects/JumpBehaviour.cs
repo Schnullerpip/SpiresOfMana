@@ -10,7 +10,7 @@ public class JumpBehaviour : A_EffectBehaviour
 
 	public override void Execute(PlayerScript caster)
 	{
-		caster.Jump(jumpForce);
+		caster.Jump(jumpForce, false);
 		Collider[] cols = Physics.OverlapSphere(caster.transform.position, pullInRadius);
 
 		foreach(Collider c in cols)

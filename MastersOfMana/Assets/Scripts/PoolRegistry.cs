@@ -5,8 +5,9 @@ using UnityEngine;
 public class PoolRegistry : MonoBehaviour {
 
     public static Pool
-        EarthwallPool,
-        FireballPool;
+		EarthwallPool,
+		FireballPool,
+        GrenadePool;
 
     public void Start()
     {
@@ -16,6 +17,7 @@ public class PoolRegistry : MonoBehaviour {
     // Use this for initialization
     public void CreatePools () {
         FireballPool = new Pool(Resources.Load("SpellPrefabs/Fireball") as GameObject, 5, Pool.PoolingStrategy.OnMissRoundRobin);
-        EarthwallPool = new Pool(Resources.Load("SpellPrefabs/Earthwall") as GameObject, 5, Pool.PoolingStrategy.OnMissSubjoinElements);
+		EarthwallPool = new Pool(Resources.Load("SpellPrefabs/Earthwall") as GameObject, 5, Pool.PoolingStrategy.OnMissSubjoinElements);
+		GrenadePool = new Pool(Resources.Load("SpellPrefabs/Grenade") as GameObject, 5, Pool.PoolingStrategy.OnMissSubjoinElements);
 	}
 }

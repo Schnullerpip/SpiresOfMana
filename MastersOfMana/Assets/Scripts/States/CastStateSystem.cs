@@ -42,5 +42,6 @@ public class CastStateSystem
     public void SetState(CastStateID idx)
     {
         current = states[(int)idx];
+        current.Init();
     }
 }

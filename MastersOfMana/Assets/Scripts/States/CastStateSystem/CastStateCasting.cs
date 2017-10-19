@@ -9,6 +9,12 @@ public class CastStateCasting : A_CastState {
 
     public CastStateCasting(PlayerScript player) : base(player) {}
 
+    public override void Init()
+    {
+        player.Currentspell().cooldown = player.Currentspell().spell.castDurationInSeconds;
+        ResetCastDurationCount();
+    }
+
     public override void IncrementCastDuration()
     {
         castDurationCount += Time.deltaTime;

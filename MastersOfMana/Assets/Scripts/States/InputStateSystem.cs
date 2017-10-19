@@ -44,5 +44,6 @@ public class InputStateSystem
     public void SetState(InputStateID idx)
     {
         current = states[(int)idx];
+        current.Init();
     }
 }

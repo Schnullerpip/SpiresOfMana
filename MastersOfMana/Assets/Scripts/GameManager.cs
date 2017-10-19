@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
         foreach (var p in mPlayers)
         {
             p.RpcChangeInputState(InputStateSystem.InputStateID.Normal);
-            p.RpcUpdateSpells(p.spellSlot_1.spell.spellID, p.spellSlot_2.spell.spellID, p.spellSlot_3.spell.spellID);
+            p.RpcUpdateSpells(p.spellslot[0].spell.spellID, p.spellslot[1].spell.spellID, p.spellslot[2].spell.spellID);
         }
 
         if (GameManager.OnGameStarted != null)

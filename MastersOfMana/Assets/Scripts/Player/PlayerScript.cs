@@ -24,6 +24,8 @@ public class PlayerScript : NetworkBehaviour
         spellSlot_2,
         spellSlot_3;
 
+	[Header("Movement")][SyncVar]
+    [SerializeField]
     //references the currently chosen spell, among the three available spellslots
     private SpellSlot mCurrentSpell;
     public SpellSlot Currentspell()
@@ -184,16 +186,19 @@ public class PlayerScript : NetworkBehaviour
     public void CmdChooseSpellslot_1()
     {
         mCurrentSpell = spellSlot_1;
+        castStateSystem.SetState(CastStateSystem.CastStateID.Normal);
     }
     [Command]
     public void CmdChooseSpellslot_2()
     {
         mCurrentSpell = spellSlot_2;
+        castStateSystem.SetState(CastStateSystem.CastStateID.Normal);
     }
     [Command]
     public void CmdChooseSpellslot_3()
     {
         mCurrentSpell = spellSlot_3;
+        castStateSystem.SetState(CastStateSystem.CastStateID.Normal);
     }
 
     //casting the chosen spell
@@ -216,7 +221,6 @@ public class PlayerScript : NetworkBehaviour
 	{
         //Decrease the cooldown in the associated spellslots
         castStateSystem.current.ReduceCooldowns();
-        Debug.Log("cooldown: " + Currentspell().cooldown);
 
         //increase the castdurationcount (if the player is casting right now) -> indicates how long the player holds the cast button
         castStateSystem.current.IncrementCastDuration();

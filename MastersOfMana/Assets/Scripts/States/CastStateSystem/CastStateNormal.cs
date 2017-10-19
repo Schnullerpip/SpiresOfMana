@@ -21,6 +21,14 @@ public class CastStateNormal : A_CastState{
         }
     }
 
+    public override void Init()
+    {
+        player.FlushSpellroutines();
+        ResetCastDurationCount();
+        player.animator.SetBool("isCasting", false);
+        player.animator.ResetTrigger("holdSpell");
+    }
+
     /// <summary>
     /// will invoke the spell that is maped at spellslot 1
     /// </summary>

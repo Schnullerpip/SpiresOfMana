@@ -12,7 +12,6 @@ using UnityEngine.Networking;
 /// </summary>
 public class PlayerScript : NetworkBehaviour
 {
-
     //member
     public InputStateSystem inputStateSystem;
     public EffectStateSystem effectStateSystem;
@@ -184,16 +183,19 @@ public class PlayerScript : NetworkBehaviour
     public void CmdChooseSpellslot_1()
     {
         mCurrentSpell = spellSlot_1;
+        RpcSetCastState(CastStateSystem.CastStateID.Normal);
     }
     [Command]
     public void CmdChooseSpellslot_2()
     {
         mCurrentSpell = spellSlot_2;
+        RpcSetCastState(CastStateSystem.CastStateID.Normal);
     }
     [Command]
     public void CmdChooseSpellslot_3()
     {
         mCurrentSpell = spellSlot_3;
+        RpcSetCastState(CastStateSystem.CastStateID.Normal);
     }
 
     //casting the chosen spell
@@ -214,13 +216,13 @@ public class PlayerScript : NetworkBehaviour
     // Update is called once per frame
     void Update () 
 	{
-        //To be run on the server
         //Decrease the cooldown in the associated spellslots
         castStateSystem.current.ReduceCooldowns();
-        //increase the castdurationcount (if the player is casting right now)
+
+        //increase the castdurationcount (if the player is casting right now) -> indicates how long the player holds the cast button
         castStateSystem.current.IncrementCastDuration();
 
-        // Update only on the local player
+	    // Update only on the local player
 	    if (!isLocalPlayer)
 	    {
             return;
@@ -229,7 +231,6 @@ public class PlayerScript : NetworkBehaviour
         //To be run on the clients
 
         //STEP 2
-        //TODO this is not how the spells should be polled!!!!! only for testing!!!! DELETE THIS EVENTUALLY
         if (rewiredPlayer.GetButtonDown("ChooseSpell1")) {
             inputStateSystem.current.ChooseSpell_1();
         }
@@ -261,6 +262,7 @@ public class PlayerScript : NetworkBehaviour
 		//TODO: define mouse & keyboard / controller schemes, "CastSpell" not final axis name
 		if(rewiredPlayer.GetButtonDown("CastSpell"))
 		{
+            Debug.Log("[PayerScript]::keydown detected");
 			inputStateSystem.current.CastSpell();
 		}else if (rewiredPlayer.GetButtonUp("CastSpell"))
 		{
@@ -590,35 +592,17 @@ public class PlayerScript : NetworkBehaviour
     /// <param name="spell3"></param>
     public void UpdateSpells(int spell1, int spell2, int spell3)
     {
-        SpellRegistry spellregistry = Prototype.NetworkLobby.LobbyManager.s_Singleton.mainMenu.spellSelectionPanel.GetComponent<SpellSelectionPanel>().spellregistry;
-        spellSlot_1.spell = spellregistry.GetSpellByID(spell1);
-        spellSlot_2.spell = spellregistry.GetSpellByID(spell2);
-        spellSlot_3.spell = spellregistry.GetSpellByID(spell3);
-    }
-
-    /// <summary>
-    /// This is called by the gamemanager once all player are loaded. It will then send the selected spells to the server, which will distribute it to alle local clients
-    /// </summary>
-    [ClientRpc]
-    public void RpcShareSpellselection()
-    {
-        if(isLocalPlayer)
-        {
-            CmdUpdateSpells(spellSlot_1.spell.spellID, spellSlot_2.spell.spellID, spellSlot_3.spell.spellID);
+        Prototype.NetworkLobby.LobbyManager NetworkManager = Prototype.NetworkLobby.LobbyManager.s_Singleton;
+        if (NetworkManager)
+        { 
+            SpellRegistry spellregistry = NetworkManager.mainMenu.spellSelectionPanel.GetComponent<SpellSelectionPanel>().spellregistry;
+            if (spellregistry)
+            {
+                spellSlot_1.spell = spellregistry.GetSpellByID(spell1);
+                spellSlot_2.spell = spellregistry.GetSpellByID(spell2);
+                spellSlot_3.spell = spellregistry.GetSpellByID(spell3);
+            }
         }
-    }
-
-    /// <summary>
-    /// Update spells on Server side and trigger update on all clients
-    /// </summary>
-    /// <param name="spell1"></param>
-    /// <param name="spell2"></param>
-    /// <param name="spell3"></param>
-    [Command]
-    public void CmdUpdateSpells(int spell1, int spell2, int spell3)
-    {
-        UpdateSpells(spell1, spell2, spell3);
-        RpcUpdateSpells(spell1, spell2, spell3);
     }
 
     /// <summary>
@@ -652,8 +636,7 @@ public class PlayerScript : NetworkBehaviour
         private IEnumerator CastRoutine(PlayerScript caster, float castDuration)
         {
             yield return new WaitForSeconds(castDuration);
-            caster.animator.SetTrigger("holdSpell");
-            //TODO invoke 'holding spell' animation
+            caster.RpcSetCastState(CastStateSystem.CastStateID.Holding);
         }
 
         /// <summary>
@@ -664,9 +647,8 @@ public class PlayerScript : NetworkBehaviour
         /// <returns></returns>
         private IEnumerator ResolveRoutine(PlayerScript caster, float resolveDuration)
         {
-            //set caster in 'resolving mode'
-            caster.RpcSetCastState(CastStateSystem.CastStateID.Resolving);
             yield return new WaitForSeconds(resolveDuration);
+            //resolve the spell
             spell.Resolve(caster);
             //set caster in 'normal mode'
             caster.RpcSetCastState(CastStateSystem.CastStateID.Normal);
@@ -682,16 +664,10 @@ public class PlayerScript : NetworkBehaviour
 	    {
             if (cooldown <= 0)
             {
-                //apply the spells cooldown -> even if the castprocedure is interrupted, the cooldown will be applied
-                cooldown = spell.coolDownInSeconds;
-
-                //TODO invoke casting animation
-                caster.animator.SetBool("isCasting", true);
-
                 //set caster in 'casting mode'
                 caster.RpcSetCastState(CastStateSystem.CastStateID.Casting);
 
-                //start the casting animation and switch to 'holding spell' animation after the castduration
+                //start the switch to 'holding spell' animation after the castduration
                 caster.EnlistSpellRoutine(caster.StartCoroutine(CastRoutine(caster, spell.castDurationInSeconds)));
             }
         }
@@ -706,26 +682,16 @@ public class PlayerScript : NetworkBehaviour
             //if cast duration was met, resolve the spell - else cancel it
             if (caster.castStateSystem.current.GetCastDurationCount() > spell.castDurationInSeconds)
             {
-
-                //tell the players animator to start the resolve animation
-                caster.animator.SetTrigger("resolve");
-                //tell player that its animator should no longer hold the state 'isHolding'
-                caster.animator.SetBool("isCasting", false);
+                //set caster in 'resolving mode'
+                caster.RpcSetCastState(CastStateSystem.CastStateID.Resolving);
 
                 //actually resolve the spell
                 caster.EnlistSpellRoutine(caster.StartCoroutine(ResolveRoutine(caster, spell.resolveDurationInSeconds)));
-                //TODO invoke 'resolve' animatino
-                //TODO set caster's state to 'resolving'
             }
             else
             {
                 //trying to resolve before the castduration is met... cancel the spell...
-                //TODO set caster's state to 'normal'
                 caster.RpcSetCastState(CastStateSystem.CastStateID.Normal);
-
-                //tell player that its animator should no longer hold the state 'isHolding'
-                caster.animator.SetBool("isCasting", false);
-                caster.FlushSpellroutines();
             }
 
             //rese the castDurationCount so we cant prematurely resolve spells

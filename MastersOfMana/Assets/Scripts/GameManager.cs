@@ -94,7 +94,8 @@ public class GameManager : MonoBehaviour
     public void PlayerDown() {
         ++mNumberOfDeadPlayers;
 
-        if (mNumberOfDeadPlayers > (mPlayers.Count - 1)) { //only one player left -> he/she won the game!
+        //TODO: What happens if both die simultaniously?
+        if (mNumberOfDeadPlayers >= (mPlayers.Count - 1)) { //only one player left -> he/she won the game!
             Debug.Log("Last Mage standing");
             ResetLocalGameState();
 

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -14,8 +12,6 @@ public class FireballBehaviour : A_SummoningBehaviour
     private float mSpeed = 5.0f;
     [SerializeField]
     private float mDamage = 5.0f;
-    [SerializeField]
-    private GameObject original;
 
     public override void Awake()
     {

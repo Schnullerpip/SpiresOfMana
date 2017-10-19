@@ -49,16 +49,19 @@ public abstract class A_CastState : A_State{
     /// <summary>
     /// the method that handles reducing the spells' cooldowns so they can be cast again
     /// </summary>
-    public abstract void ReduceCooldowns();
+    public virtual void ReduceCooldowns() {}
 
     /// <summary>
     /// will invoke the spell that is maped at spellslot 1
     /// </summary>
-    public abstract void CastCmdSpell();
+    public virtual void CastCmdSpell() {}
 
 
     /// <summary>
     /// will resolve the spell that is maped at spellslot 1
     /// </summary>
-    public abstract void ResolveCmdSpell();
+    public virtual void ResolveCmdSpell()
+    {
+        player.CmdResolveSpell(CalculateAimDirection());
+    }
 }

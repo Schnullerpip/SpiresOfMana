@@ -36,6 +36,10 @@ public class SpellHUD : MonoBehaviour
         // Calc how much of the cooldown has passed if the Spellcooldown is not 0
         if (SpellSlot.spell.coolDownInSeconds != 0)
         {
+            if(SpellSlotID == 2)
+            {
+                Debug.Log("MaxCooldown: " + SpellSlot.spell.coolDownInSeconds + "Current Cooldown: " + SpellSlot.cooldown + "Percentage: "+ CooldownPercentage);
+            }
             CooldownPercentage = SpellSlot.cooldown / SpellSlot.spell.coolDownInSeconds;
         }
         Image image = SpellSlots[SpellSlotID].GetChild(0).GetComponent<Image>();

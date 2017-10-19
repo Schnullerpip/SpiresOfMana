@@ -6,12 +6,10 @@ using UnityEngine.UI;
 public class SpellHUD : MonoBehaviour
 {
     public List<RectTransform> SpellSlots;
-        //SpellSlot1,
-        //SpellSlot2,
-        //SpellSlot3;
 
     private Canvas canvas;
     private PlayerScript localPlayer;
+    private bool[] OnCooldown = new bool[3];
 
 	// Use this for initialization
 	void OnEnable ()
@@ -36,15 +34,18 @@ public class SpellHUD : MonoBehaviour
         // Calc how much of the cooldown has passed if the Spellcooldown is not 0
         if (SpellSlot.spell.coolDownInSeconds != 0)
         {
-            if(SpellSlotID == 2)
-            {
-                Debug.Log("MaxCooldown: " + SpellSlot.spell.coolDownInSeconds + "Current Cooldown: " + SpellSlot.cooldown + "Percentage: "+ CooldownPercentage);
-            }
             CooldownPercentage = SpellSlot.cooldown / SpellSlot.spell.coolDownInSeconds;
         }
+
+
         Image image = SpellSlots[SpellSlotID].GetChild(0).GetComponent<Image>();
         if(image)
         {
+            // Did we just finish our Cooldown? --> check if fillAmount will be set to 0 this frame (and wasn't zero before)
+            if(image.fillAmount > 0 && CooldownPercentage == 0)
+            {
+                //SpellSlots[0].GetChild(1).GetComponent<ParticleSystem>().Play(false);// Simulate(100.0f);
+            }
             image.fillAmount = CooldownPercentage;
         }
     }

@@ -211,6 +211,8 @@ namespace Prototype.NetworkLobby
                 readyButton.interactable = false;
                 colorButton.interactable = false;
                 nameInput.interactable = false;
+                // Push chosen spells to server
+                CmdSpellsChanged(spells[0].spellID, spells[1].spellID, spells[2].spellID);
             }
             else
             {
@@ -223,6 +225,15 @@ namespace Prototype.NetworkLobby
                 colorButton.interactable = isLocalPlayer;
                 nameInput.interactable = isLocalPlayer;
             }
+        }
+
+        [Command]
+        public void CmdSpellsChanged(int Spell1, int Spell2, int Spell3)
+        {
+            SpellRegistry spellregistry = Prototype.NetworkLobby.LobbyManager.s_Singleton.mainMenu.spellSelectionPanel.GetComponent<SpellSelectionPanel>().spellregistry;
+            spells[0] = spellregistry.GetSpellByID(Spell1);
+            spells[1] = spellregistry.GetSpellByID(Spell2);
+            spells[2] = spellregistry.GetSpellByID(Spell3);
         }
 
         public void OnPlayerListChanged(int idx)

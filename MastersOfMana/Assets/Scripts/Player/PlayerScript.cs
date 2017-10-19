@@ -66,7 +66,7 @@ public class PlayerScript : NetworkBehaviour
 
 	[HideInInspector]
 	public Vector3 moveInputForce;
-	public FeetGroundCheck feet;
+	public FeetCollider feet;
 
 	[Header("Aim")]
 	[Tooltip("Degrees per seconds")]
@@ -502,22 +502,14 @@ public class PlayerScript : NetworkBehaviour
 		Destroy(lineGO,10);
 	}
 
-
 	void OnCollisionStay(Collision collisionInfo)
 	{
-		foreach (ContactPoint contact in collisionInfo.contacts) 
-		{
-			if(contact.thisCollider == feet.collider)
-			{
-				feet.Collision(contact);
-			}
-		}
+		//propagate the collsionenter event to the feet
+		feet.OnCollisionStay(collisionInfo);
 	}
 		
 	void FixedUpdate()
 	{
-		feet.PhysicsUpdate();
-
 		animator.SetBool("grounded", feet.IsGrounded());
 
 		Vector3 direction = moveInputForce * Time.deltaTime * speed * (mFocusActive ? focusSpeedSlowdown : 1);
@@ -567,18 +559,18 @@ public class PlayerScript : NetworkBehaviour
 	/// <summary>
 	/// Let's the character jump with the default jumpStength
 	/// </summary>
-	public void Jump()
+	public void Jump(bool onlyIfGrounded = true)
 	{
-		Jump(jumpStrength);
+		Jump(jumpStrength, onlyIfGrounded);
 	}
 
 	/// <summary>
 	/// Let's the character jump with a specified jumpStrength
 	/// </summary>
 	/// <SpellslotLambda name="jumpForce">Jump force.</SpellslotLambda>
-	public void Jump(float jumpStrength)
+	public void Jump(float jumpStrength, bool onlyIfGrounded = true)
 	{
-		if(feet.IsGrounded())
+		if(feet.IsGrounded() || !onlyIfGrounded)
 		{
 			mRigidbody.AddForce(Vector3.up * jumpStrength,ForceMode.VelocityChange);
 			animator.SetTrigger("jump");
@@ -611,31 +603,6 @@ public class PlayerScript : NetworkBehaviour
                 spellSlot_3.spell = spellregistry.GetSpellByID(spell3);
             }
         }
-    }
-
-    /// <summary>
-    /// This is called by the gamemanager once all player are loaded. It will then send the selected spells to the server, which will distribute it to alle local clients
-    /// </summary>
-    [ClientRpc]
-    public void RpcShareSpellselection()
-    {
-        if(isLocalPlayer)
-        {
-            CmdUpdateSpells(spellSlot_1.spell.spellID, spellSlot_2.spell.spellID, spellSlot_3.spell.spellID);
-        }
-    }
-
-    /// <summary>
-    /// Update spells on Server side and trigger update on all clients
-    /// </summary>
-    /// <param name="spell1"></param>
-    /// <param name="spell2"></param>
-    /// <param name="spell3"></param>
-    [Command]
-    public void CmdUpdateSpells(int spell1, int spell2, int spell3)
-    {
-        UpdateSpells(spell1, spell2, spell3);
-        RpcUpdateSpells(spell1, spell2, spell3);
     }
 
     /// <summary>

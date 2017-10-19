@@ -9,6 +9,7 @@ public class SpellHUD : MonoBehaviour
 
     private Canvas canvas;
     private PlayerScript localPlayer;
+    private bool[] OnCooldown = new bool[3];
 
 	// Use this for initialization
 	void OnEnable ()
@@ -35,9 +36,16 @@ public class SpellHUD : MonoBehaviour
         {
             CooldownPercentage = SpellSlot.cooldown / SpellSlot.spell.coolDownInSeconds;
         }
+
+
         Image image = SpellSlots[SpellSlotID].GetChild(0).GetComponent<Image>();
         if(image)
         {
+            // Did we just finish our Cooldown? --> check if fillAmount will be set to 0 this frame (and wasn't zero before)
+            if(image.fillAmount > 0 && CooldownPercentage == 0)
+            {
+                //SpellSlots[0].GetChild(1).GetComponent<ParticleSystem>().Play(false);// Simulate(100.0f);
+            }
             image.fillAmount = CooldownPercentage;
         }
     }

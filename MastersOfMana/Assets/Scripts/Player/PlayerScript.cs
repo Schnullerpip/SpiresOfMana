@@ -616,31 +616,6 @@ public class PlayerScript : NetworkBehaviour
     }
 
     /// <summary>
-    /// This is called by the gamemanager once all player are loaded. It will then send the selected spells to the server, which will distribute it to alle local clients
-    /// </summary>
-    [ClientRpc]
-    public void RpcShareSpellselection()
-    {
-        if(isLocalPlayer)
-        {
-            CmdUpdateSpells(spellSlot_1.spell.spellID, spellSlot_2.spell.spellID, spellSlot_3.spell.spellID);
-        }
-    }
-
-    /// <summary>
-    /// Update spells on Server side and trigger update on all clients
-    /// </summary>
-    /// <param name="spell1"></param>
-    /// <param name="spell2"></param>
-    /// <param name="spell3"></param>
-    [Command]
-    public void CmdUpdateSpells(int spell1, int spell2, int spell3)
-    {
-        UpdateSpells(spell1, spell2, spell3);
-        RpcUpdateSpells(spell1, spell2, spell3);
-    }
-
-    /// <summary>
     /// Update spells on client side
     /// </summary>
     /// <param name="spell1"></param>

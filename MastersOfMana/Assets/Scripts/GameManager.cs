@@ -67,14 +67,13 @@ public class GameManager : MonoBehaviour
         mPoolRegistry = GameObject.FindObjectOfType<PoolRegistry>();
         mPoolRegistry.CreatePools();
 
-        //enable the players to actually do stuff
+        //enable the players to actually do stuff and update the chosen Spells
         foreach (var p in mPlayers)
         {
             p.RpcChangeInputState(InputStateSystem.InputStateID.Normal);
+            p.RpcUpdateSpells(p.spellSlot_1.spell.spellID, p.spellSlot_2.spell.spellID, p.spellSlot_3.spell.spellID);
         }
 
-        //Let everyone know who chose which spells
-        localPlayer.RpcShareSpellselection();
         if (GameManager.OnGameStarted != null)
         {
             GameManager.OnGameStarted();

@@ -214,13 +214,14 @@ public class PlayerScript : NetworkBehaviour
     // Update is called once per frame
     void Update () 
 	{
-        //To be run on the server
+
         //Decrease the cooldown in the associated spellslots
         castStateSystem.current.ReduceCooldowns();
-        //increase the castdurationcount (if the player is casting right now)
+
+        //increase the castdurationcount (if the player is casting right now) -> indicates how long the player holds the cast button
         castStateSystem.current.IncrementCastDuration();
 
-        // Update only on the local player
+	    // Update only on the local player
 	    if (!isLocalPlayer)
 	    {
             return;
@@ -229,7 +230,6 @@ public class PlayerScript : NetworkBehaviour
         //To be run on the clients
 
         //STEP 2
-        //TODO this is not how the spells should be polled!!!!! only for testing!!!! DELETE THIS EVENTUALLY
         if (rewiredPlayer.GetButtonDown("ChooseSpell1")) {
             inputStateSystem.current.ChooseSpell_1();
         }
@@ -261,6 +261,7 @@ public class PlayerScript : NetworkBehaviour
 		//TODO: define mouse & keyboard / controller schemes, "CastSpell" not final axis name
 		if(rewiredPlayer.GetButtonDown("CastSpell"))
 		{
+            Debug.Log("cooldown: " + Currentspell().cooldown);
 			inputStateSystem.current.CastSpell();
 		}else if (rewiredPlayer.GetButtonUp("CastSpell"))
 		{

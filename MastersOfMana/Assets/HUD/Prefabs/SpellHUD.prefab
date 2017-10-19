@@ -267,9 +267,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a750e870b6330ca46aecffb52cbc3dd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SpellSlot1: {fileID: 224434437464430532}
-  SpellSlot2: {fileID: 224568740317695210}
-  SpellSlot3: {fileID: 224161211747541974}
+  SpellSlots:
+  - {fileID: 224434437464430532}
+  - {fileID: 224568740317695210}
+  - {fileID: 224161211747541974}
 --- !u!114 &114597046869716514
 MonoBehaviour:
   m_ObjectHideFlags: 1

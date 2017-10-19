@@ -27,7 +27,7 @@ public class CastStateNormal : A_CastState{
         ResetCastDurationCount();
 
         //tell player that its animator should no longer hold the state 'isHolding'
-        player.animator.SetBool("isCasting", false);
+        player.animator.SetBool(AnimationLiterals.ANIMATION_BOOL_CASTING, false);
     }
 
     /// <summary>
@@ -36,9 +36,4 @@ public class CastStateNormal : A_CastState{
     public override void CastCmdSpell() {
         player.CmdCastSpell();
     }
-
-    /// <summary>
-    /// in the normal state a spell cant resolve, since none was cast...
-    /// </summary>
-    public override void ResolveCmdSpell() {}
 }

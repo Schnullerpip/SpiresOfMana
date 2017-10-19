@@ -12,9 +12,6 @@ using UnityEngine.Networking;
 /// </summary>
 public class PlayerScript : NetworkBehaviour
 {
-
-    //TODO einheitlicher zugriff auf animations-string-literals
-
     //member
     public InputStateSystem inputStateSystem;
     public EffectStateSystem effectStateSystem;
@@ -265,6 +262,7 @@ public class PlayerScript : NetworkBehaviour
 		//TODO: define mouse & keyboard / controller schemes, "CastSpell" not final axis name
 		if(rewiredPlayer.GetButtonDown("CastSpell"))
 		{
+            Debug.Log("[PayerScript]::keydown detected");
 			inputStateSystem.current.CastSpell();
 		}else if (rewiredPlayer.GetButtonUp("CastSpell"))
 		{
@@ -671,7 +669,7 @@ public class PlayerScript : NetworkBehaviour
         private IEnumerator CastRoutine(PlayerScript caster, float castDuration)
         {
             yield return new WaitForSeconds(castDuration);
-            caster.animator.SetTrigger("holdSpell");
+            caster.RpcSetCastState(CastStateSystem.CastStateID.Holding);
         }
 
         /// <summary>

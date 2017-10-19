@@ -14,9 +14,10 @@ public class PlayerHealthScript : HealthScript {
     }
 
     public override void TakeDamage(float amount) {
+        bool hasBeenAlive = IsAlive();
         base.TakeDamage(mPlayer.effectStateSystem.current.Hurt(amount));
 
-        if (!IsAlive()) {
+        if (!IsAlive() && hasBeenAlive) {
             //this mPlayer is dead!!! tell the Gamemanager, that one is down
             GameManager.instance.PlayerDown();
         }

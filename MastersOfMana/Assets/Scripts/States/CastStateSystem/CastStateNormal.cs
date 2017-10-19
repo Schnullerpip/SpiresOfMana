@@ -7,17 +7,17 @@ public class CastStateNormal : A_CastState{
 
     public override void ReduceCooldowns()
     {
-        if ((player.spellSlot_1.cooldown -= Time.deltaTime) < 0)
+        if ((player.spellslot[0].cooldown -= Time.deltaTime) < 0)
         {
-            player.spellSlot_1.cooldown = 0;
+            player.spellslot[0].cooldown = 0;
         }
-        if ((player.spellSlot_2.cooldown -= Time.deltaTime) < 0)
+        if ((player.spellslot[1].cooldown -= Time.deltaTime) < 0)
         {
-            player.spellSlot_2.cooldown = 0;
+            player.spellslot[1].cooldown = 0;
         }
-        if ((player.spellSlot_3.cooldown -= Time.deltaTime) < 0)
+        if ((player.spellslot[2].cooldown -= Time.deltaTime) < 0)
         {
-            player.spellSlot_3.cooldown = 0;
+            player.spellslot[2].cooldown = 0;
         }
     }
 

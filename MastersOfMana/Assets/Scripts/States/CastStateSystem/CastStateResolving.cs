@@ -10,9 +10,11 @@ public class CastStateResolving : A_CastState {
     {
         var anim = player.animator;
         //tell the players animator to start the resolve animation
-        anim.ResetTrigger(AnimationLiterals.ANIMATION_TRIGGER_HOLD);
         anim.SetTrigger(AnimationLiterals.ANIMATION_TRIGGER_RESOLVE);
+
+        //TODO clear with Lukas -> what do i need to do?!?!??!
+        //anim.ResetTrigger(AnimationLiterals.ANIMATION_TRIGGER_HOLD);
         //tell player that its animator should no longer hold the state 'isHolding'
-        anim.SetBool(AnimationLiterals.ANIMATION_BOOL_CASTING, false);
+        //anim.SetBool(AnimationLiterals.ANIMATION_BOOL_CASTING, false);
     }
 }

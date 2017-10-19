@@ -557,14 +557,15 @@ public class PlayerScript : NetworkBehaviour
 	/// </summary>
 	public void Jump(bool onlyIfGrounded = true)
 	{
-		Jump(jumpStrength, onlyIfGrounded);
+		RpcJump(jumpStrength, onlyIfGrounded);
 	}
 
+    [ClientRpc]
 	/// <summary>
 	/// Let's the character jump with a specified jumpStrength
 	/// </summary>
 	/// <SpellslotLambda name="jumpForce">Jump force.</SpellslotLambda>
-	public void Jump(float jumpStrength, bool onlyIfGrounded = true)
+	public void RpcJump(float jumpStrength, bool onlyIfGrounded)
 	{
 		if(feet.IsGrounded() || !onlyIfGrounded)
 		{

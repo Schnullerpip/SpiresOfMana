@@ -214,9 +214,9 @@ public class PlayerScript : NetworkBehaviour
     // Update is called once per frame
     void Update () 
 	{
-
         //Decrease the cooldown in the associated spellslots
         castStateSystem.current.ReduceCooldowns();
+        Debug.Log("cooldown: " + Currentspell().cooldown);
 
         //increase the castdurationcount (if the player is casting right now) -> indicates how long the player holds the cast button
         castStateSystem.current.IncrementCastDuration();
@@ -261,7 +261,6 @@ public class PlayerScript : NetworkBehaviour
 		//TODO: define mouse & keyboard / controller schemes, "CastSpell" not final axis name
 		if(rewiredPlayer.GetButtonDown("CastSpell"))
 		{
-            Debug.Log("cooldown: " + Currentspell().cooldown);
 			inputStateSystem.current.CastSpell();
 		}else if (rewiredPlayer.GetButtonUp("CastSpell"))
 		{

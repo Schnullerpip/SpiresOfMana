@@ -21,9 +21,9 @@ public class SpellHUD : MonoBehaviour
     {
         //Fill SpellSlots with correct spellIcons
         localPlayer = GameManager.instance.localPlayer;
-        SpellSlots[0].GetComponent<Image>().sprite = localPlayer.spellSlot_1.spell.icon;
-        SpellSlots[1].GetComponent<Image>().sprite = localPlayer.spellSlot_2.spell.icon;
-        SpellSlots[2].GetComponent<Image>().sprite = localPlayer.spellSlot_3.spell.icon;
+        SpellSlots[0].GetComponent<Image>().sprite = localPlayer.spellslot[0].spell.icon;
+        SpellSlots[1].GetComponent<Image>().sprite = localPlayer.spellslot[1].spell.icon;
+        SpellSlots[2].GetComponent<Image>().sprite = localPlayer.spellslot[2].spell.icon;
         canvas = GetComponentInParent<Canvas>();
         canvas.enabled = true;
     }
@@ -54,9 +54,9 @@ public class SpellHUD : MonoBehaviour
     {
         if (localPlayer)
         {
-            SetCooldown(0, localPlayer.spellSlot_1);
-            SetCooldown(1, localPlayer.spellSlot_2);
-            SetCooldown(2, localPlayer.spellSlot_3);
+            SetCooldown(0, localPlayer.spellslot[0]);
+            SetCooldown(1, localPlayer.spellslot[1]);
+            SetCooldown(2, localPlayer.spellslot[2]);
         }
     }
 

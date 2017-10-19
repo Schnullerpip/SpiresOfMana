@@ -18,16 +18,15 @@ public class PlayerScript : NetworkBehaviour
     public CastStateSystem castStateSystem;
 
     //spellslots
-    public SpellSlot
-        spellSlot_1,
-        spellSlot_2,
-        spellSlot_3;
+    public SpellSlot[] spellslot = new SpellSlot[3];
 
     //references the currently chosen spell, among the three available spellslots
-    private SpellSlot mCurrentSpell;
+
+    [SyncVar]
+    private int mCurrentSpell;
     public SpellSlot Currentspell()
     {
-        return mCurrentSpell;
+        return spellslot[mCurrentSpell];
     }
 
     /// <summary>
@@ -127,7 +126,7 @@ public class PlayerScript : NetworkBehaviour
         healthScript = GetComponent<PlayerHealthScript>();
 
         //set the currently chosen spell to a default
-	    mCurrentSpell = spellSlot_1;
+	    mCurrentSpell = 0;
 	}
 
     [Command]
@@ -179,19 +178,19 @@ public class PlayerScript : NetworkBehaviour
     [Command]
     public void CmdChooseSpellslot_1()
     {
-        mCurrentSpell = spellSlot_1;
+        mCurrentSpell = 0;
         RpcSetCastState(CastStateSystem.CastStateID.Normal);
     }
     [Command]
     public void CmdChooseSpellslot_2()
     {
-        mCurrentSpell = spellSlot_2;
+        mCurrentSpell = 1;
         RpcSetCastState(CastStateSystem.CastStateID.Normal);
     }
     [Command]
     public void CmdChooseSpellslot_3()
     {
-        mCurrentSpell = spellSlot_3;
+        mCurrentSpell = 2;
         RpcSetCastState(CastStateSystem.CastStateID.Normal);
     }
 
@@ -199,7 +198,7 @@ public class PlayerScript : NetworkBehaviour
     [Command]
     public void CmdCastSpell()
     {
-        mCurrentSpell.Cast(this);
+        spellslot[mCurrentSpell].Cast(this);
     }
 
     //resolving the chosen spell
@@ -207,7 +206,7 @@ public class PlayerScript : NetworkBehaviour
     public void CmdResolveSpell(Vector3 aimDirection)
     {
         mAimDirection = aimDirection;
-        mCurrentSpell.Resolve(this);
+        spellslot[mCurrentSpell].Resolve(this);
     }
 
     // Update is called once per frame
@@ -595,9 +594,9 @@ public class PlayerScript : NetworkBehaviour
             SpellRegistry spellregistry = NetworkManager.mainMenu.spellSelectionPanel.GetComponent<SpellSelectionPanel>().spellregistry;
             if (spellregistry)
             {
-                spellSlot_1.spell = spellregistry.GetSpellByID(spell1);
-                spellSlot_2.spell = spellregistry.GetSpellByID(spell2);
-                spellSlot_3.spell = spellregistry.GetSpellByID(spell3);
+                spellslot[0].spell = spellregistry.GetSpellByID(spell1);
+                spellslot[1].spell = spellregistry.GetSpellByID(spell2);
+                spellslot[2].spell = spellregistry.GetSpellByID(spell3);
             }
         }
     }

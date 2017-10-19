@@ -5,12 +5,12 @@ using UnityEngine.UI;
 
 public class SpellHUD : MonoBehaviour
 {
+    public List<RectTransform> SpellSlots;
+        //SpellSlot1,
+        //SpellSlot2,
+        //SpellSlot3;
 
-    public RectTransform
-        SpellSlot1,
-        SpellSlot2,
-        SpellSlot3;
-
+    private Canvas canvas;
     private PlayerScript localPlayer;
 
 	// Use this for initialization
@@ -23,8 +23,40 @@ public class SpellHUD : MonoBehaviour
     {
         //Fill SpellSlots with correct spellIcons
         localPlayer = GameManager.instance.localPlayer;
-        SpellSlot1.GetComponentInChildren<Image>().sprite = localPlayer.spellSlot_1.spell.icon;
-        SpellSlot2.GetComponentInChildren<Image>().sprite = localPlayer.spellSlot_2.spell.icon;
-        SpellSlot3.GetComponentInChildren<Image>().sprite = localPlayer.spellSlot_3.spell.icon;
+        SpellSlots[0].GetComponent<Image>().sprite = localPlayer.spellSlot_1.spell.icon;
+        SpellSlots[1].GetComponent<Image>().sprite = localPlayer.spellSlot_2.spell.icon;
+        SpellSlots[2].GetComponent<Image>().sprite = localPlayer.spellSlot_3.spell.icon;
+        canvas = GetComponentInParent<Canvas>();
+        canvas.enabled = true;
+    }
+
+    public void SetCooldown(int SpellSlotID, PlayerScript.SpellSlot SpellSlot)
+    {
+        float CooldownPercentage = 0;
+        // Calc how much of the cooldown has passed if the Spellcooldown is not 0
+        if (SpellSlot.spell.coolDownInSeconds != 0)
+        {
+            CooldownPercentage = SpellSlot.cooldown / SpellSlot.spell.coolDownInSeconds;
+        }
+        Image image = SpellSlots[SpellSlotID].GetChild(0).GetComponent<Image>();
+        if(image)
+        {
+            image.fillAmount = CooldownPercentage;
+        }
+    }
+
+    public void Update()
+    {
+        if (localPlayer)
+        {
+            SetCooldown(0, localPlayer.spellSlot_1);
+            SetCooldown(1, localPlayer.spellSlot_2);
+            SetCooldown(2, localPlayer.spellSlot_3);
+        }
+    }
+
+    void OnDisable()
+    {
+        GameManager.OnGameStarted -= Init;
     }
 }

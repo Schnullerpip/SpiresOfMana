@@ -59,4 +59,11 @@ public class SpellHUD : MonoBehaviour
     {
         GameManager.OnGameStarted -= Init;
     }
+
+    private void Reset()
+    {
+        SpellSlots.Add(transform.GetChild(0).GetComponent<RectTransform>());
+        SpellSlots.Add(transform.GetChild(1).GetComponent<RectTransform>());
+        SpellSlots.Add(transform.GetChild(2).GetComponent<RectTransform>());
+    }
 }

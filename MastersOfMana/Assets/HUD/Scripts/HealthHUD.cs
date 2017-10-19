@@ -4,8 +4,8 @@ using UnityEngine.UI;
 public class HealthHUD : MonoBehaviour
 {
     private PlayerHealthScript localPlayerHealthScript;
+    private Canvas canvas;
     public Text healthText;
-    public Canvas canvas;
 
     // Use this for initialization
     void OnEnable()
@@ -26,7 +26,6 @@ public class HealthHUD : MonoBehaviour
     void OnDisable()
     {
         GameManager.OnGameStarted -= Init;
-        //canvas.enabled = false;
     }
 
     public void SetHealth(float health)

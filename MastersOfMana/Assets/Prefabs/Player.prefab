@@ -1875,7 +1875,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a555b539d9ebc349b8a9358aaf89087, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mMaxHealth: 1
+  mMaxHealth: 50
   mCurrentHealth: 0
   healthHUD: {fileID: 0}
 --- !u!114 &114612807110646480
@@ -1912,8 +1912,9 @@ MonoBehaviour:
   maxAimRefinementMagnitude: 1
   yAim: 0
   lookDirection: {x: 0, y: 0, z: 0}
-  cameraRig: {fileID: 114371251292269686, guid: 21611dcaa52d8441ba40cf1e83852a1e,
+  cameraRigPrefab: {fileID: 114371251292269686, guid: 21611dcaa52d8441ba40cf1e83852a1e,
     type: 2}
+  cameraRig: {fileID: 0}
   handTransform: {fileID: 4790305223929858}
   playerName: 
   healthScript: {fileID: 114581584314824656}

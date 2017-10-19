@@ -11,7 +11,7 @@ using UnityEngine.Networking;
 public class HealthScript : NetworkBehaviour
 {
     [SerializeField][SyncVar]
-    private float mMaxHealth = 10;
+    private float mMaxHealth = 50;
     [SerializeField][SyncVar(hook = "HealthHook")]
     private float mCurrentHealth;
 

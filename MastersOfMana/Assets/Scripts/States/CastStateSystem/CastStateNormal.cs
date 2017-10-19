@@ -25,8 +25,9 @@ public class CastStateNormal : A_CastState{
     {
         player.FlushSpellroutines();
         ResetCastDurationCount();
+
+        //tell player that its animator should no longer hold the state 'isHolding'
         player.animator.SetBool("isCasting", false);
-        player.animator.ResetTrigger("holdSpell");
     }
 
     /// <summary>

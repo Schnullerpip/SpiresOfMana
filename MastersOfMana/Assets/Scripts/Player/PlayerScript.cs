@@ -24,8 +24,6 @@ public class PlayerScript : NetworkBehaviour
         spellSlot_2,
         spellSlot_3;
 
-	[Header("Movement")][SyncVar]
-    [SerializeField]
     //references the currently chosen spell, among the three available spellslots
     private SpellSlot mCurrentSpell;
     public SpellSlot Currentspell()
@@ -665,7 +663,6 @@ public class PlayerScript : NetworkBehaviour
         {
             yield return new WaitForSeconds(castDuration);
             caster.animator.SetTrigger("holdSpell");
-            //TODO invoke 'holding spell' animation
         }
 
         /// <summary>
@@ -676,9 +673,8 @@ public class PlayerScript : NetworkBehaviour
         /// <returns></returns>
         private IEnumerator ResolveRoutine(PlayerScript caster, float resolveDuration)
         {
-            //set caster in 'resolving mode'
-            caster.RpcSetCastState(CastStateSystem.CastStateID.Resolving);
             yield return new WaitForSeconds(resolveDuration);
+            //resolve the spell
             spell.Resolve(caster);
             //set caster in 'normal mode'
             caster.RpcSetCastState(CastStateSystem.CastStateID.Normal);
@@ -694,16 +690,10 @@ public class PlayerScript : NetworkBehaviour
 	    {
             if (cooldown <= 0)
             {
-                //apply the spells cooldown -> even if the castprocedure is interrupted, the cooldown will be applied
-                cooldown = spell.coolDownInSeconds;
-
-                //TODO invoke casting animation
-                caster.animator.SetBool("isCasting", true);
-
                 //set caster in 'casting mode'
                 caster.RpcSetCastState(CastStateSystem.CastStateID.Casting);
 
-                //start the casting animation and switch to 'holding spell' animation after the castduration
+                //start the switch to 'holding spell' animation after the castduration
                 caster.EnlistSpellRoutine(caster.StartCoroutine(CastRoutine(caster, spell.castDurationInSeconds)));
             }
         }
@@ -718,26 +708,16 @@ public class PlayerScript : NetworkBehaviour
             //if cast duration was met, resolve the spell - else cancel it
             if (caster.castStateSystem.current.GetCastDurationCount() > spell.castDurationInSeconds)
             {
-
-                //tell the players animator to start the resolve animation
-                caster.animator.SetTrigger("resolve");
-                //tell player that its animator should no longer hold the state 'isHolding'
-                caster.animator.SetBool("isCasting", false);
+                //set caster in 'resolving mode'
+                caster.RpcSetCastState(CastStateSystem.CastStateID.Resolving);
 
                 //actually resolve the spell
                 caster.EnlistSpellRoutine(caster.StartCoroutine(ResolveRoutine(caster, spell.resolveDurationInSeconds)));
-                //TODO invoke 'resolve' animatino
-                //TODO set caster's state to 'resolving'
             }
             else
             {
                 //trying to resolve before the castduration is met... cancel the spell...
-                //TODO set caster's state to 'normal'
                 caster.RpcSetCastState(CastStateSystem.CastStateID.Normal);
-
-                //tell player that its animator should no longer hold the state 'isHolding'
-                caster.animator.SetBool("isCasting", false);
-                caster.FlushSpellroutines();
             }
 
             //rese the castDurationCount so we cant prematurely resolve spells

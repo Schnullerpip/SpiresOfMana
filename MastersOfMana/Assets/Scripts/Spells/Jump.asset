@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ca192bbc60a14cd691c946b0bbdf869, type: 3}
+  m_Name: Jump
+  m_EditorClassIdentifier: 
+  icon: {fileID: 21300000, guid: 0ef68331e6d154a68adbea605c0528ea, type: 3}
+  coolDownInSeconds: 0.1
+  castDurationInSeconds: 0
+  resolveDurationInSeconds: 0
+  spellID: 3
+  SpellBehaviours:
+  - {fileID: 114969345697713728, guid: 82337880c0d9f4b10bd677ef4f80bcfa, type: 2}

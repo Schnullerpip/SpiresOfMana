@@ -19,7 +19,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4745773836545080}
-  - component: {fileID: 114123059902339072}
   m_Layer: 0
   m_Name: Explosion
   m_TagString: Untagged
@@ -230,46 +229,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &114123059902339072
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1360405712532458}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f76034c56b0345588ec20fd2677a52d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  actions:
-  - timer: 0.4
-    unityEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1520938232169682}
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 1360405712532458}
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
 --- !u!114 &114437587964823430
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -359,7 +318,8 @@ MonoBehaviour:
   explosionForce: 600
   explosionRadius: 2.86
   damage: 10
-  explosion: {fileID: 114123059902339072}
+  explosionTime: 0.5
+  explosion: {fileID: 1360405712532458}
   grenadeMesh: {fileID: 1644166663039104}
 --- !u!135 &135393998497622116
 SphereCollider:

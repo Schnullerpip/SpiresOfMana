@@ -212,7 +212,10 @@ namespace Prototype.NetworkLobby
                 colorButton.interactable = false;
                 nameInput.interactable = false;
                 // Push chosen spells to server
-                CmdSpellsChanged(spells[0].spellID, spells[1].spellID, spells[2].spellID);
+                if(isLocalPlayer)
+                {
+                    CmdSpellsChanged(spells[0].spellID, spells[1].spellID, spells[2].spellID);
+                }
             }
             else
             {

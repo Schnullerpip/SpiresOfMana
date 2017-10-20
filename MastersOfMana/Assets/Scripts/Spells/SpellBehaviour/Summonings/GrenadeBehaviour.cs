@@ -15,8 +15,9 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 	public float explosionForce = 600;
 	public float explosionRadius = 7;
 	public float damage = 10;
+	public float explosionTime = 0.5f;
 
-	public DelayedAction explosion;
+	public GameObject explosion;
 	public GameObject grenadeMesh;
 
     public override void Awake()
@@ -77,17 +78,12 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 		Explode ();
 	}
 
-	void Start()
-	{
-		Shoot(Vector3.up*4);
-	}
-
 	void Explode ()
 	{
 		mRigid.isKinematic = true;
-		explosion.gameObject.SetActive(true);
-		explosion.InvokeActions();
-		grenadeMesh.SetActive(false);
+
+		StartCoroutine(ExplosionEffect());
+
 
 		if(!isServer)
 		{
@@ -99,14 +95,38 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 		{
 			if (c.attachedRigidbody) 
 			{
-				c.attachedRigidbody.AddExplosionForce (explosionForce, transform.position, explosionRadius);
+                //check wheather or not we are handling a player or just some random rigidbody
+			    if (c.attachedRigidbody.CompareTag("Player"))
+			    {
+			        PlayerScript ps = c.attachedRigidbody.GetComponent<PlayerScript>();
+                    ps.RpcAddExplosionForce(explosionForce, transform.position, explosionRadius);
+			    }
+			    else
+			    {
+                    c.attachedRigidbody.AddExplosionForce (explosionForce, transform.position, explosionRadius);
+			    }
 			}
+
 			HealthScript health = c.GetComponentInParent<HealthScript>();
-			if(health != null)
+			if(health)
 			{
 				health.TakeDamage(damage);
 			}
 		}
+	}
+
+	[ClientRpc]
+	void RpcActivateExplosionMesh()
+	{
+		explosion.SetActive(true);
+		grenadeMesh.SetActive(false);
+	}
+
+	IEnumerator ExplosionEffect()
+	{
+		RpcActivateExplosionMesh();
+		yield return new WaitForSeconds(explosionTime);
+		RpcSetActive(false);
 	}
 
 	public void Deactivate()

@@ -63,28 +63,28 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         //activate the pools, to start isntantiating, now that all the players have joined the game
-        mPoolRegistry = GameObject.FindObjectOfType<PoolRegistry>();
+        mPoolRegistry = FindObjectOfType<PoolRegistry>();
         mPoolRegistry.CreatePools();
 
         //enable the players to actually do stuff and update the chosen Spells
         foreach (var p in mPlayers)
         {
-            p.RpcChangeInputState(InputStateSystem.InputStateID.Normal);
+            p.RpcSetInputState(InputStateSystem.InputStateID.Normal);
             p.RpcUpdateSpells(p.spellslot[0].spell.spellID, p.spellslot[1].spell.spellID, p.spellslot[2].spell.spellID);
         }
 
-        if (GameManager.OnGameStarted != null)
+        if (OnGameStarted != null)
         {
-            GameManager.OnGameStarted();
+            OnGameStarted();
         }
         NetManager.instance.RpcTriggerGameStarted();
     }
 
     public void TriggerGameStarted()
     {
-        if (GameManager.OnGameStarted != null)
+        if (OnGameStarted != null)
         {
-            GameManager.OnGameStarted();
+            OnGameStarted();
         }
     }
 

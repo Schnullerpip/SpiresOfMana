@@ -563,7 +563,7 @@ public class PlayerScript : NetworkBehaviour
 	/// Let's the character jump with a specified jumpStrength
 	/// </summary>
 	/// <SpellslotLambda name="jumpForce">Jump force.</SpellslotLambda>
-	public void Jump(float jumpStrength, bool onlyIfGrounded = true)
+	public void Jump(float jumpStrength, bool onlyIfGrounded)
 	{
 		if(feet.IsGrounded() || !onlyIfGrounded)
 		{
@@ -572,12 +572,12 @@ public class PlayerScript : NetworkBehaviour
 		}
 	}
 
-    //Remote Procedure Calls!
-    [ClientRpc]
-    public void RpcChangeInputState(InputStateSystem.InputStateID newStateID)
-    {
-        inputStateSystem.SetState(newStateID);
-    }
+    ////Remote Procedure Calls!
+    //[ClientRpc]
+    //public void RpcChangeInputState(InputStateSystem.InputStateID newStateID)
+    //{
+    //    inputStateSystem.SetState(newStateID);
+    //}
 
     /// <summary>
     /// This method actually updates the spells
@@ -610,6 +610,33 @@ public class PlayerScript : NetworkBehaviour
     public void RpcUpdateSpells(int spell1, int spell2, int spell3)
     {
         UpdateSpells(spell1, spell2, spell3);
+    }
+
+    /// <summary>
+    /// method to move the client, even though client has authority over his position
+    /// </summary>
+    /// <param name="force"></param>
+    /// <param name="mode"></param>
+    [ClientRpc]
+    public void RpcAddForce(Vector3 force, int mode)
+    {
+        if (isLocalPlayer)
+        {
+            mRigidbody.AddForce(force, (ForceMode)mode);
+        }
+    }
+    /// <summary>
+    /// adds explosion force to player on server side - kinda
+    /// </summary>
+    /// <param name="force"></param>
+    /// <param name="mode"></param>
+    [ClientRpc]
+    public void RpcAddExplosionForce(float explosionForce, Vector3 explosionPosition, float explosionRadius)
+    {
+        if (isLocalPlayer)
+        {
+            mRigidbody.AddExplosionForce(explosionForce, explosionPosition, explosionRadius);
+        }
     }
 
     //useful asstes for the PlayerScript

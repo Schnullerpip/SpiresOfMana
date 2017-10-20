@@ -14,7 +14,6 @@ public class LavaFloor : NetworkBehaviour
     public void Start()
     {
         startHeight = transform.position.y;
-        Debug.Log("startHeight: " + startHeight);
     }
 
     public void OnCollisionStay(Collision other)
@@ -23,10 +22,13 @@ public class LavaFloor : NetworkBehaviour
 
     public void OnTriggerStay(Collider other)
     {
-        PlayerScript player = other.GetComponentInParent<PlayerScript>();
-        if (player && isServer)
+        if (isServer)
         {
-            player.healthScript.TakeDamage(damagePerSecond * Time.deltaTime);
+            PlayerScript player = other.GetComponentInParent<PlayerScript>();
+            if (player && isServer)
+            {
+                player.healthScript.TakeDamage(damagePerSecond * Time.deltaTime);
+            }
         }
     }
 

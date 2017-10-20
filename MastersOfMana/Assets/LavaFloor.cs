@@ -19,7 +19,11 @@ public class LavaFloor : NetworkBehaviour
 
     public void OnCollisionStay(Collision other)
     {
-        PlayerScript player = other.gameObject.GetComponent<PlayerScript>();
+    }
+
+    public void OnTriggerStay(Collider other)
+    {
+        PlayerScript player = other.GetComponentInParent<PlayerScript>();
         if (player && isServer)
         {
             player.healthScript.TakeDamage(damagePerSecond * Time.deltaTime);
@@ -32,6 +36,5 @@ public class LavaFloor : NetworkBehaviour
         Vector3 newTransformPosition = transform.position;
         newTransformPosition.y = lavaFlow.Evaluate(runTime / cycleTime) * amplitude + startHeight;
         transform.position = newTransformPosition;
-        //transform.Translate(0, RisingPerSecond * Time.deltaTime, 0);
     }
 }

@@ -68,7 +68,12 @@ public class PlayerCamera : MonoBehaviour {
 	/// <param name="hit">Hit.</param>
 	public bool CenterRaycast(out RaycastHit hit)
 	{
-		return Physics.Raycast(mCamera.ViewportPointToRay(new Vector3(.5f, .5f, 0)), out hit);
+		return Physics.Raycast(GetCenterRay(), out hit);
+	}
+
+	public Ray GetCenterRay()
+	{
+		return mCamera.ViewportPointToRay(new Vector3(.5f, .5f, 0));
 	}
 
 	/// <summary>

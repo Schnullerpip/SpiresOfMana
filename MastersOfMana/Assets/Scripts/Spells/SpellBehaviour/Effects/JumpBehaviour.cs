@@ -17,7 +17,15 @@ public class JumpBehaviour : A_EffectBehaviour
 		{
 			if(c.attachedRigidbody != null && c.attachedRigidbody.gameObject != caster.gameObject)
 			{
-				c.attachedRigidbody.AddExplosionForce(-pullInForce, caster.transform.position, pullInRadius);
+				if (c.attachedRigidbody.CompareTag("Player"))
+				{
+					PlayerScript opponent = c.attachedRigidbody.GetComponent<PlayerScript>();
+					opponent.RpcAddExplosionForce(-pullInForce, caster.transform.position, pullInRadius);
+				}
+				else
+				{
+					c.attachedRigidbody.AddExplosionForce(-pullInForce, caster.transform.position, pullInRadius);
+				}
 			}
 		}
 	}

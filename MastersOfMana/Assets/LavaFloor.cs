@@ -10,11 +10,14 @@ public class LavaFloor : NetworkBehaviour
     public AnimationCurve lavaFlow;
     private float startHeight;
     private float runTime = 0;
+    public ParticleSystem inward;
+    public ParticleSystem outward;
+    public float warningTime = 0.2f;
 
     public void Start()
     {
         startHeight = transform.position.y;
-        Debug.Log("startHeight: " + startHeight);
+        inward.Play();
     }
 
     public void OnCollisionStay(Collision other)
@@ -34,7 +37,23 @@ public class LavaFloor : NetworkBehaviour
     {
         runTime += Time.deltaTime;
         Vector3 newTransformPosition = transform.position;
-        newTransformPosition.y = lavaFlow.Evaluate(runTime / cycleTime) * amplitude + startHeight;
+        float evaluation = lavaFlow.Evaluate(runTime / cycleTime);
+        newTransformPosition.y = evaluation * amplitude + startHeight;
         transform.position = newTransformPosition;
+
+        float futureEvaluation = lavaFlow.Evaluate((runTime + Time.deltaTime + warningTime) / cycleTime);
+        //lava is going to rise!
+        if(futureEvaluation > evaluation && !outward.isPlaying)
+        {
+            inward.Stop();
+            inward.Clear();
+            outward.Play();
+        }
+        else if(futureEvaluation < evaluation && !inward.isPlaying)
+        {
+            inward.Play();
+            outward.Stop();
+            outward.Clear();
+        }
     }
 }

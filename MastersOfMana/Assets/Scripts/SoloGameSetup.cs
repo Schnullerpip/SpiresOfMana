@@ -28,6 +28,7 @@ public class SoloGameSetup : MonoBehaviour {
 
         GameObject DirectHostHackObject = GameObject.Instantiate(DirectHostHack);
         DirectHostHackObject.transform.SetParent(this.transform);
+        DirectHostHackObject.transform.position = this.transform.position;
 
         GameObject PoolRegistryObject = new GameObject("PoolRegistry");
         PoolRegistryObject.transform.SetParent(this.transform);

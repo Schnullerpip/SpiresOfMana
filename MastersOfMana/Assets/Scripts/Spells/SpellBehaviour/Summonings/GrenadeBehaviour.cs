@@ -16,7 +16,7 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 	public float explosionRadius = 7;
 	public float damage = 10;
 
-	public AnimateTransform explosionAnimation;
+	public DelayedAction explosion;
 	public GameObject grenadeMesh;
 
     public override void Awake()
@@ -27,7 +27,6 @@ public class GrenadeBehaviour : A_SummoningBehaviour
             //cant find a rigid body!!!
             throw new MissingMemberException();
         }
-		explosionAnimation.amplitude = explosionRadius * 2;
     }
 
     public override void Execute(PlayerScript caster)
@@ -62,7 +61,7 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 
 		mRigid.Reset();
 		mRigid.isKinematic = false;
-		explosionAnimation.gameObject.SetActive (false);
+		explosion.gameObject.SetActive (false);
 		grenadeMesh.SetActive (true);
 	}
 
@@ -81,7 +80,8 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 	void Explode ()
 	{
 		mRigid.isKinematic = true;
-		explosionAnimation.gameObject.SetActive(true);
+		explosion.gameObject.SetActive(true);
+		explosion.InvokeActions();
 		grenadeMesh.SetActive(false);
 
 		if(!isServer)
@@ -110,6 +110,14 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 		{
 			gameObject.SetActive(false);
 			NetworkServer.UnSpawn(gameObject);
+		}
+	}
+
+	void OnValidate()
+	{
+		if(explosion != null)
+		{
+			explosion.transform.localScale = Vector3.one * explosionRadius * 2;
 		}
 	}
 }

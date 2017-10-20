@@ -7,10 +7,10 @@ public class SoloGameSetup : MonoBehaviour {
     //private GameManager GameManager;
     //private PoolRegistry PoolRegistry;
     //private NetManager NetworkManager;
-    public GameObject DirectHostHack;
-    public GameObject HealthHUD;
-    public GameObject SpellHUD;
-    public GameObject IngameMenu;
+    public GameObject directHostHack;
+    public GameObject healthHUD;
+    public GameObject spellHUD;
+    public GameObject ingameMenu;
 
     void OnEnable()
     {
@@ -26,7 +26,7 @@ public class SoloGameSetup : MonoBehaviour {
         GameManager.instance.AddPlayerMessageCounter();
         GameManager.instance.AddPlayerMessageCounter();
 
-        GameObject DirectHostHackObject = GameObject.Instantiate(DirectHostHack);
+        GameObject DirectHostHackObject = GameObject.Instantiate(directHostHack);
         DirectHostHackObject.transform.SetParent(this.transform);
         DirectHostHackObject.transform.position = this.transform.position;
 
@@ -38,7 +38,7 @@ public class SoloGameSetup : MonoBehaviour {
         NetworkManagerObject.transform.SetParent(this.transform);
         NetworkManagerObject.AddComponent<NetManager>();
 
-        GameObject.Instantiate(IngameMenu);
+        Instantiate(ingameMenu);
 
         GameManager.instance.Go();
     }
@@ -60,8 +60,8 @@ public class SoloGameSetup : MonoBehaviour {
         }
         else
         {
-            GameObject.Instantiate(HealthHUD).GetComponent<HealthHUD>().Init();
-            GameObject.Instantiate(SpellHUD).GetComponent<SpellHUD>().Init();
+            Instantiate(healthHUD).GetComponent<HealthHUD>().Init();
+            Instantiate(spellHUD).GetComponent<SpellHUD>().Init();
         }
     }
 

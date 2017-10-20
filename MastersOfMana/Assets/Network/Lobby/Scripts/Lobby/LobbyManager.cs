@@ -145,14 +145,6 @@ namespace Prototype.NetworkLobby
             //hostInfo.text = host;
         }
 
-        //void OnLevelWasLoaded(int sceneId)
-        //{
-        //    if (mainMenu == null && sceneId == 0)
-        //    {
-        //        mainMenu = GameObject.FindObjectOfType<LobbyMainMenu>();
-        //    }
-        //}
-
         public delegate void BackButtonDelegate();
         public BackButtonDelegate backDelegate;
         public void GoBackButton()

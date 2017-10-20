@@ -970,7 +970,7 @@ Prefab:
     - target: {fileID: 114865154224641114, guid: a17e43ce1afa18148bb83829b15131fb,
         type: 2}
       propertyPath: cycleTime
-      value: 10
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 1305568902638960, guid: a17e43ce1afa18148bb83829b15131fb, type: 2}
       propertyPath: m_IsActive
@@ -1072,7 +1072,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!199 &1369832158
 ParticleSystemRenderer:
   serializedVersion: 4
@@ -1184,7 +1184,7 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -1226525665
+  randomSeed: -2143709798
   InitialModule:
     serializedVersion: 3
     enabled: 1

@@ -10,7 +10,7 @@ using UnityEngine.Networking;
 /// <summary>
 /// Defines the basic properties for a player
 /// </summary>
-public class PlayerScript : NetworkBehaviour
+public class PlayerScript : ServerMoveablePlayer
 {
     //member
     public InputStateSystem inputStateSystem;
@@ -99,6 +99,7 @@ public class PlayerScript : NetworkBehaviour
 
 	void Awake()
 	{
+        base.Awake();
         lookDirection = transform.forward;
     }
 

@@ -5,7 +5,7 @@ using UnityEngine;
 public class WindWallBehaviour : A_EffectBehaviour
 {
     [SerializeField]
-    private Vector3 mWindForce, mHalfExtents;
+    private Vector3 mWindForce, mHalfExtents = new Vector3();
 
     [SerializeField]
     private float mCenterDistance;

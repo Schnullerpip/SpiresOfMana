@@ -41,6 +41,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1044968376740284
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4322715158737734}
+  m_Layer: 0
+  m_Name: SpellHand
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1059416213001932
 GameObject:
   m_ObjectHideFlags: 0
@@ -1117,6 +1132,19 @@ Transform:
   m_Father: {fileID: 4522390539396300}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4322715158737734
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1044968376740284}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.36, z: 0.541}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4467387514677664}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4326728831934356
 Transform:
   m_ObjectHideFlags: 1
@@ -1228,6 +1256,7 @@ Transform:
   m_Children:
   - {fileID: 4880579942306480}
   - {fileID: 4918522615325516}
+  - {fileID: 4322715158737734}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1890,7 +1919,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spellslot:
-  - spell: {fileID: 11400000, guid: d41a648d6ad49334090f1c47fbc8cd34, type: 2}
+  - spell: {fileID: 11400000, guid: 5c0f19c3e50294f70acf3ae92e2ea2f8, type: 2}
     cooldown: 0
   - spell: {fileID: 11400000, guid: a5e75869edd974a7f889e1661e0ef689, type: 2}
     cooldown: 0
@@ -1913,7 +1942,7 @@ MonoBehaviour:
   cameraRigPrefab: {fileID: 114371251292269686, guid: 21611dcaa52d8441ba40cf1e83852a1e,
     type: 2}
   cameraRig: {fileID: 0}
-  handTransform: {fileID: 4790305223929858}
+  handTransform: {fileID: 4322715158737734}
   playerName: 
   healthScript: {fileID: 114581584314824656}
   animator: {fileID: 95637651589858840}

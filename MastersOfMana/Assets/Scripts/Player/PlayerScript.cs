@@ -258,7 +258,6 @@ public class PlayerScript : NetworkBehaviour
 		//TODO: define mouse & keyboard / controller schemes, "CastSpell" not final axis name
 		if(rewiredPlayer.GetButtonDown("CastSpell"))
 		{
-            Debug.Log("[PayerScript]::keydown detected");
 			inputStateSystem.current.CastSpell();
 		}else if (rewiredPlayer.GetButtonUp("CastSpell"))
 		{

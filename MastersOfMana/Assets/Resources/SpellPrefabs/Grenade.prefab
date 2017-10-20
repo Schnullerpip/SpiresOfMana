@@ -19,7 +19,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4745773836545080}
-  - component: {fileID: 114453553767640550}
+  - component: {fileID: 114123059902339072}
   m_Layer: 0
   m_Name: Explosion
   m_TagString: Untagged
@@ -39,14 +39,14 @@ GameObject:
   - component: {fileID: 114437587964823430}
   - component: {fileID: 114769817448363982}
   - component: {fileID: 114712952528206216}
-  - component: {fileID: 114297729262232844}
+  - component: {fileID: 114444558250015980}
   m_Layer: 0
   m_Name: Grenade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1534877822826028
 GameObject:
   m_ObjectHideFlags: 1
@@ -89,7 +89,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1520938232169682}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.74, y: 1.5, z: 0}
+  m_LocalPosition: {x: 3.19, y: 6.264059, z: -1.555109}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4306806663191512}
@@ -131,7 +131,7 @@ Transform:
   m_GameObject: {fileID: 1360405712532458}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 5.72, y: 5.72, z: 5.72}
   m_Children:
   - {fileID: 4252614772259328}
   m_Father: {fileID: 4154339031615722}
@@ -230,25 +230,46 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &114297729262232844
+--- !u!114 &114123059902339072
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1520938232169682}
+  m_GameObject: {fileID: 1360405712532458}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1267208747, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Script: {fileID: 11500000, guid: 6f76034c56b0345588ec20fd2677a52d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Target: {fileID: 4745773836545080}
-  m_ChildIndex: 0
-  m_SendInterval: 0.1
-  m_SyncRotationAxis: 7
-  m_RotationSyncCompression: 0
-  m_MovementThreshold: 0.001
-  m_InterpolateRotation: 0.5
-  m_InterpolateMovement: 0.5
+  actions:
+  - timer: 0.4
+    unityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1520938232169682}
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 1360405712532458}
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
 --- !u!114 &114437587964823430
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -281,60 +302,25 @@ MonoBehaviour:
     i15: 49
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
---- !u!114 &114453553767640550
+--- !u!114 &114444558250015980
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1360405712532458}
+  m_GameObject: {fileID: 1520938232169682}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e7f3fbcc643b4cf5ad51b944e86b0ee, type: 3}
+  m_Script: {fileID: -1267208747, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animationCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 0
-      value: 0
-      inSlope: 0.046555106
-      outSlope: 0.046555106
-      tangentMode: 0
-    - serializedVersion: 2
-      time: 0.20257401
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
-    - serializedVersion: 2
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 1
-    m_PostInfinity: 1
-    m_RotationOrder: 0
-  lifeTime: 0.3
-  amplitude: 4
-  axisInfluence: {x: 1, y: 1, z: 1}
-  onAnimationFinished:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114769817448363982}
-        m_MethodName: Deactivate
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
+  m_Target: {fileID: 4745773836545080}
+  m_ChildIndex: 0
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 0
+  m_MovementThreshold: 0.001
+  m_InterpolateRotation: 0.5
+  m_InterpolateMovement: 0.5
 --- !u!114 &114712952528206216
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -371,9 +357,9 @@ MonoBehaviour:
   throwForce: 15
   lifeTime: 3
   explosionForce: 300
-  explosionRadius: 7
+  explosionRadius: 2.86
   damage: 10
-  explosionAnimation: {fileID: 114453553767640550}
+  explosion: {fileID: 114123059902339072}
   grenadeMesh: {fileID: 1644166663039104}
 --- !u!135 &135393998497622116
 SphereCollider:

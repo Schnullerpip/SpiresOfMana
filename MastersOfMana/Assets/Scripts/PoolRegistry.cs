@@ -7,7 +7,8 @@ public class PoolRegistry : MonoBehaviour {
     public static Pool
 		EarthwallPool,
 		FireballPool,
-        GrenadePool;
+        GrenadePool,
+		WhipPool;
 
     public void Start()
     {
@@ -19,5 +20,6 @@ public class PoolRegistry : MonoBehaviour {
         FireballPool = new Pool(Resources.Load("SpellPrefabs/Fireball") as GameObject, 5, Pool.PoolingStrategy.OnMissRoundRobin);
 		EarthwallPool = new Pool(Resources.Load("SpellPrefabs/Earthwall") as GameObject, 5, Pool.PoolingStrategy.OnMissSubjoinElements);
 		GrenadePool = new Pool(Resources.Load("SpellPrefabs/Grenade") as GameObject, 5, Pool.PoolingStrategy.OnMissSubjoinElements);
+		WhipPool = new Pool(Resources.Load("SpellPrefabs/Whip") as GameObject, 5, Pool.PoolingStrategy.OnMissSubjoinElements);
 	}
 }

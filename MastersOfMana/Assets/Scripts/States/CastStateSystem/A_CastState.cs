@@ -62,6 +62,6 @@ public abstract class A_CastState : A_State{
     /// </summary>
     public virtual void ResolveCmdSpell()
     {
-        player.CmdResolveSpell(CalculateAimDirection());
+        player.CmdResolveSpell(CalculateAimDirection(), player.cameraRig.GetCamera().transform.position, player.cameraRig.GetCamera().transform.forward);
     }
 }

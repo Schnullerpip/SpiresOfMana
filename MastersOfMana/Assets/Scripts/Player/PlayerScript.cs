@@ -620,7 +620,23 @@ public class PlayerScript : NetworkBehaviour
     [ClientRpc]
     public void RpcAddForce(Vector3 force, int mode)
     {
-        mRigidbody.AddForce(force, (ForceMode)mode);
+        if (isLocalPlayer)
+        {
+            mRigidbody.AddForce(force, (ForceMode)mode);
+        }
+    }
+    /// <summary>
+    /// adds explosion force to player on server side - kinda
+    /// </summary>
+    /// <param name="force"></param>
+    /// <param name="mode"></param>
+    [ClientRpc]
+    public void RpcAddExplosionForce(float explosionForce, Vector3 explosionPosition, float explosionRadius)
+    {
+        if (isLocalPlayer)
+        {
+            mRigidbody.AddExplosionForce(explosionForce, explosionPosition, explosionRadius);
+        }
     }
 
     //useful asstes for the PlayerScript

@@ -94,10 +94,20 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 		{
 			if (c.attachedRigidbody) 
 			{
-				c.attachedRigidbody.AddExplosionForce (explosionForce, transform.position, explosionRadius);
+                //check wheather or not we are handling a player or just some random rigidbody
+			    if (c.attachedRigidbody.CompareTag("Player"))
+			    {
+			        PlayerScript ps = c.attachedRigidbody.GetComponent<PlayerScript>();
+                    ps.RpcAddExplosionForce(explosionForce, transform.position, explosionRadius);
+			    }
+			    else
+			    {
+                    c.attachedRigidbody.AddExplosionForce (explosionForce, transform.position, explosionRadius);
+			    }
 			}
+
 			HealthScript health = c.GetComponentInParent<HealthScript>();
-			if(health != null)
+			if(health)
 			{
 				health.TakeDamage(damage);
 			}

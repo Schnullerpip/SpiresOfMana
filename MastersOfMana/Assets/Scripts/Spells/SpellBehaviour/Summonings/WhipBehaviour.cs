@@ -26,26 +26,22 @@ public class WhipBehaviour : A_SummoningBehaviour
 		GameObject whip = PoolRegistry.WhipPool.Get();
 		WhipBehaviour whipBehaviour = whip.GetComponent<WhipBehaviour>();
 
-		whipBehaviour.lineRenderer.SetPosition(0, caster.handTransform.position);
+		whipBehaviour.lineRenderer.SetPosition(0, caster.GetCameraPosition());
 
 		RaycastHit hit;
-		bool hitSomething = Physics.Raycast(caster.cameraRig.GetCenterRay(), out hit, maxDistance);
+        Ray ray = new Ray(caster.GetCameraPosition(), caster.GetCameraLookDirection());
+		bool hitSomething = Physics.Raycast(ray, out hit, maxDistance);
 		if(hitSomething)
 		{
 			whipBehaviour.lineRenderer.SetPosition(1, hit.point);
 		}
 		else
 		{
-			whipBehaviour.lineRenderer.SetPosition(1, caster.handTransform.position + caster.GetAimDirection() * maxDistance);
+			//whipBehaviour.lineRenderer.SetPosition(1, caster.handTransform.position + caster.GetAimDirection() * maxDistance);
 		}
 
         whip.SetActive(true);
 		NetworkServer.Spawn(whip, PoolRegistry.WhipPool.assetID);
-
-//		if(!isServer)
-//		{
-//			return;
-//		}
 
 		if(hitSomething)
 		{
@@ -57,10 +53,16 @@ public class WhipBehaviour : A_SummoningBehaviour
 
 			if(hit.collider.attachedRigidbody != null)
 			{
-				hit.collider.attachedRigidbody.AddForce(-caster.GetAimDirection() * pullHitForce + Vector3.up * pullHitUpForce, ForceMode.Impulse);
+			    Vector3 force = -caster.GetAimDirection()*pullHitForce + Vector3.up*pullHitUpForce;
+			    if (hit.collider.attachedRigidbody.CompareTag("Player"))
+			    {
+			        hit.collider.attachedRigidbody.GetComponent<PlayerScript>().RpcAddForce(force, (int) ForceMode.Impulse);
+			    }
+
+				hit.collider.attachedRigidbody.AddForce(force, ForceMode.Impulse);
 			}
 
-			caster.transform.GetComponent<Rigidbody>().AddForce(caster.GetAimDirection() * pullPlayerForce + Vector3.up * pullPlayerUpForce, ForceMode.Impulse);
+			caster.RpcAddForce(caster.GetAimDirection() * pullPlayerForce + Vector3.up * pullPlayerUpForce, (int)ForceMode.Impulse);
 		}
     }
 

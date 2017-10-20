@@ -1889,16 +1889,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41fd90c150c87df48a3986418dec8555, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spellSlot_1:
-    spell: {fileID: 11400000, guid: d41a648d6ad49334090f1c47fbc8cd34, type: 2}
+  spellslot:
+  - spell: {fileID: 11400000, guid: d41a648d6ad49334090f1c47fbc8cd34, type: 2}
     cooldown: 0
-  spellSlot_2:
-    spell: {fileID: 11400000, guid: 611a54db86ce0d947bd50c5a12f8aeb0, type: 2}
+  - spell: {fileID: 11400000, guid: a5e75869edd974a7f889e1661e0ef689, type: 2}
     cooldown: 0
-  spellSlot_3:
-    spell: {fileID: 11400000, guid: e233f7ca8bad7cc4482f17316c60348f, type: 2}
+  - spell: {fileID: 11400000, guid: 611a54db86ce0d947bd50c5a12f8aeb0, type: 2}
     cooldown: 0
-  speed: 4
+  speed: 6
   focusSpeedSlowdown: 0.25
   jumpStrength: 5
   additionalFallGravityMultiplier: 1

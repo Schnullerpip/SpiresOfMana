@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
     public void Go()
     {
         mNumberOfGoMessages++;
-        if(mNumberOfGoMessages == mNeededToGo)
+        if (mNumberOfGoMessages == mNeededToGo)
         {
             StartGame();
         }
@@ -57,7 +57,6 @@ public class GameManager : MonoBehaviour
 
     public void AddPlayerMessageCounter()
     {
-
         mNeededToGo++;
     }
 

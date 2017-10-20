@@ -77,11 +77,6 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 		Explode ();
 	}
 
-	void Start()
-	{
-		Shoot(Vector3.up*4);
-	}
-
 	void Explode ()
 	{
 		mRigid.isKinematic = true;

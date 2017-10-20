@@ -26,22 +26,28 @@ public class WhipBehaviour : A_SummoningBehaviour
 		GameObject whip = PoolRegistry.WhipPool.Get();
 		WhipBehaviour whipBehaviour = whip.GetComponent<WhipBehaviour>();
 
-		whipBehaviour.lineRenderer.SetPosition(0, caster.GetCameraPosition());
+		whipBehaviour.lineRenderer.SetPosition(0, caster.handTransform.position);
 
 		RaycastHit hit;
         Ray ray = new Ray(caster.GetCameraPosition(), caster.GetCameraLookDirection());
 		bool hitSomething = Physics.Raycast(ray, out hit, maxDistance);
+
 		if(hitSomething)
 		{
 			whipBehaviour.lineRenderer.SetPosition(1, hit.point);
 		}
 		else
 		{
-			//whipBehaviour.lineRenderer.SetPosition(1, caster.handTransform.position + caster.GetAimDirection() * maxDistance);
+			whipBehaviour.lineRenderer.SetPosition(1, caster.handTransform.position + caster.GetAimDirection() * maxDistance);
 		}
 
         whip.SetActive(true);
 		NetworkServer.Spawn(whip, PoolRegistry.WhipPool.assetID);
+
+//		if(!isServer)
+//		{
+//			return;
+//		}
 
 		if(hitSomething)
 		{

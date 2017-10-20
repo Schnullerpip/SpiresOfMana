@@ -67,20 +67,7 @@ public class PlayerScript : NetworkBehaviour
 	public Vector3 moveInputForce;
 	public FeetCollider feet;
 
-    [Header("Aim")]
-    [SyncVar]
-    private Vector3 cameraLookDirection;
-    [SyncVar]
-    private Vector3 cameraPosition;
-
-    public Vector3 GetCameraLookDirection()
-    {
-        return cameraLookDirection;
-    }
-    public Vector3 GetCameraPosition()
-    {
-        return cameraPosition;
-    }
+	[Header("Aim")]
 	[Tooltip("Degrees per seconds")]
 	public float aimSpeed = 360;    
 	public float aimAssistInUnits = 1.0f;
@@ -178,15 +165,6 @@ public class PlayerScript : NetworkBehaviour
         effectStateSystem.SetState(id);
     }
 
-    /// <summary>
-    /// the direction the player aims during a cast (this field only is valid, during a cast routine, on the server!
-    /// </summary>
-    private Vector3 mAimDirection;
-    public Vector3 GetAimDirection()
-    {
-        return mAimDirection;
-    }
-
     //choosing a spell
     [Command]
     public void CmdChooseSpellslot_1()
@@ -214,11 +192,34 @@ public class PlayerScript : NetworkBehaviour
         spellslot[mCurrentSpell].Cast(this);
     }
 
+    /// <summary>
+    /// the direction the player aims during a cast (this field only is valid, during a cast routine, on the server!
+    /// </summary>
+    private Vector3 mAimDirection;
+    public Vector3 GetAimDirection()
+    {
+        return mAimDirection;
+    }
+    private Vector3 mCameraPosition;
+    public Vector3 GetCameraPosition()
+    {
+        return mCameraPosition;
+    }
+    private Vector3 mCameraLookdirection;
+    public Vector3 GetCameraLookDirection()
+    {
+        return mCameraLookdirection;
+    }
+
+
     //resolving the chosen spell
     [Command]
-    public void CmdResolveSpell(Vector3 aimDirection)
+    public void CmdResolveSpell(Vector3 aimDirection, Vector3 CameraPostion, Vector3 CameraLookDirection)
     {
         mAimDirection = aimDirection;
+        mCameraPosition = CameraPostion;
+        mCameraLookdirection = CameraLookDirection;
+
         spellslot[mCurrentSpell].Resolve(this);
     }
 
@@ -560,15 +561,7 @@ public class PlayerScript : NetworkBehaviour
 	void LateUpdate()
 	{
 		//rotate the head joint, do this in the lateupdate to override the animation (?)
-		headJoint.localRotation = Quaternion.AngleAxis(-yAim,Vector3.right);
-
-        //to be run on client only
-	    if (isLocalPlayer)
-	    {
-            //sync cameraposition to server (syncvar)
-            cameraPosition = cameraRig.transform.position;
-	        cameraLookDirection = cameraRig.GetCamera().transform.forward;
-	    }
+		headJoint.localRotation = Quaternion.AngleAxis(-yAim,Vector3.right); 
 	}
 
 

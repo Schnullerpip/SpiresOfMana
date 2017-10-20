@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 /// <summary>
 /// This components follows a transform with a certain amount of damping.
 /// </summary>
-public class PlayerCamera : MonoBehaviour {
+public class PlayerCamera : NetworkBehaviour {
 
 	public Transform joint;
 	public PlayerScript followTarget;
@@ -28,16 +29,15 @@ public class PlayerCamera : MonoBehaviour {
 		return mCamera;
 	}
 
-	void Start()
-	{
+    void Awake()
+    {
 		mCamera = GetComponentInChildren<Camera>();
 		startFOV = mCamera.fieldOfView;
-
 		if(followTarget == null)
 		{
 			Debug.LogWarning("No Follow Target assigned.", this.gameObject);
 		}
-	}
+    }
 
 	void FixedUpdate()
 	{

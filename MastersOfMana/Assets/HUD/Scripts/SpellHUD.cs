@@ -9,7 +9,6 @@ public class SpellHUD : MonoBehaviour
 
     private Canvas canvas;
     private PlayerScript localPlayer;
-    private bool[] OnCooldown = new bool[3];
 
 	// Use this for initialization
 	void OnEnable ()

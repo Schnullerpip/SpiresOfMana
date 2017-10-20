@@ -69,7 +69,7 @@ public class GameManager : MonoBehaviour
         //enable the players to actually do stuff and update the chosen Spells
         foreach (var p in mPlayers)
         {
-            p.RpcChangeInputState(InputStateSystem.InputStateID.Normal);
+            p.RpcSetInputState(InputStateSystem.InputStateID.Normal);
             p.RpcUpdateSpells(p.spellslot[0].spell.spellID, p.spellslot[1].spell.spellID, p.spellslot[2].spell.spellID);
         }
 

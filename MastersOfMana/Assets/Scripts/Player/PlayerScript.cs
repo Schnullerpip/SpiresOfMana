@@ -10,7 +10,7 @@ using UnityEngine.Networking;
 /// <summary>
 /// Defines the basic properties for a player
 /// </summary>
-public class PlayerScript : ServerMoveablePlayer
+public class PlayerScript : NetworkBehaviour
 {
     //member
     public InputStateSystem inputStateSystem;
@@ -99,7 +99,6 @@ public class PlayerScript : ServerMoveablePlayer
 
 	void Awake()
 	{
-        base.Awake();
         lookDirection = transform.forward;
     }
 
@@ -558,15 +557,14 @@ public class PlayerScript : ServerMoveablePlayer
 	/// </summary>
 	public void Jump(bool onlyIfGrounded = true)
 	{
-		RpcJump(jumpStrength, onlyIfGrounded);
+		Jump(jumpStrength, onlyIfGrounded);
 	}
 
-    [ClientRpc]
 	/// <summary>
 	/// Let's the character jump with a specified jumpStrength
 	/// </summary>
 	/// <SpellslotLambda name="jumpForce">Jump force.</SpellslotLambda>
-	public void RpcJump(float jumpStrength, bool onlyIfGrounded)
+	public void Jump(float jumpStrength, bool onlyIfGrounded)
 	{
 		if(feet.IsGrounded() || !onlyIfGrounded)
 		{
@@ -575,12 +573,12 @@ public class PlayerScript : ServerMoveablePlayer
 		}
 	}
 
-    //Remote Procedure Calls!
-    [ClientRpc]
-    public void RpcChangeInputState(InputStateSystem.InputStateID newStateID)
-    {
-        inputStateSystem.SetState(newStateID);
-    }
+    ////Remote Procedure Calls!
+    //[ClientRpc]
+    //public void RpcChangeInputState(InputStateSystem.InputStateID newStateID)
+    //{
+    //    inputStateSystem.SetState(newStateID);
+    //}
 
     /// <summary>
     /// This method actually updates the spells
@@ -613,6 +611,17 @@ public class PlayerScript : ServerMoveablePlayer
     public void RpcUpdateSpells(int spell1, int spell2, int spell3)
     {
         UpdateSpells(spell1, spell2, spell3);
+    }
+
+    /// <summary>
+    /// method to move the client, even though client has authority over his position
+    /// </summary>
+    /// <param name="force"></param>
+    /// <param name="mode"></param>
+    [ClientRpc]
+    public void RpcAddForce(Vector3 force, int mode)
+    {
+        mRigidbody.AddForce(force, (ForceMode)mode);
     }
 
     //useful asstes for the PlayerScript

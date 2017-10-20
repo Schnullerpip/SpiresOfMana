@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class WindWallBehaviour : A_EffectBehaviour
 {
-
     [SerializeField]
     private Vector3 mWindForce, mHalfExtents;
 
@@ -23,10 +22,22 @@ public class WindWallBehaviour : A_EffectBehaviour
 
         for(int i = 0; i < colliders.Length; ++i)
         {
-            ServerMoveable sm = colliders[i].GetComponentInParent<ServerMoveable>();
-            if (sm)
+
+            Vector3 force = caster.transform.rotation*mWindForce;
+            ForceMode mode = ForceMode.Impulse;
+
+            PlayerScript player = colliders[i].GetComponent<PlayerScript>();
+            if (player && player != caster)
             {
-                sm.ServerAddForce_ForceMode_Impulse(caster.transform.rotation * mWindForce);
+                caster.RpcAddForce(force, (int)mode);
+            }
+            else
+            {
+                Rigidbody rb = colliders[i].attachedRigidbody;
+                if (rb)
+                {
+                    rb.AddForce(force, mode);
+                }
             }
         }
     }

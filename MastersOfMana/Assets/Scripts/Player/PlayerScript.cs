@@ -556,15 +556,14 @@ public class PlayerScript : NetworkBehaviour
 	/// </summary>
 	public void Jump(bool onlyIfGrounded = true)
 	{
-		RpcJump(jumpStrength, onlyIfGrounded);
+		Jump(jumpStrength, onlyIfGrounded);
 	}
 
-    [ClientRpc]
 	/// <summary>
 	/// Let's the character jump with a specified jumpStrength
 	/// </summary>
 	/// <SpellslotLambda name="jumpForce">Jump force.</SpellslotLambda>
-	public void RpcJump(float jumpStrength, bool onlyIfGrounded)
+	public void Jump(float jumpStrength, bool onlyIfGrounded)
 	{
 		if(feet.IsGrounded() || !onlyIfGrounded)
 		{
@@ -573,12 +572,12 @@ public class PlayerScript : NetworkBehaviour
 		}
 	}
 
-    //Remote Procedure Calls!
-    [ClientRpc]
-    public void RpcChangeInputState(InputStateSystem.InputStateID newStateID)
-    {
-        inputStateSystem.SetState(newStateID);
-    }
+    ////Remote Procedure Calls!
+    //[ClientRpc]
+    //public void RpcChangeInputState(InputStateSystem.InputStateID newStateID)
+    //{
+    //    inputStateSystem.SetState(newStateID);
+    //}
 
     /// <summary>
     /// This method actually updates the spells
@@ -611,6 +610,17 @@ public class PlayerScript : NetworkBehaviour
     public void RpcUpdateSpells(int spell1, int spell2, int spell3)
     {
         UpdateSpells(spell1, spell2, spell3);
+    }
+
+    /// <summary>
+    /// method to move the client, even though client has authority over his position
+    /// </summary>
+    /// <param name="force"></param>
+    /// <param name="mode"></param>
+    [ClientRpc]
+    public void RpcAddForce(Vector3 force, int mode)
+    {
+        mRigidbody.AddForce(force, (ForceMode)mode);
     }
 
     //useful asstes for the PlayerScript

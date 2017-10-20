@@ -22,6 +22,14 @@ public class IngameMenu : MonoBehaviour {
 		Cursor.lockState = mIsMenuActive ? CursorLockMode.None : CursorLockMode.Locked;
     }
 
+    public void OnApplicationFocus(bool focus)
+    {
+        if(focus)
+        {
+            Cursor.lockState = mIsMenuActive ? CursorLockMode.None : CursorLockMode.Locked;
+        }
+    }
+
     void OnEnable()
     {
         //initialize Inpur handler

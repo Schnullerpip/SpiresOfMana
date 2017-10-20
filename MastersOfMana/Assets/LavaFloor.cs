@@ -14,7 +14,6 @@ public class LavaFloor : NetworkBehaviour
     public void Start()
     {
         startHeight = transform.position.y;
-        Debug.Log("startHeight: " + startHeight);
     }
 
     public void OnCollisionStay(Collision other)

@@ -19,6 +19,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4285013887335220}
+  - component: {fileID: 114620476655515874}
   m_Layer: 0
   m_Name: MultiplayerGameSetup
   m_TagString: Untagged
@@ -520,6 +521,24 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &114620476655515874
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1054946464103434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e437c6c730f91c2418a38985d51839c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectsOnGamestart:
+  - {fileID: 1164052453046962, guid: 7b13270c78cfdcd419ee053a78a3ad25, type: 2}
+  - {fileID: 1087798453436564, guid: 734e4f3c64c54d14ea8f928f17542f12, type: 2}
+  - {fileID: 1035436956626758, guid: e2fe44ebee90347749b4cc2c108bdf83, type: 2}
+  - {fileID: 1920282074317736, guid: 48484983423f39242afe657fe0b6b4e9, type: 2}
+  - {fileID: 1873515211363010, guid: bad6fea5c541cd94b9db0f96c47efbe6, type: 2}
+  - {fileID: 1722974639783876, guid: b24557cf05f5af14ca4c145d25e57016, type: 2}
 --- !u!114 &114622099818271208
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -443,48 +443,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6f478f39f049b16479868dea2c12da9e, type: 3}
   m_IsPrefabParent: 0
---- !u!1001 &500455808
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4285013887335220, guid: 70dc02d8c1439a14d8c576224d351f3b, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4285013887335220, guid: 70dc02d8c1439a14d8c576224d351f3b, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4285013887335220, guid: 70dc02d8c1439a14d8c576224d351f3b, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4285013887335220, guid: 70dc02d8c1439a14d8c576224d351f3b, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4285013887335220, guid: 70dc02d8c1439a14d8c576224d351f3b, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4285013887335220, guid: 70dc02d8c1439a14d8c576224d351f3b, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4285013887335220, guid: 70dc02d8c1439a14d8c576224d351f3b, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4285013887335220, guid: 70dc02d8c1439a14d8c576224d351f3b, type: 2}
-      propertyPath: m_RootOrder
-      value: 12
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 70dc02d8c1439a14d8c576224d351f3b, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1001 &516342021
 Prefab:
   m_ObjectHideFlags: 0
@@ -1061,6 +1019,56 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a17e43ce1afa18148bb83829b15131fb, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1283808280
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 1054946464103434, guid: 70dc02d8c1439a14d8c576224d351f3b,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1283808282}
+  - component: {fileID: 1283808281}
+  m_Layer: 0
+  m_Name: MultiplayerGameSetup
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1283808281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 114620476655515874, guid: 70dc02d8c1439a14d8c576224d351f3b,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1283808280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e437c6c730f91c2418a38985d51839c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectsOnGamestart:
+  - {fileID: 1164052453046962, guid: 7b13270c78cfdcd419ee053a78a3ad25, type: 2}
+  - {fileID: 1087798453436564, guid: 734e4f3c64c54d14ea8f928f17542f12, type: 2}
+  - {fileID: 1035436956626758, guid: e2fe44ebee90347749b4cc2c108bdf83, type: 2}
+  - {fileID: 1920282074317736, guid: 48484983423f39242afe657fe0b6b4e9, type: 2}
+  - {fileID: 1873515211363010, guid: bad6fea5c541cd94b9db0f96c47efbe6, type: 2}
+  - {fileID: 1722974639783876, guid: b24557cf05f5af14ca4c145d25e57016, type: 2}
+--- !u!4 &1283808282
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 4285013887335220, guid: 70dc02d8c1439a14d8c576224d351f3b,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1283808280}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1299073397 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 6f478f39f049b16479868dea2c12da9e, type: 3}

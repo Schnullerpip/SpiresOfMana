@@ -15,8 +15,9 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 	public float explosionForce = 600;
 	public float explosionRadius = 7;
 	public float damage = 10;
+	public float explosionTime = 0.5f;
 
-	public DelayedAction explosion;
+	public GameObject explosion;
 	public GameObject grenadeMesh;
 
     public override void Awake()
@@ -80,9 +81,9 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 	void Explode ()
 	{
 		mRigid.isKinematic = true;
-		explosion.gameObject.SetActive(true);
-		explosion.InvokeActions();
-		grenadeMesh.SetActive(false);
+
+		StartCoroutine(ExplosionEffect());
+
 
 		if(!isServer)
 		{
@@ -102,6 +103,20 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 				health.TakeDamage(damage);
 			}
 		}
+	}
+
+	[ClientRpc]
+	void RpcActivateExplosionMesh()
+	{
+		explosion.SetActive(true);
+		grenadeMesh.SetActive(false);
+	}
+
+	IEnumerator ExplosionEffect()
+	{
+		RpcActivateExplosionMesh();
+		yield return new WaitForSeconds(explosionTime);
+		RpcSetActive(false);
 	}
 
 	public void Deactivate()

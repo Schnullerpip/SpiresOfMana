@@ -33,11 +33,15 @@ public class PlayerCamera : NetworkBehaviour {
     {
 		mCamera = GetComponentInChildren<Camera>();
 		startFOV = mCamera.fieldOfView;
+    }
+
+	void Start()
+	{
 		if(followTarget == null)
 		{
 			Debug.LogWarning("No Follow Target assigned.", this.gameObject);
 		}
-    }
+	}
 
 	void FixedUpdate()
 	{

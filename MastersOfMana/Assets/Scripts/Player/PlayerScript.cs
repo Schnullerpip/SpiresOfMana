@@ -263,6 +263,11 @@ public class PlayerScript : NetworkBehaviour
 		Vector2 movementInput = rewiredPlayer.GetAxis2D("MoveHorizontal", "MoveVertical");
 		movementInput = Vector3.ClampMagnitude(movementInput,1);
 
+		if(rewiredPlayer.GetButtonDown("ShoulderSwap"))
+		{
+			cameraRig.SwapShoulder();
+		}
+
 		//propergate various inputs to the statesystems
 		#region Input
 		if(rewiredPlayer.GetButtonDown("Jump"))

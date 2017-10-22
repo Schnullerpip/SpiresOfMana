@@ -11,7 +11,8 @@ public class MultiplayerSetup : NetworkBehaviour {
     {
         foreach (GameObject obj in ObjectsOnGamestart)
         {
-            GameObject spawnedObj = GameObject.Instantiate(obj);
+            //GameObject spawnedObj = 
+				GameObject.Instantiate(obj);
         }
     }
 }

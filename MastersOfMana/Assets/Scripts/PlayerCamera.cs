@@ -92,4 +92,14 @@ public class PlayerCamera : NetworkBehaviour {
 		Vector3 direction = position - rayStart;
 		return Physics.Raycast(rayStart, direction, out hit);
 	}
+
+	public void SwapShoulder()
+	{
+		Debug.Log("Shoulder Swapping not implemented yet");
+		return;
+
+//		Vector3 camPos = mCamera.transform.localPosition;
+//		camPos.x *= -1;
+//		mCamera.transform.localPosition = camPos;
+	}
 }

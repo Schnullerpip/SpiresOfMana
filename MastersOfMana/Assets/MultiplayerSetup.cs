@@ -7,7 +7,7 @@ public class MultiplayerSetup : NetworkBehaviour {
 
     public List<GameObject> ObjectsOnGamestart;
 
-    void OnEnable()
+    void Start()
     {
         foreach (GameObject obj in ObjectsOnGamestart)
         {

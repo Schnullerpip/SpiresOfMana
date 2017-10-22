@@ -382,6 +382,12 @@ namespace Prototype.NetworkLobby
             }
 			//lock the mouse
 			Cursor.lockState = CursorLockMode.Locked;
+
+			Rewired.Player rewiredPlayer = Rewired.ReInput.players.GetPlayer(0);
+
+			rewiredPlayer.controllers.maps.SetMapsEnabled(false,"UI");
+			rewiredPlayer.controllers.maps.SetMapsEnabled(true,"Default");
+
             
             ServerChangeScene(playScene);
         }

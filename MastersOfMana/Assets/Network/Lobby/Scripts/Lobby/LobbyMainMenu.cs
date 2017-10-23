@@ -26,6 +26,11 @@ namespace Prototype.NetworkLobby
 
 		private Rewired.Player rewiredPlayer;
 
+		public Rewired.Player GetRewiredPlayer()
+		{
+			return rewiredPlayer;
+		}
+
         public void OnEnable()
         {
             //lobbyManager.topPanel.ToggleVisibility(true);

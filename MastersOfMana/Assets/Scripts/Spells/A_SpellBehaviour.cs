@@ -8,17 +8,5 @@ using UnityEngine.Networking;
 /// </summary>
 public abstract class A_SpellBehaviour : NetworkBehaviour
 {
-    //relevant data like damage, manacost etc.
-    public A_Spell referencedSpell;
-
-    public virtual void Awake()
-    {
-        //make sure referencedSpell was attached in Editor
-        if (!referencedSpell)
-        {
-            throw new MissingMemberException();
-        }
-    }
-
     public abstract void Execute(PlayerScript caster);
 }

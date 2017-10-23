@@ -20,25 +20,24 @@ public class WindWallBehaviour : A_EffectBehaviour
         //do the boxoverlap
         Collider[] colliders = Physics.OverlapBox(center, mHalfExtents, caster.transform.rotation);
 
+		Vector3 force = caster.transform.rotation*mWindForce;
+		ForceMode mode = ForceMode.Impulse;
+
         for(int i = 0; i < colliders.Length; ++i)
         {
-
-            Vector3 force = caster.transform.rotation*mWindForce;
-            ForceMode mode = ForceMode.Impulse;
-
-            PlayerScript player = colliders[i].GetComponent<PlayerScript>();
-            if (player && player != caster)
-            {
-                caster.RpcAddForce(force, (int)mode);
-            }
-            else
-            {
-                Rigidbody rb = colliders[i].attachedRigidbody;
-                if (rb)
-                {
-                    rb.AddForce(force, mode);
-                }
-            }
+			if(colliders[i].attachedRigidbody)
+			{
+				PlayerScript opponent = colliders[i].attachedRigidbody.GetComponent<PlayerScript>();
+				
+				if (opponent && opponent != caster)
+				{
+					opponent.RpcAddForce(force, (int)mode);
+				}
+				else
+				{
+					colliders[i].attachedRigidbody.AddForce(force, mode);
+				}	
+			}
         }
     }
 }

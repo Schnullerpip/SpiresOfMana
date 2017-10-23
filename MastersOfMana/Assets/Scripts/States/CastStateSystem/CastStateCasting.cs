@@ -19,7 +19,7 @@ public class CastStateCasting : A_CastState {
 
         //apply the spells cooldown -> even if the castprocedure is interrupted, the cooldown will be applied
         var spellslot = player.Currentspell();
-        spellslot.cooldown = spellslot.spell.castDurationInSeconds;
+        spellslot.cooldown = spellslot.spell.coolDownInSeconds;
         ResetCastDurationCount();
         //invoke casting animation
         anim.SetBool(AnimationLiterals.ANIMATION_BOOL_CASTING, true);

@@ -52,7 +52,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2a01037f5f361d4d9c951cbc3e81cfa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  referencedSpell: {fileID: 11400000, guid: e233f7ca8bad7cc4482f17316c60348f, type: 2}
+  mMaxDistance: 10
+  mOffsetToPlayer: 0.5
+  mCapsuleHeight: 0.5
+  mCapsuleRadius: 0
 --- !u!114 &114528237506480750
 MonoBehaviour:
   m_ObjectHideFlags: 1

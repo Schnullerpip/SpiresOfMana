@@ -7,24 +7,26 @@ public class SoloGameSetup : MonoBehaviour {
     //private GameManager GameManager;
     //private PoolRegistry PoolRegistry;
     //private NetManager NetworkManager;
+	public GameObject gameManagerPrefab;
     public GameObject directHostHack;
     public GameObject healthHUD;
     public GameObject spellHUD;
     public GameObject ingameMenu;
 
-    void OnEnable()
-    {
-        GameManager.OnGameStarted += Init;
-    }
 
     // Use this for initialization
-    void Start () {
+    void Awake () 
+	{
         Cursor.lockState = CursorLockMode.Locked;
-        GameObject GameManagerObj = new GameObject("GameManager");
+
+		GameObject GameManagerObj = Instantiate(gameManagerPrefab);
         GameManagerObj.transform.SetParent(this.transform);
-        GameManagerObj.AddComponent<GameManager>();
+//        GameManagerObj.AddComponent<GameManager>();
         GameManager.instance.AddPlayerMessageCounter();
         GameManager.instance.AddPlayerMessageCounter();
+
+		Rewired.ReInput.players.GetPlayer(0).controllers.maps.SetMapsEnabled(false,"UI");
+		Rewired.ReInput.players.GetPlayer(0).controllers.maps.SetMapsEnabled(true,"Default");
 
         GameObject DirectHostHackObject = GameObject.Instantiate(directHostHack);
         DirectHostHackObject.transform.SetParent(this.transform);
@@ -40,8 +42,20 @@ public class SoloGameSetup : MonoBehaviour {
 
         Instantiate(ingameMenu);
 
-        GameManager.instance.Go();
+		StartCoroutine(PullingGameStart());
     }
+
+	IEnumerator PullingGameStart()
+	{
+		//hack: wait for the gamemanager to be done initializing
+		while(GameManager.instance.localPlayer == null)
+		{
+			yield return null;
+		}
+
+		GameManager.instance.Go();
+		Init();
+	}
 
     public void Init()
     {

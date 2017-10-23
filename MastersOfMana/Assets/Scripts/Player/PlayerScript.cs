@@ -301,7 +301,7 @@ public class PlayerScript : NetworkBehaviour
 
 		//store the aim input, either mouse or right analog stick
 		Vector2 aimInput = rewiredPlayer.GetAxis2D("AimHorizontal", "AimVertical");
-		aimInput = Vector3.ClampMagnitude(aimInput,1);
+//		aimInput = Vector3.ClampMagnitude(aimInput,1); //TODO: delete maybe?
 
 		//take framerate into consideration
 		aimInput *= Time.deltaTime * aimSpeed * (mFocusActive ? focusAimSpeedFactor : 1);

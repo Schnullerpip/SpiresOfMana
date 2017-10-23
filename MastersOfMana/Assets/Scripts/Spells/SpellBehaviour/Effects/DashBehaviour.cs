@@ -24,7 +24,7 @@ public class DashBehaviour : A_EffectBehaviour
     public override void Execute(PlayerScript caster)
     {
         //properties the spellneeds
-        Vector3 point1, point2, originalPosition = caster.transform.position, direction = caster.transform.forward;
+        Vector3 point1, point2, originalPosition = caster.transform.position, direction = caster.GetCameraLookDirection();
 
         point1 = point2 = caster.headJoint.position + direction*mOffsetToPlayer;
         point2 -= new Vector3(0, mCapsuleHeight, 0);

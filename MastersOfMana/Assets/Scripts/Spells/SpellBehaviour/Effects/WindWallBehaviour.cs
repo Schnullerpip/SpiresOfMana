@@ -22,7 +22,6 @@ public class WindWallBehaviour : A_EffectBehaviour
 
         for(int i = 0; i < colliders.Length; ++i)
         {
-
             Vector3 force = caster.transform.rotation*mWindForce;
             ForceMode mode = ForceMode.Impulse;
 

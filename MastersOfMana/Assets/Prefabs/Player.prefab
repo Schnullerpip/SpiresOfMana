@@ -208,7 +208,7 @@ GameObject:
   - component: {fileID: 114334208707171628}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1919,7 +1919,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spellslot:
-  - spell: {fileID: 11400000, guid: 5c0f19c3e50294f70acf3ae92e2ea2f8, type: 2}
+  - spell: {fileID: 11400000, guid: a5e75869edd974a7f889e1661e0ef689, type: 2}
     cooldown: 0
   - spell: {fileID: 11400000, guid: a5e75869edd974a7f889e1661e0ef689, type: 2}
     cooldown: 0
@@ -1931,6 +1931,7 @@ MonoBehaviour:
   additionalFallGravityMultiplier: 1
   amountOfReverseSlowdown: 0.25
   maxFullspeedAngle: 90
+  fallingDamageThreshold: 18
   moveInputForce: {x: 0, y: 0, z: 0}
   feet: {fileID: 114211396574403768}
   aimSpeed: 180

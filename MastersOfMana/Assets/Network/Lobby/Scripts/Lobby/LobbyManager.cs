@@ -145,14 +145,6 @@ namespace Prototype.NetworkLobby
             //hostInfo.text = host;
         }
 
-        //void OnLevelWasLoaded(int sceneId)
-        //{
-        //    if (mainMenu == null && sceneId == 0)
-        //    {
-        //        mainMenu = GameObject.FindObjectOfType<LobbyMainMenu>();
-        //    }
-        //}
-
         public delegate void BackButtonDelegate();
         public BackButtonDelegate backDelegate;
         public void GoBackButton()
@@ -390,6 +382,12 @@ namespace Prototype.NetworkLobby
             }
 			//lock the mouse
 			Cursor.lockState = CursorLockMode.Locked;
+
+			Rewired.Player rewiredPlayer = Rewired.ReInput.players.GetPlayer(0);
+
+			rewiredPlayer.controllers.maps.SetMapsEnabled(false,"UI");
+			rewiredPlayer.controllers.maps.SetMapsEnabled(true,"Default");
+
             
             ServerChangeScene(playScene);
         }

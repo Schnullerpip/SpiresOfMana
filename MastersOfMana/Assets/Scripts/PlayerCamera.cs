@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 /// <summary>
 /// This components follows a transform with a certain amount of damping.
 /// </summary>
-public class PlayerCamera : MonoBehaviour {
+public class PlayerCamera : NetworkBehaviour {
 
 	public Transform joint;
 	public PlayerScript followTarget;
@@ -28,11 +29,14 @@ public class PlayerCamera : MonoBehaviour {
 		return mCamera;
 	}
 
-	void Start()
-	{
+    void Awake()
+    {
 		mCamera = GetComponentInChildren<Camera>();
 		startFOV = mCamera.fieldOfView;
+    }
 
+	void Start()
+	{
 		if(followTarget == null)
 		{
 			Debug.LogWarning("No Follow Target assigned.", this.gameObject);
@@ -87,5 +91,15 @@ public class PlayerCamera : MonoBehaviour {
 		Vector3 rayStart = mCamera.transform.position + mCamera.transform.forward * (-mCamera.transform.localPosition.z + .5f);
 		Vector3 direction = position - rayStart;
 		return Physics.Raycast(rayStart, direction, out hit);
+	}
+
+	public void SwapShoulder()
+	{
+		Debug.Log("Shoulder Swapping not implemented yet");
+		return;
+
+//		Vector3 camPos = mCamera.transform.localPosition;
+//		camPos.x *= -1;
+//		mCamera.transform.localPosition = camPos;
 	}
 }

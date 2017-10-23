@@ -29,6 +29,11 @@ public class PlayerScript : NetworkBehaviour
         return spellslot[mCurrentSpell];
     }
 
+    public int CurrentspellslotID()
+    {
+        return mCurrentSpell;
+    }
+
     /// <summary>
     /// holds references to all the coroutines a spell is running, so they can bes stopped/interrupted w4hen a player is for example hit
     /// and can therefore not continue to cast the spell

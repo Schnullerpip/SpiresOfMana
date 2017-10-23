@@ -21,12 +21,27 @@ public class WhipBehaviour : A_SummoningBehaviour
         base.Awake();
     }
 
+	[SyncVar(hook = "SetLinePoint0")]
+	private Vector3 linePoint0;
+	[SyncVar(hook = "SetLinePoint1")]
+	private Vector3 linePoint1;
+
+	private void SetLinePoint0(Vector3 vec)
+	{
+		lineRenderer.SetPosition(0, vec);
+	}
+
+	private void SetLinePoint1(Vector3 vec)
+	{
+		lineRenderer.SetPosition(1, vec);
+	}
+
     public override void Execute(PlayerScript caster)
     {
 		GameObject whip = PoolRegistry.WhipPool.Get();
 		WhipBehaviour whipBehaviour = whip.GetComponent<WhipBehaviour>();
 
-		whipBehaviour.lineRenderer.SetPosition(0, caster.handTransform.position);
+		whipBehaviour.linePoint0 = caster.handTransform.position;
 
 		RaycastHit hit;
         Ray ray = new Ray(caster.GetCameraPosition(), caster.GetCameraLookDirection());
@@ -34,11 +49,11 @@ public class WhipBehaviour : A_SummoningBehaviour
 
 		if(hitSomething)
 		{
-			whipBehaviour.lineRenderer.SetPosition(1, hit.point);
+			whipBehaviour.linePoint1 = hit.point;
 		}
 		else
 		{
-			whipBehaviour.lineRenderer.SetPosition(1, caster.handTransform.position + caster.GetAimDirection() * maxDistance);
+			whipBehaviour.linePoint1 = caster.handTransform.position + caster.GetAimDirection() * maxDistance;
 		}
 
         whip.SetActive(true);

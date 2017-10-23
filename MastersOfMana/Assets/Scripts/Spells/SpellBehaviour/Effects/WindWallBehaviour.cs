@@ -26,10 +26,11 @@ public class WindWallBehaviour : A_EffectBehaviour
             Vector3 force = caster.transform.rotation*mWindForce;
             ForceMode mode = ForceMode.Impulse;
 
-            PlayerScript player = colliders[i].GetComponent<PlayerScript>();
-            if (player && player != caster)
+            PlayerScript opponent = colliders[i].attachedRigidbody.GetComponent<PlayerScript>();
+
+            if (opponent && opponent != caster)
             {
-                caster.RpcAddForce(force, (int)mode);
+				opponent.RpcAddForce(force, (int)mode);
             }
             else
             {

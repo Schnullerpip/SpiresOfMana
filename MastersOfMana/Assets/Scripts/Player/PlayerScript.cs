@@ -653,6 +653,16 @@ public class PlayerScript : NetworkBehaviour
         }
     }
 
+    /// <summary>
+    /// allows the server and thus the spells, to affect the players position
+    /// </summary>
+    /// <param name="vec3"></param>
+    [ClientRpc]
+    public void RpcSetPosition(Vector3 vec3)
+    {
+        this.transform.position = vec3;
+    }
+
     //useful asstes for the PlayerScript
 
     /// <summary>

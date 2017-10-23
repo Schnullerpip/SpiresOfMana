@@ -13,10 +13,17 @@ public class FeetCollider : MonoBehaviour
 	/// <summary>
 	/// Did the feet have contact with the ground this frame?
 	/// </summary>
-	private bool mHadContactThisFrame = false;
+	private bool mContactThisFrame = false;
+	private bool mContactLastFrame = false;
 	private bool mIsGrounded = false;
 	private Vector3 mGroundNormal;
 	private SphereCollider sphereCollider;
+
+	public delegate void OnLanding();
+	/// <summary>
+	/// This Delegate is called once, when the FeetCollider is touching ground again. Regardless of wether or not the ground is considered steady
+	/// </summary>
+	public OnLanding onLanding;
 
 	void Awake()
 	{
@@ -41,7 +48,7 @@ public class FeetCollider : MonoBehaviour
 	/// <param name="contact">Contact.</param>
 	public void Collision(ContactPoint contact)
 	{
-		mHadContactThisFrame = true;
+		mContactThisFrame = true;
 
 		float tempSlope = Vector3.Angle(Vector3.up, contact.normal);
 
@@ -62,18 +69,35 @@ public class FeetCollider : MonoBehaviour
 	/// </summary>
 	public void PhysicsUpdate()
 	{
-		if(mHadContactThisFrame || CheckWithTolerance())
+		//make some extra checks (only if the terrain is not flat enough for the spherecollider)
+		mContactThisFrame = mContactThisFrame || CheckWithTolerance();
+
+		if(mContactThisFrame)
 		{
+			//this is to prevent landing on a slope (which is not "ground") to take damage multiple times
+			if(!mContactLastFrame)
+			{
+				if(onLanding != null)
+				{
+					//invoke landing delegate
+					onLanding();
+				}
+			}
+
+			//check ground slopefactor
 			mIsGrounded = currentSlopeAngle < maxSlope;
 		}
 		else
 		{
 			mIsGrounded = false;
 		}
-
+			
 		//reset the values for the next collision checks
 		currentSlopeAngle = float.MaxValue;
-		mHadContactThisFrame = false;
+
+		mContactLastFrame = mContactThisFrame;
+
+		mContactThisFrame = false;
 	}
 
 	/// <summary>

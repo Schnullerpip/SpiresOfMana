@@ -7,8 +7,12 @@ public class Explosion : NetworkBehaviour
 {
 
     public AnimationCurve aCurve;
+
     private float mCount = 0;
+
+    [SyncVar]
     public float amplitude = 1;
+
     public Transform explosionMesh;
     
     [SerializeField]

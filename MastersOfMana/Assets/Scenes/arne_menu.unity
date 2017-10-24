@@ -119,6 +119,10 @@ RectTransform:
   m_PrefabParentObject: {fileID: 22459552, guid: c0978251ff7b10d4fb954a4b56acd9f0,
     type: 2}
   m_PrefabInternal: {fileID: 815249558}
+--- !u!1 &570293380 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 115900, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
+  m_PrefabInternal: {fileID: 815249558}
 --- !u!1001 &665017916
 Prefab:
   m_ObjectHideFlags: 0
@@ -158,6 +162,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 114301063919453054, guid: 604641c1903da144a9f184e32d2b2fd7,
+        type: 2}
+      propertyPath: m_FirstSelected
+      value: 
+      objectReference: {fileID: 570293380}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 604641c1903da144a9f184e32d2b2fd7, type: 2}
   m_IsPrefabParent: 0
@@ -240,13 +249,13 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 11478224, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
-      propertyPath: lobbyManager
-      value: 
-      objectReference: {fileID: 1321811817}
     - target: {fileID: 114804644000219006, guid: c0978251ff7b10d4fb954a4b56acd9f0,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1321811817}
+    - target: {fileID: 11478224, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
+      propertyPath: lobbyManager
       value: 
       objectReference: {fileID: 1321811817}
     - target: {fileID: 155310, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}

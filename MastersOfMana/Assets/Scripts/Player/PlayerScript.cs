@@ -62,6 +62,9 @@ public class PlayerScript : NetworkBehaviour
 	[Tooltip("At which angle does the player still move with fullspeed?")]
 	[Range(0.0f,180.0f)]
 	public int maxFullspeedAngle = 90;
+	public float fallingDamageThreshold = 18.0f;
+
+	private bool mIsFalling = false;
 
 	[HideInInspector]
 	public Vector3 moveInputForce;
@@ -100,6 +103,7 @@ public class PlayerScript : NetworkBehaviour
 	void Awake()
 	{
         lookDirection = transform.forward;
+		feet.onLanding += Landing;
     }
 
     private void OnDisable()
@@ -165,15 +169,6 @@ public class PlayerScript : NetworkBehaviour
         effectStateSystem.SetState(id);
     }
 
-    /// <summary>
-    /// the direction the player aims during a cast (this field only is valid, during a cast routine, on the server!
-    /// </summary>
-    private Vector3 mAimDirection;
-    public Vector3 GetAimDirection()
-    {
-        return mAimDirection;
-    }
-
     //choosing a spell
     [Command]
     public void CmdChooseSpellslot_1()
@@ -201,11 +196,34 @@ public class PlayerScript : NetworkBehaviour
         spellslot[mCurrentSpell].Cast(this);
     }
 
+    /// <summary>
+    /// the direction the player aims during a cast (this field only is valid, during a cast routine, on the server!
+    /// </summary>
+    private Vector3 mAimDirection;
+    public Vector3 GetAimDirection()
+    {
+        return mAimDirection;
+    }
+    private Vector3 mCameraPosition;
+    public Vector3 GetCameraPosition()
+    {
+        return mCameraPosition;
+    }
+    private Vector3 mCameraLookdirection;
+    public Vector3 GetCameraLookDirection()
+    {
+        return mCameraLookdirection;
+    }
+
+
     //resolving the chosen spell
     [Command]
-    public void CmdResolveSpell(Vector3 aimDirection)
+    public void CmdResolveSpell(Vector3 aimDirection, Vector3 CameraPostion, Vector3 CameraLookDirection)
     {
         mAimDirection = aimDirection;
+        mCameraPosition = CameraPostion;
+        mCameraLookdirection = CameraLookDirection;
+
         spellslot[mCurrentSpell].Resolve(this);
     }
 
@@ -244,6 +262,11 @@ public class PlayerScript : NetworkBehaviour
 		//store the input values
 		Vector2 movementInput = rewiredPlayer.GetAxis2D("MoveHorizontal", "MoveVertical");
 		movementInput = Vector3.ClampMagnitude(movementInput,1);
+
+		if(rewiredPlayer.GetButtonDown("ShoulderSwap"))
+		{
+			cameraRig.SwapShoulder();
+		}
 
 		//propergate various inputs to the statesystems
 		#region Input
@@ -541,6 +564,19 @@ public class PlayerScript : NetworkBehaviour
 			float angle = Vector2.Angle(mRigidbody.velocity.xz(),directionXZ);
 			//move the rigidbody's velocity towards zero in the xz plane, proportional to the angle
 			mRigidbody.velocity = Vector3.MoveTowards(mRigidbody.velocity, new Vector3(0,mRigidbody.velocity.y,0), speed * Time.deltaTime * angle / 180);
+		}
+
+		mIsFalling = mRigidbody.velocity.y <= -fallingDamageThreshold;
+	}
+		
+	public void Landing()
+	{
+		if(mIsFalling)
+		{
+			float delta = - mRigidbody.velocity.y - fallingDamageThreshold;
+			float damage = delta * 3;
+			print("Falling Damage: "+damage);
+			healthScript.TakeDamage(damage);
 		}
 	}
 

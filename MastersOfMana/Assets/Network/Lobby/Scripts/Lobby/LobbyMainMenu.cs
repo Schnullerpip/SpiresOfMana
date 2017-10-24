@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using Rewired;
 
 namespace Prototype.NetworkLobby
 {
@@ -23,6 +24,8 @@ namespace Prototype.NetworkLobby
         public InputField matchNameInput;
         public Button backButton;
 
+		private Rewired.Player rewiredPlayer;
+
         public void OnEnable()
         {
             //lobbyManager.topPanel.ToggleVisibility(true);
@@ -36,7 +39,15 @@ namespace Prototype.NetworkLobby
 
             lobbyManager = GameObject.FindObjectOfType<LobbyManager>();
             backButton.onClick.AddListener(lobbyManager.GoBackButton);
+
+			rewiredPlayer = ReInput.players.GetPlayer(0);
+			rewiredPlayer.controllers.maps.SetMapsEnabled(true,"UI");
         }
+
+		void Update()
+		{
+//			print(rewiredPlayer.GetAxis("UIHorizontal"));
+		}
 
         public void OnClickHost()
         {

@@ -1,16 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class MultiplayerSetup : MonoBehaviour {
+public class MultiplayerSetup : NetworkBehaviour {
 
     public List<GameObject> ObjectsOnGamestart;
 
-    public void OnEnable()
+    void Start()
     {
-        foreach(GameObject obj in ObjectsOnGamestart)
+        foreach (GameObject obj in ObjectsOnGamestart)
         {
-            GameObject.Instantiate(obj);
+            //GameObject spawnedObj = 
+				GameObject.Instantiate(obj);
         }
     }
 }

@@ -315,7 +315,10 @@ public class PlayerScript : NetworkBehaviour
 
 		#endregion
 
-		lookDirection = Quaternion.AngleAxis(-yAim, transform.right) * transform.forward;
+        if(!healthScript.IsAlive())
+            animator.SetBool("isDead", true);
+
+        lookDirection = Quaternion.AngleAxis(-yAim, transform.right) * transform.forward;
  	}
 
 	/// <summary>
@@ -581,7 +584,7 @@ public class PlayerScript : NetworkBehaviour
 			float delta = - mRigidbody.velocity.y - fallingDamageThreshold;
 			float damage = delta * 3;
 			print("Falling Damage: "+damage);
-			healthScript.TakeDamage(damage);
+            healthScript.TakeFallDamage(damage);
 		}
 	}
 

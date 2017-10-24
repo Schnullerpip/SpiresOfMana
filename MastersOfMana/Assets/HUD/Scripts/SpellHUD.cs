@@ -20,7 +20,7 @@ public class SpellHUD : MonoBehaviour
     void OnEnable ()
     {
         GameManager.OnGameStarted += Init;
-	}
+    }
 
     public void Init()
     {

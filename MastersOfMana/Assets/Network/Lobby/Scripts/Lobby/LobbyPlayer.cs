@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using UnityEngine.EventSystems;
 
 namespace Prototype.NetworkLobby
 {
@@ -33,12 +33,12 @@ namespace Prototype.NetworkLobby
         public Color OddRowColor = new Color(250.0f / 255.0f, 250.0f / 255.0f, 250.0f / 255.0f, 1.0f);
         public Color EvenRowColor = new Color(180.0f / 255.0f, 180.0f / 255.0f, 180.0f / 255.0f, 1.0f);
 
-        static Color JoinColor = new Color(255.0f/255.0f, 0.0f, 101.0f/255.0f,1.0f);
+        static Color JoinColor = new Color(255.0f / 255.0f, 0.0f, 101.0f / 255.0f, 1.0f);
         static Color NotReadyColor = new Color(34.0f / 255.0f, 44 / 255.0f, 55.0f / 255.0f, 1.0f);
         static Color ReadyColor = new Color(0.0f, 204.0f / 255.0f, 204.0f / 255.0f, 1.0f);
         static Color TransparentColor = new Color(0, 0, 0, 0);
 
-        public Button 
+        public Button
             spellButton1,
             spellButton2,
             spellButton3;
@@ -50,7 +50,6 @@ namespace Prototype.NetworkLobby
 
         //static Color OddRowColor = new Color(250.0f / 255.0f, 250.0f / 255.0f, 250.0f / 255.0f, 1.0f);
         //static Color EvenRowColor = new Color(180.0f / 255.0f, 180.0f / 255.0f, 180.0f / 255.0f, 1.0f);
-
 
         public override void OnClientEnterLobby()
         {
@@ -91,7 +90,7 @@ namespace Prototype.NetworkLobby
             ColorBlock b = readyButton.colors;
             b.normalColor = c;
             b.pressedColor = c;
-            b.highlightedColor = c;
+            //b.highlightedColor = c;
             b.disabledColor = c;
             readyButton.colors = b;
         }
@@ -124,6 +123,7 @@ namespace Prototype.NetworkLobby
 
             readyButton.transform.GetChild(0).GetComponent<Text>().text = "JOIN";
             readyButton.interactable = true;
+            EventSystem.current.SetSelectedGameObject(readyButton.gameObject);
 
             //have to use child count of player prefab already setup as "this.slot" is not set yet
             if (playerName == "")

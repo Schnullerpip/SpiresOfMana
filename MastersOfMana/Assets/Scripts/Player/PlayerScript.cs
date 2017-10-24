@@ -581,7 +581,7 @@ public class PlayerScript : NetworkBehaviour
 			float delta = - mRigidbody.velocity.y - fallingDamageThreshold;
 			float damage = delta * 3;
 			print("Falling Damage: "+damage);
-			healthScript.TakeDamage(damage);
+            healthScript.TakeFallDamage(damage);
 		}
 	}
 

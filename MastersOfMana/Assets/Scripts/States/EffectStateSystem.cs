@@ -16,7 +16,7 @@ public class EffectStateSystem
     /*Each Player will hold his or her specific state instances in a dictionary
      * if a state change occures the 'new' state can be adressed through the player's
      * dictionary with the respective EffectStateID as the key */
-    public enum EffectStateID { Normal};
+    public enum EffectStateID { Normal, NoFallDamage, Invincible};
 
 
 
@@ -27,6 +27,8 @@ public class EffectStateSystem
         states = new List<A_EffectState>()
         {
             new EffectStateNormal(player),
+            new EffectStateNoFallDamage(player),
+            new EffectStateInvincible(player),
         };
 
         current = states[0];

@@ -18,6 +18,12 @@ public class Explosion : NetworkBehaviour
     [SerializeField]
     private float mLifeTime;
 
+    [ClientRpc]
+    public void RpcSetActive(bool activationstate)
+    {
+        gameObject.SetActive(activationstate);
+    }
+
     private void EvaluateExplosion()
     {
         explosionMesh.localScale = Vector3.one*aCurve.Evaluate(mCount/mLifeTime)*amplitude;

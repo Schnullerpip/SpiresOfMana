@@ -9,6 +9,7 @@ public class PoolRegistry : MonoBehaviour {
 		FireballPool,
         GrenadePool,
         ExplosionPool,
+        FistOfFuryPool,
 		WhipPool;
 
     public void Start()
@@ -23,5 +24,6 @@ public class PoolRegistry : MonoBehaviour {
 		GrenadePool = new Pool(Resources.Load("SpellPrefabs/Grenade") as GameObject, 5, Pool.PoolingStrategy.OnMissRoundRobin);
 		WhipPool = new Pool(Resources.Load("SpellPrefabs/Whip") as GameObject, 5, Pool.PoolingStrategy.OnMissSubjoinElements);
 		ExplosionPool = new Pool(Resources.Load("SpellPrefabs/Explosion") as GameObject, 5, Pool.PoolingStrategy.OnMissRoundRobin);
+		FistOfFuryPool = new Pool(Resources.Load("SpellPrefabs/FistOfFury") as GameObject, 5, Pool.PoolingStrategy.OnMissRoundRobin);
 	}
 }

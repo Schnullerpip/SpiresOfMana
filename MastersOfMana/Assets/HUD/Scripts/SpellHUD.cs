@@ -5,24 +5,45 @@ using UnityEngine.UI;
 
 public class SpellHUD : MonoBehaviour
 {
-    public List<RectTransform> SpellSlots;
+    public List<RectTransform> spellSlots;
 
     private Canvas canvas;
     private PlayerScript localPlayer;
 
-	// Use this for initialization
-	void OnEnable ()
+    private List<Image> spellIcons = new List<Image>();
+    private List<Image> spellHighlights = new List<Image>();
+    private List<Image> spellCooldowns = new List<Image>();
+
+    private int displayedCurrentSpell;
+
+    // Use this for initialization
+    void OnEnable ()
     {
         GameManager.OnGameStarted += Init;
 	}
 
     public void Init()
     {
-        //Fill SpellSlots with correct spellIcons
         localPlayer = GameManager.instance.localPlayer;
-        SpellSlots[0].GetComponent<Image>().sprite = localPlayer.spellslot[0].spell.icon;
-        SpellSlots[1].GetComponent<Image>().sprite = localPlayer.spellslot[1].spell.icon;
-        SpellSlots[2].GetComponent<Image>().sprite = localPlayer.spellslot[2].spell.icon;
+
+        //Prefetch all the needed children
+        spellHighlights.Add(spellSlots[0].GetChild(0).GetComponentInParent<Image>());
+        spellHighlights.Add(spellSlots[1].GetChild(0).GetComponentInParent<Image>());
+        spellHighlights.Add(spellSlots[2].GetChild(0).GetComponentInParent<Image>());
+
+        spellIcons.Add(spellSlots[0].GetChild(1).GetComponentInParent<Image>());
+        spellIcons.Add(spellSlots[1].GetChild(1).GetComponentInParent<Image>());
+        spellIcons.Add(spellSlots[2].GetChild(1).GetComponentInParent<Image>());
+
+        spellCooldowns.Add(spellSlots[0].GetChild(2).GetComponentInParent<Image>());
+        spellCooldowns.Add(spellSlots[1].GetChild(2).GetComponentInParent<Image>());
+        spellCooldowns.Add(spellSlots[2].GetChild(2).GetComponentInParent<Image>());
+
+        //Fill SpellSlots with correct spellIcons
+        spellIcons[0].sprite = localPlayer.spellslot[0].spell.icon;
+        spellIcons[1].sprite = localPlayer.spellslot[1].spell.icon;
+        spellIcons[2].sprite = localPlayer.spellslot[2].spell.icon;
+
         canvas = GetComponentInParent<Canvas>();
         canvas.enabled = true;
     }
@@ -36,17 +57,26 @@ public class SpellHUD : MonoBehaviour
             CooldownPercentage = SpellSlot.cooldown / SpellSlot.spell.coolDownInSeconds;
         }
 
-
-        Image image = SpellSlots[SpellSlotID].GetChild(0).GetComponent<Image>();
-        if(image)
+        // Did we just finish our Cooldown? --> check if fillAmount will be set to 0 this frame (and wasn't zero before)
+        if(spellCooldowns[SpellSlotID].fillAmount > 0 && CooldownPercentage == 0)
         {
-            // Did we just finish our Cooldown? --> check if fillAmount will be set to 0 this frame (and wasn't zero before)
-            if(image.fillAmount > 0 && CooldownPercentage == 0)
-            {
-                //SpellSlots[0].GetChild(1).GetComponent<ParticleSystem>().Play(false);// Simulate(100.0f);
-            }
-            image.fillAmount = CooldownPercentage;
+            //SpellSlots[0].GetChild(1).GetComponent<ParticleSystem>().Play(false);// Simulate(100.0f);
         }
+        spellCooldowns[SpellSlotID].fillAmount = CooldownPercentage;
+    }
+
+    public void SetCurrentSpell(int currentSpell)
+    {
+        if(currentSpell == displayedCurrentSpell)
+        {
+            return;
+        }
+        //disable old highlight
+        spellHighlights[displayedCurrentSpell].GetComponent<Image>().enabled = false;
+
+        //enable new highlight
+        displayedCurrentSpell = currentSpell;
+        spellHighlights[displayedCurrentSpell].GetComponent<Image>().enabled = true;
     }
 
     public void Update()
@@ -56,6 +86,7 @@ public class SpellHUD : MonoBehaviour
             SetCooldown(0, localPlayer.spellslot[0]);
             SetCooldown(1, localPlayer.spellslot[1]);
             SetCooldown(2, localPlayer.spellslot[2]);
+            SetCurrentSpell(localPlayer.CurrentspellslotID());
         }
     }
 
@@ -66,8 +97,8 @@ public class SpellHUD : MonoBehaviour
 
     private void Reset()
     {
-        SpellSlots.Add(transform.GetChild(0).GetComponent<RectTransform>());
-        SpellSlots.Add(transform.GetChild(1).GetComponent<RectTransform>());
-        SpellSlots.Add(transform.GetChild(2).GetComponent<RectTransform>());
+        spellSlots.Add(transform.GetChild(0).GetComponent<RectTransform>());
+        spellSlots.Add(transform.GetChild(1).GetComponent<RectTransform>());
+        spellSlots.Add(transform.GetChild(2).GetComponent<RectTransform>());
     }
 }

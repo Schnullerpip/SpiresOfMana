@@ -43,6 +43,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
 
     protected override void ExecuteTriggerEnter_Host(Collider collider)
     {
+        print("inside triggerenter");
         //set state to superherolanding TODO
 
         //spawn an explosion
@@ -66,21 +67,22 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
                 hs.TakeDamage(10.0f);
             }
 
-            Rigidbody rigid = collider.attachedRigidbody;
+            Rigidbody rigid = colliders[i].attachedRigidbody;
             if (rigid)
             {
-                PlayerScript ps = collider.attachedRigidbody.GetComponent<PlayerScript>();
+                print("[FistOfFuryBehaviour]::ExecuteTriggerEnter_host - " + colliders[i].attachedRigidbody.gameObject.name);
+                //TODO exchange magic numbers with good stuff... 
+                PlayerScript ps = colliders[i].attachedRigidbody.GetComponent<PlayerScript>();
                 if (ps)
                 {
-                    ps.RpcAddExplosionForce(40.0f, caster.transform.position, explosionAmplitude);
-
-                    print("explosionradius: " + explosionAmplitude/2);
-                    print("curve: " + mExplosion.aCurve.Evaluate(1));
-                    print("amplitude: " + explosionAmplitude);
+                    if (ps != caster)
+                    {
+                        ps.RpcAddExplosionForce(200.0f, caster.transform.position, explosionAmplitude);
+                    }
                 }
                 else
                 {
-                    collider.attachedRigidbody.AddExplosionForce(40.0f, caster.transform.position, explosionAmplitude);
+                    colliders[i].attachedRigidbody.AddExplosionForce(200.0f, caster.transform.position, explosionAmplitude);
                 }
             }
         }

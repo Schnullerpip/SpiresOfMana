@@ -10,6 +10,7 @@ public class SpellSelectionPanel : MonoBehaviour {
     public Button spellButtonPrefab;
     public Prototype.NetworkLobby.LobbyPlayer player;
     private bool initialized = false;
+    private Prototype.NetworkLobby.LobbyManager.BackButtonDelegate oldBackDelegate;
 
     private void OnEnable()
     {
@@ -31,5 +32,16 @@ public class SpellSelectionPanel : MonoBehaviour {
             spellButton.transform.localScale = new Vector3(1, 1, 1);
             spellButton.onClick.AddListener(delegate { player.tradeSpells(spell); });
         }
+
+        oldBackDelegate = Prototype.NetworkLobby.LobbyManager.s_Singleton.backDelegate;
+        Prototype.NetworkLobby.LobbyManager.s_Singleton.backDelegate = delegate ()
+        {
+            gameObject.SetActive(false);
+        };
+    }
+
+    private void OnDisable()
+    {
+        Prototype.NetworkLobby.LobbyManager.s_Singleton.backDelegate = oldBackDelegate;
     }
 }

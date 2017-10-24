@@ -382,9 +382,7 @@ namespace Prototype.NetworkLobby
             }
 			//lock the mouse
 			Cursor.lockState = CursorLockMode.Locked;
-
-			Rewired.Player rewiredPlayer = Rewired.ReInput.players.GetPlayer(0);
-			            
+						            
             ServerChangeScene(playScene);
         }
 

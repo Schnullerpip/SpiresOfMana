@@ -1,6 +1,8 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.Networking;
+using System.Collections;
+using System.Collections.Generic;
 
 /// <summary>
 /// The specific behaviour of the fireball, that is manifested in the scene
@@ -13,6 +15,15 @@ public class FireballBehaviour : A_SummoningBehaviour
     [SerializeField]
     private float mDamage = 5.0f;
 
+	public GameObject ballMesh;
+	public GameObject explosion;
+	public float explosionRadius = 4;
+	public float explosionTime = 1;
+	public float explosionForce = 5;
+	public float explosionDamage = 5.0f;
+
+	private Collider col;
+
     public override void Awake()
     {
         base.Awake();
@@ -21,39 +32,133 @@ public class FireballBehaviour : A_SummoningBehaviour
             //cant find a rigid body!!!
             throw new MissingMemberException();
         }
+
+		col = GetComponentInChildren<Collider>();
+		col.enabled = false;
     }
 
     public override void Execute(PlayerScript caster)
     {
         //Get a fireballinstance out of the pool
         GameObject fireball = PoolRegistry.FireballPool.Get();
+		FireballBehaviour fb = fireball.GetComponent<FireballBehaviour>();
 
-        //position the fireball to 'spawn' at the casters hand, including an offset so it does not collide instantly with the hand
-        fireball.transform.position = caster.handTransform.position + caster.GetAimDirection() * 1.5f;
-        fireball.transform.rotation = caster.transform.rotation;
-
+       
         //now activate it, so no weird interpolation errors occcure
         //TODO delete this eventually - RPCs are just too slow
         //fireball.GetComponent<A_SummoningBehaviour>().RpcSetActive(true);
         fireball.SetActive(true);
 
-        //speed up the fireball to fly into the lookdirection of the player
-        FireballBehaviour fb = fireball.GetComponent<FireballBehaviour>();
-        fb.mRigid.velocity = caster.GetAimDirection() * mSpeed;
 
         //create an instance of this fireball on the client's machine
         NetworkServer.Spawn(fireball, PoolRegistry.FireballPool.assetID);
+
+		//position the fireball to 'spawn' at the casters hand, including an offset so it does not collide instantly with the hand
+		fb.Reset(caster.handTransform.position + caster.GetAimDirection() * 1.5f, caster.transform.rotation);
+		//speed up the fireball to fly into the lookdirection of the player
+		fb.mRigid.velocity = caster.GetAimDirection() * mSpeed;
+
+
     }
 
-    protected override void ExecuteCollision_Host(Collision collision) {
-        HealthScript hs = collision.gameObject.GetComponent<HealthScript>();
-        if (hs)
+	void Reset (Vector3 pos, Quaternion rot)
+	{
+		transform.position = pos;
+		transform.rotation = rot;
+
+		mRigid.Reset();
+		mRigid.isKinematic = false;
+		col.enabled = true;
+
+		RpcActivateExplosionMesh(false);
+	}
+
+    protected override void ExecuteCollision_Host(Collision collision) 
+	{
+		mRigid.isKinematic = true;
+		StartCoroutine(ExplosionEffect());
+		col.enabled = false;
+
+		if(!isServer)
+		{
+			return;
+		}
+
+		HealthScript directHit = collision.gameObject.GetComponentInParent<HealthScript>();
+        if (directHit)
         {
-            hs.TakeDamage(mDamage);
+            directHit.TakeDamage(mDamage);
         }
 
-        PreventInterpolationIssues();
-        gameObject.SetActive(false);
-        NetworkServer.UnSpawn(gameObject);
+		Collider[] colliders = Physics.OverlapSphere(mRigid.position,explosionRadius);
+
+		//TODO: TEMP SOLUTION
+		List<HealthScript> cachedHealthScripts = new List<HealthScript>(colliders.Length);
+		List<Rigidbody> cachedRigidbodies = new List<Rigidbody>(colliders.Length);
+
+		foreach(Collider c in colliders)
+		{
+			HealthScript health = c.GetComponentInParent<HealthScript>();
+			if(health && health != directHit && !cachedHealthScripts.Contains(health))
+			{
+				health.TakeDamage(explosionDamage);
+				cachedHealthScripts.Add(health);
+			}
+				
+			if(c.attachedRigidbody && !cachedRigidbodies.Contains(c.attachedRigidbody))
+			{
+				cachedRigidbodies.Add(c.attachedRigidbody);
+				
+				//check wheather or not we are handling a player or just some random rigidbody
+				if (c.attachedRigidbody.CompareTag("Player"))
+				{
+					PlayerScript ps = c.attachedRigidbody.GetComponent<PlayerScript>();
+//					ps.RpcAddExplosionForce(explosionForce, transform.position, explosionRadius);
+					Vector3 force = c.attachedRigidbody.transform.TransformPoint(c.attachedRigidbody.centerOfMass) - mRigid.position; 
+					force.Normalize();
+					force *= explosionForce;
+					Debug.DrawRay(c.attachedRigidbody.centerOfMass,force,Color.black,10);
+
+					ps.RpcAddForce(force, (int)ForceMode.VelocityChange);
+
+				}
+				else
+				{
+//					c.attachedRigidbody.AddExplosionForce (explosionForce, transform.position, explosionRadius);
+//					UnityEditor.EditorApplication.isPaused = true;
+					Vector3 force = c.attachedRigidbody.transform.TransformPoint(c.attachedRigidbody.centerOfMass) - mRigid.position; 
+					force.Normalize();
+					force *= explosionForce;
+					Debug.DrawRay(transform.position,force,Color.white,10);
+					c.attachedRigidbody.AddForce(force + Vector3.up, ForceMode.VelocityChange);
+
+				}
+			}
+		}
     }
+
+	IEnumerator ExplosionEffect()
+	{
+		RpcActivateExplosionMesh(true);
+		yield return new WaitForSeconds(explosionTime);
+
+		PreventInterpolationIssues();
+		gameObject.SetActive(false);
+		NetworkServer.UnSpawn(gameObject);
+	}
+
+	[ClientRpc]
+	void RpcActivateExplosionMesh(bool explosionState)
+	{
+		explosion.SetActive(explosionState);
+		ballMesh.SetActive(!explosionState);
+	}
+
+	void OnValidate()
+	{
+		if(explosion != null)
+		{
+			explosion.transform.localScale = Vector3.one * explosionRadius * 2;
+		}
+	}
 }

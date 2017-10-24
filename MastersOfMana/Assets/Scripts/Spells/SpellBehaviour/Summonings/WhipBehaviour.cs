@@ -28,12 +28,14 @@ public class WhipBehaviour : A_SummoningBehaviour
 
 	private void SetLinePoint0(Vector3 vec)
 	{
-		lineRenderer.SetPosition(0, vec);
+		linePoint0 = vec;
+		lineRenderer.SetPosition(0, linePoint0);
 	}
 
 	private void SetLinePoint1(Vector3 vec)
 	{
-		lineRenderer.SetPosition(1, vec);
+		linePoint1 = vec;
+		lineRenderer.SetPosition(1, linePoint1);
 	}
 
     public override void Execute(PlayerScript caster)

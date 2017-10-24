@@ -122,22 +122,22 @@ MonoBehaviour:
   m_SceneId:
     m_Value: 0
   m_AssetId:
-    i0: 0
-    i1: 0
-    i2: 0
-    i3: 0
-    i4: 0
-    i5: 0
-    i6: 0
-    i7: 0
-    i8: 0
-    i9: 0
-    i10: 0
-    i11: 0
-    i12: 0
-    i13: 0
-    i14: 0
-    i15: 0
+    i0: 161
+    i1: 126
+    i2: 67
+    i3: 206
+    i4: 26
+    i5: 250
+    i6: 24
+    i7: 20
+    i8: 139
+    i9: 184
+    i10: 56
+    i11: 41
+    i12: 177
+    i13: 81
+    i14: 49
+    i15: 251
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
 --- !u!114 &114865154224641114
@@ -148,51 +148,54 @@ MonoBehaviour:
   m_GameObject: {fileID: 1305568902638960}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c077f346b4492884c855c6a0c61295de, type: 3}
+  m_Script: {fileID: 11500000, guid: bbbba37821416b643abbb95010c81a62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   damagePerSecond: 4
-  cycleTime: 180
-  amplitude: 10
+  cycleTime: 60
+  amplitude: 15
   lavaFlow:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 2
-      time: -0.001149132
-      value: 0.0025633932
+      time: -0.0012755101
+      value: 0.0024096374
       inSlope: 0
       outSlope: 0
       tangentMode: 136
     - serializedVersion: 2
-      time: 0.2022826
-      value: 0.6998595
+      time: 0.20025507
+      value: 0.50481904
       inSlope: 0
       outSlope: 0
       tangentMode: 136
     - serializedVersion: 2
-      time: 0.39793256
-      value: 0.30449688
+      time: 0.39859688
+      value: 0.20120473
       inSlope: 0
       outSlope: 0
       tangentMode: 136
     - serializedVersion: 2
-      time: 0.5496751
-      value: 0.9005017
-      inSlope: -2.275324
-      outSlope: -2.275324
-      tangentMode: 0
+      time: 0.5982142
+      value: 0.8036141
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
     - serializedVersion: 2
-      time: 0.80104256
-      value: 0.60299027
-      inSlope: 0.12422793
-      outSlope: 0.12422793
-      tangentMode: 0
+      time: 0.80102026
+      value: 0.30481914
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
     - serializedVersion: 2
-      time: 1.0005604
-      value: 1.0004216
+      time: 0.9993621
+      value: 1.0012044
       inSlope: 0
       outSlope: 0
       tangentMode: 136
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+  inward: {fileID: 0}
+  outward: {fileID: 0}
+  warningTime: 0.2

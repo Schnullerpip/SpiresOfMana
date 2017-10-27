@@ -122,9 +122,7 @@ public class FireballBehaviour : A_SummoningBehaviour
 					force *= explosionForce;
 					Debug.DrawRay(c.attachedRigidbody.centerOfMass,force,Color.black,10);
 
-                    //server prediction
                     ps.RpcAddForce(force, (int)ForceMode.VelocityChange);
-
 				}
 				else
 				{

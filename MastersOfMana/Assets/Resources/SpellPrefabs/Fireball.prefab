@@ -80,7 +80,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4148483238619372
 Transform:
   m_ObjectHideFlags: 1
@@ -363,7 +363,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d2a178920f848f408293de5ac73fcc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mSpeed: 50
+  mSpeed: 4
   mDamage: 10
   ballMesh: {fileID: 1270298685971524}
   explosion: {fileID: 1232424146753718}
@@ -372,6 +372,7 @@ MonoBehaviour:
   explosionForce: 5
   explosionDamage: 5
   trail: {fileID: 96633219081527090}
+  disappearTimer: 10
 --- !u!114 &114772597142026698
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -384,15 +385,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_TransformSyncMode: 3
-  m_SendInterval: 0
+  m_SendInterval: 1
   m_SyncRotationAxis: 7
   m_RotationSyncCompression: 0
   m_SyncSpin: 0
-  m_MovementTheshold: 0.001
+  m_MovementTheshold: 9000
   m_VelocityThreshold: 0.0001
   m_SnapThreshold: 7
   m_InterpolateRotation: 1
-  m_InterpolateMovement: 1
+  m_InterpolateMovement: 0
 --- !u!135 &135798414850372354
 SphereCollider:
   m_ObjectHideFlags: 1

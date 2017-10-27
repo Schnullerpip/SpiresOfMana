@@ -73,7 +73,10 @@ public class FireballBehaviour : A_SummoningBehaviour
 		RpcActivateExplosionMesh(false);
 	}
 
-    protected override void ExecuteCollision_Host(Collision collision) 
+    protected override void ExecuteCollision_Host(Collision collision) {}
+
+    protected override void ExecuteTriggerEnter_Host(Collider collision)
+    //protected override void ExecuteCollision_Host(Collision collision) 
 	{
 		mRigid.isKinematic = true;
 		StartCoroutine(ExplosionEffect());
@@ -119,7 +122,8 @@ public class FireballBehaviour : A_SummoningBehaviour
 					force *= explosionForce;
 					Debug.DrawRay(c.attachedRigidbody.centerOfMass,force,Color.black,10);
 
-					ps.RpcAddForce(force, (int)ForceMode.VelocityChange);
+                    //server prediction
+                    ps.RpcAddForce(force, (int)ForceMode.VelocityChange);
 
 				}
 				else

@@ -15,7 +15,10 @@ public class PoolRegistry : NetworkBehaviour {
 
     public void Start()
     {
-        GameManager.instance.Go();
+        if (isServer)
+        {
+            GameManager.instance.Go();
+        }
     }
 
     // Use this for initialization

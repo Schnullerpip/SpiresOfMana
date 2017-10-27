@@ -229,7 +229,7 @@ public class PlayerScript : NetworkBehaviour
         mCameraPosition = CameraPostion;
         mCameraLookdirection = CameraLookDirection;
 
-        spellslot[mCurrentSpell].Resolve(this);
+        spellslot[mCurrentSpell].Cast(this);
     }
 
     // Update is called once per frame
@@ -287,9 +287,6 @@ public class PlayerScript : NetworkBehaviour
 		if(rewiredPlayer.GetButtonDown("CastSpell"))
 		{
 			inputStateSystem.current.CastSpell();
-		}else if (rewiredPlayer.GetButtonUp("CastSpell"))
-		{
-		    inputStateSystem.current.ResolveSpell();
 		}
 
 		inputStateSystem.current.Move(movementInput);
@@ -711,24 +708,15 @@ public class PlayerScript : NetworkBehaviour
         /// <returns></returns>
         private IEnumerator CastRoutine(PlayerScript caster, float castDuration)
         {
-            yield return new WaitForSeconds(castDuration);
-            caster.RpcSetCastState(CastStateSystem.CastStateID.Holding);
-        }
+            //set caster in 'casting mode'
+            caster.RpcSetCastState(CastStateSystem.CastStateID.Resolving);
 
-        /// <summary>
-        /// activates the resolving animation, after the spell's resolveduration, takes the player to the normal state
-        /// </summary>
-        /// <param name="caster"></param>
-        /// <param name="resolveDuration"></param>
-        /// <returns></returns>
-        private IEnumerator ResolveRoutine(PlayerScript caster, float resolveDuration)
-        {
-            yield return new WaitForSeconds(resolveDuration);
+            yield return new WaitForSeconds(castDuration);
             //resolve the spell
             spell.Resolve(caster);
+
             //set caster in 'normal mode'
             caster.RpcSetCastState(CastStateSystem.CastStateID.Normal);
-            //idle animation is triggered automatically
         }
 
         /// <summary>
@@ -740,38 +728,9 @@ public class PlayerScript : NetworkBehaviour
 	    {
             if (cooldown <= 0)
             {
-                //set caster in 'casting mode'
-                caster.RpcSetCastState(CastStateSystem.CastStateID.Casting);
-
                 //start the switch to 'holding spell' animation after the castduration
                 caster.EnlistSpellRoutine(caster.StartCoroutine(CastRoutine(caster, spell.castDurationInSeconds)));
             }
-        }
-
-        /// <summary>
-        /// resolves the spell inside the slot
-        /// should only be called on the server!
-        /// </summary>
-        /// <param name="caster"></param>
-        public void Resolve(PlayerScript caster)
-        {
-            //if cast duration was met, resolve the spell - else cancel it
-            if (caster.castStateSystem.current.GetCastDurationCount() > spell.castDurationInSeconds)
-            {
-                //set caster in 'resolving mode'
-                caster.RpcSetCastState(CastStateSystem.CastStateID.Resolving);
-
-                //actually resolve the spell
-                caster.EnlistSpellRoutine(caster.StartCoroutine(ResolveRoutine(caster, spell.resolveDurationInSeconds)));
-            }
-            else
-            {
-                //trying to resolve before the castduration is met... cancel the spell...
-                caster.RpcSetCastState(CastStateSystem.CastStateID.Normal);
-            }
-
-            //rese the castDurationCount so we cant prematurely resolve spells
-            caster.castStateSystem.current.ResetCastDurationCount();
         }
 	}
 

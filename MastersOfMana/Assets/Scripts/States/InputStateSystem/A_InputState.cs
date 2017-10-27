@@ -59,15 +59,6 @@ public abstract class A_InputState : A_State{
         player.castStateSystem.current.CastCmdSpell();
     }
 
-    //resolving the chosen spell
-    public virtual void ResolveSpell() 
-	{  
-        player.castStateSystem.current.ResolveCmdSpell();
-	} 
-
-
-
-
 	public virtual void StartFocus()
 	{
 		player.StartFocus();

@@ -8,7 +8,11 @@ public class CastStateResolving : A_CastState {
 
     public override void Init()
     {
+        //set the cooldown of the current spellslot
+        player.Currentspell().cooldown = player.Currentspell().spell.coolDownInSeconds;
+
         var anim = player.animator;
+
         //tell the players animator to start the resolve animation
         anim.SetTrigger(AnimationLiterals.ANIMATION_TRIGGER_RESOLVE);
 

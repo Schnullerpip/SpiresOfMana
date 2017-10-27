@@ -24,11 +24,11 @@ public class InputStateNormal : A_InputState
 		base.Move (input);
 
 		Vector3 moveForce = new Vector3(input.x, 0, input.y);
+
 		//from global to local space
 		moveForce = player.transform.TransformDirection(moveForce);
 
 		//override moveForce in player script
 		player.moveInputForce = moveForce;
-
 	}
 }

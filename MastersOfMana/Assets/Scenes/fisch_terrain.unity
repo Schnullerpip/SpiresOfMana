@@ -424,6 +424,32 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 167521515}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &216761768 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1305568902638960, guid: a17e43ce1afa18148bb83829b15131fb,
+    type: 2}
+  m_PrefabInternal: {fileID: 1211094721}
+--- !u!114 &216761769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 216761768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 0
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_VelocityThreshold: 0.0001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
 --- !u!1 &359952824
 GameObject:
   m_ObjectHideFlags: 0
@@ -1533,6 +1559,101 @@ Prefab:
     - target: {fileID: 1305568902638960, guid: a17e43ce1afa18148bb83829b15131fb, type: 2}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114865154224641114, guid: a17e43ce1afa18148bb83829b15131fb,
+        type: 2}
+      propertyPath: amplitude
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 114865154224641114, guid: a17e43ce1afa18148bb83829b15131fb,
+        type: 2}
+      propertyPath: cycleTime
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 114865154224641114, guid: a17e43ce1afa18148bb83829b15131fb,
+        type: 2}
+      propertyPath: lavaFlow.m_Curve.Array.data[2].value
+      value: 0.5010094
+      objectReference: {fileID: 0}
+    - target: {fileID: 114865154224641114, guid: a17e43ce1afa18148bb83829b15131fb,
+        type: 2}
+      propertyPath: lavaFlow.m_Curve.Array.data[2].time
+      value: 0.25736153
+      objectReference: {fileID: 0}
+    - target: {fileID: 114865154224641114, guid: a17e43ce1afa18148bb83829b15131fb,
+        type: 2}
+      propertyPath: lavaFlow.m_Curve.Array.data[4].time
+      value: 0.8059031
+      objectReference: {fileID: 0}
+    - target: {fileID: 114865154224641114, guid: a17e43ce1afa18148bb83829b15131fb,
+        type: 2}
+      propertyPath: lavaFlow.m_Curve.Array.data[4].value
+      value: 0.80225563
+      objectReference: {fileID: 0}
+    - target: {fileID: 114865154224641114, guid: a17e43ce1afa18148bb83829b15131fb,
+        type: 2}
+      propertyPath: lavaFlow.m_Curve.Array.data[1].inSlope
+      value: -0.032561913
+      objectReference: {fileID: 0}
+    - target: {fileID: 114865154224641114, guid: a17e43ce1afa18148bb83829b15131fb,
+        type: 2}
+      propertyPath: lavaFlow.m_Curve.Array.data[1].outSlope
+      value: -0.032561913
+      objectReference: {fileID: 0}
+    - target: {fileID: 114865154224641114, guid: a17e43ce1afa18148bb83829b15131fb,
+        type: 2}
+      propertyPath: lavaFlow.m_Curve.Array.data[1].tangentMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114865154224641114, guid: a17e43ce1afa18148bb83829b15131fb,
+        type: 2}
+      propertyPath: lavaFlow.m_Curve.Array.data[1].value
+      value: 0.49964082
+      objectReference: {fileID: 0}
+    - target: {fileID: 114865154224641114, guid: a17e43ce1afa18148bb83829b15131fb,
+        type: 2}
+      propertyPath: lavaFlow.m_Curve.Array.data[1].time
+      value: 0.12228638
+      objectReference: {fileID: 0}
+    - target: {fileID: 114865154224641114, guid: a17e43ce1afa18148bb83829b15131fb,
+        type: 2}
+      propertyPath: lavaFlow.m_Curve.Array.data[2].inSlope
+      value: 0.0104394285
+      objectReference: {fileID: 0}
+    - target: {fileID: 114865154224641114, guid: a17e43ce1afa18148bb83829b15131fb,
+        type: 2}
+      propertyPath: lavaFlow.m_Curve.Array.data[2].outSlope
+      value: 0.0104394285
+      objectReference: {fileID: 0}
+    - target: {fileID: 114865154224641114, guid: a17e43ce1afa18148bb83829b15131fb,
+        type: 2}
+      propertyPath: lavaFlow.m_Curve.Array.data[3].time
+      value: 0.6466761
+      objectReference: {fileID: 0}
+    - target: {fileID: 114865154224641114, guid: a17e43ce1afa18148bb83829b15131fb,
+        type: 2}
+      propertyPath: lavaFlow.m_Curve.Array.data[3].value
+      value: 0.8036141
+      objectReference: {fileID: 0}
+    - target: {fileID: 114865154224641114, guid: a17e43ce1afa18148bb83829b15131fb,
+        type: 2}
+      propertyPath: lavaFlow.m_Curve.Array.data[3].inSlope
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114865154224641114, guid: a17e43ce1afa18148bb83829b15131fb,
+        type: 2}
+      propertyPath: lavaFlow.m_Curve.Array.data[3].outSlope
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114865154224641114, guid: a17e43ce1afa18148bb83829b15131fb,
+        type: 2}
+      propertyPath: lavaFlow.m_Curve.Array.data[4].inSlope
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114865154224641114, guid: a17e43ce1afa18148bb83829b15131fb,
+        type: 2}
+      propertyPath: lavaFlow.m_Curve.Array.data[4].outSlope
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a17e43ce1afa18148bb83829b15131fb, type: 2}

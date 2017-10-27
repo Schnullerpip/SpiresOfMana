@@ -73,7 +73,10 @@ public class FireballBehaviour : A_SummoningBehaviour
 		RpcActivateExplosionMesh(false);
 	}
 
-    protected override void ExecuteCollision_Host(Collision collision) 
+    protected override void ExecuteCollision_Host(Collision collision) {}
+
+    protected override void ExecuteTriggerEnter_Host(Collider collider)
+    //protected override void ExecuteCollision_Host(Collision collision) 
 	{
 		mRigid.isKinematic = true;
 		StartCoroutine(ExplosionEffect());
@@ -84,7 +87,7 @@ public class FireballBehaviour : A_SummoningBehaviour
 			return;
 		}
 
-		HealthScript directHit = collision.gameObject.GetComponentInParent<HealthScript>();
+		HealthScript directHit = collider.gameObject.GetComponentInParent<HealthScript>();
         if (directHit)
         {
             directHit.TakeDamage(mDamage);
@@ -119,8 +122,7 @@ public class FireballBehaviour : A_SummoningBehaviour
 					force *= explosionForce;
 					Debug.DrawRay(c.attachedRigidbody.centerOfMass,force,Color.black,10);
 
-					ps.RpcAddForce(force, (int)ForceMode.VelocityChange);
-
+                    ps.RpcAddForce(force, (int)ForceMode.VelocityChange);
 				}
 				else
 				{

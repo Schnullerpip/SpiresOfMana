@@ -359,8 +359,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mSpeed: 50
-  mDamage: 0
-  predictionFactor: 0.75
+  mDamage: 5
   ballMesh: {fileID: 1270298685971524}
   explosion: {fileID: 1232424146753718}
   explosionRadius: 2
@@ -379,7 +378,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_TransformSyncMode: 3
-  m_SendInterval: 0.033333335
+  m_SendInterval: 0.0625
   m_SyncRotationAxis: 7
   m_RotationSyncCompression: 0
   m_SyncSpin: 0
@@ -414,7 +413,7 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1270298685971524}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5

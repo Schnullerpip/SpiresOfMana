@@ -75,7 +75,7 @@ public class FireballBehaviour : A_SummoningBehaviour
 
     protected override void ExecuteCollision_Host(Collision collision) {}
 
-    protected override void ExecuteTriggerEnter_Host(Collider collision)
+    protected override void ExecuteTriggerEnter_Host(Collider collider)
     //protected override void ExecuteCollision_Host(Collision collision) 
 	{
 		mRigid.isKinematic = true;
@@ -87,7 +87,7 @@ public class FireballBehaviour : A_SummoningBehaviour
 			return;
 		}
 
-		HealthScript directHit = collision.gameObject.GetComponentInParent<HealthScript>();
+		HealthScript directHit = collider.gameObject.GetComponentInParent<HealthScript>();
         if (directHit)
         {
             directHit.TakeDamage(mDamage);

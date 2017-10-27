@@ -20,17 +20,6 @@ public class DashBehaviour : A_EffectBehaviour
 
     [SerializeField] private float mPushForce;
 
-    public class FistOfFuryInputState : A_InputState 
-    {
-        public FistOfFuryInputState(PlayerScript player) : base(player) { }
-
-        //no movement in the air
-        public override void Move(Vector2 input) { }
-        //no jumping in the air
-        public override void Jump() { }
-    }
-
-
     public override void Execute(PlayerScript caster)
     {
         //properties the spellneeds

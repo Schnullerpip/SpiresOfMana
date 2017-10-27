@@ -22,6 +22,8 @@ public class FireballBehaviour : A_SummoningBehaviour
 	public float explosionForce = 5;
 	public float explosionDamage = 5.0f;
 
+	public TrailRenderer trail;
+
 	private Collider col;
 
     public override void Awake()
@@ -48,7 +50,7 @@ public class FireballBehaviour : A_SummoningBehaviour
         //TODO delete this eventually - RPCs are just too slow
         //fireball.GetComponent<A_SummoningBehaviour>().RpcSetActive(true);
         fireball.SetActive(true);
-
+		fb.trail.Clear();
 
         //create an instance of this fireball on the client's machine
         NetworkServer.Spawn(fireball, PoolRegistry.FireballPool.assetID);

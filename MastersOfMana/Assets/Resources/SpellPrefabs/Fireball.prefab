@@ -243,7 +243,7 @@ TrailRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 2100000, guid: 34bbe847d7847413aa97db568ae530bd, type: 2}
+  - {fileID: 2100000, guid: 8b85d335347824f6584efa08ee64fe51, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -262,7 +262,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 0.2
+  m_Time: 1
   m_Parameters:
     serializedVersion: 2
     widthMultiplier: 0.34
@@ -275,9 +275,15 @@ TrailRenderer:
         inSlope: 0
         outSlope: 0
         tangentMode: 0
+      - serializedVersion: 2
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
-      m_RotationOrder: 4
+      m_RotationOrder: 0
     colorGradient:
       serializedVersion: 2
       key0: {r: 1, g: 1, b: 1, a: 1}
@@ -365,6 +371,7 @@ MonoBehaviour:
   explosionTime: 1
   explosionForce: 5
   explosionDamage: 5
+  trail: {fileID: 96633219081527090}
 --- !u!114 &114772597142026698
 MonoBehaviour:
   m_ObjectHideFlags: 1

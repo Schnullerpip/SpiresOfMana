@@ -74,7 +74,6 @@ GameObject:
   - component: {fileID: 54855802289307994}
   - component: {fileID: 114107375314558366}
   - component: {fileID: 96633219081527090}
-  - component: {fileID: 114981489256063932}
   m_Layer: 0
   m_Name: Fireball
   m_TagString: Untagged
@@ -359,7 +358,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mSpeed: 50
-  mDamage: 5
+  mDamage: 10
   ballMesh: {fileID: 1270298685971524}
   explosion: {fileID: 1232424146753718}
   explosionRadius: 2
@@ -387,25 +386,6 @@ MonoBehaviour:
   m_SnapThreshold: 7
   m_InterpolateRotation: 1
   m_InterpolateMovement: 1
---- !u!114 &114981489256063932
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1748008529846994}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1267208747, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Target: {fileID: 4635899697731440}
-  m_ChildIndex: 0
-  m_SendInterval: 0.1
-  m_SyncRotationAxis: 7
-  m_RotationSyncCompression: 0
-  m_MovementThreshold: 0.001
-  m_InterpolateRotation: 0.5
-  m_InterpolateMovement: 0.5
 --- !u!135 &135798414850372354
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -413,7 +393,7 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1270298685971524}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5

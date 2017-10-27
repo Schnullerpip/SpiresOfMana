@@ -18,6 +18,7 @@ public class LavaFloor : NetworkBehaviour
     {
         startHeight = transform.position.y;
         //inward.Play();
+        Debug.LogWarning("Remove this code for release build!");
     }
 
     public void OnTriggerStay(Collider other)
@@ -33,7 +34,6 @@ public class LavaFloor : NetworkBehaviour
     {
         if (isServer)
         {
-            Debug.LogWarning("Remove this code for release build!");
             if(Input.GetKeyDown(KeyCode.L))
             {
                 amplitude = 0;

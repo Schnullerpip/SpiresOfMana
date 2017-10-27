@@ -26,6 +26,8 @@ public class FireballBehaviour : A_SummoningBehaviour
 
 	private Collider col;
 
+	public float disappearTimer = 3;
+
     public override void Awake()
     {
         base.Awake();
@@ -44,8 +46,7 @@ public class FireballBehaviour : A_SummoningBehaviour
         //Get a fireballinstance out of the pool
         GameObject fireball = PoolRegistry.FireballPool.Get();
 		FireballBehaviour fb = fireball.GetComponent<FireballBehaviour>();
-
-       
+		       
         //now activate it, so no weird interpolation errors occcure
         //TODO delete this eventually - RPCs are just too slow
         //fireball.GetComponent<A_SummoningBehaviour>().RpcSetActive(true);
@@ -59,6 +60,10 @@ public class FireballBehaviour : A_SummoningBehaviour
 
         //create an instance of this fireball on the client's machine
         NetworkServer.Spawn(fireball, PoolRegistry.FireballPool.assetID);
+
+		fb.RpcActivateExplosionMesh(false);
+
+		fb.Disappear();
     }
 
 	void Reset (Vector3 pos, Quaternion rot)
@@ -69,8 +74,6 @@ public class FireballBehaviour : A_SummoningBehaviour
 		mRigid.Reset();
 		mRigid.isKinematic = false;
 		col.enabled = true;
-
-		RpcActivateExplosionMesh(false);
 	}
 		
     protected override void ExecuteCollision_Host(Collision collision) {}
@@ -161,6 +164,7 @@ public class FireballBehaviour : A_SummoningBehaviour
 		yield return new WaitForSeconds(explosionTime);
 
 		PreventInterpolationIssues();
+
 		gameObject.SetActive(false);
 		NetworkServer.UnSpawn(gameObject);
 	}
@@ -171,6 +175,20 @@ public class FireballBehaviour : A_SummoningBehaviour
 		explosion.SetActive(explosionState);
 		ballMesh.SetActive(!explosionState);
 	}
+		
+	public void Disappear()
+	{
+		StartCoroutine(Done());
+	}
+
+	public IEnumerator Done()
+	{
+		yield return new WaitForSeconds(disappearTimer);
+
+		gameObject.SetActive(false);
+		NetworkServer.UnSpawn(gameObject);
+	}
+
 
 	void OnValidate()
 	{

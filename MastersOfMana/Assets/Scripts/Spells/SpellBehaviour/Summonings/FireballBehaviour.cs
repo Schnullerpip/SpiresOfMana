@@ -72,12 +72,14 @@ public class FireballBehaviour : A_SummoningBehaviour
 
 		RpcActivateExplosionMesh(false);
 	}
-
+		
     protected override void ExecuteCollision_Host(Collision collision) {}
 
     protected override void ExecuteTriggerEnter_Host(Collider collider)
     //protected override void ExecuteCollision_Host(Collision collision) 
 	{
+		Vector3 directHitForce = mRigid.velocity;
+
 		mRigid.isKinematic = true;
 		StartCoroutine(ExplosionEffect());
 		col.enabled = false;
@@ -91,6 +93,11 @@ public class FireballBehaviour : A_SummoningBehaviour
         if (directHit)
         {
             directHit.TakeDamage(mDamage);
+
+			directHitForce.Normalize();
+			directHitForce *= explosionForce;
+
+			directHit.GetComponent<PlayerScript>().RpcAddForce(directHitForce, (int)ForceMode.VelocityChange);
         }
 
 		Collider[] colliders = Physics.OverlapSphere(mRigid.position,explosionRadius);
@@ -101,7 +108,15 @@ public class FireballBehaviour : A_SummoningBehaviour
 
 		foreach(Collider c in colliders)
 		{
+
 			HealthScript health = c.GetComponentInParent<HealthScript>();
+
+			if(health && health == directHit)
+			{
+				//took already damage and got a force
+				continue;
+			}
+
 			if(health && health != directHit && !cachedHealthScripts.Contains(health))
 			{
 				health.TakeDamage(explosionDamage);
@@ -122,7 +137,8 @@ public class FireballBehaviour : A_SummoningBehaviour
 					force *= explosionForce;
 					Debug.DrawRay(c.attachedRigidbody.centerOfMass,force,Color.black,10);
 
-                    ps.RpcAddForce(force, (int)ForceMode.VelocityChange);
+					ps.RpcAddForce(force, (int)ForceMode.VelocityChange);
+
 				}
 				else
 				{

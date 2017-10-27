@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.Networking;
+using System.Collections;
 
 [RequireComponent(typeof(LineRenderer))]
 public class WhipBehaviour : A_SummoningBehaviour
@@ -13,6 +14,8 @@ public class WhipBehaviour : A_SummoningBehaviour
 	public float pullPlayerUpForce = 3;
 
 	public float maxDistance = 20;
+
+	public float disappearTimer = 1.0f;
 
 	public LineRenderer lineRenderer;
 
@@ -61,6 +64,8 @@ public class WhipBehaviour : A_SummoningBehaviour
         whip.SetActive(true);
 		NetworkServer.Spawn(whip, PoolRegistry.WhipPool.assetID);
 
+		whipBehaviour.Disappear();
+
 //		if(!isServer)
 //		{
 //			return;
@@ -87,7 +92,21 @@ public class WhipBehaviour : A_SummoningBehaviour
 
 			caster.RpcAddForce(caster.GetAimDirection() * pullPlayerForce + Vector3.up * pullPlayerUpForce, (int)ForceMode.Impulse);
 		}
+
     }
+
+	public void Disappear()
+	{
+		StartCoroutine(Done());
+	}
+
+	public IEnumerator Done()
+	{
+		yield return new WaitForSeconds(disappearTimer);
+
+		gameObject.SetActive(false);
+		NetworkServer.UnSpawn(gameObject);
+	}
 
     protected override void ExecuteCollision_Host(Collision collision) 
 	{

@@ -38,7 +38,6 @@ GameObject:
   - component: {fileID: 114437587964823430}
   - component: {fileID: 114769817448363982}
   - component: {fileID: 114712952528206216}
-  - component: {fileID: 114444558250015980}
   m_Layer: 0
   m_Name: Grenade
   m_TagString: Untagged
@@ -130,7 +129,7 @@ Transform:
   m_GameObject: {fileID: 1360405712532458}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5.72, y: 5.72, z: 5.72}
+  m_LocalScale: {x: 7, y: 7, z: 7}
   m_Children:
   - {fileID: 4252614772259328}
   m_Father: {fileID: 4154339031615722}
@@ -261,25 +260,6 @@ MonoBehaviour:
     i15: 49
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
---- !u!114 &114444558250015980
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1520938232169682}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1267208747, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Target: {fileID: 4745773836545080}
-  m_ChildIndex: 0
-  m_SendInterval: 0.1
-  m_SyncRotationAxis: 7
-  m_RotationSyncCompression: 0
-  m_MovementThreshold: 0.001
-  m_InterpolateRotation: 0.5
-  m_InterpolateMovement: 0.5
 --- !u!114 &114712952528206216
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -313,11 +293,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   throwForce: 15
-  lifeTime: 3
-  explosionForce: 9
-  explosionRadius: 2.86
-  damage: 10
-  explosionTime: 0.5
+  lifeTime: 2
+  explosionForce: 10
+  explosionRadius: 3.5
+  damage: 20
+  explosionTime: 1
   explosion: {fileID: 1360405712532458}
   grenadeMesh: {fileID: 1644166663039104}
 --- !u!135 &135393998497622116

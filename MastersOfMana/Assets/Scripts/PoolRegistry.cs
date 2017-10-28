@@ -1,19 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class PoolRegistry : MonoBehaviour {
+public class PoolRegistry : NetworkBehaviour {
 
     public static Pool
 		EarthwallPool,
 		FireballPool,
         GrenadePool,
         ExplosionPool,
+        FistOfFuryPool,
 		WhipPool;
 
     public void Start()
     {
-        GameManager.instance.Go();
+        if (isServer)
+        {
+            GameManager.instance.Go();
+        }
     }
 
     // Use this for initialization
@@ -23,5 +28,6 @@ public class PoolRegistry : MonoBehaviour {
 		GrenadePool = new Pool(Resources.Load("SpellPrefabs/Grenade") as GameObject, 5, Pool.PoolingStrategy.OnMissRoundRobin);
 		WhipPool = new Pool(Resources.Load("SpellPrefabs/Whip") as GameObject, 5, Pool.PoolingStrategy.OnMissSubjoinElements);
 		ExplosionPool = new Pool(Resources.Load("SpellPrefabs/Explosion") as GameObject, 5, Pool.PoolingStrategy.OnMissRoundRobin);
+		FistOfFuryPool = new Pool(Resources.Load("SpellPrefabs/FistOfFury") as GameObject, 5, Pool.PoolingStrategy.OnMissRoundRobin);
 	}
 }

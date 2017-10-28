@@ -20,7 +20,6 @@ public class DashBehaviour : A_EffectBehaviour
 
     [SerializeField] private float mPushForce;
 
-
     public override void Execute(PlayerScript caster)
     {
         //properties the spellneeds

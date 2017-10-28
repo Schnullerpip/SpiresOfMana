@@ -7,12 +7,22 @@ public class Explosion : NetworkBehaviour
 {
 
     public AnimationCurve aCurve;
+
     private float mCount = 0;
+
+    [SyncVar]
     public float amplitude = 1;
+
     public Transform explosionMesh;
     
     [SerializeField]
     private float mLifeTime;
+
+    [ClientRpc]
+    public void RpcSetActive(bool activationstate)
+    {
+        gameObject.SetActive(activationstate);
+    }
 
     private void EvaluateExplosion()
     {

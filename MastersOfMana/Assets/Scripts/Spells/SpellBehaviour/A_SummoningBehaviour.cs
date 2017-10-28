@@ -66,11 +66,21 @@ public abstract class A_SummoningBehaviour : A_SpellBehaviour {
         }
     }
 
+    public void OnTriggerEnter(Collider other)
+    {
+        if (isServer)
+        {
+            ExecuteTriggerEnter_Host(other);
+        }
+    }
+
     /// <summary>
     /// actually handles the collision, but should only ever be invoked from the OnCollision method of the A_SummoningBehaviour super class
     /// </summary>
     /// <param name="collision"></param>
     protected abstract void ExecuteCollision_Host(Collision collision);
+
+    protected virtual void ExecuteTriggerEnter_Host(Collider collider) { }
 
     /// <summary>
     /// handles collision on client side ONLY IF ABSOLUTELY NECCSSARY!!! this should usually NOT be the case!!!!

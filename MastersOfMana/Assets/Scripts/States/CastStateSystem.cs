@@ -16,9 +16,7 @@ public class CastStateSystem
     /*Each Player will hold his or her specific state instances in a dictionary
      * if a state change occures the 'new' state can be adressed through the player's
      * dictionary with the respective CastStateID as the key */
-    public enum CastStateID { Normal, Casting, Resolving, Holding };
-
-
+    public enum CastStateID { Normal, Resolving };
 
     //Constructor
     public CastStateSystem(PlayerScript player)
@@ -27,9 +25,7 @@ public class CastStateSystem
         states = new List<A_CastState>()
         {
             new CastStateNormal(player),
-            new CastStateCasting(player),
             new CastStateResolving(player),
-            new CastStateHolding(player),
         };
 
         current = states[0];

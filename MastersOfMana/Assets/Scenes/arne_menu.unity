@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -414,7 +414,9 @@ MonoBehaviour:
   - {fileID: 1520938232169682, guid: b938e100080fb475fb2c3b00ee1e9231, type: 2}
   - {fileID: 1305568902638960, guid: a17e43ce1afa18148bb83829b15131fb, type: 2}
   - {fileID: 1247930643025394, guid: 3b77f4ff7296c4f81a3b01c7913c02ef, type: 2}
-  m_CustomConfig: 0
+  - {fileID: 1074938900135206, guid: 6b0cdc220c5b11441be55c5be9b07c8d, type: 2}
+  - {fileID: 1518199114825658, guid: c4aee2d5f96e54642bdc12550558efef, type: 2}
+  m_CustomConfig: 1
   m_MaxConnections: 4
   m_ConnectionConfig:
     m_PacketSize: 1440
@@ -456,7 +458,7 @@ MonoBehaviour:
     m_MaxTimerTimeout: 12000
     m_MinNetSimulatorTimeout: 1
     m_MaxNetSimulatorTimeout: 12000
-  m_Channels: 
+  m_Channels: 0300000000000000
   m_UseWebSockets: 0
   m_UseSimulator: 0
   m_SimulatedLatency: 1
@@ -481,7 +483,7 @@ MonoBehaviour:
   m_PlayScene: fisch_terrain
   lobbySlots: []
   netManager: {fileID: 1087798453436564, guid: 734e4f3c64c54d14ea8f928f17542f12, type: 2}
-  prematchCountdown: 5
+  prematchCountdown: 1
   mainMenu: {fileID: 560370118}
   isInGame: 0
   playerNumber: 0

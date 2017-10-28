@@ -36,7 +36,17 @@ public class A_State
     /// the state may decide or have an effect on how much damage is dealt in this situation,
     /// but it may never actually touch the health field. This is the responsibility of the PlayerHealthScript
     /// </returns>
-    public virtual float Hurt(float amount)
+    public virtual float CalculateDamage(float amount)
+    {
+        return amount;
+    }
+
+    /// <summary>
+    /// Handles internal statechanges in the case of 'i am taking falldamage right now'
+    /// </summary>
+    /// <param name="amount"></param>
+    /// <returns></returns>
+    public virtual float CalculateFallDamage(float amount)
     {
         return amount;
     }

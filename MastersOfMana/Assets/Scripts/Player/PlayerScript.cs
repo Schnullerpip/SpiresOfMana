@@ -10,12 +10,13 @@ using UnityEngine.Networking;
 /// <summary>
 /// Defines the basic properties for a player
 /// </summary>
-public class PlayerScript : NetworkBehaviour
+public class PlayerScript : NetworkBehaviour, IServerMoveable
 {
     //member
     public InputStateSystem inputStateSystem;
     public EffectStateSystem effectStateSystem;
     public CastStateSystem castStateSystem;
+    public Rigidbody mRigidbody;
 
     //spellslots
     public SpellSlot[] spellslot = new SpellSlot[3];
@@ -24,14 +25,23 @@ public class PlayerScript : NetworkBehaviour
 
     [SyncVar]
     private int mCurrentSpell;
-    public SpellSlot Currentspell()
+    public SpellSlot GetCurrentspell()
     {
         return spellslot[mCurrentSpell];
     }
 
-    public int CurrentspellslotID()
+    public int GetCurrentspellslotID()
     {
         return mCurrentSpell;
+    }
+
+    public void SetCurrentSpellslotID(int idx)
+    {
+        mCurrentSpell = idx;
+        if (mCurrentSpell > 2 || mCurrentSpell < 0)
+        {
+            mCurrentSpell = 0;
+        }
     }
 
     /// <summary>
@@ -94,7 +104,6 @@ public class PlayerScript : NetworkBehaviour
 	private Vector3 mAimRefinement;
 
 	private bool mFocusActive = false;
-	private Rigidbody mRigidbody;
 	private Collider mFocusedTarget = null;
 	protected Rewired.Player rewiredPlayer;
     [SyncVar] public string playerName;
@@ -121,8 +130,8 @@ public class PlayerScript : NetworkBehaviour
     }
 
     // Use this for initialization
-    void Start ()
-	{
+    public void Start()
+    {
         //initialize the statesystems
         inputStateSystem = new InputStateSystem(this);
         effectStateSystem = new EffectStateSystem(this);
@@ -131,8 +140,8 @@ public class PlayerScript : NetworkBehaviour
         //initialize Inpur handler
 	    rewiredPlayer = ReInput.players.GetPlayer(0);
 
-		mRigidbody = GetComponent<Rigidbody>();
         healthScript = GetComponent<PlayerHealthScript>();
+        mRigidbody = GetComponent<Rigidbody>();
 
         //set the currently chosen spell to a default
 	    mCurrentSpell = 0;
@@ -174,23 +183,51 @@ public class PlayerScript : NetworkBehaviour
         effectStateSystem.SetState(id);
     }
 
+    /// method to move the client, even though client has authority over his position
+    /// </summary>
+    /// <param name="force"></param>
+    /// <param name="mode"></param>
+    [ClientRpc]
+    public void RpcAddForce(Vector3 force, int mode)
+    {
+        if (isLocalPlayer)
+        {
+            mRigidbody.AddForce(force, (ForceMode)mode);
+        }
+    }
+
+    /// <summary>
+    /// adds explosion force to player on server side - kinda
+    /// </summary>
+    /// <param name="force"></param>
+    /// <param name="mode"></param>
+    [ClientRpc]
+    public void RpcAddExplosionForce(float explosionForce, Vector3 explosionPosition, float explosionRadius)
+    {
+        if (isLocalPlayer)
+        {
+            mRigidbody.AddExplosionForce(explosionForce, explosionPosition, explosionRadius);
+        }
+    }
+
+    [ClientRpc]
+    public void RpcAddForceAndUpdatePosition(Vector3 force, ForceMode mode, Vector3 newPosition)
+    {
+        mRigidbody.AddForce(force, mode);
+        mRigidbody.position = newPosition;
+    }
+
+    [ClientRpc]
+    public void RpcStopMotion()
+    {
+        mRigidbody.velocity = Vector3.zero;
+    }
+
     //choosing a spell
     [Command]
-    public void CmdChooseSpellslot_1()
+    public void CmdChooseSpellslot(int idx)
     {
-        mCurrentSpell = 0;
-        RpcSetCastState(CastStateSystem.CastStateID.Normal);
-    }
-    [Command]
-    public void CmdChooseSpellslot_2()
-    {
-        mCurrentSpell = 1;
-        RpcSetCastState(CastStateSystem.CastStateID.Normal);
-    }
-    [Command]
-    public void CmdChooseSpellslot_3()
-    {
-        mCurrentSpell = 2;
+        mCurrentSpell = idx;
         RpcSetCastState(CastStateSystem.CastStateID.Normal);
     }
 
@@ -229,7 +266,7 @@ public class PlayerScript : NetworkBehaviour
         mCameraPosition = CameraPostion;
         mCameraLookdirection = CameraLookDirection;
 
-        spellslot[mCurrentSpell].Resolve(this);
+        spellslot[mCurrentSpell].Cast(this);
     }
 
     // Update is called once per frame
@@ -250,14 +287,15 @@ public class PlayerScript : NetworkBehaviour
         //To be run on the clients
 
         //STEP 2
+
         if (rewiredPlayer.GetButtonDown("ChooseSpell1")) {
-            inputStateSystem.current.ChooseSpell_1();
+            inputStateSystem.current.ChooseSpell(0);
         }
 		if (rewiredPlayer.GetButtonDown("ChooseSpell2")) {
-            inputStateSystem.current.ChooseSpell_2();
+            inputStateSystem.current.ChooseSpell(1);
         }
 		if (rewiredPlayer.GetButtonDown("ChooseSpell3")) {
-            inputStateSystem.current.ChooseSpell_3();
+            inputStateSystem.current.ChooseSpell(2);
         }
 
         //STEP 3
@@ -287,9 +325,6 @@ public class PlayerScript : NetworkBehaviour
 		if(rewiredPlayer.GetButtonDown("CastSpell"))
 		{
 			inputStateSystem.current.CastSpell();
-		}else if (rewiredPlayer.GetButtonUp("CastSpell"))
-		{
-		    inputStateSystem.current.ResolveSpell();
 		}
 
 		inputStateSystem.current.Move(movementInput);
@@ -315,7 +350,10 @@ public class PlayerScript : NetworkBehaviour
 
 		#endregion
 
-		lookDirection = Quaternion.AngleAxis(-yAim, transform.right) * transform.forward;
+        if(!healthScript.IsAlive())
+            animator.SetBool("isDead", true);
+
+        lookDirection = Quaternion.AngleAxis(-yAim, transform.right) * transform.forward;
  	}
 
 	/// <summary>
@@ -581,7 +619,7 @@ public class PlayerScript : NetworkBehaviour
 			float delta = - mRigidbody.velocity.y - fallingDamageThreshold;
 			float damage = delta * 3;
 			print("Falling Damage: "+damage);
-			healthScript.TakeDamage(damage);
+            healthScript.TakeFallDamage(damage);
 		}
 	}
 
@@ -654,33 +692,6 @@ public class PlayerScript : NetworkBehaviour
     }
 
     /// <summary>
-    /// method to move the client, even though client has authority over his position
-    /// </summary>
-    /// <param name="force"></param>
-    /// <param name="mode"></param>
-    [ClientRpc]
-    public void RpcAddForce(Vector3 force, int mode)
-    {
-        if (isLocalPlayer)
-        {
-            mRigidbody.AddForce(force, (ForceMode)mode);
-        }
-    }
-    /// <summary>
-    /// adds explosion force to player on server side - kinda
-    /// </summary>
-    /// <param name="force"></param>
-    /// <param name="mode"></param>
-    [ClientRpc]
-    public void RpcAddExplosionForce(float explosionForce, Vector3 explosionPosition, float explosionRadius)
-    {
-        if (isLocalPlayer)
-        {
-            mRigidbody.AddExplosionForce(explosionForce, explosionPosition, explosionRadius);
-        }
-    }
-
-    /// <summary>
     /// allows the server and thus the spells, to affect the players position
     /// </summary>
     /// <param name="vec3"></param>
@@ -708,24 +719,15 @@ public class PlayerScript : NetworkBehaviour
         /// <returns></returns>
         private IEnumerator CastRoutine(PlayerScript caster, float castDuration)
         {
-            yield return new WaitForSeconds(castDuration);
-            caster.RpcSetCastState(CastStateSystem.CastStateID.Holding);
-        }
+            //set caster in 'casting mode'
+            caster.RpcSetCastState(CastStateSystem.CastStateID.Resolving);
 
-        /// <summary>
-        /// activates the resolving animation, after the spell's resolveduration, takes the player to the normal state
-        /// </summary>
-        /// <param name="caster"></param>
-        /// <param name="resolveDuration"></param>
-        /// <returns></returns>
-        private IEnumerator ResolveRoutine(PlayerScript caster, float resolveDuration)
-        {
-            yield return new WaitForSeconds(resolveDuration);
+            yield return new WaitForSeconds(castDuration);
             //resolve the spell
             spell.Resolve(caster);
+
             //set caster in 'normal mode'
             caster.RpcSetCastState(CastStateSystem.CastStateID.Normal);
-            //idle animation is triggered automatically
         }
 
         /// <summary>
@@ -737,38 +739,9 @@ public class PlayerScript : NetworkBehaviour
 	    {
             if (cooldown <= 0)
             {
-                //set caster in 'casting mode'
-                caster.RpcSetCastState(CastStateSystem.CastStateID.Casting);
-
                 //start the switch to 'holding spell' animation after the castduration
                 caster.EnlistSpellRoutine(caster.StartCoroutine(CastRoutine(caster, spell.castDurationInSeconds)));
             }
-        }
-
-        /// <summary>
-        /// resolves the spell inside the slot
-        /// should only be called on the server!
-        /// </summary>
-        /// <param name="caster"></param>
-        public void Resolve(PlayerScript caster)
-        {
-            //if cast duration was met, resolve the spell - else cancel it
-            if (caster.castStateSystem.current.GetCastDurationCount() > spell.castDurationInSeconds)
-            {
-                //set caster in 'resolving mode'
-                caster.RpcSetCastState(CastStateSystem.CastStateID.Resolving);
-
-                //actually resolve the spell
-                caster.EnlistSpellRoutine(caster.StartCoroutine(ResolveRoutine(caster, spell.resolveDurationInSeconds)));
-            }
-            else
-            {
-                //trying to resolve before the castduration is met... cancel the spell...
-                caster.RpcSetCastState(CastStateSystem.CastStateID.Normal);
-            }
-
-            //rese the castDurationCount so we cant prematurely resolve spells
-            caster.castStateSystem.current.ResetCastDurationCount();
         }
 	}
 

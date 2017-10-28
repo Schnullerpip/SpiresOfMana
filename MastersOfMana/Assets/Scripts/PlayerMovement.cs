@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 
-public class PlayerMovement : NetworkBehaviour {
-
+public class PlayerMovement : NetworkBehaviour, IServerMoveable
+{
 	[Header("Movement")]
 	public float speed = 6;  
 	[Range(0,1)]
@@ -94,4 +94,69 @@ public class PlayerMovement : NetworkBehaviour {
 			}
 		}
 	}
+
+	/// <summary>
+	/// Let's the character jump with the default jumpStength
+	/// </summary>
+	public void Jump(bool onlyIfGrounded = true)
+	{
+		Jump(jumpStrength, onlyIfGrounded);
+	}
+
+	/// <summary>
+	/// Let's the character jump with a specified jumpStrength
+	/// </summary>
+	/// <SpellslotLambda name="jumpForce">Jump force.</SpellslotLambda>
+	public void Jump(float jumpStrength, bool onlyIfGrounded)
+	{
+		if(feet.IsGrounded() || !onlyIfGrounded)
+		{
+			mRigidbody.AddForce(Vector3.up * jumpStrength,ForceMode.VelocityChange);
+//			animator.SetTrigger("jump");
+		}
+	}
+
+	#region RPC
+
+	/// method to move the client, even though client has authority over his position
+	/// </summary>
+	/// <param name="force"></param>
+	/// <param name="mode"></param>
+	[ClientRpc]
+	public void RpcAddForce(Vector3 force, int mode)
+	{
+		if (isLocalPlayer)
+		{
+			mRigidbody.AddForce(force, (ForceMode)mode);
+		}
+	}
+
+	/// <summary>
+	/// adds explosion force to player on server side - kinda
+	/// </summary>
+	/// <param name="force"></param>
+	/// <param name="mode"></param>
+	[ClientRpc]
+	public void RpcAddExplosionForce(float explosionForce, Vector3 explosionPosition, float explosionRadius)
+	{
+		if (isLocalPlayer)
+		{
+			mRigidbody.AddExplosionForce(explosionForce, explosionPosition, explosionRadius);
+		}
+	}
+
+	[ClientRpc]
+	public void RpcAddForceAndUpdatePosition(Vector3 force, ForceMode mode, Vector3 newPosition)
+	{
+		mRigidbody.AddForce(force, mode);
+		mRigidbody.position = newPosition;
+	}
+
+	[ClientRpc]
+	public void RpcStopMotion()
+	{
+		mRigidbody.velocity = Vector3.zero;
+	}
+
+	#endregion
 }

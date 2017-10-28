@@ -102,7 +102,7 @@ public abstract class A_InputState : A_State{
 
     public virtual void Jump() 
 	{
-		player.Jump();
+		player.movement.Jump();
 	}
 
     public virtual void ChooseSpell(int idx)

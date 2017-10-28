@@ -206,6 +206,7 @@ GameObject:
   - component: {fileID: 114235553052326292}
   - component: {fileID: 54888276362292440}
   - component: {fileID: 114334208707171628}
+  - component: {fileID: 114111673754988668}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1826,6 +1827,25 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114111673754988668
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1285255658560174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8d2448b954ac4dddbdc8d27e600635f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 6
+  focusSpeedSlowdown: 0.25
+  jumpStrength: 5
+  additionalFallGravityMultiplier: 1
+  amountOfReverseSlowdown: 0.25
+  maxFullspeedAngle: 90
+  fallingDamageThreshold: 18
+  feet: {fileID: 114211396574403768}
 --- !u!114 &114211396574403768
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1925,15 +1945,7 @@ MonoBehaviour:
     cooldown: 0
   - spell: {fileID: 11400000, guid: 611a54db86ce0d947bd50c5a12f8aeb0, type: 2}
     cooldown: 0
-  speed: 6
-  focusSpeedSlowdown: 0.25
-  jumpStrength: 5
-  additionalFallGravityMultiplier: 1
-  amountOfReverseSlowdown: 0.25
-  maxFullspeedAngle: 90
-  fallingDamageThreshold: 18
-  moveInputForce: {x: 0, y: 0, z: 0}
-  feet: {fileID: 114211396574403768}
+  movement: {fileID: 114111673754988668}
   aimSpeed: 180
   aimAssistInUnits: 2
   focusAimSpeedFactor: 0.25
@@ -1944,6 +1956,7 @@ MonoBehaviour:
     type: 2}
   cameraRig: {fileID: 0}
   handTransform: {fileID: 4322715158737734}
+  mFocusActive: 0
   playerName: 
   healthScript: {fileID: 114581584314824656}
   animator: {fileID: 95637651589858840}

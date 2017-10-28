@@ -33,11 +33,11 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
 
 
         //check whether caster is airborn or grounded
-        if (!caster.feet.IsGrounded())
+        if (!caster.movement.feet.IsGrounded())
         {
             //set caster's state so he or she doesnt get falldamage
             caster.RpcSetEffectState(EffectStateSystem.EffectStateID.NoFallDamage);
-            caster.RpcAddForce(Vector3.down * 40.0f, (int)ForceMode.VelocityChange);
+            caster.movement.RpcAddForce(Vector3.down * 40.0f, (int)ForceMode.VelocityChange);
         }
     }
 
@@ -73,7 +73,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
                 {
                     if (ps != caster)
                     {
-                        ps.RpcAddExplosionForce(200.0f, caster.transform.position, explosionAmplitude);
+                        ps.movement.RpcAddExplosionForce(200.0f, caster.transform.position, explosionAmplitude);
                     }
                 }
                 else

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
 
 public class PlayerMovement : NetworkBehaviour {
@@ -17,22 +15,19 @@ public class PlayerMovement : NetworkBehaviour {
 	[Tooltip("At which angle does the player still move with fullspeed?")]
 	[Range(0.0f,180.0f)]
 	public int maxFullspeedAngle = 90;
+	[Tooltip("How many meters per second falling is considered too much?")]
 	public float fallingDamageThreshold = 18.0f;
 
-	private bool mIsFalling = false;
-
-	[HideInInspector]
-	public Vector3 moveInputForce;
 	public FeetCollider feet;
 
-	Vector3 moveInput;
-
+	private bool mIsFalling = false;
+	private Vector3 mMoveInput;
 	private bool mFocusActive;
 	private Rigidbody mRigidbody;
 
 	public void SetMoveInput(Vector3 input)
 	{
-		moveInput = input;
+		mMoveInput = input;
 	}
 
 	void Awake()
@@ -42,7 +37,7 @@ public class PlayerMovement : NetworkBehaviour {
 
 	void FixedUpdate()
 	{
-		Vector3 direction = moveInput * Time.deltaTime * speed * (mFocusActive ? focusSpeedSlowdown : 1);
+		Vector3 direction = mMoveInput * Time.deltaTime * speed * (mFocusActive ? focusSpeedSlowdown : 1);
 		Vector2 directionXZ = direction.xz();
 
 		//calculate the amount of slowdown, by comparing the direction with the forward vector of the character

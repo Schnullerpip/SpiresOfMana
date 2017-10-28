@@ -21,6 +21,11 @@ public class CastStateNormal : A_CastState{
         }
     }
 
+    public override void Update()
+    {
+        ReduceCooldowns();
+    }
+
     public override void Init()
     {
         player.FlushSpellroutines();

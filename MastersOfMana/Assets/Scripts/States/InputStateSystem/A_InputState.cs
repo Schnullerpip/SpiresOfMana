@@ -14,6 +14,74 @@ public abstract class A_InputState : A_State{
      * those are kept empty on purpose because they're ment to be implemented in the subclasses
      * implementations inside the abstract A_Spell should only describe default behaviour
      */
+
+    public override void Update()
+    {
+        //poll the input coming from rewired
+
+        //poll wheather a spell was chosen
+        if (player.GetRewired().GetButtonDown("ChooseSpell1")) {
+           ChooseSpell(0);
+        }
+		if (player.GetRewired().GetButtonDown("ChooseSpell2")) {
+            ChooseSpell(1);
+        }
+		if (player.GetRewired().GetButtonDown("ChooseSpell3")) {
+            ChooseSpell(2);
+        }
+
+
+
+
+		//store the input values
+		Vector2 movementInput = player.GetRewired().GetAxis2D("MoveHorizontal", "MoveVertical");
+		movementInput = Vector3.ClampMagnitude(movementInput,1);
+
+		if(player.GetRewired().GetButtonDown("ShoulderSwap"))
+		{
+			player.cameraRig.SwapShoulder();
+		}
+
+		//propergate various inputs to the statesystems
+		#region Input
+		if(player.GetRewired().GetButtonDown("Jump"))
+		{
+			Jump();
+		}
+
+
+		Move(movementInput);
+
+		//TODO: define mouse & keyboard / controller schemes, "CastSpell" not final axis name
+		if(player.GetRewired().GetButtonDown("CastSpell"))
+		{
+			CastSpell();
+		}
+
+		Move(movementInput);
+
+		if(player.GetRewired().GetButtonDown("Focus"))
+		{
+			StartFocus();
+		}
+
+		if(player.GetRewired().GetButtonUp("Focus"))
+		{
+			StopFocus();
+		}
+
+		//store the aim input, either mouse or right analog stick
+		Vector2 aimInput = player.GetRewired().GetAxis2D("AimHorizontal", "AimVertical");
+//		aimInput = Vector3.ClampMagnitude(aimInput,1); //TODO: delete maybe?
+
+		//take framerate into consideration
+		aimInput *= Time.deltaTime * player.aimSpeed * (player.mFocusActive ? player.focusAimSpeedFactor : 1);
+
+		Aim(aimInput);
+
+		#endregion
+    }
+
 	public virtual void Move(Vector2 input) { }
 
 	public virtual void Aim(Vector2 aimInput) 

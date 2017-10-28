@@ -103,9 +103,14 @@ public class PlayerScript : NetworkBehaviour, IServerMoveable
     public Transform handTransform;
 	private Vector3 mAimRefinement;
 
-	private bool mFocusActive = false;
+	public bool mFocusActive = false;
 	private Collider mFocusedTarget = null;
 	protected Rewired.Player rewiredPlayer;
+    public Rewired.Player GetRewired()
+    {
+        return rewiredPlayer;
+    }
+
     [SyncVar] public string playerName;
 
     public PlayerHealthScript healthScript;
@@ -272,83 +277,16 @@ public class PlayerScript : NetworkBehaviour, IServerMoveable
     // Update is called once per frame
     void Update () 
 	{
-        //Decrease the cooldown in the associated spellslots
-        castStateSystem.current.ReduceCooldowns();
-
-        //increase the castdurationcount (if the player is casting right now) -> indicates how long the player holds the cast button
-        castStateSystem.current.IncrementCastDuration();
-
 	    // Update only on the local player
 	    if (!isLocalPlayer)
 	    {
             return;
 	    }
 
-        //To be run on the clients
-
-        //STEP 2
-
-        if (rewiredPlayer.GetButtonDown("ChooseSpell1")) {
-            inputStateSystem.current.ChooseSpell(0);
-        }
-		if (rewiredPlayer.GetButtonDown("ChooseSpell2")) {
-            inputStateSystem.current.ChooseSpell(1);
-        }
-		if (rewiredPlayer.GetButtonDown("ChooseSpell3")) {
-            inputStateSystem.current.ChooseSpell(2);
-        }
-
-        //STEP 3
-
-        //STEP n
-
-		//store the input values
-		Vector2 movementInput = rewiredPlayer.GetAxis2D("MoveHorizontal", "MoveVertical");
-		movementInput = Vector3.ClampMagnitude(movementInput,1);
-
-		if(rewiredPlayer.GetButtonDown("ShoulderSwap"))
-		{
-			cameraRig.SwapShoulder();
-		}
-
-		//propergate various inputs to the statesystems
-		#region Input
-		if(rewiredPlayer.GetButtonDown("Jump"))
-		{
-			inputStateSystem.current.Jump();
-		}
-
-
-		inputStateSystem.current.Move(movementInput);
-
-		//TODO: define mouse & keyboard / controller schemes, "CastSpell" not final axis name
-		if(rewiredPlayer.GetButtonDown("CastSpell"))
-		{
-			inputStateSystem.current.CastSpell();
-		}
-
-		inputStateSystem.current.Move(movementInput);
-
-		if(rewiredPlayer.GetButtonDown("Focus"))
-		{
-			inputStateSystem.current.StartFocus();
-		}
-
-		if(rewiredPlayer.GetButtonUp("Focus"))
-		{
-			inputStateSystem.current.StopFocus();
-		}
-
-		//store the aim input, either mouse or right analog stick
-		Vector2 aimInput = rewiredPlayer.GetAxis2D("AimHorizontal", "AimVertical");
-//		aimInput = Vector3.ClampMagnitude(aimInput,1); //TODO: delete maybe?
-
-		//take framerate into consideration
-		aimInput *= Time.deltaTime * aimSpeed * (mFocusActive ? focusAimSpeedFactor : 1);
-
-		inputStateSystem.current.Aim(aimInput);
-
-		#endregion
+        //update the states
+        inputStateSystem.Update();
+        castStateSystem.Update();
+        effectStateSystem.Update();
 
         if(!healthScript.IsAlive())
             animator.SetBool("isDead", true);

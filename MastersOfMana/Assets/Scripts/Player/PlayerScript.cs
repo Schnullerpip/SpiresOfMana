@@ -211,6 +211,13 @@ public class PlayerScript : NetworkBehaviour, IServerMoveable
     }
 
     [ClientRpc]
+    public void RpcAddForceAndUpdatePosition(Vector3 force, ForceMode mode, Vector3 newPosition)
+    {
+        mRigidbody.AddForce(force, mode);
+        mRigidbody.position = newPosition;
+    }
+
+    [ClientRpc]
     public void RpcStopMotion()
     {
         mRigidbody.velocity = Vector3.zero;

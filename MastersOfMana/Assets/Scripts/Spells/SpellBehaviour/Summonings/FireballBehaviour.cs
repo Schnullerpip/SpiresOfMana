@@ -37,8 +37,8 @@ public class FireballBehaviour : A_ServerMoveableSummoning
             throw new MissingMemberException();
         }
 
-		col = GetComponentInChildren<Collider>();
-		col.enabled = false;
+        col = GetComponentInChildren<Collider>();
+        //col.enabled = false;
     }
 
     public override void Execute(PlayerScript caster)
@@ -80,13 +80,18 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 
     protected override void ExecuteTriggerEnter_Host(Collider collider)
     //protected override void ExecuteCollision_Host(Collision collision) 
-	{
+    {
+
+        if (collider.isTrigger)
+        {
+            return;
+        }
 
 		Vector3 directHitForce = mRigid.velocity;
 
 		mRigid.isKinematic = true;
 		StartCoroutine(ExplosionEffect());
-		col.enabled = false;
+		//col.enabled = false;
 
 		if(!isServer)
 		{

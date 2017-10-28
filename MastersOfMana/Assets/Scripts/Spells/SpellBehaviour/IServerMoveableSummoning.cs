@@ -12,10 +12,7 @@ public abstract class A_ServerMoveableSummoning : A_SummoningBehaviour, IServerM
     [ClientRpc]
     public void RpcAddForce(Vector3 force, int mode)
     {
-        if (isLocalPlayer)
-        {
-            mRigid.AddForce(force, (ForceMode)mode);
-        }
+        mRigid.AddForce(force, (ForceMode)mode);
     }
 
     /// <summary>
@@ -26,10 +23,14 @@ public abstract class A_ServerMoveableSummoning : A_SummoningBehaviour, IServerM
     [ClientRpc]
     public void RpcAddExplosionForce(float explosionForce, Vector3 explosionPosition, float explosionRadius)
     {
-        if (isLocalPlayer)
-        {
-            mRigid.AddExplosionForce(explosionForce, explosionPosition, explosionRadius);
-        }
+        mRigid.AddExplosionForce(explosionForce, explosionPosition, explosionRadius);
+    }
+
+    [ClientRpc]
+    public void RpcAddForceAndUpdatePosition(Vector3 force, ForceMode mode, Vector3 newPosition)
+    {
+        mRigid.AddForce(force, mode);
+        mRigid.position = newPosition;
     }
 
     [ClientRpc]

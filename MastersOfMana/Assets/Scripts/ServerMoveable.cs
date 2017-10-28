@@ -22,5 +22,8 @@ public interface IServerMoveable
     void RpcAddExplosionForce(float explosionForce, Vector3 explosionPosition, float explosionRadius);
 
     [ClientRpc]
+    void RpcAddForceAndUpdatePosition(Vector3 force, ForceMode mode, Vector3 newPosition);
+
+    [ClientRpc]
     void RpcStopMotion();
 }

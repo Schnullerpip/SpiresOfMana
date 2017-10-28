@@ -24,14 +24,23 @@ public class PlayerScript : NetworkBehaviour
 
     [SyncVar]
     private int mCurrentSpell;
-    public SpellSlot Currentspell()
+    public SpellSlot GetCurrentspell()
     {
         return spellslot[mCurrentSpell];
     }
 
-    public int CurrentspellslotID()
+    public int GetCurrentspellslotID()
     {
         return mCurrentSpell;
+    }
+
+    public void SetCurrentSpellslotID(int idx)
+    {
+        mCurrentSpell = idx;
+        if (mCurrentSpell > 2 || mCurrentSpell < 0)
+        {
+            mCurrentSpell = 0;
+        }
     }
 
     /// <summary>
@@ -176,21 +185,9 @@ public class PlayerScript : NetworkBehaviour
 
     //choosing a spell
     [Command]
-    public void CmdChooseSpellslot_1()
+    public void CmdChooseSpellslot(int idx)
     {
-        mCurrentSpell = 0;
-        RpcSetCastState(CastStateSystem.CastStateID.Normal);
-    }
-    [Command]
-    public void CmdChooseSpellslot_2()
-    {
-        mCurrentSpell = 1;
-        RpcSetCastState(CastStateSystem.CastStateID.Normal);
-    }
-    [Command]
-    public void CmdChooseSpellslot_3()
-    {
-        mCurrentSpell = 2;
+        mCurrentSpell = idx;
         RpcSetCastState(CastStateSystem.CastStateID.Normal);
     }
 
@@ -250,14 +247,15 @@ public class PlayerScript : NetworkBehaviour
         //To be run on the clients
 
         //STEP 2
+
         if (rewiredPlayer.GetButtonDown("ChooseSpell1")) {
-            inputStateSystem.current.ChooseSpell_1();
+            inputStateSystem.current.ChooseSpell(0);
         }
 		if (rewiredPlayer.GetButtonDown("ChooseSpell2")) {
-            inputStateSystem.current.ChooseSpell_2();
+            inputStateSystem.current.ChooseSpell(1);
         }
 		if (rewiredPlayer.GetButtonDown("ChooseSpell3")) {
-            inputStateSystem.current.ChooseSpell_3();
+            inputStateSystem.current.ChooseSpell(2);
         }
 
         //STEP 3

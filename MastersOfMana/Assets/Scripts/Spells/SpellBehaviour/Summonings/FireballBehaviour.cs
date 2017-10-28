@@ -66,11 +66,6 @@ public class FireballBehaviour : A_SummoningBehaviour
 		fb.Disappear();
     }
 
-	void Update()
-	{
-		mRigid.velocity += new Vector3(Mathf.Sin(Time.time*3) * 4,0,0);
-	}
-
 	void Reset (Vector3 pos, Quaternion rot)
 	{
 		transform.position = pos;

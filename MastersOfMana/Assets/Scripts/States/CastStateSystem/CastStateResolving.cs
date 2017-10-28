@@ -9,7 +9,7 @@ public class CastStateResolving : A_CastState {
     public override void Init()
     {
         //set the cooldown of the current spellslot
-        player.Currentspell().cooldown = player.Currentspell().spell.coolDownInSeconds;
+        player.GetCurrentspell().cooldown = player.GetCurrentspell().spell.coolDownInSeconds;
 
         var anim = player.animator;
 

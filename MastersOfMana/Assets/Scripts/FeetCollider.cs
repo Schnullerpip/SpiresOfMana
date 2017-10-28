@@ -61,14 +61,6 @@ public class FeetCollider : MonoBehaviour
 
 	void FixedUpdate()
 	{
-		PhysicsUpdate();
-	}
-
-	/// <summary>
-	/// Clears certain flags and validates if the ground was really touched since the last PhysicsUpdate(). This method should be called once per FixecUpdate()
-	/// </summary>
-	public void PhysicsUpdate()
-	{
 		//make some extra checks (only if the terrain is not flat enough for the spherecollider)
 		mContactThisFrame = mContactThisFrame || CheckWithTolerance();
 

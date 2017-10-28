@@ -31,6 +31,11 @@ public class CastStateSystem
         current = states[0];
     }
 
+    public void Update()
+    {
+        current.Update();
+    }
+
     public A_CastState GetState(CastStateID idx)
     {
         return states[(int)idx];

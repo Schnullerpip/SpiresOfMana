@@ -109,7 +109,7 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 					Vector3 force = c.attachedRigidbody.transform.TransformPoint(c.attachedRigidbody.centerOfMass) - mRigid.position; 
 					force.Normalize();
 					force *= explosionForce;
-					ps.RpcAddForce(force, (int)ForceMode.VelocityChange);
+					ps.movement.RpcAddForce(force, (int)ForceMode.VelocityChange);
 
 			    }
 			    else

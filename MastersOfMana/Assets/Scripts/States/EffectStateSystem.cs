@@ -34,6 +34,11 @@ public class EffectStateSystem
         current = states[0];
     }
 
+    public void Update()
+    {
+        current.Update();
+    }
+
     public A_EffectState GetState(EffectStateID idx)
     {
         return states[(int)idx];

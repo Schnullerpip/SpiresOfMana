@@ -68,7 +68,10 @@ public abstract class A_SummoningBehaviour : A_SpellBehaviour {
 
     public void OnTriggerEnter(Collider other)
     {
-        ExecuteTriggerEnter_Host(other);
+        if (isServer)
+        {
+            ExecuteTriggerEnter_Host(other);
+        }
     }
 
     /// <summary>

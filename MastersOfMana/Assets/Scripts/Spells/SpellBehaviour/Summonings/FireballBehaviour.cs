@@ -8,7 +8,7 @@ using System.Collections.Generic;
 /// The specific behaviour of the fireball, that is manifested in the scene
 /// </summary>
 [RequireComponent(typeof(Rigidbody))]
-public class FireballBehaviour : A_SummoningBehaviour
+public class FireballBehaviour : A_ServerMoveableSummoning
 {
     [SerializeField]
     private float mSpeed = 5.0f;
@@ -37,8 +37,8 @@ public class FireballBehaviour : A_SummoningBehaviour
             throw new MissingMemberException();
         }
 
-		col = GetComponentInChildren<Collider>();
-		col.enabled = false;
+        col = GetComponentInChildren<Collider>();
+        //col.enabled = false;
     }
 
     public override void Execute(PlayerScript caster)
@@ -80,12 +80,18 @@ public class FireballBehaviour : A_SummoningBehaviour
 
     protected override void ExecuteTriggerEnter_Host(Collider collider)
     //protected override void ExecuteCollision_Host(Collision collision) 
-	{
+    {
+
+        if (collider.isTrigger)
+        {
+            return;
+        }
+
 		Vector3 directHitForce = mRigid.velocity;
 
 		mRigid.isKinematic = true;
 		StartCoroutine(ExplosionEffect());
-		col.enabled = false;
+		//col.enabled = false;
 
 		if(!isServer)
 		{
@@ -155,6 +161,9 @@ public class FireballBehaviour : A_SummoningBehaviour
 
 				}
 			}
+
+            mRigid.velocity = Vector3.zero;
+            RpcStopMotion();
 		}
     }
 

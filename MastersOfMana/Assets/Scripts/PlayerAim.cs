@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
+[DisallowMultipleComponent]
 public class PlayerAim : NetworkBehaviour {
 
 	[Header("Aim")]
@@ -24,6 +25,28 @@ public class PlayerAim : NetworkBehaviour {
 	private Vector3 mAimRefinement;
 	private bool mFocusActive = false;
 	private Collider mFocusedTarget = null;
+
+	void Awake()
+	{
+		lookDirection = transform.forward;
+	}
+
+	void OnDisable()
+	{
+		// Fix issue with LateUpdate on camera referencing the player
+		if(cameraRig != null)
+		{
+			cameraRig.gameObject.SetActive(false);
+		}
+	}
+
+	void Update()
+	{
+		if(isLocalPlayer)
+		{
+			lookDirection = Quaternion.AngleAxis(-yAngle, transform.right) * transform.forward;
+		}
+	}
 
 	/// <summary>
 	/// Determines whether this instance has a focus target.
@@ -61,6 +84,8 @@ public class PlayerAim : NetworkBehaviour {
 	/// <param name="aimMovement">Aim movement.</param>
 	public void Aim (Vector2 aimMovement)
 	{
+		aimMovement *= Time.deltaTime * aimSpeed * (mFocusActive ? focusAimSpeedFactor : 1);
+
 		//rotate the entire player along its y-axis
 		transform.Rotate (0, aimMovement.x, 0);
 		//prevent spinning around the z-Axis (no backflips allowed)
@@ -73,6 +98,8 @@ public class PlayerAim : NetworkBehaviour {
 	/// <param name="aimInput">Aim input.</param>
 	public void RefineAim (Vector2 aimInput, Rewired.ControllerType controllerType)
 	{
+		aimInput *= Time.deltaTime * aimSpeed * (mFocusActive ? focusAimSpeedFactor : 1);
+
 		//convert from local to worldspace and reduces the input by pi/2 since it was parameterized for angular movement of player
 		mAimRefinement += transform.TransformDirection (aimInput) / Mathf.PI * .5f;
 		mAimRefinement = Vector3.ClampMagnitude (mAimRefinement, maxAimRefinementMagnitude);

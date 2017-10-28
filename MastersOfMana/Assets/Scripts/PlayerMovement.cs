@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 
+[RequireComponent(typeof(Rigidbody))]
+[DisallowMultipleComponent]
 public class PlayerMovement : NetworkBehaviour, IServerMoveable
 {
 	[Header("Movement")]

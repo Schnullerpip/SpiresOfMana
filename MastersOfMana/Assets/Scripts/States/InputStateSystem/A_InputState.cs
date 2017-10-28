@@ -39,7 +39,7 @@ public abstract class A_InputState : A_State{
 
 		if(player.GetRewired().GetButtonDown("ShoulderSwap"))
 		{
-			player.cameraRig.SwapShoulder();
+			player.aim.cameraRig.SwapShoulder();
 		}
 
 		//propergate various inputs to the statesystems
@@ -74,9 +74,6 @@ public abstract class A_InputState : A_State{
 		Vector2 aimInput = player.GetRewired().GetAxis2D("AimHorizontal", "AimVertical");
 //		aimInput = Vector3.ClampMagnitude(aimInput,1); //TODO: delete maybe?
 
-		//take framerate into consideration
-		aimInput *= Time.deltaTime * player.aimSpeed * (player.mFocusActive ? player.focusAimSpeedFactor : 1);
-
 		Aim(aimInput);
 
 		#endregion
@@ -86,17 +83,18 @@ public abstract class A_InputState : A_State{
 
 	public virtual void Aim(Vector2 aimInput) 
 	{
-		player.ValidateFocusTargetView();
+		player.aim.ValidateFocusTargetView();
 
-		if(player.HasFocusTarget())
+		if(player.aim.HasFocusTarget())
 		{
-			player.RefineAim(aimInput);
-			player.RotateTowardsFocusTarget();
+			//TODO: get actual rewired controller type
+			player.aim.RefineAim(aimInput, Rewired.ControllerType.Mouse);
+			player.aim.RotateTowardsFocusTarget();
 		}
 		else
 		{
-			player.ResetRefinement();
-			player.Aim(aimInput);
+			player.aim.ResetRefinement();
+			player.aim.Aim(aimInput);
 		}
 	}
 
@@ -119,11 +117,11 @@ public abstract class A_InputState : A_State{
 
 	public virtual void StartFocus()
 	{
-		player.StartFocus();
+		player.aim.StartFocus();
 	}
 
 	public virtual void StopFocus()
 	{
-		player.StopFocus();
+		player.aim.StopFocus();
 	}
 }

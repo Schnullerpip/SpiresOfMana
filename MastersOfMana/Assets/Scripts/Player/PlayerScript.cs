@@ -10,12 +10,13 @@ using UnityEngine.Networking;
 /// <summary>
 /// Defines the basic properties for a player
 /// </summary>
-public class PlayerScript : NetworkBehaviour
+public class PlayerScript : NetworkBehaviour, IServerMoveable
 {
     //member
     public InputStateSystem inputStateSystem;
     public EffectStateSystem effectStateSystem;
     public CastStateSystem castStateSystem;
+    public Rigidbody mRigidbody;
 
     //spellslots
     public SpellSlot[] spellslot = new SpellSlot[3];
@@ -103,7 +104,6 @@ public class PlayerScript : NetworkBehaviour
 	private Vector3 mAimRefinement;
 
 	private bool mFocusActive = false;
-	private Rigidbody mRigidbody;
 	private Collider mFocusedTarget = null;
 	protected Rewired.Player rewiredPlayer;
     [SyncVar] public string playerName;
@@ -130,8 +130,8 @@ public class PlayerScript : NetworkBehaviour
     }
 
     // Use this for initialization
-    void Start ()
-	{
+    public void Start()
+    {
         //initialize the statesystems
         inputStateSystem = new InputStateSystem(this);
         effectStateSystem = new EffectStateSystem(this);
@@ -140,8 +140,8 @@ public class PlayerScript : NetworkBehaviour
         //initialize Inpur handler
 	    rewiredPlayer = ReInput.players.GetPlayer(0);
 
-		mRigidbody = GetComponent<Rigidbody>();
         healthScript = GetComponent<PlayerHealthScript>();
+        mRigidbody = GetComponent<Rigidbody>();
 
         //set the currently chosen spell to a default
 	    mCurrentSpell = 0;
@@ -181,6 +181,39 @@ public class PlayerScript : NetworkBehaviour
     public void RpcSetEffectState(EffectStateSystem.EffectStateID id)
     {
         effectStateSystem.SetState(id);
+    }
+
+    /// method to move the client, even though client has authority over his position
+    /// </summary>
+    /// <param name="force"></param>
+    /// <param name="mode"></param>
+    [ClientRpc]
+    public void RpcAddForce(Vector3 force, int mode)
+    {
+        if (isLocalPlayer)
+        {
+            mRigidbody.AddForce(force, (ForceMode)mode);
+        }
+    }
+
+    /// <summary>
+    /// adds explosion force to player on server side - kinda
+    /// </summary>
+    /// <param name="force"></param>
+    /// <param name="mode"></param>
+    [ClientRpc]
+    public void RpcAddExplosionForce(float explosionForce, Vector3 explosionPosition, float explosionRadius)
+    {
+        if (isLocalPlayer)
+        {
+            mRigidbody.AddExplosionForce(explosionForce, explosionPosition, explosionRadius);
+        }
+    }
+
+    [ClientRpc]
+    public void RpcStopMotion()
+    {
+        mRigidbody.velocity = Vector3.zero;
     }
 
     //choosing a spell
@@ -649,33 +682,6 @@ public class PlayerScript : NetworkBehaviour
     public void RpcUpdateSpells(int spell1, int spell2, int spell3)
     {
         UpdateSpells(spell1, spell2, spell3);
-    }
-
-    /// <summary>
-    /// method to move the client, even though client has authority over his position
-    /// </summary>
-    /// <param name="force"></param>
-    /// <param name="mode"></param>
-    [ClientRpc]
-    public void RpcAddForce(Vector3 force, int mode)
-    {
-        if (isLocalPlayer)
-        {
-            mRigidbody.AddForce(force, (ForceMode)mode);
-        }
-    }
-    /// <summary>
-    /// adds explosion force to player on server side - kinda
-    /// </summary>
-    /// <param name="force"></param>
-    /// <param name="mode"></param>
-    [ClientRpc]
-    public void RpcAddExplosionForce(float explosionForce, Vector3 explosionPosition, float explosionRadius)
-    {
-        if (isLocalPlayer)
-        {
-            mRigidbody.AddExplosionForce(explosionForce, explosionPosition, explosionRadius);
-        }
     }
 
     /// <summary>

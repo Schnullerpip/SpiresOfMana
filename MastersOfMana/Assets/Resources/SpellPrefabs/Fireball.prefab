@@ -363,7 +363,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d2a178920f848f408293de5ac73fcc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mSpeed: 4
+  mSpeed: 50
   mDamage: 10
   ballMesh: {fileID: 1270298685971524}
   explosion: {fileID: 1232424146753718}
@@ -389,11 +389,11 @@ MonoBehaviour:
   m_SyncRotationAxis: 7
   m_RotationSyncCompression: 0
   m_SyncSpin: 0
-  m_MovementTheshold: 9000
+  m_MovementTheshold: 0.001
   m_VelocityThreshold: 0.0001
-  m_SnapThreshold: 7
+  m_SnapThreshold: 5
   m_InterpolateRotation: 1
-  m_InterpolateMovement: 0
+  m_InterpolateMovement: 1
 --- !u!135 &135798414850372354
 SphereCollider:
   m_ObjectHideFlags: 1

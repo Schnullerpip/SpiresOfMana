@@ -45,7 +45,7 @@ public class SpellHUD : MonoBehaviour
         spellIcons[2].sprite = localPlayer.spellslot[2].spell.icon;
 
         //set selected spell
-        displayedCurrentSpell = localPlayer.CurrentspellslotID();
+        displayedCurrentSpell = localPlayer.GetCurrentspellslotID();
         spellHighlights[displayedCurrentSpell].GetComponent<Image>().enabled = true;
         canvas = GetComponentInParent<Canvas>();
         canvas.enabled = true;

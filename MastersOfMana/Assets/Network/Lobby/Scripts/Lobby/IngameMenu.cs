@@ -9,7 +9,7 @@ public class IngameMenu : MonoBehaviour {
 
 	public UnityEngine.UI.Selectable defaultSelected;
 
-	private bool mIsMenuActive = false;
+	public bool mIsMenuActive = false;
 
 	public bool GetIsMenuActive()
 	{

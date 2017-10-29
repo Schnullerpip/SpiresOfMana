@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 /// <summary>
 /// This components follows a transform with a certain amount of damping.
 /// </summary>
-public class PlayerCamera : NetworkBehaviour {
+public class PlayerCamera : MonoBehaviour {
 
 	public Transform joint;
 	public PlayerScript followTarget;

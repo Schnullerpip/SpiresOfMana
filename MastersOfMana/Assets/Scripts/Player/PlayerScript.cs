@@ -7,6 +7,7 @@ using UnityEngine.Networking;
 
 [RequireComponent(typeof(PlayerHealthScript))]
 [RequireComponent(typeof(ServerMoveable))]
+[RequireComponent(typeof(PlayerSpells))]
 /// <summary>
 /// Defines the basic properties for a player
 /// </summary>
@@ -18,54 +19,18 @@ public class PlayerScript : NetworkBehaviour
     public CastStateSystem castStateSystem;
     public Rigidbody mRigidbody;
 
-    //spellslots
-    public SpellSlot[] spellslot = new SpellSlot[3];
 
     //the cached instance of the ServerMoveable script, that allows the server to apply forces to a player
     public ServerMoveable serverMoveable;
 
-    //references the currently chosen spell, among the three available spellslots
+    //the cached instance of the spell component, that holds all relevant spell information
+    private PlayerSpells mPlayerSpells;
 
-    [SyncVar]
-    private int mCurrentSpell;
-    public SpellSlot GetCurrentspell()
+    public PlayerSpells GetPlayerSpells()
     {
-        return spellslot[mCurrentSpell];
+        return mPlayerSpells;
     }
 
-    public int GetCurrentspellslotID()
-    {
-        return mCurrentSpell;
-    }
-
-    public void SetCurrentSpellslotID(int idx)
-    {
-        mCurrentSpell = idx;
-        if (mCurrentSpell > 2 || mCurrentSpell < 0)
-        {
-            mCurrentSpell = 0;
-        }
-    }
-
-    /// <summary>
-    /// holds references to all the coroutines a spell is running, so they can bes stopped/interrupted w4hen a player is for example hit
-    /// and can therefore not continue to cast the spell
-    /// </summary>
-    private List<Coroutine> mSpellRoutines = new List<Coroutine>();
-
-    public void EnlistSpellRoutine(Coroutine spellRoutine)
-    {
-        mSpellRoutines.Add(spellRoutine);
-    }
-
-    public void FlushSpellroutines()
-    {
-        for (int i = 0; i < mSpellRoutines.Count; ++i)
-        {
-            StopCoroutine(mSpellRoutines[i]);
-        }
-        mSpellRoutines = new List<Coroutine>();
-    }
 
 	[Header("Movement")][SyncVar]
 	public float speed = 4;  
@@ -126,6 +91,8 @@ public class PlayerScript : NetworkBehaviour
 	{
         lookDirection = transform.forward;
 		feet.onLanding += Landing;
+
+        mPlayerSpells = GetComponent<PlayerSpells>();
     }
 
     private void OnDisable()
@@ -151,8 +118,6 @@ public class PlayerScript : NetworkBehaviour
         healthScript = GetComponent<PlayerHealthScript>();
         mRigidbody = GetComponent<Rigidbody>();
 
-        //set the currently chosen spell to a default
-	    mCurrentSpell = 0;
 
         //cache the servermoveable instance
         serverMoveable = GetComponent<ServerMoveable>();
@@ -194,20 +159,6 @@ public class PlayerScript : NetworkBehaviour
         effectStateSystem.SetState(id);
     }
 
-    //choosing a spell
-    [Command]
-    public void CmdChooseSpellslot(int idx)
-    {
-        mCurrentSpell = idx;
-        RpcSetCastState(CastStateSystem.CastStateID.Normal);
-    }
-
-    //casting the chosen spell
-    [Command]
-    public void CmdCastSpell()
-    {
-        spellslot[mCurrentSpell].Cast(this);
-    }
 
     /// <summary>
     /// the direction the player aims during a cast (this field only is valid, during a cast routine, on the server!
@@ -229,16 +180,6 @@ public class PlayerScript : NetworkBehaviour
     }
 
 
-    //resolving the chosen spell
-    [Command]
-    public void CmdResolveSpell(Vector3 aimDirection, Vector3 CameraPostion, Vector3 CameraLookDirection)
-    {
-        mAimDirection = aimDirection;
-        mCameraPosition = CameraPostion;
-        mCameraLookdirection = CameraLookDirection;
-
-        spellslot[mCurrentSpell].Cast(this);
-    }
 
     // Update is called once per frame
     void Update () 
@@ -582,9 +523,9 @@ public class PlayerScript : NetworkBehaviour
             SpellRegistry spellregistry = NetworkManager.mainMenu.spellSelectionPanel.GetComponent<SpellSelectionPanel>().spellregistry;
             if (spellregistry)
             {
-                spellslot[0].spell = spellregistry.GetSpellByID(spell1);
-                spellslot[1].spell = spellregistry.GetSpellByID(spell2);
-                spellslot[2].spell = spellregistry.GetSpellByID(spell3);
+                mPlayerSpells.spellslot[0].spell = spellregistry.GetSpellByID(spell1);
+                mPlayerSpells.spellslot[1].spell = spellregistry.GetSpellByID(spell2);
+                mPlayerSpells.spellslot[2].spell = spellregistry.GetSpellByID(spell3);
             }
         }
     }
@@ -601,6 +542,24 @@ public class PlayerScript : NetworkBehaviour
         UpdateSpells(spell1, spell2, spell3);
     }
 
+    //casting the chosen spell
+    [Command]
+    public void CmdCastSpell()
+    {
+        mPlayerSpells.spellslot[mPlayerSpells.currentSpell].Cast(this);
+    }
+
+    //resolving the chosen spell
+    [Command]
+    public void CmdResolveSpell(Vector3 aimDirection, Vector3 CameraPostion, Vector3 CameraLookDirection)
+    {
+        mAimDirection = aimDirection;
+        mCameraPosition = CameraPostion;
+        mCameraLookdirection = CameraLookDirection;
+
+        mPlayerSpells.spellslot[mPlayerSpells.currentSpell].Cast(this);
+    }
+
     /// <summary>
     /// allows the server and thus the spells, to affect the players position
     /// </summary>
@@ -611,49 +570,6 @@ public class PlayerScript : NetworkBehaviour
         this.transform.position = vec3;
     }
 
-    //useful asstes for the PlayerScript
-
-    /// <summary>
-    /// Simple Datacontainer (inner class) for a Pair of Spell and cooldown
-    /// </summary>
-    [System.Serializable]
-	public class SpellSlot {
-		public A_Spell spell;
-		public float cooldown;
-
-        /// <summary>
-        /// activates the casting animation, after the spells castduration it activates the 'holding spell' animation
-        /// </summary>
-        /// <param name="caster"></param>
-        /// <param name="castDuration"></param>
-        /// <returns></returns>
-        private IEnumerator CastRoutine(PlayerScript caster, float castDuration)
-        {
-            //set caster in 'casting mode'
-            caster.RpcSetCastState(CastStateSystem.CastStateID.Resolving);
-
-            yield return new WaitForSeconds(castDuration);
-            //resolve the spell
-            spell.Resolve(caster);
-
-            //set caster in 'normal mode'
-            caster.RpcSetCastState(CastStateSystem.CastStateID.Normal);
-        }
-
-        /// <summary>
-        /// casts the spell inside the slot and also adjusts the cooldown accordingly
-        /// This automatically assumes, that the overlaying PlayerScript's update routine decreases the spellslot's cooldown continuously
-        /// This should only be called on the server!!
-        /// </summary>
-	    public void Cast(PlayerScript caster)
-	    {
-            if (cooldown <= 0)
-            {
-                //start the switch to 'holding spell' animation after the castduration
-                caster.EnlistSpellRoutine(caster.StartCoroutine(CastRoutine(caster, spell.castDurationInSeconds)));
-            }
-        }
-	}
 
 	//get default parameters
     void Reset()

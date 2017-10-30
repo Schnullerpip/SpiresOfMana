@@ -107,8 +107,8 @@ public abstract class A_InputState : A_State{
 
     public virtual void ChooseSpell(int idx)
     {
-        player.SetCurrentSpellslotID(idx);
-        player.CmdChooseSpellslot(idx);
+        player.GetPlayerSpells().SetCurrentSpellslotID(idx);
+        player.GetPlayerSpells().CmdChooseSpellslot(idx);
     }
 
     //casting the chosen spell

@@ -103,10 +103,13 @@ public class FireballBehaviour : A_ServerMoveableSummoning
         {
             directHit.TakeDamage(mDamage);
 
-			directHitForce.Normalize();
-			directHitForce *= explosionForce;
-
-			directHit.GetComponent<PlayerScript>().movement.RpcAddForce(directHitForce, (int)ForceMode.VelocityChange);
+            PlayerScript player = directHit.GetComponent<PlayerScript>();
+            if (player)
+            {
+                directHitForce.Normalize();
+                directHitForce *= explosionForce;
+                player.movement.RpcAddForce(directHitForce, (int)ForceMode.VelocityChange);
+            }
         }
 
 		Collider[] colliders = Physics.OverlapSphere(mRigid.position,explosionRadius);

@@ -24,8 +24,9 @@ GameObject:
   - component: {fileID: 114865154224641114}
   - component: {fileID: 65994798037195866}
   - component: {fileID: 65341144972587894}
-  - component: {fileID: 114662051239829704}
-  - component: {fileID: 114741948251824584}
+  - component: {fileID: 114509025285551534}
+  - component: {fileID: 114733982387695080}
+  - component: {fileID: 114608471364482488}
   m_Layer: 0
   m_Name: LavaFloor
   m_TagString: Untagged
@@ -109,7 +110,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 10, y: 2.220446e-16, z: 10}
   m_Center: {x: 0, y: -1.3, z: 0}
---- !u!114 &114662051239829704
+--- !u!114 &114509025285551534
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -121,7 +122,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SceneId:
-    m_Value: 0
+    m_Value: 3
   m_AssetId:
     i0: 161
     i1: 126
@@ -141,7 +142,7 @@ MonoBehaviour:
     i15: 251
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
---- !u!114 &114741948251824584
+--- !u!114 &114608471364482488
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -155,6 +156,27 @@ MonoBehaviour:
   m_TransformSyncMode: 1
   m_SendInterval: 0.1
   m_SyncRotationAxis: 0
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_VelocityThreshold: 0.0001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
+--- !u!114 &114733982387695080
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1305568902638960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 7
   m_RotationSyncCompression: 0
   m_SyncSpin: 0
   m_MovementTheshold: 0.001
@@ -182,9 +204,9 @@ MonoBehaviour:
     - serializedVersion: 2
       time: 0.19808237
       value: 0.00021839887
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
+      inSlope: 1.3589783
+      outSlope: 1.3589783
+      tangentMode: 0
     - serializedVersion: 2
       time: 0.39910477
       value: 0.49964082

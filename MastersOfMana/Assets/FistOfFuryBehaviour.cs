@@ -43,9 +43,6 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
 
     protected override void ExecuteTriggerEnter_Host(Collider collider)
     {
-        print("inside triggerenter");
-        //set state to superherolanding TODO
-
         //spawn an explosion
         GameObject go = PoolRegistry.ExplosionPool.Get();
         go.transform.position = caster.transform.position/* + caster.transform.forward * 5*/;
@@ -70,7 +67,6 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
             Rigidbody rigid = colliders[i].attachedRigidbody;
             if (rigid)
             {
-                print("[FistOfFuryBehaviour]::ExecuteTriggerEnter_host - " + colliders[i].attachedRigidbody.gameObject.name);
                 //TODO exchange magic numbers with good stuff... 
                 PlayerScript ps = colliders[i].attachedRigidbody.GetComponent<PlayerScript>();
                 if (ps)

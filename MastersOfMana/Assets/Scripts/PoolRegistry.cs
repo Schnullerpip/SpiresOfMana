@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class PoolRegistry : MonoBehaviour {
+public class PoolRegistry : NetworkBehaviour {
 
     public static Pool
 		EarthwallPool,
@@ -14,7 +15,10 @@ public class PoolRegistry : MonoBehaviour {
 
     public void Start()
     {
-        GameManager.instance.Go();
+        if (isServer)
+        {
+            GameManager.instance.Go();
+        }
     }
 
     // Use this for initialization

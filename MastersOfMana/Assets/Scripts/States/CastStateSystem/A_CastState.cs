@@ -54,13 +54,7 @@ public abstract class A_CastState : A_State{
     /// <summary>
     /// will invoke the spell that is maped at spellslot 1
     /// </summary>
-    public virtual void CastCmdSpell() {}
-
-
-    /// <summary>
-    /// will resolve the spell that is maped at spellslot 1
-    /// </summary>
-    public virtual void ResolveCmdSpell()
+    public virtual void CastCmdSpell()
     {
         player.CmdResolveSpell(CalculateAimDirection(), player.cameraRig.GetCamera().transform.position, player.cameraRig.GetCamera().transform.forward);
     }

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 /// The specific behaviour of the fireball, that is manifested in the scene
 /// </summary>
 [RequireComponent(typeof(Rigidbody))]
-public class FireballBehaviour : A_SummoningBehaviour
+public class FireballBehaviour : A_ServerMoveableSummoning
 {
     [SerializeField]
     private float mSpeed = 5.0f;
@@ -22,7 +22,11 @@ public class FireballBehaviour : A_SummoningBehaviour
 	public float explosionForce = 5;
 	public float explosionDamage = 5.0f;
 
+	public TrailRenderer trail;
+
 	private Collider col;
+
+	public float disappearTimer = 3;
 
     public override void Awake()
     {
@@ -33,8 +37,8 @@ public class FireballBehaviour : A_SummoningBehaviour
             throw new MissingMemberException();
         }
 
-		col = GetComponentInChildren<Collider>();
-		col.enabled = false;
+        col = GetComponentInChildren<Collider>();
+        //col.enabled = false;
     }
 
     public override void Execute(PlayerScript caster)
@@ -42,23 +46,24 @@ public class FireballBehaviour : A_SummoningBehaviour
         //Get a fireballinstance out of the pool
         GameObject fireball = PoolRegistry.FireballPool.Get();
 		FireballBehaviour fb = fireball.GetComponent<FireballBehaviour>();
-
-       
+		       
         //now activate it, so no weird interpolation errors occcure
         //TODO delete this eventually - RPCs are just too slow
         //fireball.GetComponent<A_SummoningBehaviour>().RpcSetActive(true);
         fireball.SetActive(true);
-
-
-        //create an instance of this fireball on the client's machine
-        NetworkServer.Spawn(fireball, PoolRegistry.FireballPool.assetID);
+		fb.trail.Clear();
 
 		//position the fireball to 'spawn' at the casters hand, including an offset so it does not collide instantly with the hand
 		fb.Reset(caster.handTransform.position + caster.GetAimDirection() * 1.5f, caster.transform.rotation);
 		//speed up the fireball to fly into the lookdirection of the player
 		fb.mRigid.velocity = caster.GetAimDirection() * mSpeed;
 
+        //create an instance of this fireball on the client's machine
+        NetworkServer.Spawn(fireball, PoolRegistry.FireballPool.assetID);
 
+		fb.RpcActivateExplosionMesh(false);
+
+		fb.Disappear();
     }
 
 	void Reset (Vector3 pos, Quaternion rot)
@@ -69,25 +74,39 @@ public class FireballBehaviour : A_SummoningBehaviour
 		mRigid.Reset();
 		mRigid.isKinematic = false;
 		col.enabled = true;
-
-		RpcActivateExplosionMesh(false);
 	}
+		
+    protected override void ExecuteCollision_Host(Collision collision) {}
 
-    protected override void ExecuteCollision_Host(Collision collision) 
-	{
+    protected override void ExecuteTriggerEnter_Host(Collider collider)
+    //protected override void ExecuteCollision_Host(Collision collision) 
+    {
+
+        if (collider.isTrigger)
+        {
+            return;
+        }
+
+		Vector3 directHitForce = mRigid.velocity;
+
 		mRigid.isKinematic = true;
 		StartCoroutine(ExplosionEffect());
-		col.enabled = false;
+		//col.enabled = false;
 
 		if(!isServer)
 		{
 			return;
 		}
 
-		HealthScript directHit = collision.gameObject.GetComponentInParent<HealthScript>();
+		HealthScript directHit = collider.gameObject.GetComponentInParent<HealthScript>();
         if (directHit)
         {
             directHit.TakeDamage(mDamage);
+
+			directHitForce.Normalize();
+			directHitForce *= explosionForce;
+
+			directHit.GetComponent<PlayerScript>().RpcAddForce(directHitForce, (int)ForceMode.VelocityChange);
         }
 
 		Collider[] colliders = Physics.OverlapSphere(mRigid.position,explosionRadius);
@@ -98,7 +117,15 @@ public class FireballBehaviour : A_SummoningBehaviour
 
 		foreach(Collider c in colliders)
 		{
+
 			HealthScript health = c.GetComponentInParent<HealthScript>();
+
+			if(health && health == directHit)
+			{
+				//took already damage and got a force
+				continue;
+			}
+
 			if(health && health != directHit && !cachedHealthScripts.Contains(health))
 			{
 				health.TakeDamage(explosionDamage);
@@ -134,6 +161,9 @@ public class FireballBehaviour : A_SummoningBehaviour
 
 				}
 			}
+
+            mRigid.velocity = Vector3.zero;
+            RpcStopMotion();
 		}
     }
 
@@ -143,6 +173,7 @@ public class FireballBehaviour : A_SummoningBehaviour
 		yield return new WaitForSeconds(explosionTime);
 
 		PreventInterpolationIssues();
+
 		gameObject.SetActive(false);
 		NetworkServer.UnSpawn(gameObject);
 	}
@@ -153,6 +184,20 @@ public class FireballBehaviour : A_SummoningBehaviour
 		explosion.SetActive(explosionState);
 		ballMesh.SetActive(!explosionState);
 	}
+		
+	public void Disappear()
+	{
+		StartCoroutine(Done());
+	}
+
+	public IEnumerator Done()
+	{
+		yield return new WaitForSeconds(disappearTimer);
+
+		gameObject.SetActive(false);
+		NetworkServer.UnSpawn(gameObject);
+	}
+
 
 	void OnValidate()
 	{

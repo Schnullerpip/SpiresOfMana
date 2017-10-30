@@ -18,10 +18,7 @@ public class LavaFloor : NetworkBehaviour
     {
         startHeight = transform.position.y;
         //inward.Play();
-    }
-
-    public void OnCollisionStay(Collision other)
-    {
+        Debug.LogWarning("Remove this code for release build!");
     }
 
     public void OnTriggerStay(Collider other)
@@ -35,25 +32,21 @@ public class LavaFloor : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        runTime += Time.deltaTime;
-        Vector3 newTransformPosition = transform.position;
-        float evaluation = lavaFlow.Evaluate(runTime / cycleTime);
-        newTransformPosition.y = evaluation * amplitude + startHeight;
-        transform.position = newTransformPosition;
+        if (isServer)
+        {
+            if(Input.GetKeyDown(KeyCode.L))
+            {
+                amplitude = 0;
+                Vector3 newTrans = transform.position;
+                newTrans.y = startHeight;
+                transform.position = newTrans;
 
-        //float futureEvaluation = lavaFlow.Evaluate((runTime + Time.deltaTime + warningTime) / cycleTime);
-        ////lava is going to rise!
-        //if (futureEvaluation > evaluation && !outward.isPlaying)
-        //{
-        //    inward.Stop();
-        //    inward.Clear();
-        //    outward.Play();
-        //}
-        //else if (futureEvaluation < evaluation && !inward.isPlaying)
-        //{
-        //    inward.Play();
-        //    outward.Stop();
-        //    outward.Clear();
-        //}
+            }
+            runTime += Time.deltaTime;
+            Vector3 newTransformPosition = transform.position;
+            float evaluation = lavaFlow.Evaluate(runTime / cycleTime);
+            newTransformPosition.y = evaluation * amplitude + startHeight;
+            transform.position = newTransformPosition;
+        }
     }
 }

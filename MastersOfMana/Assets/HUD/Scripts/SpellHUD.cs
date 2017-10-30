@@ -86,7 +86,7 @@ public class SpellHUD : MonoBehaviour
             SetCooldown(0, localPlayer.spellslot[0]);
             SetCooldown(1, localPlayer.spellslot[1]);
             SetCooldown(2, localPlayer.spellslot[2]);
-            SetCurrentSpell(localPlayer.CurrentspellslotID());
+            SetCurrentSpell(localPlayer.GetCurrentspellslotID());
         }
     }
 

@@ -30,11 +30,4 @@ public class CastStateNormal : A_CastState{
         player.animator.SetBool(AnimationLiterals.ANIMATION_BOOL_CASTING, false);
         player.animator.ResetTrigger(AnimationLiterals.ANIMATION_TRIGGER_HOLD);
     }
-
-    /// <summary>
-    /// will invoke the spell that is maped at spellslot 1
-    /// </summary>
-    public override void CastCmdSpell() {
-        player.CmdCastSpell();
-    }
 }

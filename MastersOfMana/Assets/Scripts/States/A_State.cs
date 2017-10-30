@@ -23,7 +23,15 @@ public class A_State
     private A_State() {}
 
 	// Use this for continuous statechecks
+    /// <summary>
+    /// continuously called updateroutine, that can be used to implement statespecific checks depending on for example the deltatime
+    /// the synchronized version will run in a way, so that each instance of the player on each machine will execute the method, therefore it should only be instancerelevant dataupdates
+    /// </summary>
 	public virtual void UpdateSynchronized () {}
+    /// <summary>
+    /// continuously called updateroutine, that can be used to implement statespecific checks depending on for example the deltatime
+    /// the local version will only run on the local client instance of the player, so specific state for that instance can be updated - like input updates
+    /// </summary>
 	public virtual void UpdateLocal () {}
 
     //statemethods each statesystem will need

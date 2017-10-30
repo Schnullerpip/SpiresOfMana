@@ -78,9 +78,6 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 
 		mRigid.isKinematic = true;
 
-		RpcExplosion(transform.position,transform.rotation);
-		Instantiate(explosionPrefab,transform.position,transform.rotation);
-
 		if(!isServer)
 		{
 			return;
@@ -143,9 +140,13 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 				}
 			}
 
-			gameObject.SetActive(false);
-			NetworkServer.UnSpawn(gameObject);
 		}
+
+		RpcExplosion(transform.position,transform.rotation);
+		Instantiate(explosionPrefab,transform.position,transform.rotation);
+
+		gameObject.SetActive(false);
+		NetworkServer.UnSpawn(gameObject);
     }
 
 	[ClientRpc]

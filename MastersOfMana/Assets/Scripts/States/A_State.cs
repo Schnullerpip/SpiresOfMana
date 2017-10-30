@@ -23,7 +23,8 @@ public class A_State
     private A_State() {}
 
 	// Use this for continuous statechecks
-	public virtual void Update () {}
+	public virtual void UpdateSynchronized () {}
+	public virtual void UpdateLocal () {}
 
     //statemethods each statesystem will need
 

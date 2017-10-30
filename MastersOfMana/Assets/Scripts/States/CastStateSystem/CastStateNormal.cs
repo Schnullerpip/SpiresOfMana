@@ -21,7 +21,7 @@ public class CastStateNormal : A_CastState{
         }
     }
 
-    public override void Update()
+    public override void UpdateSynchronized()
     {
         ReduceCooldowns();
     }

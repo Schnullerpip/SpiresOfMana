@@ -15,7 +15,7 @@ public abstract class A_InputState : A_State{
      * implementations inside the abstract A_Spell should only describe default behaviour
      */
 
-    public override void Update()
+    public override void UpdateLocal()
     {
         //poll the input coming from rewired
 

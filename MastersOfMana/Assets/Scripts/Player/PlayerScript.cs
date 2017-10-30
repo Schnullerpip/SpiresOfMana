@@ -277,6 +277,12 @@ public class PlayerScript : NetworkBehaviour, IServerMoveable
     // Update is called once per frame
     void Update () 
 	{
+
+        //update on all instances of a player
+        inputStateSystem.UpdateSynchronized();
+        castStateSystem.UpdateSynchronized();
+        effectStateSystem.UpdateSynchronized();
+
 	    // Update only on the local player
 	    if (!isLocalPlayer)
 	    {
@@ -284,9 +290,9 @@ public class PlayerScript : NetworkBehaviour, IServerMoveable
 	    }
 
         //update the states
-        inputStateSystem.Update();
-        castStateSystem.Update();
-        effectStateSystem.Update();
+        inputStateSystem.UpdateLocal();
+        castStateSystem.UpdateLocal();
+        effectStateSystem.UpdateLocal();
 
         if(!healthScript.IsAlive())
             animator.SetBool("isDead", true);

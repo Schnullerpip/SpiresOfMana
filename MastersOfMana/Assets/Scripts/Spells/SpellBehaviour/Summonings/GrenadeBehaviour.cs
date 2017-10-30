@@ -110,7 +110,6 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 					force.Normalize();
 					force *= explosionForce;
 					ps.movement.RpcAddForce(force, (int)ForceMode.VelocityChange);
-
 			    }
 			    else
 			    {

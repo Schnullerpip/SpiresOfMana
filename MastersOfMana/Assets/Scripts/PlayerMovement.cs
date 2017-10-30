@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 
-[RequireComponent(typeof(Rigidbody))]
 [DisallowMultipleComponent]
-public class PlayerMovement : NetworkBehaviour, IServerMoveable
+public class PlayerMovement : ServerMoveable
 {
 	[Header("Movement")]
 	public float speed = 6;  
@@ -25,16 +24,10 @@ public class PlayerMovement : NetworkBehaviour, IServerMoveable
 	private bool mIsFalling = false;
 	private Vector3 mMoveInput;
 	private bool mFocusActive;
-	private Rigidbody mRigidbody;
 
 	public void SetMoveInput(Vector3 input)
 	{
 		mMoveInput = input;
-	}
-
-	void Awake()
-	{
-		mRigidbody = GetComponent<Rigidbody>();
 	}
 
 	void FixedUpdate()
@@ -117,48 +110,4 @@ public class PlayerMovement : NetworkBehaviour, IServerMoveable
 //			animator.SetTrigger("jump");
 		}
 	}
-
-	#region RPC
-
-	/// method to move the client, even though client has authority over his position
-	/// </summary>
-	/// <param name="force"></param>
-	/// <param name="mode"></param>
-	[ClientRpc]
-	public void RpcAddForce(Vector3 force, int mode)
-	{
-		if (isLocalPlayer)
-		{
-			mRigidbody.AddForce(force, (ForceMode)mode);
-		}
-	}
-
-	/// <summary>
-	/// adds explosion force to player on server side - kinda
-	/// </summary>
-	/// <param name="force"></param>
-	/// <param name="mode"></param>
-	[ClientRpc]
-	public void RpcAddExplosionForce(float explosionForce, Vector3 explosionPosition, float explosionRadius)
-	{
-		if (isLocalPlayer)
-		{
-			mRigidbody.AddExplosionForce(explosionForce, explosionPosition, explosionRadius);
-		}
-	}
-
-	[ClientRpc]
-	public void RpcAddForceAndUpdatePosition(Vector3 force, ForceMode mode, Vector3 newPosition)
-	{
-		mRigidbody.AddForce(force, mode);
-		mRigidbody.position = newPosition;
-	}
-
-	[ClientRpc]
-	public void RpcStopMotion()
-	{
-		mRigidbody.velocity = Vector3.zero;
-	}
-
-	#endregion
 }

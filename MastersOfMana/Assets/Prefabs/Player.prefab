@@ -208,6 +208,8 @@ GameObject:
   - component: {fileID: 114334208707171628}
   - component: {fileID: 114111673754988668}
   - component: {fileID: 114090019024461150}
+  - component: {fileID: 114868483579563138}
+  - component: {fileID: 114930508603779648}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1965,6 +1967,7 @@ MonoBehaviour:
     cooldown: 0
   - spell: {fileID: 11400000, guid: 611a54db86ce0d947bd50c5a12f8aeb0, type: 2}
     cooldown: 0
+  serverMoveable: {fileID: 0}
   movement: {fileID: 114111673754988668}
   aim: {fileID: 114090019024461150}
   cameraRigPrefab: {fileID: 114371251292269686, guid: 21611dcaa52d8441ba40cf1e83852a1e,
@@ -1974,6 +1977,36 @@ MonoBehaviour:
   healthScript: {fileID: 114581584314824656}
   animator: {fileID: 95637651589858840}
   headJoint: {fileID: 4496500260466464}
+--- !u!114 &114868483579563138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1285255658560174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 493a78ab207f7e8458b8c2e906d224ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114930508603779648
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1285255658560174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ab377a874e87ce419291cc9c24e055b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spellslot:
+  - spell: {fileID: 0}
+    cooldown: 0
+  - spell: {fileID: 0}
+    cooldown: 0
+  - spell: {fileID: 0}
+    cooldown: 0
+  currentSpell: 0
 --- !u!135 &135614149572130878
 SphereCollider:
   m_ObjectHideFlags: 1

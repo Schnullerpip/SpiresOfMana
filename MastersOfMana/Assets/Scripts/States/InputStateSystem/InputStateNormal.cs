@@ -14,11 +14,6 @@ public class InputStateNormal : A_InputState
         return amount;
     }
 
-	public override void Update ()
-	{
-		base.Update ();
-	}
-
 	public override void Move (Vector2 input)
 	{
 		base.Move (input);

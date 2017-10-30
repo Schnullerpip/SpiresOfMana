@@ -59,8 +59,10 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         for (int i = 0; i < colliders.Length; ++i)
         {
             HealthScript hs = colliders[i].GetComponent<HealthScript>();
+            Debug.Log("before damagecalculation");
             if (hs && hs != caster.healthScript)
             {
+                Debug.Log("inside dmagecalculation");
                 hs.TakeDamage(10.0f);
             }
 

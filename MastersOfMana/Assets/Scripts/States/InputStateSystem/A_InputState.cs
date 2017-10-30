@@ -15,7 +15,7 @@ public abstract class A_InputState : A_State{
      * implementations inside the abstract A_Spell should only describe default behaviour
      */
 
-    public override void Update()
+    public override void UpdateLocal()
     {
         //poll the input coming from rewired
 
@@ -105,8 +105,8 @@ public abstract class A_InputState : A_State{
 
     public virtual void ChooseSpell(int idx)
     {
-        player.SetCurrentSpellslotID(idx);
-        player.CmdChooseSpellslot(idx);
+        player.GetPlayerSpells().SetCurrentSpellslotID(idx);
+        player.GetPlayerSpells().CmdChooseSpellslot(idx);
     }
 
     //casting the chosen spell

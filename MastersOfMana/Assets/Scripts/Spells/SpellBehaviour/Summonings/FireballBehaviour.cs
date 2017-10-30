@@ -15,15 +15,12 @@ public class FireballBehaviour : A_ServerMoveableSummoning
     private float mDamage = 5.0f;
 
 	public GameObject ballMesh;
-	public GameObject explosion;
+	public GameObject explosionPrefab;
 	public float explosionRadius = 4;
-	public float explosionTime = 1;
 	public float explosionForce = 5;
 	public float explosionDamage = 5.0f;
 
 	public TrailRenderer trail;
-
-	private Collider col;
 
 	public float disappearTimer = 3;
 
@@ -36,34 +33,28 @@ public class FireballBehaviour : A_ServerMoveableSummoning
             //cant find a rigid body!!!
             throw new MissingMemberException();
         }
-
-        col = GetComponentInChildren<Collider>();
-        //col.enabled = false;
     }
 
     public override void Execute(PlayerScript caster)
     {
         //Get a fireballinstance out of the pool
-        GameObject fireball = PoolRegistry.FireballPool.Get();
-		FireballBehaviour fb = fireball.GetComponent<FireballBehaviour>();
+		FireballBehaviour fireballBehaviour = PoolRegistry.FireballPool.Get().GetComponent<FireballBehaviour>();
 		       
         //now activate it, so no weird interpolation errors occcure
         //TODO delete this eventually - RPCs are just too slow
         //fireball.GetComponent<A_SummoningBehaviour>().RpcSetActive(true);
-        fireball.SetActive(true);
-		fb.trail.Clear();
+		fireballBehaviour.gameObject.SetActive(true);
+		fireballBehaviour.trail.Clear();
 
 		//position the fireball to 'spawn' at the casters hand, including an offset so it does not collide instantly with the hand
-		fb.Reset(caster.handTransform.position + caster.GetAimDirection() * 1.5f, caster.transform.rotation);
+		fireballBehaviour.Reset(caster.handTransform.position + caster.GetAimDirection() * 1.5f, caster.transform.rotation);
 		//speed up the fireball to fly into the lookdirection of the player
-		fb.mRigid.velocity = caster.GetAimDirection() * mSpeed;
+		fireballBehaviour.mRigid.velocity = caster.GetAimDirection() * mSpeed;
 
         //create an instance of this fireball on the client's machine
-        NetworkServer.Spawn(fireball, PoolRegistry.FireballPool.assetID);
+		NetworkServer.Spawn(fireballBehaviour.gameObject, PoolRegistry.FireballPool.assetID);
 
-		fb.RpcActivateExplosionMesh(false);
-
-		fb.Disappear();
+		fireballBehaviour.Disappear();
     }
 
 	void Reset (Vector3 pos, Quaternion rot)
@@ -73,15 +64,11 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 
 		mRigid.Reset();
 		mRigid.isKinematic = false;
-		col.enabled = true;
 	}
-		
-    protected override void ExecuteCollision_Host(Collision collision) {}
 
     protected override void ExecuteTriggerEnter_Host(Collider collider)
     //protected override void ExecuteCollision_Host(Collision collision) 
     {
-
         if (collider.isTrigger)
         {
             return;
@@ -90,8 +77,6 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 		Vector3 directHitForce = mRigid.velocity;
 
 		mRigid.isKinematic = true;
-		StartCoroutine(ExplosionEffect());
-		//col.enabled = false;
 
 		if(!isServer)
 		{
@@ -138,53 +123,36 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 			if(c.attachedRigidbody && !cachedRigidbodies.Contains(c.attachedRigidbody))
 			{
 				cachedRigidbodies.Add(c.attachedRigidbody);
-				
+
+				Vector3 force = c.attachedRigidbody.transform.TransformPoint(c.attachedRigidbody.centerOfMass) - mRigid.position; 
+				force.Normalize();
+				force *= explosionForce;
+
 				//check wheather or not we are handling a player or just some random rigidbody
 				if (c.attachedRigidbody.CompareTag("Player"))
 				{
 					PlayerScript ps = c.attachedRigidbody.GetComponent<PlayerScript>();
-//					ps.RpcAddExplosionForce(explosionForce, transform.position, explosionRadius);
-					Vector3 force = c.attachedRigidbody.transform.TransformPoint(c.attachedRigidbody.centerOfMass) - mRigid.position; 
-					force.Normalize();
-					force *= explosionForce;
-					Debug.DrawRay(c.attachedRigidbody.centerOfMass,force,Color.black,10);
-
 					ps.movement.RpcAddForce(force, ForceMode.VelocityChange);
 				}
 				else
 				{
-//					c.attachedRigidbody.AddExplosionForce (explosionForce, transform.position, explosionRadius);
-//					UnityEditor.EditorApplication.isPaused = true;
-					Vector3 force = c.attachedRigidbody.transform.TransformPoint(c.attachedRigidbody.centerOfMass) - mRigid.position; 
-					force.Normalize();
-					force *= explosionForce;
-					Debug.DrawRay(transform.position,force,Color.white,10);
-					c.attachedRigidbody.AddForce(force + Vector3.up, ForceMode.VelocityChange);
-
+					c.attachedRigidbody.AddForce(force, ForceMode.VelocityChange);
 				}
 			}
 
-            mRigid.velocity = Vector3.zero;
-            serverMoveable.RpcStopMotion();
 		}
-    }
 
-	IEnumerator ExplosionEffect()
-	{
-		RpcActivateExplosionMesh(true);
-		yield return new WaitForSeconds(explosionTime);
-
-		PreventInterpolationIssues();
+		RpcExplosion(transform.position,transform.rotation);
+		Instantiate(explosionPrefab,transform.position,transform.rotation);
 
 		gameObject.SetActive(false);
 		NetworkServer.UnSpawn(gameObject);
-	}
+    }
 
 	[ClientRpc]
-	void RpcActivateExplosionMesh(bool explosionState)
+	void RpcExplosion(Vector3 position, Quaternion rotation)
 	{
-		explosion.SetActive(explosionState);
-		ballMesh.SetActive(!explosionState);
+		Instantiate(explosionPrefab,position,rotation);
 	}
 		
 	public void Disappear()
@@ -203,9 +171,9 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 
 	void OnValidate()
 	{
-		if(explosion != null)
+		if(explosionPrefab != null)
 		{
-			explosion.transform.localScale = Vector3.one * explosionRadius * 2;
+			explosionPrefab.transform.localScale = Vector3.one * explosionRadius * 2;
 		}
 	}
 }

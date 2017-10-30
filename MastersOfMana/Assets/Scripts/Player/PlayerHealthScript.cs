@@ -7,6 +7,9 @@ public class PlayerHealthScript : HealthScript {
     private PlayerScript mPlayer;
     public HealthHUD healthHUD;
 
+    public delegate void DamageTaken();
+    public event DamageTaken OnDamageTaken;
+
     public override void Start()
     {
         mPlayer = GetComponent<PlayerScript>();
@@ -31,9 +34,18 @@ public class PlayerHealthScript : HealthScript {
     public override void OnHealthChanged(float newHealth)
     {
         //At game start healthHud might not be available yet
-        if(healthHUD)
+        if (healthHUD)
         {
             healthHUD.SetHealth(newHealth);
+        }
+
+        // If newHealth is smaller than current Health we have taken damage!
+        if(newHealth < GetCurrentHealth())
+        {
+            if(OnDamageTaken != null)
+            {
+                OnDamageTaken();
+            }
         }
     }
 }

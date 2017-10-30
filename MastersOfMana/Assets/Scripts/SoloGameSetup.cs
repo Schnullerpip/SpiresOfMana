@@ -12,6 +12,7 @@ public class SoloGameSetup : MonoBehaviour {
     public GameObject healthHUD;
     public GameObject spellHUD;
     public GameObject ingameMenu;
+    public GameObject hurtIndicator;
 
 
     // Use this for initialization

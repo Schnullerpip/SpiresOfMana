@@ -5,12 +5,12 @@ using UnityEngine;
 using Rewired;
 using UnityEngine.Networking;
 
-[RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(PlayerHealthScript))]
+[RequireComponent(typeof(ServerMoveable))]
 /// <summary>
 /// Defines the basic properties for a player
 /// </summary>
-public class PlayerScript : NetworkBehaviour, IServerMoveable
+public class PlayerScript : NetworkBehaviour
 {
     //member
     public InputStateSystem inputStateSystem;
@@ -20,6 +20,9 @@ public class PlayerScript : NetworkBehaviour, IServerMoveable
 
     //spellslots
     public SpellSlot[] spellslot = new SpellSlot[3];
+
+    //the cached instance of the ServerMoveable script, that allows the server to apply forces to a player
+    public ServerMoveable serverMoveable;
 
     //references the currently chosen spell, among the three available spellslots
 
@@ -150,7 +153,10 @@ public class PlayerScript : NetworkBehaviour, IServerMoveable
 
         //set the currently chosen spell to a default
 	    mCurrentSpell = 0;
-	}
+
+        //cache the servermoveable instance
+        serverMoveable = GetComponent<ServerMoveable>();
+    }
 
     [Command]
     private void CmdGiveGo()
@@ -186,46 +192,6 @@ public class PlayerScript : NetworkBehaviour, IServerMoveable
     public void RpcSetEffectState(EffectStateSystem.EffectStateID id)
     {
         effectStateSystem.SetState(id);
-    }
-
-    /// method to move the client, even though client has authority over his position
-    /// </summary>
-    /// <param name="force"></param>
-    /// <param name="mode"></param>
-    [ClientRpc]
-    public void RpcAddForce(Vector3 force, int mode)
-    {
-        if (isLocalPlayer)
-        {
-            mRigidbody.AddForce(force, (ForceMode)mode);
-        }
-    }
-
-    /// <summary>
-    /// adds explosion force to player on server side - kinda
-    /// </summary>
-    /// <param name="force"></param>
-    /// <param name="mode"></param>
-    [ClientRpc]
-    public void RpcAddExplosionForce(float explosionForce, Vector3 explosionPosition, float explosionRadius)
-    {
-        if (isLocalPlayer)
-        {
-            mRigidbody.AddExplosionForce(explosionForce, explosionPosition, explosionRadius);
-        }
-    }
-
-    [ClientRpc]
-    public void RpcAddForceAndUpdatePosition(Vector3 force, ForceMode mode, Vector3 newPosition)
-    {
-        mRigidbody.AddForce(force, mode);
-        mRigidbody.position = newPosition;
-    }
-
-    [ClientRpc]
-    public void RpcStopMotion()
-    {
-        mRigidbody.velocity = Vector3.zero;
     }
 
     //choosing a spell

@@ -84,13 +84,13 @@ public class WhipBehaviour : A_SummoningBehaviour
 			    Vector3 force = -caster.GetAimDirection()*pullHitForce + Vector3.up*pullHitUpForce;
 			    if (hit.collider.attachedRigidbody.CompareTag("Player"))
 			    {
-			        hit.collider.attachedRigidbody.GetComponent<PlayerScript>().RpcAddForce(force, (int) ForceMode.Impulse);
+			        hit.collider.attachedRigidbody.GetComponent<PlayerScript>().serverMoveable.RpcAddForce(force, (int) ForceMode.Impulse);
 			    }
 
 				hit.collider.attachedRigidbody.AddForce(force, ForceMode.Impulse);
 			}
 
-			caster.RpcAddForce(caster.GetAimDirection() * pullPlayerForce + Vector3.up * pullPlayerUpForce, (int)ForceMode.Impulse);
+			caster.serverMoveable.RpcAddForce(caster.GetAimDirection() * pullPlayerForce + Vector3.up * pullPlayerUpForce, (int)ForceMode.Impulse);
 		}
 
     }

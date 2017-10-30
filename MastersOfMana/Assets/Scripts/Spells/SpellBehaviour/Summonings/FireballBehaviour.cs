@@ -7,7 +7,6 @@ using System.Collections.Generic;
 /// <summary>
 /// The specific behaviour of the fireball, that is manifested in the scene
 /// </summary>
-[RequireComponent(typeof(Rigidbody))]
 public class FireballBehaviour : A_ServerMoveableSummoning
 {
     [SerializeField]
@@ -31,6 +30,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
     public override void Awake()
     {
         base.Awake();
+
         if (!mRigid)
         {
             //cant find a rigid body!!!
@@ -106,7 +106,11 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 			directHitForce.Normalize();
 			directHitForce *= explosionForce;
 
-			directHit.GetComponent<PlayerScript>().RpcAddForce(directHitForce, (int)ForceMode.VelocityChange);
+			PlayerScript ps = directHit.GetComponent<PlayerScript>();
+            if (ps)
+            {
+                ps.serverMoveable.RpcAddForce(directHitForce, (int)ForceMode.VelocityChange);
+            }
         }
 
 		Collider[] colliders = Physics.OverlapSphere(mRigid.position,explosionRadius);
@@ -146,7 +150,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 					force *= explosionForce;
 					Debug.DrawRay(c.attachedRigidbody.centerOfMass,force,Color.black,10);
 
-					ps.RpcAddForce(force, (int)ForceMode.VelocityChange);
+					ps.serverMoveable.RpcAddForce(force, (int)ForceMode.VelocityChange);
 
 				}
 				else
@@ -163,7 +167,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 			}
 
             mRigid.velocity = Vector3.zero;
-            RpcStopMotion();
+            serverMoveable.RpcStopMotion();
 		}
     }
 

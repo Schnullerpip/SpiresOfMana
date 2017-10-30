@@ -37,7 +37,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         {
             //set caster's state so he or she doesnt get falldamage
             caster.RpcSetEffectState(EffectStateSystem.EffectStateID.NoFallDamage);
-            caster.RpcAddForce(Vector3.down * 40.0f, (int)ForceMode.VelocityChange);
+            caster.serverMoveable.RpcAddForce(Vector3.down * 40.0f, (int)ForceMode.VelocityChange);
         }
     }
 
@@ -73,7 +73,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
                 {
                     if (ps != caster)
                     {
-                        ps.RpcAddExplosionForce(200.0f, caster.transform.position, explosionAmplitude);
+                        ps.serverMoveable.RpcAddExplosionForce(200.0f, caster.transform.position, explosionAmplitude);
                     }
                 }
                 else

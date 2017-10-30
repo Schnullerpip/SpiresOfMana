@@ -206,6 +206,7 @@ GameObject:
   - component: {fileID: 114235553052326292}
   - component: {fileID: 54888276362292440}
   - component: {fileID: 114334208707171628}
+  - component: {fileID: 114868483579563138}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1918,6 +1919,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41fd90c150c87df48a3986418dec8555, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mRigidbody: {fileID: 0}
   spellslot:
   - spell: {fileID: 11400000, guid: d41a648d6ad49334090f1c47fbc8cd34, type: 2}
     cooldown: 0
@@ -1925,6 +1927,7 @@ MonoBehaviour:
     cooldown: 0
   - spell: {fileID: 11400000, guid: 611a54db86ce0d947bd50c5a12f8aeb0, type: 2}
     cooldown: 0
+  serverMoveable: {fileID: 0}
   speed: 6
   focusSpeedSlowdown: 0.25
   jumpStrength: 5
@@ -1944,10 +1947,22 @@ MonoBehaviour:
     type: 2}
   cameraRig: {fileID: 0}
   handTransform: {fileID: 4322715158737734}
+  mFocusActive: 0
   playerName: 
   healthScript: {fileID: 114581584314824656}
   animator: {fileID: 95637651589858840}
   headJoint: {fileID: 4496500260466464}
+--- !u!114 &114868483579563138
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1285255658560174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 493a78ab207f7e8458b8c2e906d224ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!135 &135614149572130878
 SphereCollider:
   m_ObjectHideFlags: 1

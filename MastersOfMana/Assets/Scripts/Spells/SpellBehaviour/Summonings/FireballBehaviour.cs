@@ -103,13 +103,12 @@ public class FireballBehaviour : A_ServerMoveableSummoning
         {
             directHit.TakeDamage(mDamage);
 
-			directHitForce.Normalize();
-			directHitForce *= explosionForce;
-
-			PlayerScript ps = directHit.GetComponent<PlayerScript>();
-            if (ps)
+            PlayerScript player = directHit.GetComponent<PlayerScript>();
+            if (player)
             {
-                ps.movement.RpcAddForce(directHitForce, (int)ForceMode.VelocityChange);
+                directHitForce.Normalize();
+                directHitForce *= explosionForce;
+                player.movement.RpcAddForce(directHitForce, (int)ForceMode.VelocityChange);
             }
         }
 

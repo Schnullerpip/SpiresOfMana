@@ -207,10 +207,6 @@ public class PlayerScript : NetworkBehaviour
 
 	void LateUpdate()
 	{
-		if(!isLocalPlayer)
-		{
-			Debug.Log("lol");
-		}
 		//rotate the head joint, do this in the lateupdate to override the animation (?)
 		//TODO: put it somewhere else or get rid of it entirely
 		headJoint.localRotation = Quaternion.AngleAxis(-aim.yAngle,Vector3.right); 

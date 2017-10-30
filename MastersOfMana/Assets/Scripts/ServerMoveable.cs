@@ -9,9 +9,9 @@ public class ServerMoveable : NetworkBehaviour
 {
 
     //cached instance of the attached rigid body
-    private Rigidbody mRigidbody;
+    protected Rigidbody mRigidbody;
 
-    public void Start()
+    public void Awake()
     {
         mRigidbody = gameObject.GetComponent<Rigidbody>();
     }

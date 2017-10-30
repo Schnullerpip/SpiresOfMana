@@ -5,7 +5,7 @@ public static class Extensions
 {
 	/// <summary>
 	/// Returns a Vector2 with the x and z Component of the 
-	/// original Vector3 as x and y respectiply.
+	/// original Vector3 as x and y respectively.
 	/// </summary>
 	/// <param name="vec3">Vec3.</param>
 	public static Vector2 xz(this Vector3 vec3)
@@ -22,11 +22,11 @@ public static class Extensions
 	{
 		trans.position = Vector3.zero;
 		trans.localRotation = Quaternion.identity;
-		trans.localScale = new Vector3(1, 1, 1);
+		trans.localScale = Vector3.one;
 	}
 
 	/// <summary>
-	/// Reset the velocuty and angular velcity of the specified rigidbody.
+	/// Resets the velocity and angular velcity of the specified rigidbody.
 	/// </summary>
 	/// <param name="rigid">Rigid.</param>
 	public static void Reset(this Rigidbody rigid)

@@ -33,7 +33,7 @@ public abstract class A_CastState : A_State{
     protected Vector3 CalculateAimDirection()
     {
         RaycastHit hit;
-        return player.cameraRig.CenterRaycast(out hit) ? Vector3.Normalize(hit.point - player.handTransform.position) : player.lookDirection;
+        return player.aim.cameraRig.CenterRaycast(out hit) ? Vector3.Normalize(hit.point - player.handTransform.position) : player.aim.lookDirection;
     }
 
     /*behaviour distinction
@@ -56,6 +56,6 @@ public abstract class A_CastState : A_State{
     /// </summary>
     public virtual void CastCmdSpell()
     {
-        player.CmdResolveSpell(CalculateAimDirection(), player.cameraRig.GetCamera().transform.position, player.cameraRig.GetCamera().transform.forward);
+        player.CmdResolveSpell(CalculateAimDirection(), player.aim.cameraRig.GetCamera().transform.position, player.aim.cameraRig.GetCamera().transform.forward);
     }
 }

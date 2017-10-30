@@ -109,7 +109,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 			PlayerScript ps = directHit.GetComponent<PlayerScript>();
             if (ps)
             {
-                ps.serverMoveable.RpcAddForce(directHitForce, (int)ForceMode.VelocityChange);
+                ps.movement.RpcAddForce(directHitForce, (int)ForceMode.VelocityChange);
             }
         }
 
@@ -150,8 +150,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 					force *= explosionForce;
 					Debug.DrawRay(c.attachedRigidbody.centerOfMass,force,Color.black,10);
 
-					ps.serverMoveable.RpcAddForce(force, (int)ForceMode.VelocityChange);
-
+					ps.movement.RpcAddForce(force, (int)ForceMode.VelocityChange);
 				}
 				else
 				{

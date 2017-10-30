@@ -89,7 +89,6 @@ public class WhipBehaviour : A_SummoningBehaviour
 
 				hit.collider.attachedRigidbody.AddForce(force, ForceMode.Impulse);
 			}
-
 			caster.movement.RpcAddForce(caster.GetAimDirection() * pullPlayerForce + Vector3.up * pullPlayerUpForce, (int)ForceMode.Impulse);
 		}
 

@@ -7,7 +7,6 @@ using System.Collections.Generic;
 /// <summary>
 /// The specific behaviour of the fireball, that is manifested in the scene
 /// </summary>
-[RequireComponent(typeof(Rigidbody))]
 public class FireballBehaviour : A_ServerMoveableSummoning
 {
     [SerializeField]
@@ -31,6 +30,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
     public override void Awake()
     {
         base.Awake();
+
         if (!mRigid)
         {
             //cant find a rigid body!!!
@@ -150,7 +150,6 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 					Debug.DrawRay(c.attachedRigidbody.centerOfMass,force,Color.black,10);
 
 					ps.movement.RpcAddForce(force, (int)ForceMode.VelocityChange);
-
 				}
 				else
 				{
@@ -166,7 +165,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 			}
 
             mRigid.velocity = Vector3.zero;
-            RpcStopMotion();
+            serverMoveable.RpcStopMotion();
 		}
     }
 

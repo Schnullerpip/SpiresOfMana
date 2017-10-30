@@ -60,7 +60,7 @@ public class SoloGameSetup : MonoBehaviour {
     public void Init()
     {
         bool spellMissing = false;
-        foreach(PlayerScript.SpellSlot slot in GameManager.instance.localPlayer.spellslot)
+        foreach(PlayerSpells.SpellSlot slot in GameManager.instance.localPlayer.GetPlayerSpells().spellslot)
         {
             if(!slot.spell)
             {

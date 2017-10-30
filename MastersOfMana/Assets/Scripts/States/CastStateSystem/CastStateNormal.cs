@@ -7,28 +7,28 @@ public class CastStateNormal : A_CastState{
 
     public override void ReduceCooldowns()
     {
-        if ((player.spellslot[0].cooldown -= Time.deltaTime) < 0)
+        if ((player.GetPlayerSpells().spellslot[0].cooldown -= Time.deltaTime) < 0)
         {
-            player.spellslot[0].cooldown = 0;
+            player.GetPlayerSpells().spellslot[0].cooldown = 0;
         }
-        if ((player.spellslot[1].cooldown -= Time.deltaTime) < 0)
+        if ((player.GetPlayerSpells().spellslot[1].cooldown -= Time.deltaTime) < 0)
         {
-            player.spellslot[1].cooldown = 0;
+            player.GetPlayerSpells().spellslot[1].cooldown = 0;
         }
-        if ((player.spellslot[2].cooldown -= Time.deltaTime) < 0)
+        if ((player.GetPlayerSpells().spellslot[2].cooldown -= Time.deltaTime) < 0)
         {
-            player.spellslot[2].cooldown = 0;
+            player.GetPlayerSpells().spellslot[2].cooldown = 0;
         }
     }
 
-    public override void Update()
+    public override void UpdateSynchronized()
     {
         ReduceCooldowns();
     }
 
     public override void Init()
     {
-        player.FlushSpellroutines();
+        player.GetPlayerSpells().FlushSpellroutines();
         ResetCastDurationCount();
 
         //tell player that its animator should no longer hold the state 'isHolding'

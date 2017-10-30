@@ -40,15 +40,15 @@ public class SpellHUD : MonoBehaviour
         spellCooldowns.Add(spellSlots[2].GetChild(2).GetComponentInParent<Image>());
 
         //Fill SpellSlots with correct spellIcons
-        spellIcons[0].sprite = localPlayer.spellslot[0].spell.icon;
-        spellIcons[1].sprite = localPlayer.spellslot[1].spell.icon;
-        spellIcons[2].sprite = localPlayer.spellslot[2].spell.icon;
+        spellIcons[0].sprite = localPlayer.GetPlayerSpells().spellslot[0].spell.icon;
+        spellIcons[1].sprite = localPlayer.GetPlayerSpells().spellslot[1].spell.icon;
+        spellIcons[2].sprite = localPlayer.GetPlayerSpells().spellslot[2].spell.icon;
 
         canvas = GetComponentInParent<Canvas>();
         canvas.enabled = true;
     }
 
-    public void SetCooldown(int SpellSlotID, PlayerScript.SpellSlot SpellSlot)
+    public void SetCooldown(int SpellSlotID, PlayerSpells.SpellSlot SpellSlot)
     {
         float CooldownPercentage = 0;
         // Calc how much of the cooldown has passed if the Spellcooldown is not 0
@@ -83,10 +83,10 @@ public class SpellHUD : MonoBehaviour
     {
         if (localPlayer)
         {
-            SetCooldown(0, localPlayer.spellslot[0]);
-            SetCooldown(1, localPlayer.spellslot[1]);
-            SetCooldown(2, localPlayer.spellslot[2]);
-            SetCurrentSpell(localPlayer.GetCurrentspellslotID());
+            SetCooldown(0, localPlayer.GetPlayerSpells().spellslot[0]);
+            SetCooldown(1, localPlayer.GetPlayerSpells().spellslot[1]);
+            SetCooldown(2, localPlayer.GetPlayerSpells().spellslot[2]);
+            SetCurrentSpell(localPlayer.GetPlayerSpells().GetCurrentspellslotID());
         }
     }
 

@@ -7,7 +7,6 @@ using System.Collections.Generic;
 /// <summary>
 /// The specific behaviour of the fireball, that is manifested in the scene
 /// </summary>
-[RequireComponent(typeof(Rigidbody))]
 public class FireballBehaviour : A_ServerMoveableSummoning
 {
     [SerializeField]
@@ -18,7 +17,6 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 	public GameObject ballMesh;
 	public GameObject explosionPrefab;
 	public float explosionRadius = 4;
-	public float explosionTime = 1;
 	public float explosionForce = 5;
 	public float explosionDamage = 5.0f;
 
@@ -29,6 +27,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
     public override void Awake()
     {
         base.Awake();
+
         if (!mRigid)
         {
             //cant find a rigid body!!!
@@ -73,82 +72,84 @@ public class FireballBehaviour : A_ServerMoveableSummoning
         if (collider.isTrigger)
         {
             return;
-		}
+        }
 
 		Vector3 directHitForce = mRigid.velocity;
 
 		mRigid.isKinematic = true;
 
-		RpcExplosion(transform.position, transform.rotation);
-		Instantiate(explosionPrefab, transform.position, transform.rotation);
+		RpcExplosion(transform.position,transform.rotation);
+		Instantiate(explosionPrefab,transform.position,transform.rotation);
 
-		if(isServer)
+		if(!isServer)
 		{
-			HealthScript directHit = collider.gameObject.GetComponentInParent<HealthScript>();
-	        if (directHit)
-	        {
-	            directHit.TakeDamage(mDamage);
+			return;
+		}
 
-				directHitForce.Normalize();
-				directHitForce *= explosionForce;
+		HealthScript directHit = collider.gameObject.GetComponentInParent<HealthScript>();
+        if (directHit)
+        {
+            directHit.TakeDamage(mDamage);
 
-				directHit.GetComponent<PlayerScript>().movement.RpcAddForce(directHitForce, (int)ForceMode.VelocityChange);
-	        }
+            PlayerScript player = directHit.GetComponent<PlayerScript>();
+            if (player)
+            {
+                directHitForce.Normalize();
+                directHitForce *= explosionForce;
+                player.movement.RpcAddForce(directHitForce, (int)ForceMode.VelocityChange);
+            }
+        }
 
-			Collider[] colliders = Physics.OverlapSphere(mRigid.position,explosionRadius);
+		Collider[] colliders = Physics.OverlapSphere(mRigid.position,explosionRadius);
 
-			//TODO: TEMP SOLUTION
-			List<HealthScript> cachedHealthScripts = new List<HealthScript>(colliders.Length);
-			List<Rigidbody> cachedRigidbodies = new List<Rigidbody>(colliders.Length);
+		//TODO: TEMP SOLUTION
+		List<HealthScript> cachedHealthScripts = new List<HealthScript>(colliders.Length);
+		List<Rigidbody> cachedRigidbodies = new List<Rigidbody>(colliders.Length);
 
-			foreach(Collider c in colliders)
+		foreach(Collider c in colliders)
+		{
+
+			HealthScript health = c.GetComponentInParent<HealthScript>();
+
+			if(health && health == directHit)
 			{
-
-				HealthScript health = c.GetComponentInParent<HealthScript>();
-
-				if(health && health == directHit)
-				{
-					//took already damage and got a force
-					continue;
-				}
-
-				if(health && health != directHit && !cachedHealthScripts.Contains(health))
-				{
-					health.TakeDamage(explosionDamage);
-					cachedHealthScripts.Add(health);
-				}
-					
-				if(c.attachedRigidbody && !cachedRigidbodies.Contains(c.attachedRigidbody))
-				{
-					cachedRigidbodies.Add(c.attachedRigidbody);
-
-					Vector3 force = c.attachedRigidbody.transform.TransformPoint(c.attachedRigidbody.centerOfMass) - mRigid.position; 
-					force.Normalize();
-					force *= explosionForce;
-
-					//check wheather or not we are handling a player or just some random rigidbody
-					if (c.attachedRigidbody.CompareTag("Player"))
-					{
-						PlayerScript ps = c.attachedRigidbody.GetComponent<PlayerScript>();
-						ps.movement.RpcAddForce(force, (int)ForceMode.VelocityChange);
-					}
-					else
-					{
-						c.attachedRigidbody.AddForce(force, ForceMode.VelocityChange);
-					}
-				}
-
-	            mRigid.velocity = Vector3.zero;
+				//took already damage and got a force
+				continue;
 			}
 
-			PreventInterpolationIssues();
+			if(health && health != directHit && !cachedHealthScripts.Contains(health))
+			{
+				health.TakeDamage(explosionDamage);
+				cachedHealthScripts.Add(health);
+			}
+				
+			if(c.attachedRigidbody && !cachedRigidbodies.Contains(c.attachedRigidbody))
+			{
+				cachedRigidbodies.Add(c.attachedRigidbody);
+
+				Vector3 force = c.attachedRigidbody.transform.TransformPoint(c.attachedRigidbody.centerOfMass) - mRigid.position; 
+				force.Normalize();
+				force *= explosionForce;
+
+				//check wheather or not we are handling a player or just some random rigidbody
+				if (c.attachedRigidbody.CompareTag("Player"))
+				{
+					PlayerScript ps = c.attachedRigidbody.GetComponent<PlayerScript>();
+					ps.movement.RpcAddForce(force, (int)ForceMode.VelocityChange);
+				}
+				else
+				{
+					c.attachedRigidbody.AddForce(force, ForceMode.VelocityChange);
+				}
+			}
+
 			gameObject.SetActive(false);
 			NetworkServer.UnSpawn(gameObject);
 		}
     }
 
 	[ClientRpc]
-	public void RpcExplosion(Vector3 position, Quaternion rotation)
+	void RpcExplosion(Vector3 position, Quaternion rotation)
 	{
 		Instantiate(explosionPrefab,position,rotation);
 	}
@@ -162,11 +163,11 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 	{
 		yield return new WaitForSeconds(disappearTimer);
 
-		PreventInterpolationIssues();
 		gameObject.SetActive(false);
 		NetworkServer.UnSpawn(gameObject);
 	}
-		
+
+
 	void OnValidate()
 	{
 		if(explosionPrefab != null)

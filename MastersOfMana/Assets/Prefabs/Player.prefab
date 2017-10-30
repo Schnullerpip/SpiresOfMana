@@ -1866,7 +1866,7 @@ MonoBehaviour:
   additionalFallGravityMultiplier: 1
   amountOfReverseSlowdown: 0.25
   maxFullspeedAngle: 90
-  fallingDamageThreshold: 22
+  fallingDamageThreshold: 18
   feet: {fileID: 114211396574403768}
 --- !u!114 &114211396574403768
 MonoBehaviour:
@@ -1960,6 +1960,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41fd90c150c87df48a3986418dec8555, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rigid: {fileID: 0}
   movement: {fileID: 114111673754988668}
   aim: {fileID: 114090019024461150}
   cameraRigPrefab: {fileID: 114371251292269686, guid: 21611dcaa52d8441ba40cf1e83852a1e,

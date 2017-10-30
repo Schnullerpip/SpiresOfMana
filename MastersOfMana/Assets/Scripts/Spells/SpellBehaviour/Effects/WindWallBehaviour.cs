@@ -31,7 +31,7 @@ public class WindWallBehaviour : A_EffectBehaviour
 				
 				if (opponent && opponent != caster)
 				{
-					opponent.serverMoveable.RpcAddForce(force, (int)mode);
+					opponent.movement.RpcAddForce(force, (int)mode);
 				}
 				else
 				{

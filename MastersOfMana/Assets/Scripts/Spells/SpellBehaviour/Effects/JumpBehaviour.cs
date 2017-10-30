@@ -10,7 +10,7 @@ public class JumpBehaviour : A_EffectBehaviour
 
 	public override void Execute(PlayerScript caster)
 	{
-        caster.serverMoveable.RpcAddForce(Vector3.up * jumpForce, (int)ForceMode.VelocityChange);
+        caster.movement.RpcAddForce(Vector3.up * jumpForce, (int)ForceMode.VelocityChange);
 		Collider[] cols = Physics.OverlapSphere(caster.transform.position, pullInRadius);
 
 		foreach(Collider c in cols)
@@ -20,7 +20,7 @@ public class JumpBehaviour : A_EffectBehaviour
 				if (c.attachedRigidbody.CompareTag("Player"))
 				{
 					PlayerScript opponent = c.attachedRigidbody.GetComponent<PlayerScript>();
-					opponent.serverMoveable.RpcAddExplosionForce(-pullInForce, caster.transform.position, pullInRadius);
+					opponent.movement.RpcAddExplosionForce(-pullInForce, caster.transform.position, pullInRadius);
 				}
 				else
 				{

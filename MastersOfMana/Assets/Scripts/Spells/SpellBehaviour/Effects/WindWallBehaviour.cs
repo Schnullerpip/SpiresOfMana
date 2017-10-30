@@ -30,7 +30,6 @@ public class WindWallBehaviour : A_SummoningBehaviour
         WindWallBehaviour windwall = ww.GetComponent<WindWallBehaviour>();
 
         //put the center of the windbox infront of the caster
-        //windwall.center = caster.transform.position + caster.transform.forward*mCenterDistance + Vector3.up*2;
         windwall.center = caster.handTransform.position + caster.GetAimDirection()*mCenterDistance;
 
 		windwall.force = mWindforceStrength*(caster.transform.rotation*mWindForceDirection);
@@ -59,16 +58,19 @@ public class WindWallBehaviour : A_SummoningBehaviour
 
     protected override void ExecuteCollision_Host(Collision collision) { }
 
-    protected override void ExecuteTriggerEnter_Host(Collider collider)
+    protected override void ExecuteTriggerEnter_Host(Collider other)
     { 
-        Rigidbody rigid = collider.attachedRigidbody;
+        Rigidbody rigid = other.attachedRigidbody;
         if(rigid)
         {
             PlayerScript opponent = rigid.GetComponent<PlayerScript>();
             
             if (opponent)
             {
+                if (opponent != caster)
+                {
                     opponent.movement.RpcAddForce(force, mode);
+                }
             }
             else
             {

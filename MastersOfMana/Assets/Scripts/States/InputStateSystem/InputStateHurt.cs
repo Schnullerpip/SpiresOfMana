@@ -9,6 +9,4 @@ public class InputStateHurt : A_InputState
     public override void ChooseSpell(int idx) { }
 
     public override void Jump() { }
-
-    public override void Update() { }
 }

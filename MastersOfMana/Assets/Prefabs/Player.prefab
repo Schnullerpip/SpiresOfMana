@@ -52,7 +52,7 @@ GameObject:
   m_Layer: 0
   m_Name: SpellHand
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 4660412927644837186, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -206,6 +206,10 @@ GameObject:
   - component: {fileID: 114235553052326292}
   - component: {fileID: 54888276362292440}
   - component: {fileID: 114334208707171628}
+  - component: {fileID: 114111673754988668}
+  - component: {fileID: 114090019024461150}
+  - component: {fileID: 114868483579563138}
+  - component: {fileID: 114930508603779648}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1826,6 +1830,44 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114090019024461150
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1285255658560174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 038d04afd56a842bf94294875ad2129b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aimSpeed: 180
+  aimAssistInUnits: 2
+  focusAimSpeedFactor: 0.25
+  maxAimRefinementMagnitude: 1
+  yAngle: 0
+  lookDirection: {x: 0, y: 0, z: 0}
+  cameraRig: {fileID: 0}
+  handTransform: {fileID: 4322715158737734}
+--- !u!114 &114111673754988668
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1285255658560174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8d2448b954ac4dddbdc8d27e600635f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 6
+  focusSpeedSlowdown: 0.25
+  jumpStrength: 5
+  additionalFallGravityMultiplier: 1
+  amountOfReverseSlowdown: 0.25
+  maxFullspeedAngle: 90
+  fallingDamageThreshold: 22
+  feet: {fileID: 114211396574403768}
 --- !u!114 &114211396574403768
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1918,36 +1960,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41fd90c150c87df48a3986418dec8555, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spellslot:
-  - spell: {fileID: 11400000, guid: d41a648d6ad49334090f1c47fbc8cd34, type: 2}
-    cooldown: 0
-  - spell: {fileID: 11400000, guid: a5e75869edd974a7f889e1661e0ef689, type: 2}
-    cooldown: 0
-  - spell: {fileID: 11400000, guid: 611a54db86ce0d947bd50c5a12f8aeb0, type: 2}
-    cooldown: 0
-  speed: 6
-  focusSpeedSlowdown: 0.25
-  jumpStrength: 5
-  additionalFallGravityMultiplier: 1
-  amountOfReverseSlowdown: 0.25
-  maxFullspeedAngle: 90
-  fallingDamageThreshold: 18
-  moveInputForce: {x: 0, y: 0, z: 0}
-  feet: {fileID: 114211396574403768}
-  aimSpeed: 180
-  aimAssistInUnits: 2
-  focusAimSpeedFactor: 0.25
-  maxAimRefinementMagnitude: 1
-  yAim: 0
-  lookDirection: {x: 0, y: 0, z: 0}
+  movement: {fileID: 114111673754988668}
+  aim: {fileID: 114090019024461150}
   cameraRigPrefab: {fileID: 114371251292269686, guid: 21611dcaa52d8441ba40cf1e83852a1e,
     type: 2}
-  cameraRig: {fileID: 0}
   handTransform: {fileID: 4322715158737734}
   playerName: 
   healthScript: {fileID: 114581584314824656}
   animator: {fileID: 95637651589858840}
   headJoint: {fileID: 4496500260466464}
+--- !u!114 &114868483579563138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1285255658560174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 493a78ab207f7e8458b8c2e906d224ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114930508603779648
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1285255658560174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ab377a874e87ce419291cc9c24e055b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spellslot:
+  - spell: {fileID: 0}
+    cooldown: 0
+  - spell: {fileID: 0}
+    cooldown: 0
+  - spell: {fileID: 0}
+    cooldown: 0
+  currentSpell: 0
 --- !u!135 &135614149572130878
 SphereCollider:
   m_ObjectHideFlags: 1

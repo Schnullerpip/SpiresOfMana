@@ -36,6 +36,15 @@ public class InputStateSystem
         current = states[0];
     }
 
+    public void UpdateSynchronized()
+    {
+        current.UpdateSynchronized();
+    }
+    public void UpdateLocal()
+    {
+        current.UpdateLocal();
+    }
+
     public A_InputState GetState(InputStateID idx)
     {
         return states[(int)idx];

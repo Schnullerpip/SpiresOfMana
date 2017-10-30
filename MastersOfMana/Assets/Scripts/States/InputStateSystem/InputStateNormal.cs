@@ -14,11 +14,6 @@ public class InputStateNormal : A_InputState
         return amount;
     }
 
-	public override void Update ()
-	{
-		base.Update ();
-	}
-
 	public override void Move (Vector2 input)
 	{
 		base.Move (input);
@@ -29,6 +24,6 @@ public class InputStateNormal : A_InputState
 		moveForce = player.transform.TransformDirection(moveForce);
 
 		//override moveForce in player script
-		player.moveInputForce = moveForce;
+		player.movement.SetMoveInput(moveForce);
 	}
 }

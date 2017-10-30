@@ -4,14 +4,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public interface IServerMoveable
+[RequireComponent(typeof(Rigidbody))]
+public class ServerMoveable : NetworkBehaviour
 {
-    /// method to move the client, even though client has authority over his position
+
+    //cached instance of the attached rigid body
+    protected Rigidbody mRigidbody;
+
+    public virtual void Awake()
+    {
+        mRigidbody = gameObject.GetComponent<Rigidbody>();
+    }
+
+
+    /// method to move the client instance, even though client has authority over his position
     /// </summary>
     /// <param name="force"></param>
     /// <param name="mode"></param>
     [ClientRpc]
-    void RpcAddForce(Vector3 force, int mode);
+    public void RpcAddForce(Vector3 force, int mode)
+    {
+        mRigidbody.AddForce(force, (ForceMode)mode);
+    }
 
     /// <summary>
     /// adds explosion force to player on server side - kinda
@@ -19,11 +33,21 @@ public interface IServerMoveable
     /// <param name="force"></param>
     /// <param name="mode"></param>
     [ClientRpc]
-    void RpcAddExplosionForce(float explosionForce, Vector3 explosionPosition, float explosionRadius);
+    public void RpcAddExplosionForce(float explosionForce, Vector3 explosionPosition, float explosionRadius)
+    {
+        mRigidbody.AddExplosionForce(explosionForce, explosionPosition, explosionRadius);
+    }
 
     [ClientRpc]
-    void RpcAddForceAndUpdatePosition(Vector3 force, ForceMode mode, Vector3 newPosition);
+    public void RpcAddForceAndUpdatePosition(Vector3 force, ForceMode mode, Vector3 newPosition)
+    {
+        mRigidbody.AddForce(force, mode);
+        mRigidbody.position = newPosition;
+    }
 
     [ClientRpc]
-    void RpcStopMotion();
+    public void RpcStopMotion()
+    {
+        mRigidbody.velocity = Vector3.zero;
+    }
 }

@@ -1,41 +1,24 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public abstract class A_ServerMoveableSummoning : A_SummoningBehaviour, IServerMoveable {
+[RequireComponent(typeof(ServerMoveable))]
+public abstract class A_ServerMoveableSummoning : A_SummoningBehaviour
+{
 
-    /// method to move the client, even though client has authority over his position
-    /// </summary>
-    /// <param name="force"></param>
-    /// <param name="mode"></param>
-    [ClientRpc]
-    public void RpcAddForce(Vector3 force, int mode)
-    {
-        mRigid.AddForce(force, (ForceMode)mode);
-    }
+    public ServerMoveable serverMoveable;
 
-    /// <summary>
-    /// adds explosion force to player on server side - kinda
-    /// </summary>
-    /// <param name="force"></param>
-    /// <param name="mode"></param>
-    [ClientRpc]
-    public void RpcAddExplosionForce(float explosionForce, Vector3 explosionPosition, float explosionRadius)
+    public override void Awake()
     {
-        mRigid.AddExplosionForce(explosionForce, explosionPosition, explosionRadius);
-    }
+        base.Awake();
 
-    [ClientRpc]
-    public void RpcAddForceAndUpdatePosition(Vector3 force, ForceMode mode, Vector3 newPosition)
-    {
-        mRigid.AddForce(force, mode);
-        mRigid.position = newPosition;
-    }
-
-    [ClientRpc]
-    public void RpcStopMotion()
-    {
-        mRigid.velocity = Vector3.zero;
+        serverMoveable = GetComponent<ServerMoveable>();
+        if (!serverMoveable)
+        {
+            //cant find a rigid body!!!
+            throw new MissingMemberException("no ServerMoveable script attached!");
+        }
     }
 }

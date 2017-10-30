@@ -41,7 +41,7 @@ public class DashBehaviour : A_EffectBehaviour
             PlayerScript ps = hit.collider.GetComponentInParent<PlayerScript>();
             if (ps)
             {
-                ps.RpcAddForce(direction*mPushForce, (int)ForceMode.Impulse);
+                ps.movement.RpcAddForce(direction*mPushForce, (int)ForceMode.Impulse);
             }
         }
 

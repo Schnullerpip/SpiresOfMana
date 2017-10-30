@@ -34,6 +34,15 @@ public class EffectStateSystem
         current = states[0];
     }
 
+    public void UpdateSynchronized()
+    {
+        current.UpdateSynchronized();
+    }
+    public void UpdateLocal()
+    {
+        current.UpdateLocal();
+    }
+
     public A_EffectState GetState(EffectStateID idx)
     {
         return states[(int)idx];

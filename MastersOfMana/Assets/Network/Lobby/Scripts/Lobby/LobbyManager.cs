@@ -55,6 +55,7 @@ namespace Prototype.NetworkLobby
 
             DontDestroyOnLoad(gameObject);
             SetServerInfo("Offline", "None");
+            SetCancelDelegate(mainMenu.Quit);
         }
 
         public override void OnLobbyClientSceneChanged(NetworkConnection conn)
@@ -122,7 +123,7 @@ namespace Prototype.NetworkLobby
 
             if (currentPanel != mainMenu.mainMenuPanel && newPanel != null)
             {
-                mainMenu.backButton.gameObject.SetActive(true);
+                //mainMenu.backButton.gameObject.SetActive(true);
             }
             else
             {
@@ -184,6 +185,44 @@ namespace Prototype.NetworkLobby
 
             
             ChangeTo(mainMenu.mainMenuPanel);
+        }
+
+        //Using this cancel list we can store the hierarchy of back calls to do
+        public delegate void CancelDelegate();
+        private CancelDelegate cancelDelegate;
+        private List<CancelDelegate> oldCancelDelegates = new List<CancelDelegate>();
+        public void SetCancelDelegate(CancelDelegate dele)
+        {
+            oldCancelDelegates.Add(dele);
+            cancelDelegate = dele;
+        }
+
+        public void RemoveLastCancelDelegate()
+        {
+            if (oldCancelDelegates.Count > 0)
+            {
+                oldCancelDelegates.RemoveRange(oldCancelDelegates.Count-1, 1);
+            }
+        }
+
+        public void Cancel()
+        {
+            cancelDelegate();
+            if (oldCancelDelegates.Count > 0)
+            {
+                RemoveLastCancelDelegate();
+                if (oldCancelDelegates.Count > 0)
+                {
+                    cancelDelegate = oldCancelDelegates[oldCancelDelegates.Count - 1];
+                }
+            }
+        }
+        private void Update()
+        {
+            if (Rewired.ReInput.players.GetPlayer(0).GetButtonDown("UICancel"))
+            {
+                Cancel();
+            }
         }
 
         public void StopClientClbk()

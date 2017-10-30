@@ -23,6 +23,7 @@ namespace Prototype.NetworkLobby
 
         public GameObject localIcone;
         public GameObject remoteIcone;
+        private Button backButton;
 
         //OnMyName function will be invoked on clients when server change the value of playerName
         [SyncVar(hook = "OnMyName")]
@@ -142,15 +143,61 @@ namespace Prototype.NetworkLobby
             readyButton.onClick.RemoveAllListeners();
             readyButton.onClick.AddListener(OnReadyClicked);
 
-
             spellButton1.gameObject.SetActive(true);
             spellButton2.gameObject.SetActive(true);
             spellButton3.gameObject.SetActive(true);
             UpdateSpellButtons();
 
+            //We need to assign the navigation for down directly, it seems to lose the explicit reference because the back button is on a different UI
+            backButton = GetComponentInParent<LobbyPlayerList>().backButton;
+            AssignCustomNavigation(readyButton, backButton, OnSelectDirection.down);
+            AssignCustomNavigation(spellButton1, backButton, OnSelectDirection.down);
+            AssignCustomNavigation(spellButton2, backButton, OnSelectDirection.down);
+            AssignCustomNavigation(spellButton3, backButton, OnSelectDirection.down);
+            AssignCustomNavigation(removePlayerButton, backButton, OnSelectDirection.down);
+            AssignCustomNavigation(backButton, spellButton1, OnSelectDirection.up);
+
             //when OnClientEnterLobby is called, the loval PlayerController is not yet created, so we need to redo that here to disable
             //the add button if we reach maxLocalPlayer. We pass 0, as it was already counted on OnClientEnterLobby
             if (LobbyManager.s_Singleton != null) LobbyManager.s_Singleton.OnPlayersNumberModified(0);
+        }
+
+        public enum OnSelectDirection
+        {
+            down,
+            up,
+            left,
+            right
+        }
+        public void AssignCustomNavigation(Button sourceButton, Button targetButton, OnSelectDirection direction)
+        {
+            Navigation navigation = sourceButton.navigation;
+            navigation.mode = Navigation.Mode.Explicit;
+            switch (direction)
+            {
+                case OnSelectDirection.up:
+                    navigation.selectOnUp = targetButton;
+                    break;
+                case OnSelectDirection.left:
+                    navigation.selectOnLeft = targetButton;
+                    break;
+                case OnSelectDirection.right:
+                    navigation.selectOnRight = targetButton;
+                    break;
+                default:
+                    navigation.selectOnDown = targetButton;
+                    break;
+            }
+            sourceButton.navigation = navigation;
+        }
+
+        public void SetUiInteractive(bool setActive)
+        {
+            Button[] buttons = transform.parent.GetComponentsInChildren<Button>();
+            foreach(Button button in buttons)
+            {
+                button.interactable = setActive;
+            }
         }
 
         public void UpdateSpellButtons()

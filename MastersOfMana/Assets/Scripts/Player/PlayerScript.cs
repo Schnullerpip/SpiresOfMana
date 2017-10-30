@@ -669,7 +669,7 @@ public class PlayerScript : NetworkBehaviour, IServerMoveable
         Prototype.NetworkLobby.LobbyManager NetworkManager = Prototype.NetworkLobby.LobbyManager.s_Singleton;
         if (NetworkManager)
         { 
-            SpellRegistry spellregistry = NetworkManager.mainMenu.spellSelectionPanel.GetComponent<SpellSelectionPanel>().spellregistry;
+            SpellRegistry spellregistry = NetworkManager.mainMenu.spellSelectionPanel.GetComponent<Prototype.NetworkLobby.SpellSelectionPanel>().spellregistry;
             if (spellregistry)
             {
                 spellslot[0].spell = spellregistry.GetSpellByID(spell1);

@@ -38,5 +38,6 @@ public class HurtIndicator : MonoBehaviour {
         sprite.gameObject.SetActive(true);
         yield return new WaitForSeconds(flashDuration);
         sprite.gameObject.SetActive(false);
+        mflashCorutine = null;
     }
 }

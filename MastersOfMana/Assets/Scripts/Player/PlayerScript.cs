@@ -71,6 +71,14 @@ public class PlayerScript : NetworkBehaviour
         mPlayerSpells = GetComponent<PlayerSpells>();
     }
 
+    private void OnDisable()
+    {
+        if (isLocalPlayer)
+        {
+            movement.onLandingWhileFalling -= healthScript.TakeFallDamage;
+        }
+    }
+
     // Use this for initialization
     public void Start()
     {
@@ -83,6 +91,23 @@ public class PlayerScript : NetworkBehaviour
 	    rewiredPlayer = ReInput.players.GetPlayer(0);
 
         healthScript = GetComponent<PlayerHealthScript>();
+        if (isLocalPlayer)
+        {
+            movement.onLandingWhileFalling += takeFallDamage;
+        }
+    }
+
+    //We need this method, as it seems that delegates can't call commands
+    public void takeFallDamage(float amount)
+    {
+        CmdTakeFallDamage(amount);
+    }
+
+    //Take fall damage on the server
+    [Command]
+    public void CmdTakeFallDamage(float amount)
+    {
+        healthScript.TakeFallDamage(amount);
     }
 
     [Command]

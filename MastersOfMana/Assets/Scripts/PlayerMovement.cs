@@ -25,7 +25,18 @@ public class PlayerMovement : ServerMoveable
 	private Vector3 mMoveInput;
 	private bool mFocusActive;
 
-	public void SetMoveInput(Vector3 input)
+    public override void Awake()
+    {
+        base.Awake();
+        feet.onLanding += Landing;
+    }
+
+    public void OnDisable()
+    {
+        feet.onLanding -= Landing;
+    }
+
+    public void SetMoveInput(Vector3 input)
 	{
 		mMoveInput = input;
 	}
@@ -71,11 +82,11 @@ public class PlayerMovement : ServerMoveable
 		mIsFalling = mRigidbody.velocity.y <= -fallingDamageThreshold;
 	}
 
-	public delegate void OnLanding(float impactVelocity);
+	public delegate void OnLandingWhileFalling(float impactVelocity);
 	/// <summary>
 	/// This Delegate is called once, when the FeetCollider is touching ground again. Regardless of wether or not the ground is considered steady
 	/// </summary>
-	public OnLanding onLanding;
+	public OnLandingWhileFalling onLandingWhileFalling;
 
 	public void Landing()
 	{
@@ -83,9 +94,9 @@ public class PlayerMovement : ServerMoveable
 		{
 			float delta = - mRigidbody.velocity.y - fallingDamageThreshold;
 //			float damage = delta * 3;
-			if(onLanding != null)
+			if(onLandingWhileFalling != null)
 			{
-				onLanding(delta);
+                onLandingWhileFalling(delta);
 			}
 		}
 	}

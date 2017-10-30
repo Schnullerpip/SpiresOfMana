@@ -25,6 +25,7 @@ GameObject:
   - component: {fileID: 65994798037195866}
   - component: {fileID: 65341144972587894}
   - component: {fileID: 114662051239829704}
+  - component: {fileID: 114741948251824584}
   m_Layer: 0
   m_Name: LavaFloor
   m_TagString: Untagged
@@ -39,7 +40,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1305568902638960}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 5.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0.1, z: 0}
   m_LocalScale: {x: 30, y: 1, z: 30}
   m_Children: []
   m_Father: {fileID: 0}
@@ -140,6 +141,27 @@ MonoBehaviour:
     i15: 251
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
+--- !u!114 &114741948251824584
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1305568902638960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 0
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_VelocityThreshold: 0.0001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
 --- !u!114 &114865154224641114
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -152,38 +174,38 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damagePerSecond: 4
-  cycleTime: 60
-  amplitude: 15
+  cycleTime: 180
+  amplitude: 12
   lavaFlow:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 2
-      time: -0.0012755101
-      value: 0.0024096374
+      time: 0.19808237
+      value: 0.00021839887
       inSlope: 0
       outSlope: 0
       tangentMode: 136
     - serializedVersion: 2
-      time: 0.20025507
-      value: 0.50481904
-      inSlope: 0
-      outSlope: 0
+      time: 0.39910477
+      value: 0.49964082
+      inSlope: -0.032561913
+      outSlope: -0.032561913
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.59750575
+      value: 0.5010094
+      inSlope: 0.013596087
+      outSlope: 0.013596087
       tangentMode: 136
     - serializedVersion: 2
-      time: 0.39859688
-      value: 0.20120473
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
-    - serializedVersion: 2
-      time: 0.5982142
+      time: 0.8017448
       value: 0.8036141
       inSlope: 0
       outSlope: 0
       tangentMode: 136
     - serializedVersion: 2
-      time: 0.80102026
-      value: 0.30481914
+      time: 0.88951766
+      value: 0.80225563
       inSlope: 0
       outSlope: 0
       tangentMode: 136

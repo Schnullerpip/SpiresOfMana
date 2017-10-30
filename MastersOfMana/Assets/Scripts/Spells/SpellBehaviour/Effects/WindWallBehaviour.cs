@@ -40,7 +40,7 @@ public class WindWallBehaviour : A_SummoningBehaviour
         windwall.caster = caster;
 
         Rigidbody rigid = ww.GetComponent<Rigidbody>();
-        rigid.velocity = caster.rigid.velocity;
+		rigid.velocity = caster.movement.GetVelocity();
 
         ww.SetActive(true);
         NetworkServer.Spawn(ww);

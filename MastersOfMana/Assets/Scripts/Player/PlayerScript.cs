@@ -26,9 +26,6 @@ public class PlayerScript : NetworkBehaviour
         return mPlayerSpells;
     }
 
-    //cached instance of Rigidbody
-    public Rigidbody rigid;
-
     /// <summary>
     /// holds references to all the coroutines a spell is running, so they can bes stopped/interrupted w4hen a player is for example hit
     /// and can therefore not continue to cast the spell
@@ -65,13 +62,12 @@ public class PlayerScript : NetworkBehaviour
     public PlayerHealthScript healthScript;
 
 	[Header("Animation")]
-	public Animator animator;
+//	public Animator animator;
 	public Transform headJoint;
 
 	void Awake()
 	{
         mPlayerSpells = GetComponent<PlayerSpells>();
-	    rigid = GetComponent<Rigidbody>();
 	}
 
     private void OnDisable()
@@ -186,10 +182,6 @@ public class PlayerScript : NetworkBehaviour
         inputStateSystem.UpdateLocal();
         castStateSystem.UpdateLocal();
         effectStateSystem.UpdateLocal();
-
-        if(!healthScript.IsAlive())
-            animator.SetBool("isDead", true);
-
  	}
 		
 	void OnCollisionStay(Collision collisionInfo)
@@ -261,13 +253,5 @@ public class PlayerScript : NetworkBehaviour
         mCameraLookdirection = CameraLookDirection;
 
         mPlayerSpells.spellslot[mPlayerSpells.currentSpell].Cast(this);
-    }
-
-
-
-	//get default parameters
-    void Reset()
-    {
-        animator = GetComponentInChildren<Animator>();
     }
 }

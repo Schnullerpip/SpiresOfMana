@@ -210,6 +210,9 @@ GameObject:
   - component: {fileID: 114090019024461150}
   - component: {fileID: 114868483579563138}
   - component: {fileID: 114930508603779648}
+  - component: {fileID: 114651380410554418}
+  - component: {fileID: 95559592168868734}
+  - component: {fileID: 114808234077334614}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -650,7 +653,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4880579942306480}
-  - component: {fileID: 95637651589858840}
   m_Layer: 0
   m_Name: SorcererRigged
   m_TagString: Untagged
@@ -1813,13 +1815,13 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!95 &95637651589858840
+--- !u!95 &95559592168868734
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1724316665355810}
+  m_GameObject: {fileID: 1285255658560174}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: f507266f9158d40b5810d9da01f9027c, type: 3}
   m_Controller: {fileID: 9100000, guid: 2e27ebde5222a426198163a5f68f3144, type: 2}
@@ -1867,6 +1869,8 @@ MonoBehaviour:
   amountOfReverseSlowdown: 0.25
   maxFullspeedAngle: 90
   fallingDamageThreshold: 18
+  hurtSlowdown: 0.5
+  inputVelocityInfluence: 0.75
   feet: {fileID: 114211396574403768}
 --- !u!114 &114211396574403768
 MonoBehaviour:
@@ -1960,7 +1964,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41fd90c150c87df48a3986418dec8555, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rigid: {fileID: 0}
   movement: {fileID: 114111673754988668}
   aim: {fileID: 114090019024461150}
   cameraRigPrefab: {fileID: 114371251292269686, guid: 21611dcaa52d8441ba40cf1e83852a1e,
@@ -1968,8 +1971,38 @@ MonoBehaviour:
   handTransform: {fileID: 4322715158737734}
   playerName: 
   healthScript: {fileID: 114581584314824656}
-  animator: {fileID: 95637651589858840}
   headJoint: {fileID: 4496500260466464}
+--- !u!114 &114651380410554418
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1285255658560174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ea229bbd10fe4ad686272ea6150bcf5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 95559592168868734}
+--- !u!114 &114808234077334614
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1285255658560174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1590678366, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Animator: {fileID: 95559592168868734}
+  m_ParameterSendBits: 383
+  param0: 
+  param1: 
+  param2: 
+  param3: 
+  param4: 
+  param5: 
 --- !u!114 &114868483579563138
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1993,11 +2026,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spellslot:
-  - spell: {fileID: 0}
+  - spell: {fileID: 11400000, guid: d41a648d6ad49334090f1c47fbc8cd34, type: 2}
     cooldown: 0
-  - spell: {fileID: 0}
+  - spell: {fileID: 11400000, guid: 550c3a75fecb949ec8c45ab4c38ef166, type: 2}
     cooldown: 0
-  - spell: {fileID: 0}
+  - spell: {fileID: 11400000, guid: 5c0f19c3e50294f70acf3ae92e2ea2f8, type: 2}
     cooldown: 0
   currentSpell: 0
 --- !u!135 &135614149572130878

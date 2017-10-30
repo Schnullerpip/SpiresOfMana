@@ -54,21 +54,24 @@ public class PlayerMovement : ServerMoveable
 		mMoveInput = input;
 	}
 
+	public delegate void OnMovement(float velocityMag, Vector2 direction, bool isGrounded);
+	public OnMovement onMovement;
+
 	void FixedUpdate()
 	{
-		Vector3 direction = mMoveInput * Time.deltaTime * speed;
+		Vector3 movement = mMoveInput * speed;
 
-		direction *= mFocusActive ? focusSpeedSlowdown : 1;
-		direction *= mHurtSlowdownActive ? hurtSlowdown : 1;
+		movement *= mFocusActive ? focusSpeedSlowdown : 1;
+		movement *= mHurtSlowdownActive ? hurtSlowdown : 1;
 
-		Vector2 directionXZ = direction.xz();
+		Vector2 movementXZ = movement.xz();
 
 		//calculate the amount of slowdown, by comparing the direction with the forward vector of the character
 		Vector2 forwardXZ = transform.forward.xz();
 		//value between 0 and 1, 1 being total reversaldamping, 0 being no damping
-		float reverseDamping = Mathf.Clamp01((Vector2.Angle (forwardXZ, directionXZ) - maxFullspeedAngle) / 180 * 2);
+		float reverseDamping = Mathf.Clamp01((Vector2.Angle (forwardXZ, movementXZ) - maxFullspeedAngle) / 180 * 2);
 		reverseDamping *= amountOfReverseSlowdown;
-		direction *= 1 - reverseDamping;
+		movement *= 1 - reverseDamping;
 
 		//increase the falling speed to make it feel a bit less floaty
 		if(mRigidbody.velocity.y < 0)
@@ -76,19 +79,13 @@ public class PlayerMovement : ServerMoveable
 			mRigidbody.velocity += Physics.gravity * additionalFallGravityMultiplier * Time.deltaTime;
 		}
 
-		float directionSqrMag = direction.sqrMagnitude;
-
-//		Vector3 localDirection = transform.InverseTransformVector(direction);
-//		animator.SetFloat("speed_forward",localDirection.x);
-//		animator.SetFloat("speed_right",localDirection.z);
-//
-//		animator.SetFloat("velocity",directionSqrMag);
+		Vector3 newMovement = movement;
 
 		//if the player gets input
-		if(directionSqrMag > 0)
+		if(movement.sqrMagnitude > 0)
 		{
 			//calculate the angle between the movemement and external forces
-			float angle = Vector2.Angle(mRigidbody.velocity.xz(),directionXZ);
+			float angle = Vector2.Angle(mRigidbody.velocity.xz(),movementXZ);
 			//the anglefactor is a value between 0 (same direction) and 1 (opposite direction)
 			float angleFactor = angle / 180;
 
@@ -98,7 +95,6 @@ public class PlayerMovement : ServerMoveable
 			mRigidbody.velocity = Vector3.MoveTowards(mRigidbody.velocity, desiredVelocity, influence * inputVelocityInfluence);
 
 			//the following steps are necessary to allow the player to move while having external forces applied to him/her
-			Vector3 newDirection = direction;
 
 			//early exit if the velocity is to small to be relevant for the calculations
 			if(mRigidbody.velocity.sqrMagnitude > 0.0001f)
@@ -108,29 +104,40 @@ public class PlayerMovement : ServerMoveable
 				//also cache magnitude, as it is a bit more expansive to calculate (squareroot)
 				float veloXZMagnitude = veloXZ.magnitude;
 
-				Vector2 accumulatedVectors = veloXZ + directionXZ;
+				Vector2 accumulatedVectors = veloXZ + movementXZ;
 				accumulatedVectors = Vector2.ClampMagnitude(accumulatedVectors, Mathf.Max(veloXZMagnitude, speed));
-				Vector2 newDirectionXZ = accumulatedVectors - veloXZ;
+				Vector2 newMovementXZ = accumulatedVectors - veloXZ;
 
 				//if the velocity was higher than the maximum speed, reduce the new direction by a factor corresponding to the angle 
 				if(veloXZMagnitude > speed)
 				{
-					newDirectionXZ *= (1-angleFactor);
+					newMovementXZ *= (1-angleFactor);
 				}
 
 				//stuff it into the vector3
-				newDirection.x = newDirectionXZ.x;
-				newDirection.z = newDirectionXZ.y;
+				newMovement.x = newMovementXZ.x;
+				newMovement.z = newMovementXZ.y;
 			}
 
-			mRigidbody.MovePosition(mRigidbody.position + newDirection);
+			mRigidbody.MovePosition(mRigidbody.position + newMovement * Time.deltaTime);
 		}
 
+		Vector3 localMovement = transform.InverseTransformVector(newMovement);
+
+		if(onMovement != null)
+		{
+			onMovement(newMovement.magnitude, localMovement.xz(), feet.IsGrounded());
+		}
 
 		mIsFalling = mRigidbody.velocity.y <= -fallingDamageThreshold;
 
 		mHurtSlowdownActive = false;
 
+	}
+
+	public Vector3 GetVelocity()
+	{
+		return mRigidbody.velocity;
 	}
 
 	public delegate void OnLandingWhileFalling(float impactVelocity);
@@ -160,6 +167,9 @@ public class PlayerMovement : ServerMoveable
 		Jump(jumpStrength, onlyIfGrounded);
 	}
 
+	public delegate void OnJumping();
+	public OnJumping onJumping;
+
 	/// <summary>
 	/// Let's the character jump with a specified jumpStrength
 	/// </summary>
@@ -169,7 +179,10 @@ public class PlayerMovement : ServerMoveable
 		if(feet.IsGrounded() || !onlyIfGrounded)
 		{
 			mRigidbody.AddForce(Vector3.up * jumpStrength,ForceMode.VelocityChange);
-//			animator.SetTrigger("jump");
+			if(onJumping != null)
+			{
+				onJumping();
+			}
 		}
 	}
 }

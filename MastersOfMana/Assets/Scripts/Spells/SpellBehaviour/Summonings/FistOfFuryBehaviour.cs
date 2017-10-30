@@ -45,6 +45,8 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
 
     protected override void ExecuteTriggerEnter_Host(Collider collider)
     {
+        if (collider.isTrigger) return;
+        
         //spawn an explosion
         GameObject go = PoolRegistry.ExplosionPool.Get();
         go.transform.position = caster.transform.position/* + caster.transform.forward * 5*/;

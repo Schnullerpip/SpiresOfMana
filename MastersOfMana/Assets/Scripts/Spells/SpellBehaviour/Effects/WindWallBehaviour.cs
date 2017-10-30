@@ -1,43 +1,81 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class WindWallBehaviour : A_EffectBehaviour
+public class WindWallBehaviour : A_SummoningBehaviour
 {
     [SerializeField]
-    private Vector3 mWindForce, mHalfExtents = new Vector3();
+    private Vector3 mWindForceDirection;
+
+    [SerializeField]
+    private float mWindforceStrength;
 
     [SerializeField]
     private float mCenterDistance;
 
+    private Vector3 force;
+    private ForceMode mode;
+    private Vector3 center;
+    private PlayerScript caster;
+
+    public void Reset()
+    {
+        mWindForceDirection.Normalize();
+    }
+
     public override void Execute(PlayerScript caster)
     {
-        //get all servermoveables in the area infront of the caster and push them somewhere
+        GameObject ww = PoolRegistry.WindWallPool.Get();
+        WindWallBehaviour windwall = ww.GetComponent<WindWallBehaviour>();
 
         //put the center of the windbox infront of the caster
-        Vector3 center = caster.transform.position + caster.transform.forward*mCenterDistance;
+        windwall.center = caster.handTransform.position + caster.GetAimDirection()*mCenterDistance;
 
-        //do the boxoverlap
-        Collider[] colliders = Physics.OverlapBox(center, mHalfExtents, caster.transform.rotation);
+		windwall.force = mWindforceStrength*(caster.transform.rotation*mWindForceDirection);
+		windwall.mode = ForceMode.VelocityChange;
 
-		Vector3 force = caster.transform.rotation*mWindForce;
-		ForceMode mode = ForceMode.Impulse;
+        windwall.transform.rotation = caster.headJoint.transform.rotation;
+        windwall.transform.position = windwall.center;
+        windwall.caster = caster;
 
-        for(int i = 0; i < colliders.Length; ++i)
+        Rigidbody rigid = ww.GetComponent<Rigidbody>();
+        rigid.velocity = caster.rigid.velocity;
+
+        ww.SetActive(true);
+        NetworkServer.Spawn(ww);
+
+        //make sure to unspawn the windwall
+        caster.StartCoroutine(UnspawnWindwall(ww));
+    }
+
+    IEnumerator UnspawnWindwall(GameObject obj)
+    {
+        yield return new WaitForSeconds(0.5f);
+        obj.SetActive(false);
+        NetworkServer.UnSpawn(obj);
+    }
+
+    protected override void ExecuteCollision_Host(Collision collision) { }
+
+    protected override void ExecuteTriggerEnter_Host(Collider other)
+    { 
+        Rigidbody rigid = other.attachedRigidbody;
+        if(rigid)
         {
-			if(colliders[i].attachedRigidbody)
-			{
-				PlayerScript opponent = colliders[i].attachedRigidbody.GetComponent<PlayerScript>();
-				
-				if (opponent && opponent != caster)
-				{
-					opponent.movement.RpcAddForce(force, (int)mode);
-				}
-				else
-				{
-					colliders[i].attachedRigidbody.AddForce(force, mode);
-				}	
-			}
+            PlayerScript opponent = rigid.GetComponent<PlayerScript>();
+            
+            if (opponent)
+            {
+                if (opponent != caster)
+                {
+                    opponent.movement.RpcAddForce(force, mode);
+                }
+            }
+            else
+            {
+                rigid.AddForce(force, mode);
+            }	
         }
     }
 }

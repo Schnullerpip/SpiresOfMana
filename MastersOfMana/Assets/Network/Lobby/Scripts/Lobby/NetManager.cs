@@ -18,11 +18,16 @@ public class NetManager : NetworkBehaviour {
         }
     }
 
+    public bool amIServer()
+    {
+        return isServer;
+    }
+
     [ClientRpc]
     public void RpcLoadPostGameScreen(string winner)
     {
         GameManager.instance.winnerName = winner;
-        SceneManager.LoadSceneAsync(2, LoadSceneMode.Additive);
+        SceneManager.LoadSceneAsync("Scenes/arne_postGame", LoadSceneMode.Additive);
     }
 
     [ClientRpc]

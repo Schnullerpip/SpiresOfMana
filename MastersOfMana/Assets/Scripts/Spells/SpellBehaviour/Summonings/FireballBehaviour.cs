@@ -93,7 +93,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
             {
                 directHitForce.Normalize();
                 directHitForce *= explosionForce;
-                player.movement.RpcAddForce(directHitForce, (int)ForceMode.VelocityChange);
+                player.movement.RpcAddForce(directHitForce, ForceMode.VelocityChange);
             }
         }
 
@@ -132,7 +132,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 				if (c.attachedRigidbody.CompareTag("Player"))
 				{
 					PlayerScript ps = c.attachedRigidbody.GetComponent<PlayerScript>();
-					ps.movement.RpcAddForce(force, (int)ForceMode.VelocityChange);
+					ps.movement.RpcAddForce(force, ForceMode.VelocityChange);
 				}
 				else
 				{

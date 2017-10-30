@@ -21,11 +21,13 @@ public class PlayerScript : NetworkBehaviour
 
     //the cached instance of the spell component, that holds all relevant spell information
     private PlayerSpells mPlayerSpells;
-
     public PlayerSpells GetPlayerSpells()
     {
         return mPlayerSpells;
     }
+
+    //cached instance of Rigidbody
+    public Rigidbody rigid;
 
     /// <summary>
     /// holds references to all the coroutines a spell is running, so they can bes stopped/interrupted w4hen a player is for example hit
@@ -69,6 +71,15 @@ public class PlayerScript : NetworkBehaviour
 	void Awake()
 	{
         mPlayerSpells = GetComponent<PlayerSpells>();
+	    rigid = GetComponent<Rigidbody>();
+	}
+
+    private void OnDisable()
+    {
+        if (isLocalPlayer)
+        {
+            movement.onLandingWhileFalling -= healthScript.TakeFallDamage;
+        }
     }
 
     // Use this for initialization
@@ -83,6 +94,23 @@ public class PlayerScript : NetworkBehaviour
 	    rewiredPlayer = ReInput.players.GetPlayer(0);
 
         healthScript = GetComponent<PlayerHealthScript>();
+        if (isLocalPlayer)
+        {
+            movement.onLandingWhileFalling += takeFallDamage;
+        }
+    }
+
+    //We need this method, as it seems that delegates can't call commands
+    public void takeFallDamage(float amount)
+    {
+        CmdTakeFallDamage(amount);
+    }
+
+    //Take fall damage on the server
+    [Command]
+    public void CmdTakeFallDamage(float amount)
+    {
+        healthScript.TakeFallDamage(amount);
     }
 
     [Command]
@@ -235,15 +263,6 @@ public class PlayerScript : NetworkBehaviour
         mPlayerSpells.spellslot[mPlayerSpells.currentSpell].Cast(this);
     }
 
-    /// <summary>
-    /// allows the server and thus the spells, to affect the players position
-    /// </summary>
-    /// <param name="vec3"></param>
-    [ClientRpc]
-    public void RpcSetPosition(Vector3 vec3)
-    {
-        this.transform.position = vec3;
-    }
 
 
 	//get default parameters

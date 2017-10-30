@@ -106,7 +106,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 			directHitForce.Normalize();
 			directHitForce *= explosionForce;
 
-			directHit.GetComponent<PlayerScript>().RpcAddForce(directHitForce, (int)ForceMode.VelocityChange);
+			directHit.GetComponent<PlayerScript>().movement.RpcAddForce(directHitForce, (int)ForceMode.VelocityChange);
         }
 
 		Collider[] colliders = Physics.OverlapSphere(mRigid.position,explosionRadius);
@@ -146,7 +146,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 					force *= explosionForce;
 					Debug.DrawRay(c.attachedRigidbody.centerOfMass,force,Color.black,10);
 
-					ps.RpcAddForce(force, (int)ForceMode.VelocityChange);
+					ps.movement.RpcAddForce(force, (int)ForceMode.VelocityChange);
 
 				}
 				else

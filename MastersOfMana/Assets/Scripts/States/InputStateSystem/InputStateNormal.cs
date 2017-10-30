@@ -29,6 +29,6 @@ public class InputStateNormal : A_InputState
 		moveForce = player.transform.TransformDirection(moveForce);
 
 		//override moveForce in player script
-		player.moveInputForce = moveForce;
+		player.movement.SetMoveInput(moveForce);
 	}
 }

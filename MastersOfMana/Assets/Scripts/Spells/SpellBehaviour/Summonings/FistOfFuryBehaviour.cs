@@ -13,6 +13,8 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     private Explosion mExplosion;
     [SerializeField]
     private ParticleSystem mTrail;
+    [SerializeField]
+    private float mExplosionForce;
 
     public override void Awake()
     {
@@ -37,7 +39,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         {
             //set caster's state so he or she doesnt get falldamage
             caster.RpcSetEffectState(EffectStateSystem.EffectStateID.NoFallDamage);
-            caster.movement.RpcAddForce(Vector3.down * 40.0f, (int)ForceMode.VelocityChange);
+            caster.movement.RpcAddForce(Vector3.down * 40.0f, ForceMode.VelocityChange);
         }
     }
 
@@ -58,29 +60,27 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         Collider[] colliders = Physics.OverlapSphere(caster.transform.position, explosionAmplitude);
         for (int i = 0; i < colliders.Length; ++i)
         {
-            HealthScript hs = colliders[i].GetComponent<HealthScript>();
-            Debug.Log("before damagecalculation");
-            if (hs && hs != caster.healthScript)
-            {
-                Debug.Log("inside dmagecalculation");
-                hs.TakeDamage(10.0f);
-            }
-
             Rigidbody rigid = colliders[i].attachedRigidbody;
             if (rigid)
             {
+                HealthScript hs = rigid.GetComponent<HealthScript>();
+                if (hs && hs != caster.healthScript)
+                {
+                    hs.TakeDamage(10.0f);
+                }
+
                 //TODO exchange magic numbers with good stuff... 
                 PlayerScript ps = colliders[i].attachedRigidbody.GetComponent<PlayerScript>();
                 if (ps)
                 {
                     if (ps != caster)
                     {
-                        ps.movement.RpcAddExplosionForce(200.0f, caster.transform.position, explosionAmplitude);
+                        ps.movement.RpcAddExplosionForce(mExplosionForce, caster.transform.position, explosionAmplitude);
                     }
                 }
                 else
                 {
-                    colliders[i].attachedRigidbody.AddExplosionForce(200.0f, caster.transform.position, explosionAmplitude);
+                    rigid.AddExplosionForce(mExplosionForce, caster.transform.position, explosionAmplitude);
                 }
             }
         }

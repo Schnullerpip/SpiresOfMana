@@ -19,20 +19,39 @@ public class PlayerMovement : ServerMoveable
 	[Tooltip("How many meters per second falling is considered too much?")]
 	public float fallingDamageThreshold = 18.0f;
 
+	public float hurtSlowdown = 0.5f;
+
+	[Range(0,1)]
+	public float inputVelocityInfluence = 0.75f;
+
 	public FeetCollider feet;
 
 	private bool mIsFalling = false;
 	private Vector3 mMoveInput;
 	private bool mFocusActive;
 
+	private bool mHurtSlowdownActive;
+
 	public void SetMoveInput(Vector3 input)
 	{
 		mMoveInput = input;
 	}
 
+	public void SetMoveInputHurt(Vector3 input)
+	{
+		mHurtSlowdownActive = true;
+		mMoveInput = input;
+	}
+
+	Vector3 lastPos;
+
 	void FixedUpdate()
 	{
-		Vector3 direction = mMoveInput * Time.deltaTime * speed * (mFocusActive ? focusSpeedSlowdown : 1);
+		Vector3 direction = mMoveInput * Time.deltaTime * speed;
+
+		direction *= mFocusActive ? focusSpeedSlowdown : 1;
+		direction *= mHurtSlowdownActive ? hurtSlowdown : 1;
+
 		Vector2 directionXZ = direction.xz();
 
 		//calculate the amount of slowdown, by comparing the direction with the forward vector of the character
@@ -50,9 +69,6 @@ public class PlayerMovement : ServerMoveable
 
 		float directionSqrMag = direction.sqrMagnitude;
 
-		//move the character
-		mRigidbody.MovePosition(mRigidbody.position + direction);
-
 //		Vector3 localDirection = transform.InverseTransformVector(direction);
 //		animator.SetFloat("speed_forward",localDirection.x);
 //		animator.SetFloat("speed_right",localDirection.z);
@@ -64,11 +80,48 @@ public class PlayerMovement : ServerMoveable
 		{
 			//calculate the angle between the movemement and external forces
 			float angle = Vector2.Angle(mRigidbody.velocity.xz(),directionXZ);
+			//the anglefactor is a value between 0 (same direction) and 1 (opposite direction)
+			float angleFactor = angle / 180;
+
+			float influence = speed * Time.deltaTime * angleFactor;
+			Vector3 desiredVelocity = new Vector3(0,mRigidbody.velocity.y,0);
 			//move the rigidbody's velocity towards zero in the xz plane, proportional to the angle
-			mRigidbody.velocity = Vector3.MoveTowards(mRigidbody.velocity, new Vector3(0,mRigidbody.velocity.y,0), speed * Time.deltaTime * angle / 180);
+			mRigidbody.velocity = Vector3.MoveTowards(mRigidbody.velocity, desiredVelocity, influence * inputVelocityInfluence);
+
+			//the following steps are necessary to allow the player to move while having external forces applied to him/her
+			Vector3 newDirection = direction;
+
+			//early exit if the velocity is to small to be relevant for the calculations
+			if(mRigidbody.velocity.sqrMagnitude > 0.0001f)
+			{
+				//cache velcity as a 2D vector in the XZ plane, Y is still only handled by the physicsengine 
+				Vector2 veloXZ = mRigidbody.velocity.xz();
+				//also cache magnitude, as it is a bit more expansive to calculate (squareroot)
+				float veloXZMagnitude = veloXZ.magnitude;
+
+				Vector2 accumulatedVectors = veloXZ + directionXZ;
+				accumulatedVectors = Vector2.ClampMagnitude(accumulatedVectors, Mathf.Max(veloXZMagnitude, speed));
+				Vector2 newDirectionXZ = accumulatedVectors - veloXZ;
+
+				//if the velocity was higher than the maximum speed, reduce the new direction by a factor corresponding to the angle 
+				if(veloXZMagnitude > speed)
+				{
+					newDirectionXZ *= (1-angleFactor);
+				}
+
+				//stuff it into the vector3
+				newDirection.x = newDirectionXZ.x;
+				newDirection.z = newDirectionXZ.y;
+			}
+
+			mRigidbody.MovePosition(mRigidbody.position + newDirection);
 		}
 
+
 		mIsFalling = mRigidbody.velocity.y <= -fallingDamageThreshold;
+
+		mHurtSlowdownActive = false;
+
 	}
 
 	public delegate void OnLanding(float impactVelocity);

@@ -124,4 +124,10 @@ public abstract class A_InputState : A_State{
 	{
 		player.aim.StopFocus();
 	}
+
+	protected Vector3 World2DToLocal3D (Vector2 world2D, Transform transform)
+	{
+		//from global to local space
+		return transform.TransformDirection (world2D.x, 0, world2D.y);
+	}
 }

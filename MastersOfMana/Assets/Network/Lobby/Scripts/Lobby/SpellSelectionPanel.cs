@@ -16,11 +16,19 @@ namespace Prototype.NetworkLobby {
 
     private void OnEnable()
         {
-            if (initialized)
-                return;
+            player.SetUiInteractive(false);
+            LobbyManager.s_Singleton.SetCancelDelegate(GoBack);
 
+            if (!initialized)
+            {
+                Init();
+            }
+            spellButtons[0].OnSelect(null);
+        }
+
+        public void Init()
+        {
             initialized = true;
-
             for (int i = 0; i < spellregistry.SpellList.Count; i++)
             {
                 A_Spell spell = spellregistry.SpellList[i];
@@ -32,23 +40,17 @@ namespace Prototype.NetworkLobby {
                 }
                 spellButton.transform.SetParent(spellList);
                 spellButton.transform.localScale = new Vector3(1, 1, 1);
-                spellButton.onClick.AddListener(delegate { player.tradeSpells(spell); });
+                spellButton.onClick.AddListener(delegate { OnClickSpellButton(spell); });
                 spellButtons.Add(spellButton);
             }
             // This will make sure the first spell is highlighted when opening
             GetComponentInParent<MultipleMenuInput>().firstSelected = spellButtons[0].gameObject;
+        }
 
-            player.SetUiInteractive(false);
-
-            //Assign correct Navigation for the spellButtons
-            //for(int i = 0; i < spellButtons.Count; i++)
-            //{
-            //    //if(i==0)
-            //    //{
-            //    //    AssignCustomNavigation()
-            //    //}
-            //}
-            LobbyManager.s_Singleton.SetCancelDelegate(GoBack);
+        private void OnClickSpellButton(A_Spell spell)
+        {
+            player.tradeSpells(spell);
+            Cancel();
         }
 
         public enum OnSelectDirection
@@ -80,8 +82,14 @@ namespace Prototype.NetworkLobby {
             sourceButton.navigation = navigation;
         }
 
+        public void Cancel()
+        {
+            LobbyManager.s_Singleton.Cancel();
+        }
+
         public void GoBack()
         {
+            player.GetComponentInParent<MultipleMenuInput>().highlightFirstSelected();
             gameObject.SetActive(false);
         }
 

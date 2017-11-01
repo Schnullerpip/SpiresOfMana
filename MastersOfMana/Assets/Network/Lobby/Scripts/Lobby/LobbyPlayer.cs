@@ -193,11 +193,12 @@ namespace Prototype.NetworkLobby
 
         public void SetUiInteractive(bool setActive)
         {
-            Button[] buttons = transform.parent.GetComponentsInChildren<Button>();
-            foreach(Button button in buttons)
+            Selectable[] selectables = transform.parent.GetComponentsInChildren<Selectable>();
+            foreach(Selectable selectable in selectables)
             {
-                button.interactable = setActive;
+                selectable.interactable = setActive;
             }
+            backButton.interactable = setActive;
         }
 
         public void UpdateSpellButtons()
@@ -229,7 +230,6 @@ namespace Prototype.NetworkLobby
                 }
             }
             spells[mSpellToChange] = spell;
-            LobbyManager.s_Singleton.mainMenu.spellSelectionPanel.gameObject.SetActive(false);
             UpdateSpellButtons();
         }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class GameManager : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public string winnerName;
     public PlayerScript localPlayer;
+    public GameObject eventSystem;
 
     public delegate void GameStarted();
     public static event GameStarted OnGameStarted;
@@ -30,6 +32,7 @@ public class GameManager : MonoBehaviour
         else
         {
             instance = this;
+            eventSystem.SetActive(true);
             DontDestroyOnLoad(this);
         }
     }

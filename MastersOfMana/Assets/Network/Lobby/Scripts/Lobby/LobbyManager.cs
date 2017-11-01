@@ -47,7 +47,15 @@ namespace Prototype.NetworkLobby
 
         void Start()
         {
-            s_Singleton = this;
+            if(s_Singleton == null)
+            {
+                s_Singleton = this;
+                mainMenu.gameObject.SetActive(true);
+            }
+            else
+            {
+                Destroy(this.gameObject);
+            }
             mLobbyHooks = GetComponent<Prototype.NetworkLobby.LobbyHook>();
             currentPanel = mainMenu.mainMenuPanel;
 
@@ -219,7 +227,7 @@ namespace Prototype.NetworkLobby
         }
         private void Update()
         {
-            if (Rewired.ReInput.players.GetPlayer(0).GetButtonDown("UICancel"))
+            if (Rewired.ReInput.isReady && Rewired.ReInput.players.GetPlayer(0).GetButtonDown("UICancel"))
             {
                 Cancel();
             }

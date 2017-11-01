@@ -8,7 +8,6 @@ public class HurtIndicator : MonoBehaviour {
     private PlayerHealthScript localPlayerHealthScript;
     public Image sprite;
     public float flashDuration = 0.5f;
-    private Coroutine mflashCorutine;
     private bool inCoroutine = false;
 
     // Use this for initialization
@@ -26,14 +25,10 @@ public class HurtIndicator : MonoBehaviour {
 
     private void Flash()
     {
-        //if(mflashCorutine != null)
-        //{
-        //    StopCoroutine(mflashCorutine);
-        //}
         if (!inCoroutine)
         {
             inCoroutine = true;
-            mflashCorutine = StartCoroutine(DoFlash());
+            StartCoroutine(DoFlash());
         }
 
     }

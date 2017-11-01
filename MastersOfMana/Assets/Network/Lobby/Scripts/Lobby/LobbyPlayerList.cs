@@ -20,13 +20,18 @@ namespace Prototype.NetworkLobby
         private void Start()
         {
             backButton.onClick.AddListener(GoBack);
-            LobbyManager.s_Singleton.SetCancelDelegate(GoBack);
         }
 
         public void OnEnable()
         {
+            LobbyManager.s_Singleton.SetCancelDelegate(GoBack);
             _instance = this;
             _layout = playerListContentTransform.GetComponent<VerticalLayoutGroup>();
+        }
+
+        public void onDisable()
+        {
+            LobbyManager.s_Singleton.RemoveLastCancelDelegate();
         }
 
         public void DisplayDirectServerWarning(bool enabled)

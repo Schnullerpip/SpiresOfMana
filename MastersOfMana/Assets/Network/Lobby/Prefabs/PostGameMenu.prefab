@@ -55,6 +55,7 @@ GameObject:
   - component: {fileID: 114358827652103754}
   - component: {fileID: 114904889831974530}
   - component: {fileID: 114134383409440692}
+  - component: {fileID: 114537217757430110}
   m_Layer: 5
   m_Name: PostGameMenu
   m_TagString: Untagged
@@ -146,7 +147,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 0
-  m_Text: Player 1 won!
+  m_Text: ' has won!'
 --- !u!114 &114134383409440692
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -159,6 +160,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   winnerText: {fileID: 114057226614513726}
+  resumeButton: {fileID: 114734555353998458}
 --- !u!114 &114358827652103754
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -207,6 +209,18 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114537217757430110
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1426940545677462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bd5e59ecf1d16a48b619949670e9dc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  firstSelected: {fileID: 1609746626797872}
 --- !u!114 &114734555353998458
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -219,7 +233,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -227,7 +241,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 0, b: 0.39607847, a: 1}
-    m_HighlightedColor: {r: 1, g: 0, b: 0.39607847, a: 1}
+    m_HighlightedColor: {r: 1, g: 0.7607843, b: 0.85490197, a: 1}
     m_PressedColor: {r: 1, g: 0, b: 0.39607847, a: 1}
     m_DisabledColor: {r: 1, g: 0, b: 0.39607847, a: 0.5019608}
     m_ColorMultiplier: 1

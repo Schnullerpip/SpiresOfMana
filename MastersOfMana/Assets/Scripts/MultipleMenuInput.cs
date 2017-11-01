@@ -15,23 +15,34 @@ public class MultipleMenuInput : MonoBehaviour {
         if(controller.type == Rewired.ControllerType.Mouse)
         {
             eventSystem.SetSelectedGameObject(null);
+            Cursor.visible = true;
         }
-        else if(controller.type == Rewired.ControllerType.Joystick)
+        else if(controller.type == Rewired.ControllerType.Joystick && firstSelected != null)
         {
             eventSystem.SetSelectedGameObject(firstSelected);
+            Cursor.visible = false;
         }
     }
 
     public void Start()
     {
         eventSystem = EventSystem.current;
-        eventSystem.SetSelectedGameObject(firstSelected);
+        highlightFirstSelected();
     }
 
     public void OnEnable()
     {
         Rewired.ActiveControllerChangedDelegate onControllerChangedDelegate = onControllerChanged;
         Rewired.ReInput.controllers.AddLastActiveControllerChangedDelegate(onControllerChangedDelegate);
+        highlightFirstSelected();
+    }
+
+    public void highlightFirstSelected()
+    {
+        if (firstSelected && eventSystem != null)
+        {
+            eventSystem.SetSelectedGameObject(firstSelected);
+        }
     }
 
     public void OnDisable()

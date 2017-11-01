@@ -44,7 +44,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1997745783768698
 GameObject:
   m_ObjectHideFlags: 0
@@ -142,7 +142,7 @@ MonoBehaviour:
   useRewiredSystemPlayer: 0
   rewiredPlayerIds: 00000000
   usePlayingPlayersOnly: 0
-  moveOneElementPerAxisPress: 0
+  moveOneElementPerAxisPress: 1
   m_HorizontalAxis: UIHorizontal
   m_VerticalAxis: UIVertical
   m_SubmitButton: UISubmit
@@ -165,8 +165,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   winnerName: 
   localPlayer: {fileID: 0}
-  rewired: {fileID: 0}
-  eventSystem: {fileID: 0}
+  eventSystem: {fileID: 1566325945482672}
 --- !u!114 &114830869772096972
 MonoBehaviour:
   m_ObjectHideFlags: 1

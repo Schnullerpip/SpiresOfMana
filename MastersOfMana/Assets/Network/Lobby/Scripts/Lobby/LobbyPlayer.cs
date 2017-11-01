@@ -146,6 +146,9 @@ namespace Prototype.NetworkLobby
             spellButton1.gameObject.SetActive(true);
             spellButton2.gameObject.SetActive(true);
             spellButton3.gameObject.SetActive(true);
+            spellButton1.interactable = true;
+            spellButton2.interactable = true;
+            spellButton3.interactable = true;
             UpdateSpellButtons();
 
             //We need to assign the navigation for down directly, it seems to lose the explicit reference because the back button is on a different UI
@@ -258,8 +261,11 @@ namespace Prototype.NetworkLobby
                 readyButton.interactable = false;
                 colorButton.interactable = false;
                 nameInput.interactable = false;
+                spellButton1.interactable = false;
+                spellButton2.interactable = false;
+                spellButton3.interactable = false;
                 // Push chosen spells to server
-                if(isLocalPlayer)
+                if (isLocalPlayer)
                 {
                     CmdSpellsChanged(spells[0].spellID, spells[1].spellID, spells[2].spellID);
                 }
@@ -274,6 +280,9 @@ namespace Prototype.NetworkLobby
                 readyButton.interactable = isLocalPlayer;
                 colorButton.interactable = isLocalPlayer;
                 nameInput.interactable = isLocalPlayer;
+                spellButton1.interactable = isLocalPlayer;
+                spellButton2.interactable = isLocalPlayer;
+                spellButton3.interactable = isLocalPlayer;
             }
         }
 

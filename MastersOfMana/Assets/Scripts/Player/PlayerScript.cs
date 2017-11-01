@@ -21,7 +21,6 @@ public class PlayerScript : NetworkBehaviour
 
     //the cached instance of the spell component, that holds all relevant spell information
     private PlayerSpells mPlayerSpells;
-
     public PlayerSpells GetPlayerSpells()
     {
         return mPlayerSpells;
@@ -63,13 +62,13 @@ public class PlayerScript : NetworkBehaviour
     public PlayerHealthScript healthScript;
 
 	[Header("Animation")]
-	public Animator animator;
+//	public Animator animator;
 	public Transform headJoint;
 
 	void Awake()
 	{
         mPlayerSpells = GetComponent<PlayerSpells>();
-    }
+	}
 
     private void OnDisable()
     {
@@ -183,10 +182,6 @@ public class PlayerScript : NetworkBehaviour
         inputStateSystem.UpdateLocal();
         castStateSystem.UpdateLocal();
         effectStateSystem.UpdateLocal();
-
-        if(!healthScript.IsAlive())
-            animator.SetBool("isDead", true);
-
  	}
 		
 	void OnCollisionStay(Collision collisionInfo)
@@ -258,22 +253,5 @@ public class PlayerScript : NetworkBehaviour
         mCameraLookdirection = CameraLookDirection;
 
         mPlayerSpells.spellslot[mPlayerSpells.currentSpell].Cast(this);
-    }
-
-    /// <summary>
-    /// allows the server and thus the spells, to affect the players position
-    /// </summary>
-    /// <param name="vec3"></param>
-    [ClientRpc]
-    public void RpcSetPosition(Vector3 vec3)
-    {
-        this.transform.position = vec3;
-    }
-
-
-	//get default parameters
-    void Reset()
-    {
-        animator = GetComponentInChildren<Animator>();
     }
 }

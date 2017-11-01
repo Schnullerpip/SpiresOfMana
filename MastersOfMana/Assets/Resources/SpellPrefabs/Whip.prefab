@@ -19,9 +19,9 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4168501406209142}
-  - component: {fileID: 120818958224146740}
-  - component: {fileID: 114515317586244104}
   - component: {fileID: 114620502676607184}
+  - component: {fileID: 114515317586244104}
+  - component: {fileID: 120818958224146740}
   m_Layer: 0
   m_Name: Whip
   m_TagString: Untagged
@@ -85,13 +85,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72f429ffdbb0d4672a68954676019904, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  referencedSpell: {fileID: 11400000, guid: 5c0f19c3e50294f70acf3ae92e2ea2f8, type: 2}
-  damage: 5
   pullHitForce: 10
-  pullHitUpForce: 0
+  pullHitUpForce: 5
+  rayRadius: 0.2
   pullPlayerForce: 10
-  pullPlayerUpForce: 7
-  maxDistance: 20
+  pullPlayerUpForce: 2
+  maxDistance: 30
+  disappearTimer: 1
   lineRenderer: {fileID: 120818958224146740}
 --- !u!120 &120818958224146740
 LineRenderer:
@@ -106,7 +106,7 @@ LineRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 3366995991f5e468694b78d971fcca4f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -147,25 +147,25 @@ LineRenderer:
       serializedVersion: 2
       key0: {r: 1, g: 1, b: 1, a: 1}
       key1: {r: 1, g: 1, b: 1, a: 1}
-      key2: {r: 0, g: 0, b: 0, a: 0}
-      key3: {r: 0, g: 0, b: 0, a: 0}
-      key4: {r: 0, g: 0, b: 0, a: 0}
-      key5: {r: 0, g: 0, b: 0, a: 0}
-      key6: {r: 0, g: 0, b: 0, a: 0}
+      key2: {r: 1, g: 1, b: 1, a: 0}
+      key3: {r: 0.69803923, g: 0.69803923, b: 0.69803923, a: 0}
+      key4: {r: 0, g: 0, b: 1, a: 0}
+      key5: {r: 1, g: 0, b: 1, a: 0}
+      key6: {r: 1, g: 0, b: 0, a: 0}
       key7: {r: 0, g: 0, b: 0, a: 0}
       ctime0: 0
       ctime1: 65535
-      ctime2: 0
-      ctime3: 0
-      ctime4: 0
-      ctime5: 0
-      ctime6: 0
+      ctime2: 40670
+      ctime3: 65535
+      ctime4: 43646
+      ctime5: 54591
+      ctime6: 65535
       ctime7: 0
       atime0: 0
       atime1: 65535
-      atime2: 0
-      atime3: 0
-      atime4: 0
+      atime2: 65535
+      atime3: 65535
+      atime4: 65535
       atime5: 0
       atime6: 0
       atime7: 0

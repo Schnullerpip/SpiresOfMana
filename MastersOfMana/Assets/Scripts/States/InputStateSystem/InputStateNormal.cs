@@ -6,22 +6,11 @@ public class InputStateNormal : A_InputState
 {
     public InputStateNormal(PlayerScript player) : base(player) { }
 
-
-    public override float CalculateDamage(float amount)
-    {
-        //get the instance of the hurt state and ask for it in the state dictionary
-        player.inputStateSystem.SetState(InputStateSystem.InputStateID.Hurt);
-        return amount;
-    }
-
 	public override void Move (Vector2 input)
 	{
 		base.Move (input);
 
-		Vector3 moveForce = new Vector3(input.x, 0, input.y);
-
-		//from global to local space
-		moveForce = player.transform.TransformDirection(moveForce);
+		Vector3 moveForce = World2DToLocal3D(input, player.transform);
 
 		//override moveForce in player script
 		player.movement.SetMoveInput(moveForce);

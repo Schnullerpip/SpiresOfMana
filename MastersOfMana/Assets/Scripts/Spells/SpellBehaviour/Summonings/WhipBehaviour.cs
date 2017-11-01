@@ -6,14 +6,16 @@ using System.Collections;
 [RequireComponent(typeof(LineRenderer))]
 public class WhipBehaviour : A_SummoningBehaviour
 {
-    public float damage = 5.0f;
+//    public float damage = 5.0f;
 	public float pullHitForce = 10;
 	public float pullHitUpForce = 3;
+
+	public float rayRadius = 0.2f;
 
 	public float pullPlayerForce = 10;
 	public float pullPlayerUpForce = 3;
 
-	public float maxDistance = 20;
+	public float maxDistance = 30;
 
 	public float disappearTimer = 1.0f;
 
@@ -50,7 +52,8 @@ public class WhipBehaviour : A_SummoningBehaviour
 
 		RaycastHit hit;
         Ray ray = new Ray(caster.GetCameraPosition(), caster.GetCameraLookDirection());
-		bool hitSomething = Physics.Raycast(ray, out hit, maxDistance);
+		bool hitSomething = Physics.SphereCast(ray, rayRadius, out hit, maxDistance);
+//		bool hitSomething = Physics.Raycast(ray, out hit, maxDistance);
 
 		if(hitSomething)
 		{
@@ -73,23 +76,23 @@ public class WhipBehaviour : A_SummoningBehaviour
 
 		if(hitSomething)
 		{
-			HealthScript hitHealth = hit.transform.GetComponentInChildren<HealthScript>();
-			if(hitHealth != null)
-			{
-				hitHealth.TakeDamage(damage);
-			}
-
+//			HealthScript hitHealth = hit.transform.GetComponentInChildren<HealthScript>();
+//			if(hitHealth != null)
+//			{
+//				hitHealth.TakeDamage(damage);
+//			}
+//
 			if(hit.collider.attachedRigidbody != null)
 			{
 			    Vector3 force = -caster.GetAimDirection()*pullHitForce + Vector3.up*pullHitUpForce;
 			    if (hit.collider.attachedRigidbody.CompareTag("Player"))
 			    {
-			        hit.collider.attachedRigidbody.GetComponent<PlayerScript>().movement.RpcAddForce(force, (int) ForceMode.Impulse);
+			        hit.collider.attachedRigidbody.GetComponent<PlayerScript>().movement.RpcAddForce(force, ForceMode.Impulse);
 			    }
 
 				hit.collider.attachedRigidbody.AddForce(force, ForceMode.Impulse);
 			}
-			caster.movement.RpcAddForce(caster.GetAimDirection() * pullPlayerForce + Vector3.up * pullPlayerUpForce, (int)ForceMode.Impulse);
+			caster.movement.RpcAddForce(caster.GetAimDirection() * pullPlayerForce + Vector3.up * pullPlayerUpForce, ForceMode.Impulse);
 		}
 
     }

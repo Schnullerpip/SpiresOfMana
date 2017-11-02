@@ -44,6 +44,7 @@ namespace Prototype.NetworkLobby
 
 			rewiredPlayer = ReInput.players.GetPlayer(0);
 			rewiredPlayer.controllers.maps.SetMapsEnabled(true,"UI");
+            rewiredPlayer.controllers.maps.SetMapsEnabled(false, "Default");
         }
 
         public void OnClickHost()

@@ -395,6 +395,8 @@ namespace Prototype.NetworkLobby
 
         public IEnumerator ServerCountdownCoroutine()
         {
+            // Dont show match in server list as we already started
+            matchMaker.SetMatchAttributes(matchInfo.networkId, false, 1, null);
             float remainingTime = prematchCountdown;
             int floorTime = Mathf.FloorToInt(remainingTime);
 
@@ -429,7 +431,7 @@ namespace Prototype.NetworkLobby
             }
 			//lock the mouse
 			Cursor.lockState = CursorLockMode.Locked;
-						            
+
             ServerChangeScene(playScene);
         }
 

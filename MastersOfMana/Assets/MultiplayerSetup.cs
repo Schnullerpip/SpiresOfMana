@@ -1,9 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
-public class MultiplayerSetup : NetworkBehaviour {
+public class MultiplayerSetup : MonoBehaviour {
 
     public List<GameObject> ObjectsOnGamestart;
 
@@ -11,8 +10,7 @@ public class MultiplayerSetup : NetworkBehaviour {
     {
         foreach (GameObject obj in ObjectsOnGamestart)
         {
-            //GameObject spawnedObj = 
-				GameObject.Instantiate(obj);
+		    GameObject.Instantiate(obj);
         }
     }
 }

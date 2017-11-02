@@ -11,7 +11,7 @@ public class ServerMoveable : NetworkBehaviour
     //cached instance of the attached rigid body
     protected Rigidbody mRigidbody;
 
-    public void Awake()
+    public virtual void Awake()
     {
         mRigidbody = gameObject.GetComponent<Rigidbody>();
     }
@@ -22,9 +22,9 @@ public class ServerMoveable : NetworkBehaviour
     /// <param name="force"></param>
     /// <param name="mode"></param>
     [ClientRpc]
-    public void RpcAddForce(Vector3 force, int mode)
+    public void RpcAddForce(Vector3 force, ForceMode mode)
     {
-        mRigidbody.AddForce(force, (ForceMode)mode);
+        mRigidbody.AddForce(force, mode);
     }
 
     /// <summary>
@@ -49,5 +49,15 @@ public class ServerMoveable : NetworkBehaviour
     public void RpcStopMotion()
     {
         mRigidbody.velocity = Vector3.zero;
+    }
+
+    /// <summary>
+    /// allows the server and thus the spells, to affect the players position
+    /// </summary>
+    /// <param name="vec3"></param>
+    [ClientRpc]
+    public void RpcSetPosition(Vector3 vec3)
+    {
+        mRigidbody.position = vec3;
     }
 }

@@ -49,7 +49,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4206410120861818
 Transform:
   m_ObjectHideFlags: 1
@@ -283,8 +283,7 @@ MonoBehaviour:
   explosionPrefab: {fileID: 1771704966800898, guid: b125de03614484f3db13b07525dfc102,
     type: 2}
   explosionRadius: 2
-  explosionTime: 1
-  explosionForce: 5
+  explosionForce: 8
   explosionDamage: 5
   trail: {fileID: 96633219081527090}
   disappearTimer: 10

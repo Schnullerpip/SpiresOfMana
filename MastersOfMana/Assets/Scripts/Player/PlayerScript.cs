@@ -21,7 +21,6 @@ public class PlayerScript : NetworkBehaviour
 
     //the cached instance of the spell component, that holds all relevant spell information
     private PlayerSpells mPlayerSpells;
-
     public PlayerSpells GetPlayerSpells()
     {
         return mPlayerSpells;
@@ -63,12 +62,20 @@ public class PlayerScript : NetworkBehaviour
     public PlayerHealthScript healthScript;
 
 	[Header("Animation")]
-	public Animator animator;
+//	public Animator animator;
 	public Transform headJoint;
 
 	void Awake()
 	{
         mPlayerSpells = GetComponent<PlayerSpells>();
+	}
+
+    private void OnDisable()
+    {
+        if (isLocalPlayer)
+        {
+            movement.onLandingWhileFalling -= healthScript.TakeFallDamage;
+        }
     }
 
     // Use this for initialization
@@ -83,6 +90,23 @@ public class PlayerScript : NetworkBehaviour
 	    rewiredPlayer = ReInput.players.GetPlayer(0);
 
         healthScript = GetComponent<PlayerHealthScript>();
+        if (isLocalPlayer)
+        {
+            movement.onLandingWhileFalling += takeFallDamage;
+        }
+    }
+
+    //We need this method, as it seems that delegates can't call commands
+    public void takeFallDamage(float amount)
+    {
+        CmdTakeFallDamage(amount);
+    }
+
+    //Take fall damage on the server
+    [Command]
+    public void CmdTakeFallDamage(float amount)
+    {
+        healthScript.TakeFallDamage(amount);
     }
 
     [Command]
@@ -158,10 +182,6 @@ public class PlayerScript : NetworkBehaviour
         inputStateSystem.UpdateLocal();
         castStateSystem.UpdateLocal();
         effectStateSystem.UpdateLocal();
-
-        if(!healthScript.IsAlive())
-            animator.SetBool("isDead", true);
-
  	}
 		
 	void OnCollisionStay(Collision collisionInfo)
@@ -195,7 +215,7 @@ public class PlayerScript : NetworkBehaviour
         Prototype.NetworkLobby.LobbyManager NetworkManager = Prototype.NetworkLobby.LobbyManager.s_Singleton;
         if (NetworkManager)
         { 
-            SpellRegistry spellregistry = NetworkManager.mainMenu.spellSelectionPanel.GetComponent<SpellSelectionPanel>().spellregistry;
+            SpellRegistry spellregistry = NetworkManager.mainMenu.spellSelectionPanel.GetComponent<Prototype.NetworkLobby.SpellSelectionPanel>().spellregistry;
             if (spellregistry)
             {
                 mPlayerSpells.spellslot[0].spell = spellregistry.GetSpellByID(spell1);
@@ -233,22 +253,5 @@ public class PlayerScript : NetworkBehaviour
         mCameraLookdirection = CameraLookDirection;
 
         mPlayerSpells.spellslot[mPlayerSpells.currentSpell].Cast(this);
-    }
-
-    /// <summary>
-    /// allows the server and thus the spells, to affect the players position
-    /// </summary>
-    /// <param name="vec3"></param>
-    [ClientRpc]
-    public void RpcSetPosition(Vector3 vec3)
-    {
-        this.transform.position = vec3;
-    }
-
-
-	//get default parameters
-    void Reset()
-    {
-        animator = GetComponentInChildren<Animator>();
     }
 }

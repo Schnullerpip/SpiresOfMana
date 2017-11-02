@@ -20,7 +20,7 @@ public class SpellHUD : MonoBehaviour
     void OnEnable ()
     {
         GameManager.OnGameStarted += Init;
-	}
+    }
 
     public void Init()
     {
@@ -44,6 +44,9 @@ public class SpellHUD : MonoBehaviour
         spellIcons[1].sprite = localPlayer.GetPlayerSpells().spellslot[1].spell.icon;
         spellIcons[2].sprite = localPlayer.GetPlayerSpells().spellslot[2].spell.icon;
 
+        //set selected spell
+        displayedCurrentSpell = localPlayer.GetPlayerSpells().GetCurrentspellslotID();
+        spellHighlights[displayedCurrentSpell].GetComponent<Image>().enabled = true;
         canvas = GetComponentInParent<Canvas>();
         canvas.enabled = true;
     }

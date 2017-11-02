@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class GameManager : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public string winnerName;
     public PlayerScript localPlayer;
+    public GameObject eventSystem;
 
     public delegate void GameStarted();
     public static event GameStarted OnGameStarted;
@@ -30,6 +32,7 @@ public class GameManager : MonoBehaviour
         else
         {
             instance = this;
+            eventSystem.SetActive(true);
             DontDestroyOnLoad(this);
         }
     }
@@ -62,22 +65,25 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        //activate the pools, to start isntantiating, now that all the players have joined the game
-        mPoolRegistry = FindObjectOfType<PoolRegistry>();
-        mPoolRegistry.CreatePools();
-
-        //enable the players to actually do stuff and update the chosen Spells
-        foreach (var p in mPlayers)
+        if (NetManager.instance.amIServer())
         {
-            p.RpcSetInputState(InputStateSystem.InputStateID.Normal);
-            p.RpcUpdateSpells(p.GetPlayerSpells().spellslot[0].spell.spellID, p.GetPlayerSpells().spellslot[1].spell.spellID, p.GetPlayerSpells().spellslot[2].spell.spellID);
-        }
+            //activate the pools, to start isntantiating, now that all the players have joined the game
+            mPoolRegistry = FindObjectOfType<PoolRegistry>();
+            mPoolRegistry.CreatePools();
 
-        if (OnGameStarted != null)
-        {
-            OnGameStarted();
+            //enable the players to actually do stuff and update the chosen Spells
+            foreach (var p in mPlayers)
+            {
+                p.RpcSetInputState(InputStateSystem.InputStateID.Normal);
+                p.RpcUpdateSpells(p.GetPlayerSpells().spellslot[0].spell.spellID, p.GetPlayerSpells().spellslot[1].spell.spellID, p.GetPlayerSpells().spellslot[2].spell.spellID);
+            }
+
+            if (OnGameStarted != null)
+            {
+                OnGameStarted();
+            }
+            NetManager.instance.RpcTriggerGameStarted();
         }
-        NetManager.instance.RpcTriggerGameStarted();
     }
 
     public void TriggerGameStarted()

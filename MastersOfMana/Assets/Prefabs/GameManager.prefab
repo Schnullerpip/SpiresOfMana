@@ -37,13 +37,14 @@ GameObject:
   - component: {fileID: 4432099978196768}
   - component: {fileID: 114301063919453054}
   - component: {fileID: 114345246678317944}
+  - component: {fileID: 114078098719225204}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1997745783768698
 GameObject:
   m_ObjectHideFlags: 0
@@ -101,6 +102,17 @@ Transform:
   m_Father: {fileID: 4352911368931666}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114078098719225204
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1566325945482672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1327945023, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114301063919453054
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -130,7 +142,7 @@ MonoBehaviour:
   useRewiredSystemPlayer: 0
   rewiredPlayerIds: 00000000
   usePlayingPlayersOnly: 0
-  moveOneElementPerAxisPress: 0
+  moveOneElementPerAxisPress: 1
   m_HorizontalAxis: UIHorizontal
   m_VerticalAxis: UIVertical
   m_SubmitButton: UISubmit
@@ -153,6 +165,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   winnerName: 
   localPlayer: {fileID: 0}
+  eventSystem: {fileID: 1566325945482672}
 --- !u!114 &114830869772096972
 MonoBehaviour:
   m_ObjectHideFlags: 1

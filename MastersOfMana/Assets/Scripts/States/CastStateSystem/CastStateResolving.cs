@@ -11,10 +11,12 @@ public class CastStateResolving : A_CastState {
         //set the cooldown of the current spellslot
         player.GetPlayerSpells().GetCurrentspell().cooldown = player.GetPlayerSpells().GetCurrentspell().spell.coolDownInSeconds;
 
-        var anim = player.animator;
+		player.GetComponent<PlayerAnimation>().Cast();
 
-        //tell the players animator to start the resolve animation
-        anim.SetTrigger(AnimationLiterals.ANIMATION_TRIGGER_RESOLVE);
+//        var anim = player.animator;
+//
+//        //tell the players animator to start the resolve animation
+//        anim.SetTrigger(AnimationLiterals.ANIMATION_TRIGGER_RESOLVE);
 
         //TODO clear with Lukas -> what do i need to do?!?!??!
         //anim.ResetTrigger(AnimationLiterals.ANIMATION_TRIGGER_HOLD);

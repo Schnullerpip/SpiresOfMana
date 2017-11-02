@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using UnityEngine.EventSystems;
 
 namespace Prototype.NetworkLobby
 {
@@ -23,6 +23,7 @@ namespace Prototype.NetworkLobby
 
         public GameObject localIcone;
         public GameObject remoteIcone;
+        private Button backButton;
 
         //OnMyName function will be invoked on clients when server change the value of playerName
         [SyncVar(hook = "OnMyName")]
@@ -33,12 +34,12 @@ namespace Prototype.NetworkLobby
         public Color OddRowColor = new Color(250.0f / 255.0f, 250.0f / 255.0f, 250.0f / 255.0f, 1.0f);
         public Color EvenRowColor = new Color(180.0f / 255.0f, 180.0f / 255.0f, 180.0f / 255.0f, 1.0f);
 
-        static Color JoinColor = new Color(255.0f/255.0f, 0.0f, 101.0f/255.0f,1.0f);
+        static Color JoinColor = new Color(255.0f / 255.0f, 0.0f, 101.0f / 255.0f, 1.0f);
         static Color NotReadyColor = new Color(34.0f / 255.0f, 44 / 255.0f, 55.0f / 255.0f, 1.0f);
         static Color ReadyColor = new Color(0.0f, 204.0f / 255.0f, 204.0f / 255.0f, 1.0f);
         static Color TransparentColor = new Color(0, 0, 0, 0);
 
-        public Button 
+        public Button
             spellButton1,
             spellButton2,
             spellButton3;
@@ -50,7 +51,6 @@ namespace Prototype.NetworkLobby
 
         //static Color OddRowColor = new Color(250.0f / 255.0f, 250.0f / 255.0f, 250.0f / 255.0f, 1.0f);
         //static Color EvenRowColor = new Color(180.0f / 255.0f, 180.0f / 255.0f, 180.0f / 255.0f, 1.0f);
-
 
         public override void OnClientEnterLobby()
         {
@@ -91,7 +91,7 @@ namespace Prototype.NetworkLobby
             ColorBlock b = readyButton.colors;
             b.normalColor = c;
             b.pressedColor = c;
-            b.highlightedColor = c;
+            //b.highlightedColor = c;
             b.disabledColor = c;
             readyButton.colors = b;
         }
@@ -124,6 +124,7 @@ namespace Prototype.NetworkLobby
 
             readyButton.transform.GetChild(0).GetComponent<Text>().text = "JOIN";
             readyButton.interactable = true;
+            EventSystem.current.SetSelectedGameObject(readyButton.gameObject);
 
             //have to use child count of player prefab already setup as "this.slot" is not set yet
             if (playerName == "")
@@ -142,15 +143,65 @@ namespace Prototype.NetworkLobby
             readyButton.onClick.RemoveAllListeners();
             readyButton.onClick.AddListener(OnReadyClicked);
 
-
             spellButton1.gameObject.SetActive(true);
             spellButton2.gameObject.SetActive(true);
             spellButton3.gameObject.SetActive(true);
+            spellButton1.interactable = true;
+            spellButton2.interactable = true;
+            spellButton3.interactable = true;
             UpdateSpellButtons();
+
+            //We need to assign the navigation for down directly, it seems to lose the explicit reference because the back button is on a different UI
+            backButton = GetComponentInParent<LobbyPlayerList>().backButton;
+            AssignCustomNavigation(readyButton, backButton, OnSelectDirection.down);
+            AssignCustomNavigation(spellButton1, backButton, OnSelectDirection.down);
+            AssignCustomNavigation(spellButton2, backButton, OnSelectDirection.down);
+            AssignCustomNavigation(spellButton3, backButton, OnSelectDirection.down);
+            AssignCustomNavigation(removePlayerButton, backButton, OnSelectDirection.down);
+            AssignCustomNavigation(backButton, spellButton1, OnSelectDirection.up);
 
             //when OnClientEnterLobby is called, the loval PlayerController is not yet created, so we need to redo that here to disable
             //the add button if we reach maxLocalPlayer. We pass 0, as it was already counted on OnClientEnterLobby
             if (LobbyManager.s_Singleton != null) LobbyManager.s_Singleton.OnPlayersNumberModified(0);
+        }
+
+        public enum OnSelectDirection
+        {
+            down,
+            up,
+            left,
+            right
+        }
+        public void AssignCustomNavigation(Button sourceButton, Button targetButton, OnSelectDirection direction)
+        {
+            Navigation navigation = sourceButton.navigation;
+            navigation.mode = Navigation.Mode.Explicit;
+            switch (direction)
+            {
+                case OnSelectDirection.up:
+                    navigation.selectOnUp = targetButton;
+                    break;
+                case OnSelectDirection.left:
+                    navigation.selectOnLeft = targetButton;
+                    break;
+                case OnSelectDirection.right:
+                    navigation.selectOnRight = targetButton;
+                    break;
+                default:
+                    navigation.selectOnDown = targetButton;
+                    break;
+            }
+            sourceButton.navigation = navigation;
+        }
+
+        public void SetUiInteractive(bool setActive)
+        {
+            Selectable[] selectables = transform.parent.GetComponentsInChildren<Selectable>();
+            foreach(Selectable selectable in selectables)
+            {
+                selectable.interactable = setActive;
+            }
+            backButton.interactable = setActive;
         }
 
         public void UpdateSpellButtons()
@@ -182,7 +233,6 @@ namespace Prototype.NetworkLobby
                 }
             }
             spells[mSpellToChange] = spell;
-            LobbyManager.s_Singleton.mainMenu.spellSelectionPanel.gameObject.SetActive(false);
             UpdateSpellButtons();
         }
 
@@ -211,8 +261,11 @@ namespace Prototype.NetworkLobby
                 readyButton.interactable = false;
                 colorButton.interactable = false;
                 nameInput.interactable = false;
+                spellButton1.interactable = false;
+                spellButton2.interactable = false;
+                spellButton3.interactable = false;
                 // Push chosen spells to server
-                if(isLocalPlayer)
+                if (isLocalPlayer)
                 {
                     CmdSpellsChanged(spells[0].spellID, spells[1].spellID, spells[2].spellID);
                 }
@@ -227,6 +280,9 @@ namespace Prototype.NetworkLobby
                 readyButton.interactable = isLocalPlayer;
                 colorButton.interactable = isLocalPlayer;
                 nameInput.interactable = isLocalPlayer;
+                spellButton1.interactable = isLocalPlayer;
+                spellButton2.interactable = isLocalPlayer;
+                spellButton3.interactable = isLocalPlayer;
             }
         }
 

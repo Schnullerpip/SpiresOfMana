@@ -33,26 +33,18 @@ namespace Prototype.NetworkLobby
 
         public void OnEnable()
         {
-            //lobbyManager.topPanel.ToggleVisibility(true);
-
-            //ipInput.onEndEdit.RemoveAllListeners();
-            //ipInput.onEndEdit.AddListener(onEndEditIP);
             Cursor.lockState = CursorLockMode.None;
 
             matchNameInput.onEndEdit.RemoveAllListeners();
             matchNameInput.onEndEdit.AddListener(onEndEditGameName);
 
             lobbyManager = GameObject.FindObjectOfType<LobbyManager>();
+            backButton.onClick.RemoveAllListeners();
             backButton.onClick.AddListener(lobbyManager.GoBackButton);
 
 			rewiredPlayer = ReInput.players.GetPlayer(0);
 			rewiredPlayer.controllers.maps.SetMapsEnabled(true,"UI");
         }
-
-		void Update()
-		{
-//			print(rewiredPlayer.GetAxis("UIHorizontal"));
-		}
 
         public void OnClickHost()
         {
@@ -63,7 +55,6 @@ namespace Prototype.NetworkLobby
         {
             lobbyManager.ChangeTo(lobbyPanel);
 
-            //lobbyManager.networkAddress = ipInput.text;
             lobbyManager.StartClient();
 
             lobbyManager.backDelegate = lobbyManager.StopClientClbk;
@@ -92,7 +83,7 @@ namespace Prototype.NetworkLobby
 				"", "", "", 0, 0,
 				lobbyManager.OnMatchCreate);
 
-            lobbyManager.backDelegate = lobbyManager.StopHost;
+            //lobbyManager.backDelegate = lobbyManager.StopHost;
             lobbyManager.mIsMatchmaking = true;
             lobbyManager.DisplayIsConnecting();
 
@@ -102,7 +93,9 @@ namespace Prototype.NetworkLobby
         public void OnClickOpenServerList()
         {
             lobbyManager.StartMatchMaker();
-            lobbyManager.backDelegate = lobbyManager.SimpleBackClbk;
+            lobbyManager.SetCancelDelegate(lobbyManager.SimpleBackClbk);
+            lobbyManager.backDelegate = lobbyManager.Cancel;
+            backButton.gameObject.SetActive(true);
             lobbyManager.ChangeTo(lobbyServerList);
         }
 

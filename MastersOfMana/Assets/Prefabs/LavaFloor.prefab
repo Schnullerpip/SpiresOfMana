@@ -24,7 +24,9 @@ GameObject:
   - component: {fileID: 114865154224641114}
   - component: {fileID: 65994798037195866}
   - component: {fileID: 65341144972587894}
-  - component: {fileID: 114662051239829704}
+  - component: {fileID: 114509025285551534}
+  - component: {fileID: 114733982387695080}
+  - component: {fileID: 114062914322740068}
   m_Layer: 0
   m_Name: LavaFloor
   m_TagString: Untagged
@@ -39,7 +41,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1305568902638960}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 5.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0.1, z: 0}
   m_LocalScale: {x: 30, y: 1, z: 30}
   m_Children: []
   m_Father: {fileID: 0}
@@ -108,7 +110,28 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 10, y: 2.220446e-16, z: 10}
   m_Center: {x: 0, y: -1.3, z: 0}
---- !u!114 &114662051239829704
+--- !u!114 &114062914322740068
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1305568902638960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 0
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_VelocityThreshold: 0.0001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
+--- !u!114 &114509025285551534
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -140,6 +163,27 @@ MonoBehaviour:
     i15: 251
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
+--- !u!114 &114733982387695080
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1305568902638960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_VelocityThreshold: 0.0001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
 --- !u!114 &114865154224641114
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -152,38 +196,44 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damagePerSecond: 4
-  cycleTime: 60
-  amplitude: 15
+  cycleTime: 180
+  amplitude: 12
   lavaFlow:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 2
-      time: -0.0012755101
-      value: 0.0024096374
+      time: 0.0011829585
+      value: 0.0029039457
+      inSlope: 0.022896878
+      outSlope: 0.022896878
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.13037068
+      value: 0.023092069
+      inSlope: 0.20522293
+      outSlope: 0.20522293
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.30368286
+      value: 0.49607027
+      inSlope: -0.032561913
+      outSlope: -0.032561913
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.5387336
+      value: 0.49801868
+      inSlope: 0.02299819
+      outSlope: 0.02299819
+      tangentMode: 136
+    - serializedVersion: 2
+      time: 0.64256454
+      value: 0.802266
       inSlope: 0
       outSlope: 0
       tangentMode: 136
     - serializedVersion: 2
-      time: 0.20025507
-      value: 0.50481904
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
-    - serializedVersion: 2
-      time: 0.39859688
-      value: 0.20120473
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
-    - serializedVersion: 2
-      time: 0.5982142
-      value: 0.8036141
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
-    - serializedVersion: 2
-      time: 0.80102026
-      value: 0.30481914
+      time: 0.8059031
+      value: 0.80225563
       inSlope: 0
       outSlope: 0
       tangentMode: 136

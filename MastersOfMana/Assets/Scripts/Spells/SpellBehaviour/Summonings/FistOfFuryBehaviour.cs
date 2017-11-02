@@ -6,15 +6,17 @@ using UnityEngine.Networking;
 [RequireComponent(typeof(Collider))]
 public class FistOfFuryBehaviour : A_SummoningBehaviour
 {
+    private PlayerScript caster;
 
     [SerializeField] private float explosionAmplitude;
-    private PlayerScript caster;
-    [SerializeField]
-    private Explosion mExplosion;
-    [SerializeField]
-    private ParticleSystem mTrail;
-    [SerializeField]
-    private float mExplosionForce;
+    [SerializeField] private Explosion mExplosion;
+    [SerializeField] private ParticleSystem mTrail;
+
+    [SerializeField] private float mExplosionForce;
+    [SerializeField] private float mPushDownForce;
+    [SerializeField] private float mMinimumDamage;
+    [SerializeField] private float mMaximumDamage;
+    [SerializeField] [Range(0.0f, 1.0f)] private float mVelocityScaledDamageFactor;
 
     public override void Awake()
     {
@@ -39,7 +41,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         {
             //set caster's state so he or she doesnt get falldamage
             caster.RpcSetEffectState(EffectStateSystem.EffectStateID.NoFallDamage);
-            caster.movement.RpcAddForce(Vector3.down * 40.0f, ForceMode.VelocityChange);
+            caster.movement.RpcAddForce(Vector3.down * mPushDownForce, ForceMode.VelocityChange);
         }
     }
 
@@ -58,6 +60,9 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         }
         NetworkServer.Spawn(go);
 
+
+        //Debug.Log("velocity: " + caster.movement.GetVelocity());
+
         //apply explosiondamage to all healthscripts that were found
         Collider[] colliders = Physics.OverlapSphere(caster.transform.position, explosionAmplitude);
         for (int i = 0; i < colliders.Length; ++i)
@@ -68,7 +73,10 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
                 HealthScript hs = rigid.GetComponent<HealthScript>();
                 if (hs && hs != caster.healthScript)
                 {
-                    hs.TakeDamage(10.0f);
+                    float damage = mMinimumDamage + caster.movement.GetVelocity().magnitude*mVelocityScaledDamageFactor;
+                    damage = Mathf.Clamp(damage, mMinimumDamage, mMaximumDamage);
+                    Debug.Log("damage dealt: " + damage);
+                    hs.TakeDamage(damage);
                 }
 
                 //TODO exchange magic numbers with good stuff... 

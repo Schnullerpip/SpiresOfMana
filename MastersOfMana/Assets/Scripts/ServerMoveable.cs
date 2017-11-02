@@ -11,6 +11,15 @@ public class ServerMoveable : NetworkBehaviour
     //cached instance of the attached rigid body
     protected Rigidbody mRigidbody;
 
+    /// <summary>
+    /// Method that returns the player's velocity vector
+    /// </summary>
+    /// <returns></returns>
+    public Vector3 GetVelocity()
+    {
+        return mRigidbody.velocity;
+    }
+
     public virtual void Awake()
     {
         mRigidbody = gameObject.GetComponent<Rigidbody>();
@@ -25,6 +34,7 @@ public class ServerMoveable : NetworkBehaviour
     public void RpcAddForce(Vector3 force, ForceMode mode)
     {
         mRigidbody.AddForce(force, mode);
+        Debug.Log(mRigidbody.velocity.magnitude);
     }
 
     /// <summary>

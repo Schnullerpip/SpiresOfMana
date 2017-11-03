@@ -40,10 +40,12 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 		//create an instance of this fireball on the client's machine
 		NetworkServer.Spawn(grenade, PoolRegistry.GrenadePool.assetID);
 
-		grenadeBehaviour.Reset(caster.handTransform.position + caster.GetAimDirection() * 1.5f, caster.transform.rotation);
+		Vector3 aimDirection = GetAim(caster);
+
+		grenadeBehaviour.Reset(caster.handTransform.position + aimDirection * 1.5f, caster.transform.rotation);
 
 		//speed up the fireball to fly into the lookdirection of the player
-		grenadeBehaviour.Shoot(caster.GetAimDirection());
+		grenadeBehaviour.Shoot(aimDirection);
 
     }
 

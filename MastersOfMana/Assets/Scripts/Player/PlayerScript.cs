@@ -61,9 +61,12 @@ public class PlayerScript : NetworkBehaviour
 
     public PlayerHealthScript healthScript;
 
-	[Header("Animation")]
-//	public Animator animator;
 	public Transform headJoint;
+
+
+	public LayerMask ignoreLayer;
+	private Collider[] colliders;
+	private int[] colliderLayers;
 
 	void Awake()
 	{
@@ -94,6 +97,13 @@ public class PlayerScript : NetworkBehaviour
         {
             movement.onLandingWhileFalling += takeFallDamage;
         }
+
+		colliders = GetComponentsInChildren<Collider>(true);
+		colliderLayers = new int[colliders.Length];
+		for (int i = 0; i < colliders.Length; ++i) 
+		{
+			colliderLayers[i] = colliders[i].gameObject.layer;
+		}
     }
 
     //We need this method, as it seems that delegates can't call commands
@@ -140,16 +150,7 @@ public class PlayerScript : NetworkBehaviour
     {
         effectStateSystem.SetState(id);
     }
-
-
-    /// <summary>
-    /// the direction the player aims during a cast (this field only is valid, during a cast routine, on the server!
-    /// </summary>
-    private Vector3 mAimDirection;
-    public Vector3 GetAimDirection()
-    {
-        return mAimDirection;
-    }
+		
     private Vector3 mCameraPosition;
     public Vector3 GetCameraPosition()
     {
@@ -166,7 +167,6 @@ public class PlayerScript : NetworkBehaviour
     // Update is called once per frame
     void Update () 
 	{
-
         //update on all instances of a player
         inputStateSystem.UpdateSynchronized();
         castStateSystem.UpdateSynchronized();
@@ -188,6 +188,14 @@ public class PlayerScript : NetworkBehaviour
 	{
 		//propagate the collsionenter event to the feet
 		movement.feet.OnCollisionStay(collisionInfo);
+	}
+
+	public void SetColliderIgnoreRaycast(bool value)
+	{
+		for (int i = 0; i < colliders.Length; ++i) 
+		{
+			colliders[i].gameObject.layer = value ? (ignoreLayer.value >> 1) : colliderLayers[i];
+		}
 	}
 
 	void LateUpdate()
@@ -246,9 +254,8 @@ public class PlayerScript : NetworkBehaviour
 
     //resolving the chosen spell
     [Command]
-    public void CmdResolveSpell(Vector3 aimDirection, Vector3 CameraPostion, Vector3 CameraLookDirection)
+    public void CmdResolveSpell(Vector3 CameraPostion, Vector3 CameraLookDirection)
     {
-        mAimDirection = aimDirection;
         mCameraPosition = CameraPostion;
         mCameraLookdirection = CameraLookDirection;
 

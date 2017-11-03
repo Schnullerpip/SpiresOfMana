@@ -151,7 +151,7 @@ public class PlayerMovement : ServerMoveable
 		if(mIsFalling)
 		{
 			float delta = - mRigidbody.velocity.y - fallingDamageThreshold;
-//			float damage = delta * 3;
+
 			if(onLandingWhileFalling != null)
 			{
                 onLandingWhileFalling(delta);

@@ -30,7 +30,7 @@ public class HurtIndicator : MonoBehaviour {
 
     private void Flash()
     {
-        if (!inCoroutine)
+        if (this && !inCoroutine)
         {
             inCoroutine = true;
             StartCoroutine(DoFlash());

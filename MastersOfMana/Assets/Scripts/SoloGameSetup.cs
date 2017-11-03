@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class SoloGameSetup : MonoBehaviour {
 
-    //private GameManager GameManager;
-    //private PoolRegistry PoolRegistry;
-    //private NetManager NetworkManager;
 	public GameObject gameManagerPrefab;
     public GameObject directHostHack;
     public GameObject healthHUD;
@@ -41,6 +38,7 @@ public class SoloGameSetup : MonoBehaviour {
         NetworkManagerObject.AddComponent<NetManager>();
 
         Instantiate(ingameMenu);
+        Instantiate(hurtIndicator);
 
 		StartCoroutine(PullingGameStart());
     }

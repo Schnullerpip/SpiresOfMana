@@ -78,10 +78,6 @@ public class GameManager : MonoBehaviour
                 p.RpcUpdateSpells(p.GetPlayerSpells().spellslot[0].spell.spellID, p.GetPlayerSpells().spellslot[1].spell.spellID, p.GetPlayerSpells().spellslot[2].spell.spellID);
             }
 
-            if (OnGameStarted != null)
-            {
-                OnGameStarted();
-            }
             NetManager.instance.RpcTriggerGameStarted();
         }
     }

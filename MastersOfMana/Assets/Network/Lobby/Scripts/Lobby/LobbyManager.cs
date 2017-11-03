@@ -460,8 +460,9 @@ namespace Prototype.NetworkLobby
         
         public override void OnClientDisconnect(NetworkConnection conn)
         {
-            base.OnClientDisconnect(conn);
-            ChangeTo(mainMenu.mainMenuPanel);
+            StopClientClbk();
+            //base.OnClientDisconnect(conn);
+            //ChangeTo(mainMenu.mainMenuPanel);
         }
 
         public override void OnClientError(NetworkConnection conn, int errorCode)

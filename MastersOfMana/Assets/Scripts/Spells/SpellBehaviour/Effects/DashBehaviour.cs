@@ -23,8 +23,9 @@ public class DashBehaviour : A_EffectBehaviour
 
     public override void Execute(PlayerScript caster)
     {
+		
         //properties the spellneeds
-        Vector3 point1, point2, originalPosition = caster.transform.position, direction = caster.GetCameraLookDirection();
+		Vector3 point1, point2, originalPosition = caster.transform.position, direction = GetAim(caster);
 
         point1 = point2 = caster.headJoint.position + direction*mOffsetToPlayer;
         point2 -= new Vector3(0, mCapsuleHeight, 0);
@@ -42,7 +43,8 @@ public class DashBehaviour : A_EffectBehaviour
             PlayerScript ps = hit.collider.GetComponentInParent<PlayerScript>();
             if (ps)
             {
-                ps.movement.RpcAddForce(direction*mPushForce, ForceMode.Impulse);
+                Vector3 pushDirection = Vector3.Normalize(ps.transform.TransformPoint(ps.movement.mRigidbody.centerOfMass) - caster.transform.position);
+                ps.movement.RpcAddForce(pushDirection*mPushForce, ForceMode.Impulse);
             }
         }
 

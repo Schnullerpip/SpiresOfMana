@@ -135,11 +135,6 @@ public class PlayerMovement : ServerMoveable
 
 	}
 
-	public Vector3 GetVelocity()
-	{
-		return mRigidbody.velocity;
-	}
-
 	public delegate void OnLandingWhileFalling(float impactVelocity);
 	/// <summary>
 	/// This Delegate is called once, when the FeetCollider is touching ground again. Regardless of wether or not the ground is considered steady

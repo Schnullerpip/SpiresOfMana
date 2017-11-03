@@ -13,6 +13,10 @@ public class SpellHUD : MonoBehaviour
     private List<Image> spellIcons = new List<Image>();
     private List<Image> spellHighlights = new List<Image>();
     private List<Image> spellCooldowns = new List<Image>();
+    public Image targetCooldown;
+
+    public delegate void CooldownFinished();
+    public event CooldownFinished OnCooldownFinished;
 
     private int displayedCurrentSpell;
 
@@ -63,9 +67,17 @@ public class SpellHUD : MonoBehaviour
         // Did we just finish our Cooldown? --> check if fillAmount will be set to 0 this frame (and wasn't zero before)
         if(spellCooldowns[SpellSlotID].fillAmount > 0 && CooldownPercentage == 0)
         {
+            if(OnCooldownFinished != null)
+            {
+                OnCooldownFinished();
+            }
             //SpellSlots[0].GetChild(1).GetComponent<ParticleSystem>().Play(false);// Simulate(100.0f);
         }
         spellCooldowns[SpellSlotID].fillAmount = CooldownPercentage;
+        if(SpellSlotID == displayedCurrentSpell)
+        {
+            targetCooldown.fillAmount = 1-CooldownPercentage;
+        }
     }
 
     public void SetCurrentSpell(int currentSpell)

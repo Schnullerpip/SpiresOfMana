@@ -19,7 +19,15 @@ public class WindWallBehaviour : A_SummoningBehaviour
     private Vector3 center;
     private PlayerScript caster;
 
-    public void Reset()
+    //prevent players from getting forces of the windwall for each collider they have
+    private List<Rigidbody> mAlreadyAffected;
+
+    public void OnEnable()
+    {
+        mAlreadyAffected = new List<Rigidbody>();
+    }
+
+    public void OnValidate()
     {
         mWindForceDirection.Normalize();
     }
@@ -69,8 +77,9 @@ public class WindWallBehaviour : A_SummoningBehaviour
             
             if (opponent)
             {
-                if (opponent != caster)
+                if (opponent != caster && !mAlreadyAffected.Contains(rigid))
                 {
+                    mAlreadyAffected.Add(rigid);
                     opponent.movement.RpcAddForce(force, mode);
                 }
             }

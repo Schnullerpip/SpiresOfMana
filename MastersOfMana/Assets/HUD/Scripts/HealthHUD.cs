@@ -3,9 +3,13 @@ using UnityEngine.UI;
 
 public class HealthHUD : MonoBehaviour
 {
+    public Text healthText;
+    public float criticalHealthFraction;
+
     private PlayerHealthScript localPlayerHealthScript;
     private Canvas canvas;
-    public Text healthText;
+    private float mCriticalHealth;
+    private bool mInCritialHealth = false;
 
     // Use this for initialization
     void OnEnable()
@@ -18,6 +22,7 @@ public class HealthHUD : MonoBehaviour
         localPlayerHealthScript = GameManager.instance.localPlayer.healthScript;
         // Set this UI Script in HealthScript so that HealtScript can update us
         localPlayerHealthScript.healthHUD = this;
+        mCriticalHealth = criticalHealthFraction * localPlayerHealthScript.GetMaxHealth();
         SetHealth(localPlayerHealthScript.GetCurrentHealth());
         canvas = GetComponentInParent<Canvas>();
         canvas.enabled = true;

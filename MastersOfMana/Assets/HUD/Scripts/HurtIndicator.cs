@@ -7,8 +7,14 @@ public class HurtIndicator : MonoBehaviour {
 
     private PlayerHealthScript localPlayerHealthScript;
     public Image sprite;
-    public float flashDuration = 0.5f;
+    public float flashSpeed = 0.01f;
+    public float alphaIncrease = 0.05f;
+
     private bool inCoroutine = false;
+    public float flashDuration = 0.5f;
+
+    private bool mRising = false;
+    private float mMinAlpha = 0.0f;
 
     // Use this for initialization
     void OnEnable()
@@ -21,6 +27,25 @@ public class HurtIndicator : MonoBehaviour {
         localPlayerHealthScript = GameManager.instance.localPlayer.healthScript;
         // Set this UI Script in HealthScript so that HealtScript can update us
         localPlayerHealthScript.OnDamageTaken += Flash;
+    }
+
+    private void Update()
+    {
+        if(mRising)
+        {
+            Color col = sprite.color;
+            col.a += flashSpeed;
+            if(col.a >= 1)
+            {
+                col.a = 1;
+                mRising = false;
+            }
+            sprite.color = col;
+        }
+        else
+        {
+
+        }
     }
 
     private void Flash()

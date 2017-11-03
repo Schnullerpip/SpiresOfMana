@@ -58,4 +58,9 @@ public class HealthScript : NetworkBehaviour
     public float GetCurrentHealth() {
         return mCurrentHealth;
     }
+
+    public float GetMaxHealth()
+    {
+        return mMaxHealth;
+    }
 }

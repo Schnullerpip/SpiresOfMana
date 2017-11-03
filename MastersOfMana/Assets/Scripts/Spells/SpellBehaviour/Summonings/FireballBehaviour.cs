@@ -46,10 +46,12 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 		fireballBehaviour.gameObject.SetActive(true);
 		fireballBehaviour.trail.Clear();
 
+		Vector3 aimDirection = GetAim(caster); 
+
 		//position the fireball to 'spawn' at the casters hand, including an offset so it does not collide instantly with the hand
-		fireballBehaviour.Reset(caster.handTransform.position + caster.GetAimDirection() * 1.5f, caster.transform.rotation);
+		fireballBehaviour.Reset(caster.handTransform.position + aimDirection * 1.5f, caster.transform.rotation);
 		//speed up the fireball to fly into the lookdirection of the player
-		fireballBehaviour.mRigid.velocity = caster.GetAimDirection() * mSpeed;
+		fireballBehaviour.mRigid.velocity = aimDirection * mSpeed;
 
         //create an instance of this fireball on the client's machine
 		NetworkServer.Spawn(fireballBehaviour.gameObject, PoolRegistry.FireballPool.assetID);

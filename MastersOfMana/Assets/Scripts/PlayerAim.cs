@@ -181,13 +181,13 @@ public class PlayerAim : NetworkBehaviour {
 		//TODO: cache this, maybe gamemanager?
 		List<HealthScript> allHealthScripts = new List<HealthScript>(GameObject.FindObjectsOfType<HealthScript>());
 
-		//		//sort by distance 
-		//		allHealthScripts.Sort(
-		//			delegate(HealthScript a, HealthScript b) 
-		//			{
-		//				return Vector3.Distance(transform.position,a.transform.position).CompareTo(Vector3.Distance(transform.position,b.transform.position));
-		//			}
-		//		);
+//		//sort by distance 
+//		allHealthScripts.Sort(
+//			delegate(HealthScript a, HealthScript b) 
+//			{
+//				return Vector3.Distance(transform.position,a.transform.position).CompareTo(Vector3.Distance(transform.position,b.transform.position));
+//			}
+//		);
 
 		//sort by angle
 		allHealthScripts.Sort(

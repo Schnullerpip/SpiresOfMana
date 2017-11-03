@@ -6,7 +6,6 @@ using System.Collections;
 [RequireComponent(typeof(LineRenderer))]
 public class WhipBehaviour : A_SummoningBehaviour
 {
-//    public float damage = 5.0f;
 	public float pullHitForce = 10;
 	public float pullHitUpForce = 3;
 
@@ -52,8 +51,10 @@ public class WhipBehaviour : A_SummoningBehaviour
 
 		RaycastHit hit;
         Ray ray = new Ray(caster.GetCameraPosition(), caster.GetCameraLookDirection());
+
+		caster.SetColliderIgnoreRaycast(true);
 		bool hitSomething = Physics.SphereCast(ray, rayRadius, out hit, maxDistance);
-//		bool hitSomething = Physics.Raycast(ray, out hit, maxDistance);
+		caster.SetColliderIgnoreRaycast(false);
 
 		if(hitSomething)
 		{
@@ -61,7 +62,7 @@ public class WhipBehaviour : A_SummoningBehaviour
 		}
 		else
 		{
-			whipBehaviour.linePoint1 = caster.handTransform.position + caster.GetAimDirection() * maxDistance;
+			whipBehaviour.linePoint1 = caster.handTransform.position + caster.GetCameraLookDirection() * maxDistance;
 		}
 
         whip.SetActive(true);
@@ -69,30 +70,27 @@ public class WhipBehaviour : A_SummoningBehaviour
 
 		whipBehaviour.Disappear();
 
-//		if(!isServer)
-//		{
-//			return;
-//		}
-
 		if(hitSomething)
 		{
-//			HealthScript hitHealth = hit.transform.GetComponentInChildren<HealthScript>();
-//			if(hitHealth != null)
-//			{
-//				hitHealth.TakeDamage(damage);
-//			}
-//
+			Vector3 aimDirection = Vector3.Normalize(hit.point - caster.handTransform.position);
+
 			if(hit.collider.attachedRigidbody != null)
 			{
-			    Vector3 force = -caster.GetAimDirection()*pullHitForce + Vector3.up*pullHitUpForce;
+				Vector3 force = -aimDirection * pullHitForce + Vector3.up*pullHitUpForce;
 			    if (hit.collider.attachedRigidbody.CompareTag("Player"))
 			    {
 			        hit.collider.attachedRigidbody.GetComponent<PlayerScript>().movement.RpcAddForce(force, ForceMode.Impulse);
 			    }
-
-				hit.collider.attachedRigidbody.AddForce(force, ForceMode.Impulse);
+				else
+				{
+					hit.collider.attachedRigidbody.AddForce(force, ForceMode.Impulse);
+				}
 			}
-			caster.movement.RpcAddForce(caster.GetAimDirection() * pullPlayerForce + Vector3.up * pullPlayerUpForce, ForceMode.Impulse);
+
+			Vector3 forceVector = aimDirection * pullPlayerForce + Vector3.up * pullPlayerUpForce;
+
+			Debug.DrawRay(caster.transform.position, forceVector, Color.red, 10);
+			caster.movement.RpcAddForce(forceVector, ForceMode.Impulse);
 		}
 
     }

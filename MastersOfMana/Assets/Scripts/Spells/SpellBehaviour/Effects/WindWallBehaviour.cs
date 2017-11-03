@@ -37,8 +37,10 @@ public class WindWallBehaviour : A_SummoningBehaviour
         GameObject ww = PoolRegistry.WindWallPool.Get();
         WindWallBehaviour windwall = ww.GetComponent<WindWallBehaviour>();
 
+		Vector3 direction =	GetAim(caster);
+
         //put the center of the windbox infront of the caster
-        windwall.center = caster.handTransform.position + caster.GetAimDirection()*mCenterDistance;
+		windwall.center = caster.handTransform.position + direction * mCenterDistance;
 
 		windwall.force = mWindforceStrength*(caster.transform.rotation*mWindForceDirection);
 		windwall.mode = ForceMode.VelocityChange;

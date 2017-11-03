@@ -34,4 +34,16 @@ public static class Extensions
 		rigid.velocity = Vector3.zero;
 		rigid.angularVelocity = Vector3.zero;
 	}
+
+	public static void SetLayer(this Transform trans, int layer, bool recursive = true) 
+	{
+		trans.gameObject.layer = layer;
+		if(recursive)
+		{
+			foreach(Transform child in trans)
+			{
+				child.SetLayer(layer, true);
+			}
+		}		
+	}
 }

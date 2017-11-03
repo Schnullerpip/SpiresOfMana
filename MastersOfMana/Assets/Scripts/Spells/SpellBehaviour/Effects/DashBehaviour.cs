@@ -42,7 +42,7 @@ public class DashBehaviour : A_EffectBehaviour
             PlayerScript ps = hit.collider.GetComponentInParent<PlayerScript>();
             if (ps)
             {
-                Vector3 pushDirection = ps.transform.TransformPoint(ps.movement.mRigidbody.centerOfMass) - caster.transform.position;
+                Vector3 pushDirection = Vector3.Normalize(ps.transform.TransformPoint(ps.movement.mRigidbody.centerOfMass) - caster.transform.position);
                 ps.movement.RpcAddForce(pushDirection*mPushForce, ForceMode.Impulse);
             }
         }

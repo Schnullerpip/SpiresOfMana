@@ -395,6 +395,10 @@ namespace Prototype.NetworkLobby
 
         public IEnumerator ServerCountdownCoroutine()
         {
+            //We actually need a Callback, otherwise the function doesnt work!
+            //Make sure this match is no longer shown in the serverlist!
+            NetworkMatch.BasicResponseDelegate del = BasicResponseDelegate;
+            matchMaker.SetMatchAttributes(matchInfo.networkId, false, 1, del);
             float remainingTime = prematchCountdown;
             int floorTime = Mathf.FloorToInt(remainingTime);
 
@@ -429,8 +433,12 @@ namespace Prototype.NetworkLobby
             }
 			//lock the mouse
 			Cursor.lockState = CursorLockMode.Locked;
-						            
+
             ServerChangeScene(playScene);
+        }
+
+        public void BasicResponseDelegate(bool success, string extendedInfo)
+        {
         }
 
         // ----------------- Client callbacks ------------------

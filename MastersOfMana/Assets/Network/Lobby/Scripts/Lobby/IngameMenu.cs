@@ -71,5 +71,8 @@ public class IngameMenu : MonoBehaviour {
     {
         lobbyManager.GoBackButton();
         ToggleVisibility();
+        Cursor.lockState = CursorLockMode.None;
+        mRewiredPlayer.controllers.maps.SetMapsEnabled(true, "UI");
+        mRewiredPlayer.controllers.maps.SetMapsEnabled(false, "Default");
     }
 }

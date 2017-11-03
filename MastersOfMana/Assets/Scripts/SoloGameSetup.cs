@@ -22,7 +22,6 @@ public class SoloGameSetup : MonoBehaviour {
 
 		GameObject GameManagerObj = Instantiate(gameManagerPrefab);
         GameManagerObj.transform.SetParent(this.transform);
-//        GameManagerObj.AddComponent<GameManager>();
         GameManager.instance.AddPlayerMessageCounter();
         GameManager.instance.AddPlayerMessageCounter();
 
@@ -78,6 +77,7 @@ public class SoloGameSetup : MonoBehaviour {
             Instantiate(healthHUD).GetComponent<HealthHUD>().Init();
             Instantiate(spellHUD).GetComponent<SpellHUD>().Init();
         }
+        GameManager.instance.localPlayer.transform.position = transform.position;
     }
 
     void OnDisable()

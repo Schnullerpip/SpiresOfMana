@@ -34,7 +34,6 @@ public class ServerMoveable : NetworkBehaviour
     public void RpcAddForce(Vector3 force, ForceMode mode)
     {
         mRigidbody.AddForce(force, mode);
-        Debug.Log(mRigidbody.velocity.magnitude);
     }
 
     /// <summary>

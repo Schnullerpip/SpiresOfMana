@@ -70,7 +70,6 @@ public abstract class A_SummoningBehaviour : A_SpellBehaviour {
     {
         if (isServer)
         {
-            Debug.Log("aha");
             ExecuteTriggerEnter_Host(other);
         }
 		else

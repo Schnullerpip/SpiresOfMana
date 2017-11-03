@@ -30,6 +30,6 @@ public class HealthHUD : MonoBehaviour
 
     public void SetHealth(float health)
     {
-        healthText.text = "Health: " + (int)health;
+        healthText.text = "Health: " + Mathf.CeilToInt(health);
     }
 }

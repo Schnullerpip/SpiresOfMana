@@ -125,6 +125,23 @@ public class PlayerScript : NetworkBehaviour
 		aim.cameraRig.gameObject.SetActive(true);
     }
 
+    //Statechanging ----------------------------------------
+    public void SetInputState(InputStateSystem.InputStateID id)
+    {
+        inputStateSystem.SetState(id);
+        RpcSetInputState(id);
+    }
+    public void SetEffectState(EffectStateSystem.EffectStateID id)
+    {
+        effectStateSystem.SetState(id);
+        RpcSetEffectState(id);
+    }
+    public void SetCastState(CastStateSystem.CastStateID id)
+    {
+        castStateSystem.SetState(id);
+        RpcSetCastState(id);
+    }
+
     [ClientRpc]
     public void RpcSetInputState(InputStateSystem.InputStateID id)
     {
@@ -140,6 +157,7 @@ public class PlayerScript : NetworkBehaviour
     {
         effectStateSystem.SetState(id);
     }
+    //------------------------------------------------------
 
 
     /// <summary>

@@ -40,7 +40,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         if (!caster.movement.feet.IsGrounded())
         {
             //set caster's state so he or she doesnt get falldamage
-            caster.RpcSetEffectState(EffectStateSystem.EffectStateID.NoFallDamage);
+            caster.SetEffectState(EffectStateSystem.EffectStateID.NoFallDamage);
             caster.movement.RpcAddForce(Vector3.down * mPushDownForce, ForceMode.VelocityChange);
         }
     }

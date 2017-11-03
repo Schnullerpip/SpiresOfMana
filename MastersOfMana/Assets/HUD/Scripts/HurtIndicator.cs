@@ -23,6 +23,11 @@ public class HurtIndicator : MonoBehaviour {
         localPlayerHealthScript.OnDamageTaken += Flash;
     }
 
+    public void OnDisable()
+    {
+        localPlayerHealthScript.OnDamageTaken -= Flash;
+    }
+
     private void Flash()
     {
         if (!inCoroutine)

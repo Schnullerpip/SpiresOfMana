@@ -49,7 +49,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 		Vector3 aimDirection = GetAim(caster); 
 
 		//position the fireball to 'spawn' at the casters hand, including an offset so it does not collide instantly with the hand
-		fireballBehaviour.Reset(caster.handTransform.position + aimDirection * 1.5f, caster.transform.rotation);
+		fireballBehaviour.Reset(caster.handTransform.position + aimDirection, caster.transform.rotation);
 		//speed up the fireball to fly into the lookdirection of the player
 		fireballBehaviour.mRigid.velocity = aimDirection * mSpeed;
 

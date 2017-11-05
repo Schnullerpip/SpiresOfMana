@@ -1843,13 +1843,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   aimSpeed: 180
-  aimAssistInUnits: 2
   focusAimSpeedFactor: 0.25
-  maxAimRefinementMagnitude: 1
+  focusAssistSpeed: 360
   yAngle: 0
-  lookDirection: {x: 0, y: 0, z: 0}
-  cameraRig: {fileID: 0}
   handTransform: {fileID: 4322715158737734}
+  currentLookRotation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!114 &114111673754988668
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1861,6 +1859,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8d2448b954ac4dddbdc8d27e600635f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mRigidbody: {fileID: 0}
   speed: 6
   focusSpeedSlowdown: 0.25
   jumpStrength: 5

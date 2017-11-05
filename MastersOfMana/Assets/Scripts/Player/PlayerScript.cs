@@ -130,9 +130,10 @@ public class PlayerScript : NetworkBehaviour
     {
         GameManager.instance.localPlayer = this;
         CmdGiveGo();
-		aim.cameraRig = Instantiate(cameraRigPrefab);
-		aim.cameraRig.GetComponent<PlayerCamera>().followTarget = this;
-		aim.cameraRig.gameObject.SetActive(true);
+		PlayerCamera cam = Instantiate(cameraRigPrefab);
+		cam.followTarget = this;
+//		cam.gameObject.SetActive(true);
+		aim.SetCameraRig(cam);
     }
 
     //Statechanging ----------------------------------------
@@ -219,7 +220,7 @@ public class PlayerScript : NetworkBehaviour
 	{
 		//rotate the head joint, do this in the lateupdate to override the animation (?)
 		//TODO: put it somewhere else or get rid of it entirely
-		headJoint.localRotation = Quaternion.AngleAxis(-aim.yAngle,Vector3.right); 
+		headJoint.localRotation = Quaternion.AngleAxis(aim.GetYAngle(), Vector3.right); 
 	}
 		
     ////Remote Procedure Calls!

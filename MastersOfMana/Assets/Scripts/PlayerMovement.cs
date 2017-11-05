@@ -54,6 +54,10 @@ public class PlayerMovement : ServerMoveable
 		mMoveInput = input;
 	}
 
+	public void SetFocusActive(bool value){
+		mFocusActive = value;
+	}
+
 	public delegate void OnMovement(float velocityMag, Vector2 direction, bool isGrounded);
 	public OnMovement onMovement;
 

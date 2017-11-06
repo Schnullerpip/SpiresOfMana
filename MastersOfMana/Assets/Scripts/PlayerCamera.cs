@@ -8,21 +8,22 @@ using UnityEngine.Networking;
 /// </summary>
 public class PlayerCamera : MonoBehaviour {
 
+	[Tooltip("This is the joint for the up and down rotation. This should be in the middle on the xz Plane, otherwise rotation will look weird")]
 	public Transform joint;
 	public PlayerScript followTarget;
 
 	[Range(0,1)]
 	public float movementDamping = .2f;
 
-	public Vector3 movementVelocity; 
+	public float shoulderSwapSpeed = 2;
+
 	public float zoomedInFOV = 30;
 	public float zoomSpeed = 1;
 
-	private float startFOV;
-
-	private Vector3 mOffset;
-
+	private float mStartFOV;
+	private int mCurrentShoulder = 1;
 	private Camera mCamera;
+	private Vector3 mMovementVelocity; 
 
 	public Camera GetCamera()
 	{
@@ -32,7 +33,7 @@ public class PlayerCamera : MonoBehaviour {
     void Awake()
     {
 		mCamera = GetComponentInChildren<Camera>();
-		startFOV = mCamera.fieldOfView;
+		mStartFOV = mCamera.fieldOfView;
     }
 
 	void Start()
@@ -47,21 +48,15 @@ public class PlayerCamera : MonoBehaviour {
 	{
 		Vector3 targetPosition = followTarget.transform.position;
 
-		transform.position = Vector3.SmoothDamp(transform.position, targetPosition ,ref movementVelocity, movementDamping);
+		transform.position = Vector3.SmoothDamp(transform.position, targetPosition ,ref mMovementVelocity, movementDamping);
 	}
 
 	void LateUpdate () 
 	{
 		Quaternion targetRotation = followTarget.aim.currentLookRotation;
 
-		if(followTarget.aim.IsFocused())
-		{
-			mCamera.fieldOfView = Mathf.MoveTowards(mCamera.fieldOfView, zoomedInFOV, Time.deltaTime * zoomSpeed);
-		}
-		else
-		{
-			mCamera.fieldOfView = Mathf.MoveTowards(mCamera.fieldOfView, startFOV, Time.deltaTime * zoomSpeed);
-		}
+		mCamera.fieldOfView = Mathf.MoveTowards(mCamera.fieldOfView, followTarget.aim.IsFocused() ? zoomedInFOV : mStartFOV, Time.deltaTime * zoomSpeed);
+
 		joint.rotation = targetRotation;
 	}
 
@@ -75,31 +70,35 @@ public class PlayerCamera : MonoBehaviour {
 		return Physics.Raycast(GetCenterRay(), out hit);
 	}
 
+	/// <summary>
+	/// Gets the center ray from the viewport.
+	/// </summary>
+	/// <returns>The center ray.</returns>
 	public Ray GetCenterRay()
 	{
 		return mCamera.ViewportPointToRay(new Vector3(.5f, .5f, 0));
 	}
 
 	/// <summary>
-	/// Shoots a ray from the 3D position of the camera, offset by its approx. distance to the players head.
+	/// Starts a coroutine that moves the camera from one shoulder to the other.
 	/// </summary>
-	/// <returns><c>true</c>, if the raycast hit, <c>false</c> otherwise.</returns>
-	/// <param name="position">Position.</param>
-	/// <param name="hit">Hit.</param>
-	public bool RaycastCheck(Vector3 position, out RaycastHit hit)
-	{
-		Vector3 rayStart = mCamera.transform.position + mCamera.transform.forward * (-mCamera.transform.localPosition.z + .5f);
-		Vector3 direction = position - rayStart;
-		return Physics.Raycast(rayStart, direction, out hit);
-	}
-
 	public void SwapShoulder()
 	{
-		Debug.Log("Shoulder Swapping not implemented yet");
-		return;
+		mCurrentShoulder *= -1;
+		StopAllCoroutines();
+		StartCoroutine(InterpolateShoulder());
+	}
 
-//		Vector3 camPos = mCamera.transform.localPosition;
-//		camPos.x *= -1;
-//		mCamera.transform.localPosition = camPos;
+	private IEnumerator InterpolateShoulder()
+	{
+		Vector3 targetScale = new Vector3(mCurrentShoulder,1,1);
+		float t = 0;
+		while(t < 1)
+		{
+			joint.localScale = Vector3.Lerp(joint.localScale, targetScale, t);
+			t += Time.deltaTime * shoulderSwapSpeed;
+			yield return null;
+		}
+		joint.localScale = targetScale;
 	}
 }

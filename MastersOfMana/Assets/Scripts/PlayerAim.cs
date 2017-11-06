@@ -17,6 +17,8 @@ public class PlayerAim : NetworkBehaviour {
 
 	public float focusAssistSpeed = 20;
 
+	public float maxYAngle = 85;
+
 //	[Tooltip("How many units can the player move the cursor when locked on?")]
 //	public float maxAimRefinementMagnitude = 1f;
 //	[HideInInspector]
@@ -110,7 +112,7 @@ public class PlayerAim : NetworkBehaviour {
 		//rotate the entire player along its y-axis
 		transform.Rotate (0, aimMovement.x, 0);
 		//prevent spinning around the z-Axis (no backflips allowed)
-		yAngle = Mathf.Clamp (yAngle - aimMovement.y, -89, 89);
+		yAngle = Mathf.Clamp (yAngle - aimMovement.y, -maxYAngle, maxYAngle);
 	}
 
 //	/// <summary>
@@ -160,10 +162,16 @@ public class PlayerAim : NetworkBehaviour {
 
 		//take the calculated quaternuon and split it into a rotation along the players y axis
 		transform.rotation = Quaternion.Euler(0, rotationEuler.y, 0);
-		//and the yAngle (which is the angle along the players z-Axis, maybe this name should be refactored?
+		//and the yAngle (which is the angle along the players x-Axis, maybe this name should be refactored?
 		yAngle = rotationEuler.x;
 
+		//since quaterions go from 0 - 360 and then wrap around, this is a workaround to get the desired value between -maxYAngle and maxYAngle
+		if(yAngle > maxYAngle)
+		{
+			yAngle -= 360;
+		}
 
+		yAngle = Mathf.Clamp(yAngle, -maxYAngle, maxYAngle);
 
 //		yAngle = Vector3.SignedAngle (transform.forward, dirToTarget, -transform.right);
 //		Quaternion lookRotation = Quaternion.LookRotation(dirToTarget, Vector3.up);

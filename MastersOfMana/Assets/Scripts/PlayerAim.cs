@@ -6,45 +6,66 @@ using UnityEngine.Networking;
 [DisallowMultipleComponent]
 public class PlayerAim : NetworkBehaviour {
 
-	[Header("Aim")]
 	[Tooltip("Degrees per seconds")]
 	public float aimSpeed = 360;    
-	public float aimAssistInUnits = 1.0f;
+
+	[Header("Focus Assist")]
+//	public float aimAssistInUnits = 1.0f;
 	[Tooltip("How fast is the aim when focused? 0 = freeze, 1 = no slowdown")]
 	[Range(0,1)]
 	public float focusAimSpeedFactor = .25f;
-	[Tooltip("How many units can the player move the cursor when locked on?")]
-	public float maxAimRefinementMagnitude = 1f;
-	[HideInInspector]
-	public float yAngle = 0;
-	[HideInInspector][SyncVar]
-	public Vector3 lookDirection;
-	public PlayerCamera cameraRig;
+
+	public float focusAssistSpeed = 20;
+
+//	[Tooltip("How many units can the player move the cursor when locked on?")]
+//	public float maxAimRefinementMagnitude = 1f;
+//	[HideInInspector]
+	private float yAngle = 0;
+//	[HideInInspector][SyncVar]
+//	public Vector3 lookDirection;
 	public Transform handTransform;
 
-	private Vector3 mAimRefinement;
+	public Quaternion currentLookRotation;
+
+//	private Vector3 mAimRefinement;
+	private PlayerCamera mCameraRig;
 	private bool mFocusActive = false;
 	private Collider mFocusedTarget = null;
 
 	void Awake()
 	{
-		lookDirection = transform.forward;
+//		lookDirection = transform.forward;
 	}
 
 	void OnDisable()
 	{
 		// Fix issue with LateUpdate on camera referencing the player
-		if(cameraRig != null)
+		if(mCameraRig != null)
 		{
-			cameraRig.gameObject.SetActive(false);
+			mCameraRig.gameObject.SetActive(false);
 		}
+	}
+
+	public PlayerCamera GetCameraRig(){
+		return mCameraRig;
+	}
+
+	public void SetCameraRig(PlayerCamera cameraRig){
+		mCameraRig = cameraRig;
+	}
+
+	public float GetYAngle(){
+		return yAngle;
 	}
 
 	void Update()
 	{
 		if(isLocalPlayer)
 		{
-			lookDirection = Quaternion.AngleAxis(-yAngle, transform.right) * transform.forward;
+//			lookDirection = Quaternion.AngleAxis(-yAngle, transform.right) * transform.forward;
+
+			//calculate the lookRotation by taking the yAngle (up and down) and the rotation in the y Axis (in form of the vec3 forward)
+			currentLookRotation = Quaternion.LookRotation(Quaternion.AngleAxis(yAngle, transform.right) * transform.forward);
 		}
 	}
 
@@ -57,26 +78,26 @@ public class PlayerAim : NetworkBehaviour {
 		return mFocusedTarget != null;
 	}
 
-	/// <summary>
-	/// Validates if the focus target is in view. Sets the FocusTarget to null if not in free view.
-	/// </summary>
-	/// <returns><c>true</c>, if focus target view was validated, <c>false</c> otherwise.</returns>
-	public bool ValidateFocusTargetView ()
-	{
-		if(mFocusedTarget == null)
-		{
-			return false;
-		}
-		RaycastHit hit;
-		//check if the focus target is still in view
-		cameraRig.RaycastCheck (mFocusedTarget.bounds.center, out hit);
-		if (hit.collider.gameObject != mFocusedTarget.gameObject) 
-		{
-			mFocusedTarget = null;
-			return false;
-		}
-		return true;
-	}
+//	/// <summary>
+//	/// Validates if the focus target is in view. Sets the FocusTarget to null if not in free view.
+//	/// </summary>
+//	/// <returns><c>true</c>, if focus target view was validated, <c>false</c> otherwise.</returns>
+//	public bool ValidateFocusTargetView ()
+//	{
+//		if(mFocusedTarget == null)
+//		{
+//			return false;
+//		}
+//		RaycastHit hit;
+//		//check if the focus target is still in view
+//		cameraRig.RaycastCheck (mFocusedTarget.bounds.center, out hit);
+//		if (hit.collider.gameObject != mFocusedTarget.gameObject) 
+//		{
+//			mFocusedTarget = null;
+//			return false;
+//		}
+//		return true;
+//	}
 
 	/// <summary>
 	/// Aims the player by the specified aimMovement.
@@ -89,47 +110,78 @@ public class PlayerAim : NetworkBehaviour {
 		//rotate the entire player along its y-axis
 		transform.Rotate (0, aimMovement.x, 0);
 		//prevent spinning around the z-Axis (no backflips allowed)
-		yAngle = Mathf.Clamp (yAngle + aimMovement.y, -89, 89);
+		yAngle = Mathf.Clamp (yAngle - aimMovement.y, -89, 89);
 	}
 
-	/// <summary>
-	/// Refines the aim.
-	/// </summary>
-	/// <param name="aimInput">Aim input.</param>
-	public void RefineAim (Vector2 aimInput, Rewired.ControllerType controllerType)
-	{
-		aimInput *= Time.deltaTime * aimSpeed * (mFocusActive ? focusAimSpeedFactor : 1);
+//	/// <summary>
+//	/// Refines the aim.
+//	/// </summary>
+//	/// <param name="aimInput">Aim input.</param>
+//	public void RefineAim (Vector2 aimInput, Rewired.ControllerType controllerType)
+//	{
+//		aimInput *= Time.deltaTime * aimSpeed * (mFocusActive ? focusAimSpeedFactor : 1);
+//
+//		//convert from local to worldspace and reduces the input by pi/2 since it was parameterized for angular movement of player
+//		mAimRefinement += transform.TransformDirection (aimInput) / Mathf.PI * .5f;
+//		mAimRefinement = Vector3.ClampMagnitude (mAimRefinement, maxAimRefinementMagnitude);
+//
+//		//do the following only if the player uses a joystick, as this rubberbanding is just super buggy with a mouse
+//		if(controllerType == Rewired.ControllerType.Joystick)
+//		{
+//			if (aimInput.sqrMagnitude <= 0) 
+//			{
+//				mAimRefinement = Vector3.MoveTowards (mAimRefinement, Vector3.zero, Time.deltaTime * aimSpeed * Time.deltaTime);
+//			}
+//		}
+//	}
+//
+//	public void ResetRefinement()
+//	{
+//		mAimRefinement = Vector3.zero;
+//	}
 
-		//convert from local to worldspace and reduces the input by pi/2 since it was parameterized for angular movement of player
-		mAimRefinement += transform.TransformDirection (aimInput) / Mathf.PI * .5f;
-		mAimRefinement = Vector3.ClampMagnitude (mAimRefinement, maxAimRefinementMagnitude);
-
-		//do the following only if the player uses a joystick, as this rubberbanding is just super buggy with a mouse
-		if(controllerType == Rewired.ControllerType.Joystick)
-		{
-			if (aimInput.sqrMagnitude <= 0) 
-			{
-				mAimRefinement = Vector3.MoveTowards (mAimRefinement, Vector3.zero, Time.deltaTime * aimSpeed * Time.deltaTime);
-			}
-		}
-	}
-
-	public void ResetRefinement()
-	{
-		mAimRefinement = Vector3.zero;
+	public void LookAtFocusTarget(){
+		LookAt(mFocusedTarget.bounds.center);
 	}
 
 	/// <summary>
 	/// Rotates the player towards the focus target.
 	/// </summary>
-	public void RotateTowardsFocusTarget ()
+	public void LookAt (Vector3 pointInWorldSpace)
 	{
 		//get the direction to the target, from the actual cameras position
-		Vector3 dirToTarget = (mFocusedTarget.bounds.center + mAimRefinement) - cameraRig.GetCamera().transform.position;
-		//rotate towards the target
+		Vector3 dirToTarget = (pointInWorldSpace /*+ mAimRefinement*/) - mCameraRig.GetCamera().transform.position;
+
+		//rotate towards the the direction of the target over multiple frames
+		//at short distances this is usually 1 or 2 frames, but when doing bigger rotations this should help with the view snapping effect
+		Quaternion targetRotation = Quaternion.RotateTowards (currentLookRotation, Quaternion.LookRotation (dirToTarget), focusAssistSpeed * Time.deltaTime);
+
+		Vector3 rotationEuler = targetRotation.eulerAngles;
+
+		//take the calculated quaternuon and split it into a rotation along the players y axis
+		transform.rotation = Quaternion.Euler(0, rotationEuler.y, 0);
+		//and the yAngle (which is the angle along the players z-Axis, maybe this name should be refactored?
+		yAngle = rotationEuler.x;
+
+
+
+//		yAngle = Vector3.SignedAngle (transform.forward, dirToTarget, -transform.right);
+//		Quaternion lookRotation = Quaternion.LookRotation(dirToTarget, Vector3.up);
+//
+//		Vector3 lookRotationEuler = lookRotation.eulerAngles;
+//
+//		transform.rotation = Quaternion.Euler(0,lookRotation.y * Mathf.Rad2Deg,0);
+
+		/*
 		float yRotation = Mathf.Atan2 (dirToTarget.x, dirToTarget.z) * Mathf.Rad2Deg;
-		transform.rotation = Quaternion.AngleAxis (yRotation, Vector3.up);
-		yAngle = -Vector3.SignedAngle (transform.forward, dirToTarget, transform.right);
+
+		Vector3 rot = transform.rotation.eulerAngles;
+		rot.y = Mathf.MoveTowardsAngle(rot.y, yRotation, 5);
+		transform.rotation = Quaternion.Euler(rot);
+
+//		transform.rotation = Quaternion.AngleAxis (Mathf.MoveTowards(transform.rotation.y, yRotation, 5), Vector3.up);
+		yAngle = Mathf.MoveTowardsAngle(yAngle, -Vector3.SignedAngle (transform.forward, dirToTarget, transform.right), 5);
+		*/
 	}
 
 	/// <summary>
@@ -144,10 +196,10 @@ public class PlayerAim : NetworkBehaviour {
 	/// <summary>
 	/// Starts the focus. Sets FocusActive to true and looks for a potential FocusTarget. Does not guarantee a FocusTarget.
 	/// </summary>
-	public void StartFocus()
+	public void StartFocus(PlayerScript self)
 	{
 		mFocusActive = true;
-		mFocusedTarget = FocusAssistTarget(aimAssistInUnits);
+		mFocusedTarget = FocusAssistTarget(self);//, aimAssistInUnits);
 	}
 
 	/// <summary>
@@ -164,37 +216,42 @@ public class PlayerAim : NetworkBehaviour {
 	/// maxAngle of the camera and that is not obstructed.	/// </summary>
 	/// <returns>The assist target.</returns>
 	/// <param name="maxUnitsOff">Max units off.</param>
-	private Collider FocusAssistTarget(float maxUnitsOff)
+	private Collider FocusAssistTarget(PlayerScript self)//, float maxUnitsOff)
 	{
 		//shoot a raycast in the middle of the screen
 		RaycastHit hit;
-		if(cameraRig.CenterRaycast(out hit))
+		self.SetColliderIgnoreRaycast(true);
+
+		if(mCameraRig.CenterRaycast(out hit))
 		{
+			self.SetColliderIgnoreRaycast(false);
 			//if we hit a healthscript, take that as our aim assist target
 			HealthScript h = hit.collider.GetComponentInParent<HealthScript>();
 			if(h != null)
 			{
+				self.SetColliderIgnoreRaycast(false);
 				return hit.collider;
 			}
 		}
+		//otherwise look for the next best target
 
 		//TODO: cache this, maybe gamemanager?
 		List<HealthScript> allHealthScripts = new List<HealthScript>(GameObject.FindObjectsOfType<HealthScript>());
 
-		//		//sort by distance 
-		//		allHealthScripts.Sort(
-		//			delegate(HealthScript a, HealthScript b) 
-		//			{
-		//				return Vector3.Distance(transform.position,a.transform.position).CompareTo(Vector3.Distance(transform.position,b.transform.position));
-		//			}
-		//		);
+//		//sort by distance 
+//		allHealthScripts.Sort(
+//			delegate(HealthScript a, HealthScript b) 
+//			{
+//				return Vector3.Distance(transform.position,a.transform.position).CompareTo(Vector3.Distance(transform.position,b.transform.position));
+//			}
+//		);
 
 		//sort by angle
 		allHealthScripts.Sort(
 			delegate(HealthScript a, HealthScript b) 
 			{
-				return Vector3.Angle(lookDirection, a.transform.position - cameraRig.GetCamera().transform.position)
-					.CompareTo(Vector3.Angle(lookDirection, b.transform.position - cameraRig.GetCamera().transform.position));
+				return Vector3.Angle(currentLookRotation.eulerAngles, a.transform.position - mCameraRig.GetCamera().transform.position)
+					.CompareTo(Vector3.Angle(currentLookRotation.eulerAngles, b.transform.position - mCameraRig.GetCamera().transform.position));
 			}
 		);
 
@@ -207,26 +264,29 @@ public class PlayerAim : NetworkBehaviour {
 				continue;
 			}
 
-			//skip if the target is behind the player
-			if(transform.InverseTransformPoint(aHealthScript.transform.position).z < 0)
-			{
-				continue;
-			}
+//			//skip if the target is behind the player
+//			if(transform.InverseTransformPoint(aHealthScript.transform.position).z < 0)
+//			{
+//				continue;
+//			}
 
 			Collider healthScriptCollider = aHealthScript.GetComponentInChildren<Collider>();
 
 			//get the vector to the target, from the position of the camera
-			Vector3 dirToTarget = healthScriptCollider.bounds.center - cameraRig.GetCamera().transform.position;
+//			Vector3 dirToTarget = healthScriptCollider.bounds.center - cameraRig.GetCamera().transform.position;
 
 			//priject the direction vector to the target onto a plane, defined by the lookDirection
 			//this way it acts as if the target hat a kind of 2d hitbox (circle) that expands maxUnitsOff into every direciton 
-			if(Vector3.ProjectOnPlane(dirToTarget, - lookDirection).sqrMagnitude < maxUnitsOff * maxUnitsOff)
+//			if(Vector3.ProjectOnPlane(dirToTarget, - lookDirection).sqrMagnitude < maxUnitsOff * maxUnitsOff)
 			{
-				if(cameraRig.RaycastCheck(healthScriptCollider.bounds.center, out hit))
+//				if(cameraRig.RaycastCheck(healthScriptCollider.bounds.center, out hit))
+				Debug.DrawLine(mCameraRig.GetCamera().transform.position, healthScriptCollider.bounds.center, Color.red, 20);
+				if(Physics.Linecast(mCameraRig.GetCamera().transform.position, healthScriptCollider.bounds.center, out hit))
 				{
 					//TODO find a better method to varify target, perhabs tags?
 					if(hit.collider.GetComponentInParent<HealthScript>() == aHealthScript)
 					{
+						self.SetColliderIgnoreRaycast(false);
 						return hit.collider;
 					}
 				}
@@ -234,6 +294,7 @@ public class PlayerAim : NetworkBehaviour {
 		}
 
 		//nothing found
+		self.SetColliderIgnoreRaycast(false);
 		return null;
 	}
 }

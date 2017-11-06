@@ -39,7 +39,7 @@ public abstract class A_InputState : A_State{
 
 		if(player.GetRewired().GetButtonDown("ShoulderSwap"))
 		{
-			player.aim.cameraRig.SwapShoulder();
+			player.aim.GetCameraRig().SwapShoulder();
 		}
 
 		//propergate various inputs to the statesystems
@@ -83,17 +83,17 @@ public abstract class A_InputState : A_State{
 
 	public virtual void Aim(Vector2 aimInput) 
 	{
-		player.aim.ValidateFocusTargetView();
+//		player.aim.ValidateFocusTargetView();
 
 		if(player.aim.HasFocusTarget())
 		{
 			//TODO: get actual rewired controller type
-			player.aim.RefineAim(aimInput, Rewired.ControllerType.Mouse);
-			player.aim.RotateTowardsFocusTarget();
+//			player.aim.RefineAim(aimInput, Rewired.ControllerType.Mouse);
+			player.aim.LookAtFocusTarget();
 		}
 		else
 		{
-			player.aim.ResetRefinement();
+//			player.aim.ResetRefinement();
 			player.aim.Aim(aimInput);
 		}
 	}
@@ -117,7 +117,7 @@ public abstract class A_InputState : A_State{
 
 	public virtual void StartFocus()
 	{
-		player.aim.StartFocus();
+		player.aim.StartFocus(player);
 	}
 
 	public virtual void StopFocus()

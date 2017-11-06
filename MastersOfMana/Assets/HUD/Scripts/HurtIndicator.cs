@@ -29,6 +29,16 @@ public class HurtIndicator : MonoBehaviour {
         mPlayerMaxHealth = localPlayerHealthScript.GetMaxHealth();
     }
 
+
+    public void OnDisable()
+    {
+        if (localPlayerHealthScript)
+        {
+            localPlayerHealthScript.OnHealthChanged -= HealthChanged;
+            localPlayerHealthScript.OnDamageTaken -= DamageTaken;
+        }
+    }
+
     private void Update()
     {
         if(mRising)
@@ -56,7 +66,6 @@ public class HurtIndicator : MonoBehaviour {
     {
         //Calculate new minimum Alpha value
         mMinAlpha = alphaIncreasePerPercentHealthLost * (1- newHealth / mPlayerMaxHealth);
-        Debug.Log(mMinAlpha);
     }
 
     private void DamageTaken(float damage)

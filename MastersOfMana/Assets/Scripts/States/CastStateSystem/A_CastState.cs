@@ -23,18 +23,6 @@ public abstract class A_CastState : A_State{
     {
         castDurationCount = 0;
     }
-    /*
-     * handy helper methods 
-     */
-    /// <summary>
-    /// Calculates the aim direction for a player considering its camerarig, that is only o the local player! The resulting Vector3 can 
-    /// be passed to the spell Commands, so the server can update its aiming direction, the moment it is supposed to cast a spell
-    /// </summary>
-    protected Vector3 CalculateAimDirection()
-    {
-        RaycastHit hit;
-        return player.aim.cameraRig.CenterRaycast(out hit) ? Vector3.Normalize(hit.point - player.handTransform.position) : player.aim.lookDirection;
-    }
 
     /*behaviour distinction
      * those are keptempty on purpose because they're ment to be implemented in the subclasses
@@ -56,6 +44,6 @@ public abstract class A_CastState : A_State{
     /// </summary>
     public virtual void CastCmdSpell()
     {
-        player.CmdResolveSpell(CalculateAimDirection(), player.aim.cameraRig.GetCamera().transform.position, player.aim.cameraRig.GetCamera().transform.forward);
+		player.CmdResolveSpell(player.aim.GetCameraRig().GetCamera().transform.position, player.aim.GetCameraRig().GetCamera().transform.forward);
     }
 }

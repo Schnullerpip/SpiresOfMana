@@ -208,7 +208,6 @@ GameObject:
   - component: {fileID: 114334208707171628}
   - component: {fileID: 114111673754988668}
   - component: {fileID: 114090019024461150}
-  - component: {fileID: 114868483579563138}
   - component: {fileID: 114930508603779648}
   - component: {fileID: 114651380410554418}
   - component: {fileID: 95559592168868734}
@@ -1844,13 +1843,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   aimSpeed: 180
-  aimAssistInUnits: 2
   focusAimSpeedFactor: 0.25
-  maxAimRefinementMagnitude: 1
+  focusAssistSpeed: 360
   yAngle: 0
-  lookDirection: {x: 0, y: 0, z: 0}
-  cameraRig: {fileID: 0}
   handTransform: {fileID: 4322715158737734}
+  currentLookRotation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!114 &114111673754988668
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1862,6 +1859,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8d2448b954ac4dddbdc8d27e600635f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mRigidbody: {fileID: 0}
   speed: 6
   focusSpeedSlowdown: 0.25
   jumpStrength: 5
@@ -1972,6 +1970,9 @@ MonoBehaviour:
   playerName: 
   healthScript: {fileID: 114581584314824656}
   headJoint: {fileID: 4496500260466464}
+  ignoreLayer:
+    serializedVersion: 2
+    m_Bits: 4
 --- !u!114 &114651380410554418
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2003,17 +2004,6 @@ MonoBehaviour:
   param3: 
   param4: 
   param5: 
---- !u!114 &114868483579563138
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1285255658560174}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 493a78ab207f7e8458b8c2e906d224ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114930508603779648
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -54,6 +54,10 @@ public class PlayerMovement : ServerMoveable
 		mMoveInput = input;
 	}
 
+	public void SetFocusActive(bool value){
+		mFocusActive = value;
+	}
+
 	public delegate void OnMovement(float velocityMag, Vector2 direction, bool isGrounded);
 	public OnMovement onMovement;
 
@@ -135,11 +139,6 @@ public class PlayerMovement : ServerMoveable
 
 	}
 
-	public Vector3 GetVelocity()
-	{
-		return mRigidbody.velocity;
-	}
-
 	public delegate void OnLandingWhileFalling(float impactVelocity);
 	/// <summary>
 	/// This Delegate is called once, when the FeetCollider is touching ground again. Regardless of wether or not the ground is considered steady
@@ -151,7 +150,7 @@ public class PlayerMovement : ServerMoveable
 		if(mIsFalling)
 		{
 			float delta = - mRigidbody.velocity.y - fallingDamageThreshold;
-//			float damage = delta * 3;
+
 			if(onLandingWhileFalling != null)
 			{
                 onLandingWhileFalling(delta);

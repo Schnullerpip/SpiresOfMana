@@ -52,7 +52,7 @@ public class PlayerCamera : MonoBehaviour {
 
 	void LateUpdate () 
 	{
-		Quaternion targetRotation = Quaternion.LookRotation(followTarget.aim.lookDirection,followTarget.transform.up);
+		Quaternion targetRotation = followTarget.aim.currentLookRotation;
 
 		if(followTarget.aim.IsFocused())
 		{

@@ -19,7 +19,15 @@ public class WindWallBehaviour : A_SummoningBehaviour
     private Vector3 center;
     private PlayerScript caster;
 
-    public void Reset()
+    //prevent players from getting forces of the windwall for each collider they have
+    private List<Rigidbody> mAlreadyAffected;
+
+    public void OnEnable()
+    {
+        mAlreadyAffected = new List<Rigidbody>();
+    }
+
+    public void OnValidate()
     {
         mWindForceDirection.Normalize();
     }
@@ -29,8 +37,10 @@ public class WindWallBehaviour : A_SummoningBehaviour
         GameObject ww = PoolRegistry.WindWallPool.Get();
         WindWallBehaviour windwall = ww.GetComponent<WindWallBehaviour>();
 
+		Vector3 direction =	GetAim(caster);
+
         //put the center of the windbox infront of the caster
-        windwall.center = caster.handTransform.position + caster.GetAimDirection()*mCenterDistance;
+		windwall.center = caster.handTransform.position + direction * mCenterDistance;
 
 		windwall.force = mWindforceStrength*(caster.transform.rotation*mWindForceDirection);
 		windwall.mode = ForceMode.VelocityChange;
@@ -67,8 +77,9 @@ public class WindWallBehaviour : A_SummoningBehaviour
             
             if (opponent)
             {
-                if (opponent != caster)
+                if (opponent != caster && !mAlreadyAffected.Contains(rigid))
                 {
+                    mAlreadyAffected.Add(rigid);
                     opponent.movement.RpcAddForce(force, mode);
                 }
             }

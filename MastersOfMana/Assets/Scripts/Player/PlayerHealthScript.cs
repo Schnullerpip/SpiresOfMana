@@ -5,10 +5,12 @@ using UnityEngine;
 public class PlayerHealthScript : HealthScript {
 
     private PlayerScript mPlayer;
-    public HealthHUD healthHUD;
 
-    public delegate void DamageTaken();
+    public delegate void DamageTaken(float damage);
     public event DamageTaken OnDamageTaken;
+
+    public delegate void HealthChanged(float damage);
+    public event HealthChanged OnHealthChanged;
 
     public override void Start()
     {
@@ -26,25 +28,36 @@ public class PlayerHealthScript : HealthScript {
         }
     }
 
+    public override void TakeHeal(float amount)
+    {
+        base.TakeHeal(mPlayer.effectStateSystem.current.CalculateHeal(amount));
+    }
+
     public void TakeFallDamage(float amount)
     {
         TakeDamage(mPlayer.effectStateSystem.current.CalculateFallDamage(amount));
     }
 
-    public override void OnHealthChanged(float newHealth)
+    public override void HealthChangedHook(float newHealth)
     {
-        //At game start healthHud might not be available yet
-        if (healthHUD)
+
+        if(OnHealthChanged != null)
         {
-            healthHUD.SetHealth(newHealth);
+            OnHealthChanged(newHealth);
         }
+        ////At game start healthHud might not be available yet
+        //if (healthHUD)
+        //{
+        //    healthHUD.SetHealth(newHealth);
+        //}
 
         // If newHealth is smaller than current Health we have taken damage!
-        if(newHealth < GetCurrentHealth())
+        float damage = GetCurrentHealth() - newHealth;
+        if (damage > 0)
         {
-            if(OnDamageTaken != null)
+            if (OnDamageTaken != null)
             {
-                OnDamageTaken();
+                OnDamageTaken(damage);
             }
         }
     }

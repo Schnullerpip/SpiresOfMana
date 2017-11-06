@@ -78,10 +78,6 @@ public class GameManager : MonoBehaviour
                 p.RpcUpdateSpells(p.GetPlayerSpells().spellslot[0].spell.spellID, p.GetPlayerSpells().spellslot[1].spell.spellID, p.GetPlayerSpells().spellslot[2].spell.spellID);
             }
 
-            if (OnGameStarted != null)
-            {
-                OnGameStarted();
-            }
             NetManager.instance.RpcTriggerGameStarted();
         }
     }
@@ -101,7 +97,6 @@ public class GameManager : MonoBehaviour
 
         //TODO: What happens if both die simultaniously?
         if (mNumberOfDeadPlayers >= (mPlayers.Count - 1)) { //only one player left -> he/she won the game!
-            Debug.Log("Last Mage standing");
             ResetLocalGameState();
 
             //Find out who has won and call post game screen

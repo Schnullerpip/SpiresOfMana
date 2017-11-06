@@ -9,7 +9,16 @@ public class ServerMoveable : NetworkBehaviour
 {
 
     //cached instance of the attached rigid body
-    protected Rigidbody mRigidbody;
+    public Rigidbody mRigidbody;
+
+    /// <summary>
+    /// Method that returns the player's velocity vector
+    /// </summary>
+    /// <returns></returns>
+    public Vector3 GetVelocity()
+    {
+        return mRigidbody.velocity;
+    }
 
     public virtual void Awake()
     {

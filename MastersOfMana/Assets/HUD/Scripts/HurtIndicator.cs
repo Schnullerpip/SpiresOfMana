@@ -7,14 +7,13 @@ public class HurtIndicator : MonoBehaviour {
 
     private PlayerHealthScript localPlayerHealthScript;
     public Image sprite;
-    public float flashSpeed = 0.01f;
-    public float alphaIncrease = 0.05f;
-
-    private bool inCoroutine = false;
-    public float flashDuration = 0.5f;
+    public float flashSpeed = 0.06f;
+    public float alphaIncreasePerPercentHealthLost = 0.75f;
 
     private bool mRising = false;
     private float mMinAlpha = 0.0f;
+
+    private float mPlayerMaxHealth;
 
     // Use this for initialization
     void OnEnable()
@@ -25,14 +24,16 @@ public class HurtIndicator : MonoBehaviour {
     public void Init()
     {
         localPlayerHealthScript = GameManager.instance.localPlayer.healthScript;
-        // Set this UI Script in HealthScript so that HealtScript can update us
-        localPlayerHealthScript.OnDamageTaken += Flash;
+        localPlayerHealthScript.OnHealthChanged += HealthChanged;
+        localPlayerHealthScript.OnDamageTaken += DamageTaken;
+        mPlayerMaxHealth = localPlayerHealthScript.GetMaxHealth();
     }
 
     private void Update()
     {
         if(mRising)
         {
+            // we need to cache the color because we can't change the alpha value directly
             Color col = sprite.color;
             col.a += flashSpeed;
             if(col.a >= 1)
@@ -42,27 +43,27 @@ public class HurtIndicator : MonoBehaviour {
             }
             sprite.color = col;
         }
-        else
+        else if(sprite.color.a > mMinAlpha)
         {
-
+            // we need to cache the color because we can't change the alpha value directly
+            Color col = sprite.color;
+            col.a -= flashSpeed;
+            sprite.color = col;
         }
     }
 
-    private void Flash()
+    private void HealthChanged(float newHealth)
     {
-        if (!inCoroutine)
-        {
-            inCoroutine = true;
-            StartCoroutine(DoFlash());
-        }
-
+        //Calculate new minimum Alpha value
+        mMinAlpha = alphaIncreasePerPercentHealthLost * (1- newHealth / mPlayerMaxHealth);
+        Debug.Log(mMinAlpha);
     }
 
-    IEnumerator DoFlash()
+    private void DamageTaken(float damage)
     {
-        sprite.gameObject.SetActive(true);
-        yield return new WaitForSeconds(flashDuration);
-        sprite.gameObject.SetActive(false);
-        inCoroutine = false;
+        if(sprite.color.a <= mMinAlpha)
+        {
+            mRising = true;
+        }
     }
 }

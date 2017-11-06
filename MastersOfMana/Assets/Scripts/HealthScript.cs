@@ -33,9 +33,9 @@ public class HealthScript : NetworkBehaviour
     /// </summary>
     public void HealthHook(float newHealth)
     {
-        OnHealthChanged(newHealth);
+        HealthChangedHook(newHealth);
     }
-    public virtual void OnHealthChanged(float newHealth) {}
+    public virtual void HealthChangedHook(float newHealth) {}
         
     /// <summary>
     /// the only thing, that should be adressed, to actually hurt a GameObject, this should only ever be run on the server!!!

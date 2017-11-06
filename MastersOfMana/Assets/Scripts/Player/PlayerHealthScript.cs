@@ -28,6 +28,11 @@ public class PlayerHealthScript : HealthScript {
         }
     }
 
+    public override void TakeHeal(float amount)
+    {
+        base.TakeHeal(mPlayer.effectStateSystem.current.CalculateHeal(amount));
+    }
+
     public void TakeFallDamage(float amount)
     {
         TakeDamage(mPlayer.effectStateSystem.current.CalculateFallDamage(amount));

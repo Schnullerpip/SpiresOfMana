@@ -63,4 +63,21 @@ public class HealthScript : NetworkBehaviour
     {
         return mMaxHealth;
     }
+
+    /// <summary>
+    /// the only thing, that should be adressed, to actually heal a GameObject, this should only ever be run on the server!!!
+    /// </summary>
+    /// <param name="amount"></param>
+    public virtual void TakeHeal(float amount)
+    {
+        if(mCurrentHealth <= 0)
+        {
+            return;
+        }
+        mCurrentHealth += amount;
+        if(mCurrentHealth > mMaxHealth)
+        {
+            mCurrentHealth = mMaxHealth;
+        }
+    }
 }

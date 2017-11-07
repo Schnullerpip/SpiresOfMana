@@ -86,10 +86,12 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
                 mAlreadyHit.Add(rigid.gameObject);
                 PlayerScript ps = colliders[i].attachedRigidbody.GetComponent<PlayerScript>();
                 Vector3 direction = rigid.position - caster.movement.mRigidbody.position;
+                direction.Normalize();
                 if (ps)
                 {
                     if (ps != caster)
                     {
+                        Debug.Log("force: " + mExplosionForce*direction);
                         ps.movement.RpcAddForce(mExplosionForce*direction, ForceMode.VelocityChange);
                     }
                 }

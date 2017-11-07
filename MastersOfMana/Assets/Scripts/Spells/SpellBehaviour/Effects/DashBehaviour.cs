@@ -21,6 +21,8 @@ public class DashBehaviour : A_EffectBehaviour
 
     [SerializeField] private float mPushForce;
 
+    [SerializeField] private float mReduction;
+
     public override void Execute(PlayerScript caster)
     {
 		
@@ -32,11 +34,11 @@ public class DashBehaviour : A_EffectBehaviour
 
         //capsulecast to find new position
         RaycastHit hit;
-        bool hitSomething = Physics.CapsuleCast(point1, point2, mCapsuleRadius, direction, out hit, mMaxDistance);
+        bool hitSomething = Physics.CapsuleCast(point1, point2, mCapsuleRadius, direction, out hit, mMaxDistance, 1, QueryTriggerInteraction.Ignore);
 
         //find position of player to that position
         //if the way is free go until maxdistance is reached - else go until the hit object
-        Vector3 newPosition = originalPosition + direction*(hitSomething ? hit.distance : mMaxDistance);
+        Vector3 newPosition = originalPosition + direction*(hitSomething ? hit.distance-mReduction : mMaxDistance);
 
         if (hitSomething)
         {

@@ -74,10 +74,16 @@ public class HealthScript : NetworkBehaviour
         {
             return;
         }
-        mCurrentHealth += amount;
-        if(mCurrentHealth > mMaxHealth)
+
+        //Setting mCurrenthealth here directly would provocate a health changed hook
+        float tempHealth = mCurrentHealth + amount;
+        if(tempHealth > mMaxHealth)
         {
             mCurrentHealth = mMaxHealth;
+        }
+        else
+        {
+            mCurrentHealth = tempHealth;
         }
     }
 }

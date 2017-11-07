@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 23967707339572866}
   - component: {fileID: 95975248448819700}
   - component: {fileID: 64410035350067692}
+  - component: {fileID: 54441391373491532}
   m_Layer: 0
   m_Name: EarthWall
   m_TagString: Untagged
@@ -115,6 +116,21 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1662614185547866}
   m_Mesh: {fileID: 4300000, guid: a6ae69a65de22244db6ab75739a1b45a, type: 3}
+--- !u!54 &54441391373491532
+Rigidbody:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1662614185547866}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!64 &64410035350067692
 MeshCollider:
   m_ObjectHideFlags: 1

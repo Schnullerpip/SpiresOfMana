@@ -72,6 +72,9 @@ public class JumpBehaviour : A_EffectBehaviour
 
 	void OnValidate()
 	{
-		vacuumPrefab.transform.localScale = Vector3.one * pullInRadius * 2;
+	    if (vacuumPrefab)
+	    {
+            vacuumPrefab.transform.localScale = Vector3.one * pullInRadius * 2;
+	    }
 	}
 }

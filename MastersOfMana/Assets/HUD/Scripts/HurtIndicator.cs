@@ -7,8 +7,13 @@ public class HurtIndicator : MonoBehaviour {
 
     private PlayerHealthScript localPlayerHealthScript;
     public Image sprite;
-    public float flashDuration = 0.5f;
-    private bool inCoroutine = false;
+    public float flashSpeed = 0.06f;
+    public float alphaIncreasePerPercentHealthLost = 0.75f;
+
+    private bool mRising = false;
+    private float mMinAlpha = 0.0f;
+
+    private float mPlayerMaxHealth;
 
     // Use this for initialization
     void OnEnable()
@@ -19,30 +24,55 @@ public class HurtIndicator : MonoBehaviour {
     public void Init()
     {
         localPlayerHealthScript = GameManager.instance.localPlayer.healthScript;
-        // Set this UI Script in HealthScript so that HealtScript can update us
-        localPlayerHealthScript.OnDamageTaken += Flash;
+        localPlayerHealthScript.OnHealthChanged += HealthChanged;
+        localPlayerHealthScript.OnDamageTaken += DamageTaken;
+        mPlayerMaxHealth = localPlayerHealthScript.GetMaxHealth();
     }
+
 
     public void OnDisable()
     {
-        localPlayerHealthScript.OnDamageTaken -= Flash;
-    }
-
-    private void Flash()
-    {
-        if (this && !inCoroutine)
+        if (localPlayerHealthScript)
         {
-            inCoroutine = true;
-            StartCoroutine(DoFlash());
+            localPlayerHealthScript.OnHealthChanged -= HealthChanged;
+            localPlayerHealthScript.OnDamageTaken -= DamageTaken;
         }
-
     }
 
-    IEnumerator DoFlash()
+    private void Update()
     {
-        sprite.gameObject.SetActive(true);
-        yield return new WaitForSeconds(flashDuration);
-        sprite.gameObject.SetActive(false);
-        inCoroutine = false;
+        if(mRising)
+        {
+            // we need to cache the color because we can't change the alpha value directly
+            Color col = sprite.color;
+            col.a += flashSpeed;
+            if(col.a >= 1)
+            {
+                col.a = 1;
+                mRising = false;
+            }
+            sprite.color = col;
+        }
+        else if(sprite.color.a > mMinAlpha)
+        {
+            // we need to cache the color because we can't change the alpha value directly
+            Color col = sprite.color;
+            col.a -= flashSpeed;
+            sprite.color = col;
+        }
+    }
+
+    private void HealthChanged(float newHealth)
+    {
+        //Calculate new minimum Alpha value
+        mMinAlpha = alphaIncreasePerPercentHealthLost * (1- newHealth / mPlayerMaxHealth);
+    }
+
+    private void DamageTaken(float damage)
+    {
+        if(sprite.color.a <= mMinAlpha)
+        {
+            mRising = true;
+        }
     }
 }

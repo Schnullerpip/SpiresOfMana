@@ -33,9 +33,9 @@ public class HealthScript : NetworkBehaviour
     /// </summary>
     public void HealthHook(float newHealth)
     {
-        OnHealthChanged(newHealth);
+        HealthChangedHook(newHealth);
     }
-    public virtual void OnHealthChanged(float newHealth) {}
+    public virtual void HealthChangedHook(float newHealth) {}
         
     /// <summary>
     /// the only thing, that should be adressed, to actually hurt a GameObject, this should only ever be run on the server!!!
@@ -57,5 +57,27 @@ public class HealthScript : NetworkBehaviour
 
     public float GetCurrentHealth() {
         return mCurrentHealth;
+    }
+
+    public float GetMaxHealth()
+    {
+        return mMaxHealth;
+    }
+
+    /// <summary>
+    /// the only thing, that should be adressed, to actually heal a GameObject, this should only ever be run on the server!!!
+    /// </summary>
+    /// <param name="amount"></param>
+    public virtual void TakeHeal(float amount)
+    {
+        if(mCurrentHealth <= 0)
+        {
+            return;
+        }
+        mCurrentHealth += amount;
+        if(mCurrentHealth > mMaxHealth)
+        {
+            mCurrentHealth = mMaxHealth;
+        }
     }
 }

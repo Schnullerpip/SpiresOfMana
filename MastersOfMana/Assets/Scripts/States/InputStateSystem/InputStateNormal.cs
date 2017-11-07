@@ -10,6 +10,8 @@ public class InputStateNormal : A_InputState
 	{
 		base.Move (input);
 
+		player.movement.SetFocusActive(player.aim.IsFocused());
+
 		Vector3 moveForce = World2DToLocal3D(input, player.transform);
 
 		//override moveForce in player script

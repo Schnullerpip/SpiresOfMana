@@ -41,7 +41,7 @@ public class PlayerAnimation : NetworkBehaviour {
 		animator.SetTrigger("jump");
 	}
 
-	void TookDamage()
+	void TookDamage(float damage)
 	{
 		if(!mPlayer.healthScript.IsAlive())
 		{

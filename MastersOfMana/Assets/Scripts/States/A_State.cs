@@ -59,4 +59,18 @@ public class A_State
     {
         return amount;
     }
+
+    /// <summary>
+    /// Handles internal statechanges in the case of "I am getting healed right now!"
+    /// </summary>
+    /// <param name="amount"></param>
+    /// <returns>
+    /// the amount of heal, that will be added to the current health
+    /// the state may decide or have an effect on how much heal is given in this situation,
+    /// but it may never actually touch the health field. This is the responsibility of the PlayerHealthScript
+    /// </returns>
+    public virtual float CalculateHeal(float amount)
+    {
+        return amount;
+    }
 }

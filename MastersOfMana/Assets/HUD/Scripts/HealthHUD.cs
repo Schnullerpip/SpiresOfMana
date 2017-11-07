@@ -3,9 +3,10 @@ using UnityEngine.UI;
 
 public class HealthHUD : MonoBehaviour
 {
+    public Text healthText;
+
     private PlayerHealthScript localPlayerHealthScript;
     private Canvas canvas;
-    public Text healthText;
 
     // Use this for initialization
     void OnEnable()
@@ -16,8 +17,8 @@ public class HealthHUD : MonoBehaviour
     public void Init()
     {
         localPlayerHealthScript = GameManager.instance.localPlayer.healthScript;
-        // Set this UI Script in HealthScript so that HealtScript can update us
-        localPlayerHealthScript.healthHUD = this;
+        // Get notified whenever health is changed
+        localPlayerHealthScript.OnHealthChanged += SetHealth;
         SetHealth(localPlayerHealthScript.GetCurrentHealth());
         canvas = GetComponentInParent<Canvas>();
         canvas.enabled = true;

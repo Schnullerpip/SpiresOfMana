@@ -29,7 +29,7 @@ namespace Prototype.NetworkLobby
             _layout = playerListContentTransform.GetComponent<VerticalLayoutGroup>();
         }
 
-        public void onDisable()
+        public void OnDisable()
         {
             LobbyManager.s_Singleton.RemoveLastCancelDelegate();
         }

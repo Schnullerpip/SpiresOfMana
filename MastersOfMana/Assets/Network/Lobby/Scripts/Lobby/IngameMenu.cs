@@ -32,7 +32,14 @@ public class IngameMenu : MonoBehaviour {
 			{
 				defaultSelected.Select();
 			}
+            lobbyManager.SetCancelDelegate(null);
 		}
+    }
+
+    public void Resume()
+    {
+        lobbyManager.RemoveLastCancelDelegate();
+        ToggleVisibility();
     }
 
     public void OnApplicationFocus(bool focus)
@@ -54,7 +61,7 @@ public class IngameMenu : MonoBehaviour {
     {
         if (mRewiredPlayer != null && mRewiredPlayer.GetButtonDown("IngameMenu"))
         {
-            ToggleVisibility();
+            Resume();
         }
     }
 
@@ -70,7 +77,7 @@ public class IngameMenu : MonoBehaviour {
     public void GoToMainMenu()
     {
         lobbyManager.GoBackButton();
-        ToggleVisibility();
+        Resume();
         Cursor.lockState = CursorLockMode.None;
         mRewiredPlayer.controllers.maps.SetMapsEnabled(true, "UI");
         mRewiredPlayer.controllers.maps.SetMapsEnabled(false, "Default");

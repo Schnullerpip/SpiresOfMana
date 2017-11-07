@@ -219,7 +219,10 @@ namespace Prototype.NetworkLobby
 
         public void Cancel()
         {
-            cancelDelegate();
+            if(cancelDelegate != null)
+            {
+                cancelDelegate();
+            }
             if (oldCancelDelegates.Count > 0)
             {
                 RemoveLastCancelDelegate();

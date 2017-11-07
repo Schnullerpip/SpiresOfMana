@@ -236,7 +236,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114922961059789288}
-        m_MethodName: ToggleVisibility
+        m_MethodName: Resume
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -519,6 +519,7 @@ MonoBehaviour:
   lobbyManager: {fileID: 0}
   canvas: {fileID: 223831861934255878}
   defaultSelected: {fileID: 114248011526214780}
+  mIsMenuActive: 0
 --- !u!114 &114939363813196796
 MonoBehaviour:
   m_ObjectHideFlags: 1

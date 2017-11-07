@@ -17,11 +17,11 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 	public float damage = 10;
 	public float explosionTime = 0.5f;
 
-	public GameObject explosion;
+	public GameObject explosionPrefab;
 	public GameObject grenadeMesh;
 
-    private Rigidbody mStickTo = null;
-    private Vector3 mStickPosition;
+//    private Rigidbody mStickTo = null;
+//    private Vector3 mStickPosition;
 
     public override void Awake()
     {
@@ -35,52 +35,51 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 
     public override void Execute(PlayerScript caster)
     {
-		//Get a fireballinstance out of the pool
-		GameObject grenade = PoolRegistry.GrenadePool.Get();
+		GrenadeBehaviour grenadeBehaviour = PoolRegistry.GrenadePool.Get().GetComponent<GrenadeBehaviour>();
+		//create an instance of this grenade on the client's machine
 
-		GrenadeBehaviour grenadeBehaviour = grenade.GetComponent<GrenadeBehaviour>();
-		grenade.SetActive(true);
-		//create an instance of this fireball on the client's machine
-		NetworkServer.Spawn(grenade, PoolRegistry.GrenadePool.assetID);
+		grenadeBehaviour.gameObject.SetActive(true);
 
 		Vector3 aimDirection = GetAim(caster);
+		
+		grenadeBehaviour.Reset(caster.handTransform.position + aimDirection, caster.transform.rotation);
+		grenadeBehaviour.mRigid.velocity = aimDirection * throwForce;
 
-		grenadeBehaviour.Reset(caster.handTransform.position + aimDirection * 1.5f, caster.transform.rotation);
+		NetworkServer.Spawn(grenadeBehaviour.gameObject, PoolRegistry.GrenadePool.assetID);
 
-		//speed up the fireball to fly into the lookdirection of the player
-		grenadeBehaviour.Shoot(aimDirection);
+		grenadeBehaviour.LightFuse(lifeTime);
     }
 
-    public void Update()
-    {
-        if (isServer && mStickTo)
-        {
-            Vector3 moveCorrection = mStickTo.transform.position - mStickPosition;
-            mStickPosition = mRigid.position;
-            mRigid.MovePosition(mRigid.position + moveCorrection);
-            Debug.Log("correcting position from : " + mStickPosition + " to: " + mRigid.position);
-        }
-    }
+//    public void Update()
+//    {
+//        if (isServer && mStickTo)
+//        {
+//            Vector3 moveCorrection = mStickTo.transform.position - mStickPosition;
+//            mStickPosition = mRigid.position;
+//            mRigid.MovePosition(mRigid.position + moveCorrection);
+//            Debug.Log("correcting position from : " + mStickPosition + " to: " + mRigid.position);
+//        }
+//    }
 
 	#region implemented abstract members of A_SummoningBehaviour
 
 	protected override void ExecuteCollision_Host (Collision collision)
 	{
-	    if (!mStickTo)
-	    {
-	        var rigid = collision.collider.attachedRigidbody;
-	        if (rigid)
-	        {
-	            mStickTo = rigid;
-                Debug.Log("sticking to " + rigid.name);
-	            mRigid.useGravity = false;
-	            mRigid.isKinematic = true;
-
-	            grenadeMesh.GetComponent<Collider>().enabled = false;
-
-	            mStickPosition = mRigid.position;
-	        }
-	    }
+//	    if (!mStickTo)
+//	    {
+//	        var rigid = collision.collider.attachedRigidbody;
+//	        if (rigid)
+//	        {
+//	            mStickTo = rigid;
+//                Debug.Log("sticking to " + rigid.name);
+//	            mRigid.useGravity = false;
+//	            mRigid.isKinematic = true;
+//
+//	            grenadeMesh.GetComponent<Collider>().enabled = false;
+//
+//	            mStickPosition = mRigid.position;
+//	        }
+//	    }
 	}
 
 	#endregion
@@ -92,18 +91,16 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 
 		mRigid.Reset();
 		mRigid.isKinematic = false;
-
-		RpcActivateExplosionMesh(false);
 	}
 
-	void Shoot(Vector3 direction)
+	private void LightFuse(float time)
 	{
-		mRigid.velocity = direction * throwForce;
-		StartCoroutine(LightFuse(lifeTime));
+		StartCoroutine(C_LightFuse(time));
 	}
 
-	IEnumerator LightFuse(float time)
+	IEnumerator C_LightFuse(float time)
 	{
+		//TODO cache waitforseconds
 		yield return new WaitForSeconds(time);
 		Explode ();
 	}
@@ -111,9 +108,6 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 	void Explode ()
 	{
 		mRigid.isKinematic = true;
-
-		StartCoroutine(ExplosionEffect());
-
 
 		if(!isServer)
 		{
@@ -131,22 +125,18 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 			{
 				cachedRigidbodies.Add(c.attachedRigidbody);
 
+				Vector3 force = c.attachedRigidbody.DirectionToCenterOfMass(mRigid.position);
+				force.Normalize();
+				force *= explosionForce;
+
                 //check wheather or not we are handling a player or just some random rigidbody
 			    if (c.attachedRigidbody.CompareTag("Player"))
 			    {
 			        PlayerScript ps = c.attachedRigidbody.GetComponent<PlayerScript>();
-//                  ps.RpcAddExplosionForce(explosionForce, transform.position, explosionRadius);
-					Vector3 force = c.attachedRigidbody.transform.TransformPoint(c.attachedRigidbody.centerOfMass) - mRigid.position; 
-					force.Normalize();
-					force *= explosionForce;
 					ps.movement.RpcAddForce(force, ForceMode.VelocityChange);
 			    }
 			    else
 			    {
-//                  c.attachedRigidbody.AddExplosionForce (explosionForce, transform.position, explosionRadius);
-					Vector3 force = c.attachedRigidbody.transform.TransformPoint(c.attachedRigidbody.centerOfMass) - mRigid.position; 
-					force.Normalize();
-					force *= explosionForce;
 					c.attachedRigidbody.AddForce(force, ForceMode.VelocityChange);
 			    }
 			}
@@ -158,36 +148,25 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 				cachedHealthScripts.Add(health);
 			}
 		}
+
+		RpcExplosion(transform.position,transform.rotation);
+		Instantiate(explosionPrefab,transform.position,transform.rotation);
+
+		NetworkServer.UnSpawn(gameObject);
+		gameObject.SetActive(false);
 	}
 
 	[ClientRpc]
-	void RpcActivateExplosionMesh(bool explosionState)
+	void RpcExplosion(Vector3 position, Quaternion rotation)
 	{
-		explosion.SetActive(explosionState);
-		grenadeMesh.SetActive(!explosionState);
-	}
-
-	IEnumerator ExplosionEffect()
-	{
-		RpcActivateExplosionMesh(true);
-		yield return new WaitForSeconds(explosionTime);
-		RpcSetActive(false);
-	}
-
-	public void Deactivate()
-	{
-		if(isServer)
-		{
-			gameObject.SetActive(false);
-			NetworkServer.UnSpawn(gameObject);
-		}
+		Instantiate(explosionPrefab,position,rotation);
 	}
 
 	void OnValidate()
 	{
-		if(explosion != null)
+		if(explosionPrefab != null)
 		{
-			explosion.transform.localScale = Vector3.one * explosionRadius * 2;
+			explosionPrefab.transform.localScale = Vector3.one * explosionRadius * 2;
 		}
 	}
 }

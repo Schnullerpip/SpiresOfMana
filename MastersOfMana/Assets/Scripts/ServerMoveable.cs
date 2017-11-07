@@ -36,6 +36,12 @@ public class ServerMoveable : NetworkBehaviour
         mRigidbody.AddForce(force, mode);
     }
 
+	[ClientRpc]
+	public void RpcSetVelocity(Vector3 velocity)
+	{
+		mRigidbody.velocity = velocity;
+	}
+
     /// <summary>
     /// adds explosion force to player on server side - kinda
     /// </summary>

@@ -14,12 +14,21 @@ public class JumpBehaviour : A_EffectBehaviour
 
 	public override void Execute(PlayerScript caster)
 	{
-		Vector3 velocity = caster.movement.mRigidbody.velocity;
+        //Get a jumpinstance out of the pool
+        JumpBehaviour jumpBehaviour = PoolRegistry.JumpPool.Get().GetComponent<JumpBehaviour>();
+
+        //now activate it
+        jumpBehaviour.gameObject.SetActive(true);
+
+        //create an instance of this jump on the client's machine
+        NetworkServer.Spawn(jumpBehaviour.gameObject, PoolRegistry.JumpPool.assetID);
+
+        Vector3 velocity = caster.movement.mRigidbody.velocity;
 		velocity.y = jumpForce;
         caster.movement.RpcSetVelocity(velocity);
 
 		caster.StartCoroutine(DelayedImpulse(implosionDelay, caster.transform.position, caster.transform));
-		RpcImplosion(caster.transform.position, caster.transform.rotation);
+        jumpBehaviour.RpcImplosion(caster.transform.position, caster.transform.rotation);
 		Instantiate(vacuumPrefab, caster.transform.position, caster.transform.rotation);
 	}
 

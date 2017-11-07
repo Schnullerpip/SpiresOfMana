@@ -210,6 +210,10 @@ namespace Prototype.NetworkLobby
             if (oldCancelDelegates.Count > 0)
             {
                 oldCancelDelegates.RemoveRange(oldCancelDelegates.Count-1, 1);
+                if (oldCancelDelegates.Count > 0)
+                {
+                    cancelDelegate = oldCancelDelegates[oldCancelDelegates.Count - 1];
+                }
             }
         }
 
@@ -219,10 +223,6 @@ namespace Prototype.NetworkLobby
             if (oldCancelDelegates.Count > 0)
             {
                 RemoveLastCancelDelegate();
-                if (oldCancelDelegates.Count > 0)
-                {
-                    cancelDelegate = oldCancelDelegates[oldCancelDelegates.Count - 1];
-                }
             }
         }
         private void Update()

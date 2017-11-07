@@ -65,8 +65,8 @@ public class PlayerScript : NetworkBehaviour
 
 
 	public LayerMask ignoreLayer;
-	private Collider[] colliders;
-	private int[] colliderLayers;
+	private Collider[] mColliders;
+	private int[] mColliderLayers;
 
 	void Awake()
 	{
@@ -98,11 +98,11 @@ public class PlayerScript : NetworkBehaviour
             movement.onLandingWhileFalling += takeFallDamage;
         }
 
-		colliders = GetComponentsInChildren<Collider>(true);
-		colliderLayers = new int[colliders.Length];
-		for (int i = 0; i < colliders.Length; ++i) 
+		mColliders = GetComponentsInChildren<Collider>(true);
+		mColliderLayers = new int[mColliders.Length];
+		for (int i = 0; i < mColliders.Length; ++i) 
 		{
-			colliderLayers[i] = colliders[i].gameObject.layer;
+			mColliderLayers[i] = mColliders[i].gameObject.layer;
 		}
     }
 
@@ -210,9 +210,9 @@ public class PlayerScript : NetworkBehaviour
 
 	public void SetColliderIgnoreRaycast(bool value)
 	{
-		for (int i = 0; i < colliders.Length; ++i) 
+		for (int i = 0; i < mColliders.Length; ++i) 
 		{
-			colliders[i].gameObject.layer = value ? (ignoreLayer.value >> 1) : colliderLayers[i];
+			mColliders[i].gameObject.layer = value ? (ignoreLayer.value >> 1) : mColliderLayers[i];
 		}
 	}
 

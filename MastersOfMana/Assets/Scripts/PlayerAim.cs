@@ -26,6 +26,7 @@ public class PlayerAim : NetworkBehaviour {
 //	[HideInInspector][SyncVar]
 //	public Vector3 lookDirection;
 	public Transform handTransform;
+	public Transform handJoint;
 
 	public Quaternion currentLookRotation;
 
@@ -68,6 +69,16 @@ public class PlayerAim : NetworkBehaviour {
 
 			//calculate the lookRotation by taking the yAngle (up and down) and the rotation in the y Axis (in form of the vec3 forward)
 			currentLookRotation = Quaternion.LookRotation(Quaternion.AngleAxis(yAngle, transform.right) * transform.forward);
+		}
+	}
+
+	void LateUpdate()
+	{
+		if(isLocalPlayer)
+		{
+			Vector3 rot = handJoint.localRotation.eulerAngles;
+			rot.x = yAngle;
+			handJoint.localRotation = Quaternion.Euler(rot);
 		}
 	}
 

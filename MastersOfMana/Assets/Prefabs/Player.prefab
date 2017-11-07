@@ -43,7 +43,7 @@ GameObject:
   m_IsActive: 1
 --- !u!1 &1044968376740284
 GameObject:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
@@ -916,6 +916,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1983272474948914
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4679889578031652}
+  m_Layer: 0
+  m_Name: HandJoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1990586921199760
 GameObject:
   m_ObjectHideFlags: 1
@@ -1143,12 +1158,12 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1044968376740284}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.36, z: 0.541}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.078, z: 0.566}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 4467387514677664}
-  m_RootOrder: 2
+  m_Father: {fileID: 4679889578031652}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4326728831934356
 Transform:
@@ -1261,7 +1276,7 @@ Transform:
   m_Children:
   - {fileID: 4880579942306480}
   - {fileID: 4918522615325516}
-  - {fileID: 4322715158737734}
+  - {fileID: 4679889578031652}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1519,6 +1534,20 @@ Transform:
   - {fileID: 4049951017005714}
   m_Father: {fileID: 4635552724784190}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4679889578031652
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1983272474948914}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.488, z: 0.153}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4322715158737734}
+  m_Father: {fileID: 4467387514677664}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4700428563729414
 Transform:
@@ -1847,6 +1876,7 @@ MonoBehaviour:
   focusAssistSpeed: 360
   maxYAngle: 85
   handTransform: {fileID: 4322715158737734}
+  handJoint: {fileID: 4679889578031652}
   currentLookRotation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!114 &114111673754988668
 MonoBehaviour:
@@ -2019,7 +2049,7 @@ MonoBehaviour:
     cooldown: 0
   - spell: {fileID: 11400000, guid: 550c3a75fecb949ec8c45ab4c38ef166, type: 2}
     cooldown: 0
-  - spell: {fileID: 11400000, guid: 5c0f19c3e50294f70acf3ae92e2ea2f8, type: 2}
+  - spell: {fileID: 11400000, guid: e233f7ca8bad7cc4482f17316c60348f, type: 2}
     cooldown: 0
   currentSpell: 0
 --- !u!135 &135614149572130878

@@ -46,4 +46,15 @@ public static class Extensions
 			}
 		}		
 	}
+
+	/// <summary>
+	/// Returns the Vector from the provided position in worldspace to center of mass.
+	/// </summary>
+	/// <returns>The to center of mass.</returns>
+	/// <param name="rigid">Rigid.</param>
+	/// <param name="position">Position.</param>
+	public static Vector3 DirectionToCenterOfMass(this Rigidbody rigid, Vector3 position)
+	{
+		return rigid.transform.TransformPoint(rigid.centerOfMass) - position; 
+	}
 }

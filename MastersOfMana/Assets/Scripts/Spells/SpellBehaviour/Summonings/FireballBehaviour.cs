@@ -126,7 +126,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 			{
 				cachedRigidbodies.Add(c.attachedRigidbody);
 
-				Vector3 force = c.attachedRigidbody.transform.TransformPoint(c.attachedRigidbody.centerOfMass) - mRigid.position; 
+				Vector3 force = c.attachedRigidbody.worldCenterOfMass - mRigid.position; 
 				force.Normalize();
 				force *= explosionForce;
 

@@ -70,16 +70,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
             Rigidbody rigid = colliders[i].attachedRigidbody;
             if (rigid)
             {
-                HealthScript hs = rigid.GetComponent<HealthScript>();
-                if (hs && hs != caster.healthScript)
-                {
-                    float damage = mMinimumDamage + caster.movement.GetVelocity().magnitude*mVelocityScaledDamageFactor;
-                    damage = Mathf.Clamp(damage, mMinimumDamage, mMaximumDamage);
-                    Debug.Log("damage dealt: " + damage);
-                    hs.TakeDamage(damage);
-                }
 
-                //TODO exchange magic numbers with good stuff... 
                 PlayerScript ps = colliders[i].attachedRigidbody.GetComponent<PlayerScript>();
                 if (ps)
                 {
@@ -91,6 +82,14 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
                 else
                 {
                     rigid.AddExplosionForce(mExplosionForce, caster.transform.position, explosionAmplitude);
+                }
+
+                HealthScript hs = rigid.GetComponentInParent<HealthScript>();
+                if (hs && hs != caster.healthScript)
+                {
+                    float damage = mMinimumDamage + caster.movement.GetVelocity().magnitude*mVelocityScaledDamageFactor;
+                    damage = Mathf.Clamp(damage, mMinimumDamage, mMaximumDamage);
+                    hs.TakeDamage(damage);
                 }
             }
         }

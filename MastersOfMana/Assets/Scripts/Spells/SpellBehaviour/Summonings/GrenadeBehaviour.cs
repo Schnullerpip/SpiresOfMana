@@ -20,6 +20,9 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 	public GameObject explosion;
 	public GameObject grenadeMesh;
 
+    private Rigidbody mStickTo = null;
+    private Vector3 mStickPosition;
+
     public override void Awake()
     {
         base.Awake();
@@ -46,13 +49,38 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 
 		//speed up the fireball to fly into the lookdirection of the player
 		grenadeBehaviour.Shoot(aimDirection);
+    }
 
+    public void Update()
+    {
+        if (isServer && mStickTo)
+        {
+            Vector3 moveCorrection = mStickTo.transform.position - mStickPosition;
+            mStickPosition = mRigid.position;
+            mRigid.MovePosition(mRigid.position + moveCorrection);
+            Debug.Log("correcting position from : " + mStickPosition + " to: " + mRigid.position);
+        }
     }
 
 	#region implemented abstract members of A_SummoningBehaviour
 
 	protected override void ExecuteCollision_Host (Collision collision)
 	{
+	    if (!mStickTo)
+	    {
+	        var rigid = collision.collider.attachedRigidbody;
+	        if (rigid)
+	        {
+	            mStickTo = rigid;
+                Debug.Log("sticking to " + rigid.name);
+	            mRigid.useGravity = false;
+	            mRigid.isKinematic = true;
+
+	            grenadeMesh.GetComponent<Collider>().enabled = false;
+
+	            mStickPosition = mRigid.position;
+	        }
+	    }
 	}
 
 	#endregion

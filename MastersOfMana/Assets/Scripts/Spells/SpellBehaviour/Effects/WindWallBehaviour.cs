@@ -20,11 +20,11 @@ public class WindWallBehaviour : A_SummoningBehaviour
     private PlayerScript caster;
 
     //prevent players from getting forces of the windwall for each collider they have
-    private List<Rigidbody> mAlreadyAffected;
+    private List<GameObject> mAlreadyAffected;
 
     public void OnEnable()
     {
-        mAlreadyAffected = new List<Rigidbody>();
+        mAlreadyAffected = new List<GameObject>();
     }
 
     public void OnValidate()
@@ -45,7 +45,10 @@ public class WindWallBehaviour : A_SummoningBehaviour
 		windwall.force = mWindforceStrength*(caster.transform.rotation*mWindForceDirection);
 		windwall.mode = ForceMode.VelocityChange;
 
-        windwall.transform.rotation = caster.headJoint.transform.rotation;
+        Vector3 rot = caster.transform.rotation.eulerAngles;
+        rot.x = caster.headJoint.transform.rotation.eulerAngles.x;
+        windwall.transform.rotation = Quaternion.Euler(rot);
+
         windwall.transform.position = windwall.center;
         windwall.caster = caster;
 
@@ -71,21 +74,22 @@ public class WindWallBehaviour : A_SummoningBehaviour
     protected override void ExecuteTriggerEnter_Host(Collider other)
     { 
         Rigidbody rigid = other.attachedRigidbody;
-        if(rigid)
+
+        if(rigid && !mAlreadyAffected.Contains(other.gameObject))
         {
+            mAlreadyAffected.Add(other.gameObject);
             PlayerScript opponent = rigid.GetComponent<PlayerScript>();
             
             if (opponent)
             {
-                if (opponent != caster && !mAlreadyAffected.Contains(rigid))
+                if (opponent != caster )
                 {
-                    mAlreadyAffected.Add(rigid);
-                    opponent.movement.RpcAddForce(force, mode);
+                    opponent.movement.RpcSetVelocity(force);
                 }
             }
             else
             {
-                rigid.AddForce(force, mode);
+                rigid.velocity = force;
             }	
         }
     }

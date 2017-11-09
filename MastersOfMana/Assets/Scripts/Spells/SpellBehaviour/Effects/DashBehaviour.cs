@@ -23,6 +23,32 @@ public class DashBehaviour : A_EffectBehaviour
 
     [SerializeField] private float mReduction;
 
+	public override bool Preview (PlayerScript caster)
+	{
+		if(!base.Preview (caster))
+		{
+			return false;
+		}
+
+		//properties the spellneeds
+		Vector3 point1, point2, originalPosition = caster.transform.position, direction = GetAim(caster);
+
+		point1 = point2 = caster.headJoint.position + direction*mOffsetToPlayer;
+		point2 -= new Vector3(0, mCapsuleHeight, 0);
+
+		//capsulecast to find new position
+		RaycastHit hit;
+		bool hitSomething = Physics.CapsuleCast(point1, point2, mCapsuleRadius, direction, out hit, mMaxDistance, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+
+		//find position of player to that position
+		//if the way is free go until maxdistance is reached - else go until the hit object
+		Vector3 newPosition = originalPosition + direction*(hitSomething ? hit.distance-mReduction : mMaxDistance);
+
+		previewIndicator.position = newPosition;
+
+		return true;
+	}
+
     public override void Execute(PlayerScript caster)
     {
 		
@@ -34,7 +60,7 @@ public class DashBehaviour : A_EffectBehaviour
 
         //capsulecast to find new position
         RaycastHit hit;
-        bool hitSomething = Physics.CapsuleCast(point1, point2, mCapsuleRadius, direction, out hit, mMaxDistance, 1, QueryTriggerInteraction.Ignore);
+		bool hitSomething = Physics.CapsuleCast(point1, point2, mCapsuleRadius, direction, out hit, mMaxDistance, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
 
         //find position of player to that position
         //if the way is free go until maxdistance is reached - else go until the hit object

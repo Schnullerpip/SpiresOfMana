@@ -15,8 +15,10 @@ public abstract class A_SummoningBehaviour : A_SpellBehaviour {
     //important members
     protected Rigidbody mRigid;
 
-    public virtual void Awake()
+    public override void Awake()
     {
+		base.Awake();
+
         if (isLocalPlayer)
         {
             GetComponent<Collider>().enabled = false;

@@ -35,6 +35,38 @@ public class FireballBehaviour : A_ServerMoveableSummoning
         }
     }
 
+		
+	public override bool Preview (PlayerScript caster)
+	{
+		if(!base.Preview(caster))
+		{
+			return false;
+		}
+
+		RaycastHit hit;
+		Ray ray = caster.aim.GetCameraRig().GetCenterRay();
+
+		caster.SetColliderIgnoreRaycast(true);
+		bool hitSomething = Physics.Raycast(ray, out hit);
+		caster.SetColliderIgnoreRaycast(false);
+
+		Vector3 aimDirection = hitSomething ? Vector3.Normalize(hit.point - caster.handTransform.position) : ray.direction;
+	
+		if(Physics.SphereCast(caster.handTransform.position, 0.25f, aimDirection, out hit))
+		{
+//			GameObject prev = Instantiate(ballMesh,hit.point + hit.normal * 0.25f, Quaternion.identity);
+//			Destroy(prev,0.01f);
+			previewIndicator.position = hit.point + hit.normal * 0.25f;
+			return true;
+		}
+		else
+		{
+			previewIndicator.position = OBLIVION;
+			return false;
+		}
+
+	}
+
     public override void Execute(PlayerScript caster)
     {
         //Get a fireballinstance out of the pool
@@ -127,6 +159,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 				cachedRigidbodies.Add(c.attachedRigidbody);
 
 				Vector3 force = c.attachedRigidbody.worldCenterOfMass - mRigid.position; 
+
 				force.Normalize();
 				force *= explosionForce;
 

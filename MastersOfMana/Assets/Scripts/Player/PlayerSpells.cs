@@ -62,6 +62,21 @@ public class PlayerSpells : NetworkBehaviour {
         }
     }
 
+	public void PreviewCurrentSpell(PlayerScript player)
+	{
+		//TODO: delete
+
+		#if UNITY_EDITOR
+		UnityEngine.Profiling.Profiler.BeginSample("Preview");
+		#endif
+		GetCurrentspell().spell.SpellBehaviours[0].Preview(player);
+		#if UNITY_EDITOR
+		UnityEngine.Profiling.Profiler.EndSample();
+		#endif
+
+	}
+
+
     //choosing a spell
     [Command]
     public void CmdChooseSpellslot(int idx)

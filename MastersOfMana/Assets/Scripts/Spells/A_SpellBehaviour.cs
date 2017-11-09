@@ -9,7 +9,31 @@ using UnityEngine;
 /// </summary>
 public abstract class A_SpellBehaviour : NetworkBehaviour
 {
+	protected static Transform previewIndicator;
+
+	public virtual void Awake()
+	{
+		if(!previewIndicator)
+		{
+			GameObject go = GameObject.FindWithTag("DebugPreviewIndicator");
+			if(go)
+			{
+				previewIndicator = go.transform;
+			}
+		}
+	}
+
 	public abstract void Execute(PlayerScript caster);
+
+	public virtual bool Preview(PlayerScript caster) 
+	{
+		if(previewIndicator == null)
+		{
+			return false;
+		}
+
+		return true;
+	}
 
 	/// <summary>
 	/// Gets the aim direction. This direction is from the hand transform to the position that corresponds with the center of the screen.

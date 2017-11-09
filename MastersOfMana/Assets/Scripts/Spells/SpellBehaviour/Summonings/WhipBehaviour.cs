@@ -39,6 +39,32 @@ public class WhipBehaviour : A_SummoningBehaviour
 		lineRenderer.SetPosition(1, linePoint1);
 	}
 
+	public override bool Preview (PlayerScript caster)
+	{
+		if(!base.Preview (caster))
+		{
+			return false;
+		}
+
+		RaycastHit hit;
+		Ray ray = caster.aim.GetCameraRig().GetCenterRay();
+
+		caster.SetColliderIgnoreRaycast(true);
+		bool hitSomething = Physics.SphereCast(ray, rayRadius, out hit, maxDistance);
+		caster.SetColliderIgnoreRaycast(false);
+
+		if(hitSomething)
+		{
+			previewIndicator.position = hit.point; 
+		}
+		else
+		{
+			previewIndicator.position = OBLIVION;
+		}
+
+		return hitSomething;
+	}
+
     public override void Execute(PlayerScript caster)
     {
 		WhipBehaviour whipBehaviour = PoolRegistry.WhipPool.Get().GetComponent<WhipBehaviour>();

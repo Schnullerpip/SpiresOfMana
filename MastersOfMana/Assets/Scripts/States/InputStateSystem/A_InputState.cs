@@ -30,8 +30,7 @@ public abstract class A_InputState : A_State{
             ChooseSpell(2);
         }
 
-
-
+		player.GetPlayerSpells().PreviewCurrentSpell(player);
 
 		//store the input values
 		Vector2 movementInput = player.GetRewired().GetAxis2D("MoveHorizontal", "MoveVertical");

@@ -6,13 +6,10 @@ using System.Collections;
 [RequireComponent(typeof(LineRenderer))]
 public class WhipBehaviour : A_SummoningBehaviour
 {
-	public float pullHitForce = 10;
-	public float pullHitUpForce = 3;
+	public float pullForce = 10;
+	public float UpForce = 3;
 
 	public float rayRadius = 0.2f;
-
-	public float pullPlayerForce = 10;
-	public float pullPlayerUpForce = 3;
 
 	public float maxDistance = 30;
 
@@ -44,8 +41,7 @@ public class WhipBehaviour : A_SummoningBehaviour
 
     public override void Execute(PlayerScript caster)
     {
-		GameObject whip = PoolRegistry.WhipPool.Get();
-		WhipBehaviour whipBehaviour = whip.GetComponent<WhipBehaviour>();
+		WhipBehaviour whipBehaviour = PoolRegistry.WhipPool.Get().GetComponent<WhipBehaviour>();
 
 		whipBehaviour.linePoint0 = caster.handTransform.position;
 
@@ -65,10 +61,10 @@ public class WhipBehaviour : A_SummoningBehaviour
 			whipBehaviour.linePoint1 = caster.handTransform.position + caster.GetCameraLookDirection() * maxDistance;
 		}
 
-        whip.SetActive(true);
-		NetworkServer.Spawn(whip, PoolRegistry.WhipPool.assetID);
+        whipBehaviour.gameObject.SetActive(true);
+		NetworkServer.Spawn(whipBehaviour.gameObject, PoolRegistry.WhipPool.assetID);
 
-		whipBehaviour.Disappear();
+		whipBehaviour.StartCoroutine(whipBehaviour.Done());
 
 		if(hitSomething)
 		{
@@ -76,29 +72,28 @@ public class WhipBehaviour : A_SummoningBehaviour
 
 			if(hit.collider.attachedRigidbody != null)
 			{
-				Vector3 force = -aimDirection * pullHitForce + Vector3.up*pullHitUpForce;
+				Vector3 force = -aimDirection * pullForce + Vector3.up * UpForce;
 			    if (hit.collider.attachedRigidbody.CompareTag("Player"))
 			    {
-			        hit.collider.attachedRigidbody.GetComponent<PlayerScript>().movement.RpcAddForce(force, ForceMode.Impulse);
+					hit.collider.attachedRigidbody.GetComponent<PlayerScript>().movement.RpcAddForce(force, ForceMode.VelocityChange);
 			    }
 				else
 				{
-					hit.collider.attachedRigidbody.AddForce(force, ForceMode.Impulse);
+					hit.collider.attachedRigidbody.AddForce(force, ForceMode.VelocityChange);
 				}
 			}
-
-			Vector3 forceVector = aimDirection * pullPlayerForce + Vector3.up * pullPlayerUpForce;
-
-			Debug.DrawRay(caster.transform.position, forceVector, Color.red, 10);
-			caster.movement.RpcAddForce(forceVector, ForceMode.Impulse);
+			else
+			{
+				Vector3 forceVector = aimDirection * pullForce + Vector3.up * UpForce;
+				caster.movement.RpcAddForce(forceVector, ForceMode.VelocityChange);
+			}
 		}
-
     }
 
-	public void Disappear()
-	{
-		StartCoroutine(Done());
-	}
+//	public void Disappear()
+//	{
+//		StartCoroutine(Done());
+//	}
 
 	public IEnumerator Done()
 	{

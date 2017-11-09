@@ -19,7 +19,7 @@ public class JetBehaviour : A_SummoningBehaviour
     public override void Execute(PlayerScript caster)
     {
         RaycastHit hit;
-        if (Physics.Raycast( new Ray(caster.transform.TransformPoint(caster.movement.mRigidbody.centerOfMass) + caster.transform.forward*mOffsetToCaster, Vector3.down), out hit, 50))
+        if (Physics.Raycast( new Ray(caster.movement.mRigidbody.worldCenterOfMass + caster.transform.forward * mOffsetToCaster, Vector3.down), out hit, 50))
         {
             GameObject jet = PoolRegistry.JetPool.Get();
             jet.transform.position = hit.point;

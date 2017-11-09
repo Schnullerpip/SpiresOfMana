@@ -177,7 +177,7 @@ public class PlayerMovement : ServerMoveable
 	{
 		if(feet.IsGrounded() || !onlyIfGrounded)
 		{
-			mRigidbody.AddForce(Vector3.up * jumpStrength,ForceMode.VelocityChange);
+			mRigidbody.SetVelocityY(jumpStrength);
 			if(onJumping != null)
 			{
 				onJumping();

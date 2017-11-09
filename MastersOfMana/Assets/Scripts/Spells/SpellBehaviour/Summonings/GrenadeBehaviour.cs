@@ -124,8 +124,7 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 			if (c.attachedRigidbody && !cachedRigidbodies.Contains(c.attachedRigidbody)) 
 			{
 				cachedRigidbodies.Add(c.attachedRigidbody);
-
-				Vector3 force = c.attachedRigidbody.DirectionToCenterOfMass(mRigid.position);
+				Vector3 force = c.attachedRigidbody.worldCenterOfMass - mRigid.position;
 				force.Normalize();
 				force *= explosionForce;
 

@@ -151,9 +151,9 @@ namespace Prototype.NetworkLobby
             readyButton.onClick.AddListener(OnReadyClicked);
 
             spellregistry = Prototype.NetworkLobby.LobbyManager.s_Singleton.mainMenu.spellSelectionPanel.GetComponent<SpellSelectionPanel>().spellregistry;
-            spells[0] = spellregistry.GetSpellByID(PlayerPrefs.GetInt("SpellSlot0"));
-            spells[1] = spellregistry.GetSpellByID(PlayerPrefs.GetInt("SpellSlot1"));
-            spells[2] = spellregistry.GetSpellByID(PlayerPrefs.GetInt("SpellSlot2"));
+            spells[0] = spellregistry.GetSpellByID(PlayerPrefs.GetInt("SpellSlot0",0));
+            spells[1] = spellregistry.GetSpellByID(PlayerPrefs.GetInt("SpellSlot1",1));
+            spells[2] = spellregistry.GetSpellByID(PlayerPrefs.GetInt("SpellSlot2",2));
 
             spellButton1.gameObject.SetActive(true);
             spellButton2.gameObject.SetActive(true);

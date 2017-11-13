@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     private int mNeededToGo = 1;
 
     public static GameManager instance;
-    public string winnerName;
+    public uint winnerID;
     public PlayerScript localPlayer;
     public GameObject eventSystem;
 
@@ -104,15 +104,16 @@ public class GameManager : MonoBehaviour
             {
                 if(p.healthScript.IsAlive())
                 {
-                    winnerName = p.playerName;
+                    winnerID = p.netId.Value;
+                    
                     break;
                 }
             }
-            StartCoroutine(PostGameLobby(winnerName));
+            StartCoroutine(PostGameLobby(winnerID));
         }
     }
 
-    public IEnumerator PostGameLobby(string winner) {
+    public IEnumerator PostGameLobby(uint winner) {
         yield return new WaitForSeconds(0.0f);
         NetManager.instance.RpcLoadPostGameScreen(winner);
     }

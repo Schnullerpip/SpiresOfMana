@@ -25,7 +25,6 @@ public class PlayerAim : NetworkBehaviour {
 	private float yAngle = 0;
 //	[HideInInspector][SyncVar]
 //	public Vector3 lookDirection;
-	public Transform handTransform;
 	public Transform handJoint;
 
 	public Quaternion currentLookRotation;
@@ -299,7 +298,7 @@ public class PlayerAim : NetworkBehaviour {
 //			if(Vector3.ProjectOnPlane(dirToTarget, - lookDirection).sqrMagnitude < maxUnitsOff * maxUnitsOff)
 			{
 //				if(cameraRig.RaycastCheck(healthScriptCollider.bounds.center, out hit))
-				Debug.DrawLine(mCameraRig.GetCamera().transform.position, healthScriptCollider.bounds.center, Color.red, 20);
+//				Debug.DrawLine(mCameraRig.GetCamera().transform.position, healthScriptCollider.bounds.center, Color.red, 20);
 				if(Physics.Linecast(mCameraRig.GetCamera().transform.position, healthScriptCollider.bounds.center, out hit))
 				{
 					//TODO find a better method to varify target, perhabs tags?

@@ -39,6 +39,14 @@ public class WhipBehaviour : A_SummoningBehaviour
 		lineRenderer.SetPosition(1, linePoint1);
 	}
 
+	bool RayCast(PlayerScript player, Ray ray, out RaycastHit hit)
+	{
+		player.SetColliderIgnoreRaycast(true);
+		bool hitSomething = Physics.SphereCast(ray, rayRadius, out hit, maxDistance);
+		player.SetColliderIgnoreRaycast(false);
+		return hitSomething;
+	}
+
 	public override bool Preview (PlayerScript caster)
 	{
 		if(!base.Preview (caster))
@@ -49,20 +57,17 @@ public class WhipBehaviour : A_SummoningBehaviour
 		RaycastHit hit;
 		Ray ray = caster.aim.GetCameraRig().GetCenterRay();
 
-		caster.SetColliderIgnoreRaycast(true);
-		bool hitSomething = Physics.SphereCast(ray, rayRadius, out hit, maxDistance);
-		caster.SetColliderIgnoreRaycast(false);
-
-		if(hitSomething)
+		if(RayCast(caster, ray, out hit))
 		{
-			previewIndicator.position = hit.point; 
+			previewIndicator.Move(hit.point); 
+			return true;
 		}
 		else
 		{
-			previewIndicator.position = OBLIVION;
+			previewIndicator.Deactivate();
 		}
 
-		return hitSomething;
+		return false;
 	}
 
     public override void Execute(PlayerScript caster)
@@ -74,11 +79,7 @@ public class WhipBehaviour : A_SummoningBehaviour
 		RaycastHit hit;
         Ray ray = new Ray(caster.GetCameraPosition(), caster.GetCameraLookDirection());
 
-		caster.SetColliderIgnoreRaycast(true);
-		bool hitSomething = Physics.SphereCast(ray, rayRadius, out hit, maxDistance);
-		caster.SetColliderIgnoreRaycast(false);
-
-		if(hitSomething)
+		if(RayCast(caster, ray, out hit))
 		{
 			whipBehaviour.linePoint1 = hit.point;
 		}
@@ -92,7 +93,7 @@ public class WhipBehaviour : A_SummoningBehaviour
 
 		whipBehaviour.StartCoroutine(whipBehaviour.Done());
 
-		if(hitSomething)
+		if(hit.collider != null)
 		{
 			Vector3 aimDirection = Vector3.Normalize(hit.point - caster.handTransform.position);
 

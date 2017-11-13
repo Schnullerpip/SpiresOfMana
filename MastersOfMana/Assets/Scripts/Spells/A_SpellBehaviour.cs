@@ -9,17 +9,14 @@ using UnityEngine;
 /// </summary>
 public abstract class A_SpellBehaviour : NetworkBehaviour
 {
-	protected static Transform previewIndicator;
+	protected static PreviewDebug previewIndicator;
 
 	public virtual void Awake()
 	{
 		if(!previewIndicator)
 		{
-			GameObject go = GameObject.FindWithTag("DebugPreviewIndicator");
-			if(go)
-			{
-				previewIndicator = go.transform;
-			}
+			previewIndicator = GameObject.FindObjectOfType<PreviewDebug>();
+			previewIndicator.Deactivate();
 		}
 	}
 
@@ -47,6 +44,12 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 		return GetAim(player, out hit);
 	}
 
+	public Vector3 GetAimLocal(PlayerScript player)
+	{
+		RaycastHit hit;
+		return GetAimLocal(player, out hit);
+	}
+
 	/// <summary>
 	/// Gets the aim direction and the hit info. This direction is from the hand transform to the position that corresponds with the center of the screen.
 	/// If there was no raycast hit, its the direction of the camera.
@@ -58,10 +61,29 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 	{
 		Ray ray = new Ray(player.GetCameraPosition(), player.GetCameraLookDirection());
 
+		return RayCast(player, ray, out hit);
+	}
+
+	public Vector3 GetAimLocal(PlayerScript player, out RaycastHit hit)
+	{
+		Ray ray = player.aim.GetCameraRig().GetCenterRay();
+
+		return RayCast(player, ray, out hit);
+	}
+
+	private Vector3 RayCast(PlayerScript player, Ray ray, out RaycastHit hit)
+	{
 		player.SetColliderIgnoreRaycast(true);
 		bool hitSomething = Physics.Raycast(ray, out hit);
 		player.SetColliderIgnoreRaycast(false);
 
-		return hitSomething ? Vector3.Normalize(hit.point - player.handTransform.position) : player.GetCameraLookDirection();
+		if(hitSomething)
+		{
+			return Vector3.Normalize(hit.point - player.handTransform.position);
+		}
+		else
+		{
+			return ray.direction;
+		}
 	}
 }

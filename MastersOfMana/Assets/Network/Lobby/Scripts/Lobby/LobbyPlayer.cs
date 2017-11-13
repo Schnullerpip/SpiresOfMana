@@ -15,6 +15,12 @@ namespace Prototype.NetworkLobby
         //used on server to avoid assigning the same color to two player
         static List<int> _colorInUse = new List<int>();
 
+        public enum ControlSchemes
+        {
+            SelectAndTrigger = 0,
+            SelectEqualsTrigger = 1
+        }
+
         public Button colorButton;
         public InputField nameInput;
         public Button readyButton;
@@ -46,6 +52,7 @@ namespace Prototype.NetworkLobby
 
         //spellslots
         public List<A_Spell> spells;
+        private SpellRegistry spellregistry;
 
         private int mSpellToChange;
 
@@ -142,6 +149,11 @@ namespace Prototype.NetworkLobby
 
             readyButton.onClick.RemoveAllListeners();
             readyButton.onClick.AddListener(OnReadyClicked);
+
+            spellregistry = Prototype.NetworkLobby.LobbyManager.s_Singleton.mainMenu.spellSelectionPanel.GetComponent<SpellSelectionPanel>().spellregistry;
+            spells[0] = spellregistry.GetSpellByID(PlayerPrefs.GetInt("SpellSlot0"));
+            spells[1] = spellregistry.GetSpellByID(PlayerPrefs.GetInt("SpellSlot1"));
+            spells[2] = spellregistry.GetSpellByID(PlayerPrefs.GetInt("SpellSlot2"));
 
             spellButton1.gameObject.SetActive(true);
             spellButton2.gameObject.SetActive(true);
@@ -267,6 +279,11 @@ namespace Prototype.NetworkLobby
                 // Push chosen spells to server
                 if (isLocalPlayer)
                 {
+                    //Save Spells to PlayerPrefs
+                    PlayerPrefs.SetInt("SpellSlot0",spells[0].spellID);
+                    PlayerPrefs.SetInt("SpellSlot1", spells[1].spellID);
+                    PlayerPrefs.SetInt("SpellSlot2", spells[2].spellID);
+                    PlayerPrefs.Save();
                     CmdSpellsChanged(spells[0].spellID, spells[1].spellID, spells[2].spellID);
                 }
             }

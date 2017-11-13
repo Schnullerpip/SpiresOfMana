@@ -378,6 +378,12 @@ namespace Prototype.NetworkLobby
         }
 
         [ClientRpc]
+        public void RpcGameStarts()
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+
+        [ClientRpc]
         public void RpcUpdateRemoveButton()
         {
             CheckRemoveButton();

@@ -20,7 +20,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4234286362109766}
   - component: {fileID: 33577980648631928}
-  - component: {fileID: 135095382666576358}
   - component: {fileID: 23394804949500618}
   m_Layer: 0
   m_Name: Sphere
@@ -954,18 +953,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   smoothTime: 0.016
---- !u!135 &135095382666576358
-SphereCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1029771112544678}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!137 &137055710757611482
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

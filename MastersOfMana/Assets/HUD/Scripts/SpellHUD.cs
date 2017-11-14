@@ -34,19 +34,23 @@ public class SpellHUD : MonoBehaviour
         spellHighlights.Add(spellSlots[0].GetChild(0).GetComponentInParent<Image>());
         spellHighlights.Add(spellSlots[1].GetChild(0).GetComponentInParent<Image>());
         spellHighlights.Add(spellSlots[2].GetChild(0).GetComponentInParent<Image>());
+        spellHighlights.Add(spellSlots[3].GetChild(0).GetComponentInParent<Image>());
 
         spellIcons.Add(spellSlots[0].GetChild(1).GetComponentInParent<Image>());
         spellIcons.Add(spellSlots[1].GetChild(1).GetComponentInParent<Image>());
         spellIcons.Add(spellSlots[2].GetChild(1).GetComponentInParent<Image>());
+        spellIcons.Add(spellSlots[3].GetChild(1).GetComponentInParent<Image>());
 
         spellCooldowns.Add(spellSlots[0].GetChild(2).GetComponentInParent<Image>());
         spellCooldowns.Add(spellSlots[1].GetChild(2).GetComponentInParent<Image>());
         spellCooldowns.Add(spellSlots[2].GetChild(2).GetComponentInParent<Image>());
+        spellCooldowns.Add(spellSlots[3].GetChild(2).GetComponentInParent<Image>());
 
         //Fill SpellSlots with correct spellIcons
         spellIcons[0].sprite = localPlayer.GetPlayerSpells().spellslot[0].spell.icon;
         spellIcons[1].sprite = localPlayer.GetPlayerSpells().spellslot[1].spell.icon;
         spellIcons[2].sprite = localPlayer.GetPlayerSpells().spellslot[2].spell.icon;
+        spellIcons[3].sprite = localPlayer.GetPlayerSpells().spellslot[3].spell.icon;
 
         //set selected spell
         displayedCurrentSpell = localPlayer.GetPlayerSpells().GetCurrentspellslotID();

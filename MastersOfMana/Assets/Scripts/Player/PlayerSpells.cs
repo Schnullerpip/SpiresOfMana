@@ -8,6 +8,9 @@ public class PlayerSpells : NetworkBehaviour {
     //cached instance of the playerscript
     private PlayerScript mPlayer;
 
+    public float ultimateEnergy = 0;
+    public float ultimateEnergyThreshold = 30;
+
     public void Start()
     {
         //cache the playaer for later use
@@ -37,7 +40,7 @@ public class PlayerSpells : NetworkBehaviour {
     }
 
     //spellslots
-    public SpellSlot[] spellslot = new SpellSlot[3];
+    public SpellSlot[] spellslot = new SpellSlot[4];
 
     //references the currently chosen spell, among the three available spellslots
     [SyncVar]

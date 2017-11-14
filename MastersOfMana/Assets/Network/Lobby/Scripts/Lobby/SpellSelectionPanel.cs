@@ -11,6 +11,7 @@ namespace Prototype.NetworkLobby {
         public RectTransform spellList;
         public Button spellButtonPrefab;
         public LobbyPlayer player;
+        public bool showUltimates = false;
         private bool initialized = false;
         private List<Button> spellButtons = new List<Button>();
 
@@ -19,19 +20,21 @@ namespace Prototype.NetworkLobby {
             player.SetUiInteractive(false);
             LobbyManager.s_Singleton.SetCancelDelegate(GoBack);
 
-            if (!initialized)
-            {
-                Init();
-            }
+            Init();
             spellButtons[0].OnSelect(null);
         }
 
         public void Init()
         {
             initialized = true;
-            for (int i = 0; i < spellregistry.SpellList.Count; i++)
+            List<A_Spell> spells = spellregistry.SpellList;
+            if (showUltimates)
             {
-                A_Spell spell = spellregistry.SpellList[i];
+                spells = spellregistry.UltimateSpellList;
+            }
+            for (int i = 0; i < spells.Count; i++)
+            {
+                A_Spell spell = spells[i];
                 Button spellButton = GameObject.Instantiate(spellButtonPrefab);
                 Image image = spellButton.transform.GetChild(0).GetComponent<Image>();
                 if (image)
@@ -96,6 +99,11 @@ namespace Prototype.NetworkLobby {
         public void OnDisable()
         {
             player.SetUiInteractive(true);
+            foreach(Button button in spellButtons)
+            {
+                Destroy(button.gameObject);
+            }
+            spellButtons.Clear();
         }
     }
 }

@@ -55,7 +55,6 @@ public class JumpBehaviour : A_EffectBehaviour
 				Vector3 direction = position - c.attachedRigidbody.transform.position + Vector3.up * 0.2f;
 				direction.Normalize();
 				direction *= pullInForce;
-				Debug.DrawRay(c.attachedRigidbody.transform.position,direction, Color.yellow, 10);
 
 				if (c.attachedRigidbody.CompareTag("Player"))
 				{

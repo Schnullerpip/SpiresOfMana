@@ -245,8 +245,8 @@ public class PlayerAim : NetworkBehaviour {
 		{
 			self.SetColliderIgnoreRaycast(false);
 			//if we hit a healthscript, take that as our aim assist target
-			HealthScript h = hit.collider.GetComponentInParent<HealthScript>();
-			if(h != null)
+			PlayerScript target = hit.collider.GetComponentInParent<PlayerScript>();
+			if(target != null)
 			{
 				self.SetColliderIgnoreRaycast(false);
 				return hit.collider;
@@ -255,7 +255,7 @@ public class PlayerAim : NetworkBehaviour {
 		//otherwise look for the next best target
 
 		//TODO: cache this, maybe gamemanager?
-		List<HealthScript> allHealthScripts = new List<HealthScript>(GameObject.FindObjectsOfType<HealthScript>());
+		List<PlayerScript> allPlayers = new List<PlayerScript>(GameObject.FindObjectsOfType<PlayerScript>());
 
 //		//sort by distance 
 //		allHealthScripts.Sort(
@@ -266,8 +266,8 @@ public class PlayerAim : NetworkBehaviour {
 //		);
 
 		//sort by angle
-		allHealthScripts.Sort(
-			delegate(HealthScript a, HealthScript b) 
+		allPlayers.Sort(
+			delegate(PlayerScript a, PlayerScript b) 
 			{
 				return Vector3.Angle(currentLookRotation.eulerAngles, a.transform.position - mCameraRig.GetCamera().transform.position)
 					.CompareTo(Vector3.Angle(currentLookRotation.eulerAngles, b.transform.position - mCameraRig.GetCamera().transform.position));
@@ -275,10 +275,10 @@ public class PlayerAim : NetworkBehaviour {
 		);
 
 		//iterate through all healthscripts
-		foreach (HealthScript aHealthScript in allHealthScripts) 
+		foreach (PlayerScript aPlayer in allPlayers) 
 		{
 			//skip player him/herself
-			if(aHealthScript.gameObject == this.gameObject)
+			if(aPlayer.gameObject == this.gameObject)
 			{
 				continue;
 			}
@@ -289,7 +289,7 @@ public class PlayerAim : NetworkBehaviour {
 //				continue;
 //			}
 
-			Collider healthScriptCollider = aHealthScript.GetComponentInChildren<Collider>();
+			Collider healthScriptCollider = aPlayer.GetComponentInChildren<Collider>();
 
 			//get the vector to the target, from the position of the camera
 //			Vector3 dirToTarget = healthScriptCollider.bounds.center - cameraRig.GetCamera().transform.position;
@@ -303,7 +303,7 @@ public class PlayerAim : NetworkBehaviour {
 				if(Physics.Linecast(mCameraRig.GetCamera().transform.position, healthScriptCollider.bounds.center, out hit))
 				{
 					//TODO find a better method to varify target, perhabs tags?
-					if(hit.collider.GetComponentInParent<HealthScript>() == aHealthScript)
+					if(hit.collider.GetComponentInParent<PlayerScript>() == aPlayer)
 					{
 						self.SetColliderIgnoreRaycast(false);
 						return hit.collider;

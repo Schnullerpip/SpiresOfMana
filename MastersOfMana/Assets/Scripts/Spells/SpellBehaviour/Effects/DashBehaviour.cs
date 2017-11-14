@@ -46,7 +46,7 @@ public class DashBehaviour : A_EffectBehaviour
             if (ps)
             {
                 Vector3 pushDirection = Vector3.Normalize(ps.transform.TransformPoint(ps.movement.mRigidbody.centerOfMass) - caster.transform.position);
-                ps.movement.RpcAddForce(pushDirection*mPushForce, ForceMode.Impulse);
+                ps.movement.RpcSetVelocity(pushDirection*mPushForce);
             }
         }
 

@@ -75,13 +75,25 @@ public class DashBehaviour : A_EffectBehaviour
 
 			if(surfaceAngle > 90)
 			{
-				return caster.transform.position + (direction * hit.distance);
+				Debug.Log("Ceiling");
+
+				RaycastHit ceilingHit;
+
+				if(Physics.Raycast(hit.point, hit.normal, out ceilingHit, playerHeight))
+				{
+					return hit.point + hit.normal * (surfaceAngle / 90) * playerRadius;
+				}
+				else
+				{
+					return caster.transform.position + (direction * hit.distance);
+				}
 			} 
 			else 
 			{
 				//place the player to the hit point, but add the normal of the surface with a weighting depending on the angle of the surface.
 				//a wall should add the full player's radius, placing him/her right next to wall instead of into it 
 				return hit.point + hit.normal * (surfaceAngle / 90) * playerRadius;
+
 			}
 		}
 		else

@@ -65,8 +65,8 @@ public class PlayerScript : NetworkBehaviour
 
 
 	public LayerMask ignoreLayer;
-	private Collider[] mColliders;
-	private int[] mColliderLayers;
+
+	private ColliderPack mColliderPack;
 
 	void Awake()
 	{
@@ -97,13 +97,16 @@ public class PlayerScript : NetworkBehaviour
         {
             movement.onLandingWhileFalling += takeFallDamage;
         }
+			
+		Collider[] colliders = GetComponentsInChildren<Collider>(true);
+		int[] colliderLayers = new int[colliders.Length];
 
-		mColliders = GetComponentsInChildren<Collider>(true);
-		mColliderLayers = new int[mColliders.Length];
-		for (int i = 0; i < mColliders.Length; ++i) 
+		for (int i = 0; i < colliders.Length; ++i) 
 		{
-			mColliderLayers[i] = mColliders[i].gameObject.layer;
+			colliderLayers[i] = colliders[i].gameObject.layer;
 		}
+
+		mColliderPack = new ColliderPack(colliders, colliderLayers);
     }
 
     //We need this method, as it seems that delegates can't call commands
@@ -210,9 +213,13 @@ public class PlayerScript : NetworkBehaviour
 
 	public void SetColliderIgnoreRaycast(bool value)
 	{
-		for (int i = 0; i < mColliders.Length; ++i) 
+		if(value)
 		{
-			mColliders[i].gameObject.layer = value ? (ignoreLayer.value >> 1) : mColliderLayers[i];
+			mColliderPack.SetColliderLayer(ignoreLayer.value >> 1);
+		}
+		else
+		{
+			mColliderPack.RestoreOriginalLayer();
 		}
 	}
 

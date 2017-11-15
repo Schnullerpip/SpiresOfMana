@@ -44,7 +44,10 @@ public class UltimateLoadingZone : MonoBehaviour {
         while (enabled)
         {
             yield return new WaitForSeconds(1f);
-            playerSpells.ultimateEnergy += ultimateEnergyPerSecond;
+            if(!GameManager.instance.isUltimateActive)
+            {
+                playerSpells.ultimateEnergy += ultimateEnergyPerSecond;
+            }
         }
     }
 }

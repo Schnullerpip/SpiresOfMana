@@ -29,6 +29,8 @@ public class FireballBehaviour : A_ServerMoveableSummoning
     {
         base.Awake();
 
+        RFX4_ColorHelper.ChangeObjectColorByHUE(gameObject, RFX4_ColorHelper.ColorToHSV(effectColor).H);
+
         if (!mRigid)
         {
             //cant find a rigid body!!!
@@ -52,8 +54,6 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 		fireballBehaviour.Reset(caster.handTransform.position + aimDirection, caster.transform.rotation);
 		//speed up the fireball to fly into the lookdirection of the player
 		fireballBehaviour.mRigid.velocity = aimDirection * mSpeed;
-
-        RFX4_ColorHelper.ChangeObjectColorByHUE(fireballBehaviour.gameObject, RFX4_ColorHelper.ColorToHSV(effectColor).H);
 
         OnCollisionDeactivateBehaviour(true);
 
@@ -81,10 +81,9 @@ public class FireballBehaviour : A_ServerMoveableSummoning
         }
 
 		Vector3 directHitForce = mRigid.velocity;
-
 		mRigid.isKinematic = true;
 
-		if(!isServer)
+        if (!isServer)
 		{
 			return;
 		}
@@ -147,13 +146,12 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 			}
 		}
 
-		RpcExplosion(transform.position,transform.rotation);
-		var explosionObject = Instantiate(explosionPrefab,transform.position, transform.rotation);
+        RpcExplosion(transform.position, transform.rotation);
+        var explosionObject = Instantiate(explosionPrefab, transform.position, transform.rotation);
         RFX4_ColorHelper.ChangeObjectColorByHUE(explosionObject, RFX4_ColorHelper.ColorToHSV(effectColor).H);
-
-        //gameObject.SetActive(false);
         OnCollisionDeactivateBehaviour(false);
 
+        //gameObject.SetActive(false);
         //NetworkServer.UnSpawn(gameObject);
     }
 
@@ -161,6 +159,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
     {
         foreach (var effect in DeactivatedObjectsOnCollision)
         {
+            //Debug.Log((active ? "" : "de") + "activate " + effect.name);
             effect.SetActive(active);
         }
     }
@@ -168,9 +167,11 @@ public class FireballBehaviour : A_ServerMoveableSummoning
     [ClientRpc]
 	void RpcExplosion(Vector3 position, Quaternion rotation)
 	{
-		//Instantiate(explosionPrefab,position,rotation);
+        //Instantiate(explosionPrefab,position,rotation);
+        mRigid.isKinematic = true;
         var explosionObject = Instantiate(explosionPrefab, position, rotation);
         RFX4_ColorHelper.ChangeObjectColorByHUE(explosionObject, RFX4_ColorHelper.ColorToHSV(effectColor).H);
+        OnCollisionDeactivateBehaviour(false);
     }
 		
 	public void Disappear()

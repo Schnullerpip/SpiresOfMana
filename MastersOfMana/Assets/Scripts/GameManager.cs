@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     public uint winnerID;
     public PlayerScript localPlayer;
     public GameObject eventSystem;
+    public bool isUltimateActive = false;
 
     public delegate void GameStarted();
     public static event GameStarted OnGameStarted;

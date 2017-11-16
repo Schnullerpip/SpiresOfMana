@@ -48,12 +48,12 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
 
     public Vector3 GetRandomOffset()
     {
-        Vector3 result = Vector3.up;
-        result.x = Random.Range(0.0f, 1.0f) * (Random.value > 0.5f ? -1 : 1);
-        result.y = Random.Range(0.0f, 1.0f) * (Random.value > 0.5f ? -1 : 1);
-        result.z = Random.Range(0.0f, 1.0f) * (Random.value > 0.5f ? -1 : 1);
-        result.Normalize();
-        return result;
+        return new Vector3
+        {
+            x = Random.Range(0.0f, 1.0f)*(Random.value > 0.5f ? -1 : 1),
+            y = Random.Range(0.0f, 1.0f)*(Random.value > 0.5f ? -1 : 1),
+            z = Random.Range(0.0f, 1.0f)*(Random.value > 0.5f ? -1 : 1)
+        }.normalized;
     }
 
     public void RepositionRock()
@@ -61,7 +61,6 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         transform.SetPositionAndRotation(caster.movement.mRigidbody.worldCenterOfMass, Quaternion.AngleAxis(Time.time * mRotationVelocity, Vector3.up));
         transform.Translate(mOffset);
     }
-
 
     public void Start()
     {

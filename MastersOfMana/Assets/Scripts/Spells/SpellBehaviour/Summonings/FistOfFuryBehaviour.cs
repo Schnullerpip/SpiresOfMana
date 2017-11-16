@@ -9,7 +9,6 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     private PlayerScript caster;
 
     [SerializeField] private float explosionAmplitude;
-    [SerializeField] private Explosion mExplosion;
     [SerializeField] private ParticleSystem mTrail;
 
     [SerializeField] private float mExplosionForce;
@@ -21,12 +20,6 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     private List<GameObject> mAlreadyHit;
     //will store the transform.position of the caster when he casted - the difference between that and he collisionpoint will be a factor to the resulting damage
     private Vector3 castPosition;
-
-    public override void Awake()
-    {
-        base.Awake();
-        mExplosion.amplitude = explosionAmplitude;
-    }
 
     public override void Execute(PlayerScript caster)
     {
@@ -54,15 +47,15 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         if (collider.isTrigger) return;
 
         //spawn an explosion
-        GameObject go = PoolRegistry.ExplosionPool.Get();
-        go.transform.position = caster.transform.position/* + caster.transform.forward * 5*/;
-        go.SetActive(true);
-        Explosion ex = go.GetComponent<Explosion>();
+        GameObject explosion = PoolRegistry.ExplosionPool.Get();
+        explosion.transform.position = caster.transform.position/* + caster.transform.forward * 5*/;
+        explosion.SetActive(true);
+        Explosion ex = explosion.GetComponent<Explosion>();
         if (ex)
         {
             ex.amplitude = explosionAmplitude;
         }
-        NetworkServer.Spawn(go);
+        NetworkServer.Spawn(explosion);
 
 
         //Debug.Log("velocity: " + caster.movement.GetVelocity());

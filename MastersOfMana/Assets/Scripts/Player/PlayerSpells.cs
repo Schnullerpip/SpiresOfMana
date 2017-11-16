@@ -8,6 +8,10 @@ public class PlayerSpells : NetworkBehaviour {
     //cached instance of the playerscript
     private PlayerScript mPlayer;
 
+    [SyncVar]
+    public float ultimateEnergy = 0;
+    public float ultimateEnergyThreshold = 30;
+
     public void Start()
     {
         //cache the playaer for later use
@@ -37,7 +41,7 @@ public class PlayerSpells : NetworkBehaviour {
     }
 
     //spellslots
-    public SpellSlot[] spellslot = new SpellSlot[3];
+    public SpellSlot[] spellslot = new SpellSlot[4];
 
     //references the currently chosen spell, among the three available spellslots
     [SyncVar]
@@ -78,6 +82,7 @@ public class PlayerSpells : NetworkBehaviour {
 	public class SpellSlot {
 		public A_Spell spell;
 		public float cooldown;
+        public bool isUltimateSpellSlot = false;
 
         /// <summary>
         /// activates the casting animation, after the spells castduration it activates the 'holding spell' animation
@@ -107,6 +112,15 @@ public class PlayerSpells : NetworkBehaviour {
 	    {
             if (cooldown <= 0)
             {
+                if(isUltimateSpellSlot)
+                {
+                    //Only one ultimate can be active at the same time
+                    if(GameManager.instance.isUltimateActive)
+                    {
+                        return;
+                    }
+                    caster.GetPlayerSpells().ultimateEnergy = 0;
+                }
                 //start the switch to 'holding spell' animation after the castduration
                 caster.GetPlayerSpells().EnlistSpellRoutine(caster.StartCoroutine(CastRoutine(caster, spell.castDurationInSeconds)));
             }

@@ -163,7 +163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b80e17390ca09145b74e1c74a565016, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  winnerName: 
+  winnerID: 0
   localPlayer: {fileID: 0}
   eventSystem: {fileID: 1566325945482672}
 --- !u!114 &114830869772096972
@@ -466,6 +466,15 @@ MonoBehaviour:
       _behaviorId: 0
       _userAssignable: 1
       _categoryId: 0
+    - _id: 16
+      _name: ChooseUltimate
+      _type: 1
+      _descriptiveName: ChooseUltimate
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 0
     actionCategories:
     - _name: Default
       _descriptiveName: Default
@@ -480,7 +489,7 @@ MonoBehaviour:
     actionCategoryMap:
       list:
       - categoryId: 0
-        actionIds: 0000000001000000020000000300000004000000050000000a0000000900000008000000070000000f000000
+        actionIds: 0000000001000000020000000300000004000000050000000a0000000900000008000000070000000f00000010000000
       - categoryId: 1
         actionIds: 0b0000000c0000000d0000000e00000006000000
     inputBehaviors:
@@ -858,6 +867,17 @@ MonoBehaviour:
         _modifierKey1: 0
         _modifierKey2: 0
         _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 16
+        _elementType: 1
+        _elementIdentifierId: -1
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 52
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
     - id: 1
       categoryId: 4
       layoutId: 0
@@ -997,7 +1017,7 @@ MonoBehaviour:
     customControllerMaps: []
     customControllers: []
     playerIdCounter: 2
-    actionIdCounter: 16
+    actionIdCounter: 17
     actionCategoryIdCounter: 3
     inputBehaviorIdCounter: 1
     mapCategoryIdCounter: 5

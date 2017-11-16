@@ -29,12 +29,19 @@ public abstract class A_InputState : A_State{
 		if (player.GetRewired().GetButtonDown("ChooseSpell3")) {
             ChooseSpell(2);
         }
+        if (player.GetRewired().GetButtonDown("ChooseUltimate"))
+        {
+            if(player.GetPlayerSpells().ultimateEnergy >= player.GetPlayerSpells().ultimateEnergyThreshold)
+            {
+                ChooseSpell(3);
+            }
+        }
 
 
 
 
-		//store the input values
-		Vector2 movementInput = player.GetRewired().GetAxis2D("MoveHorizontal", "MoveVertical");
+        //store the input values
+        Vector2 movementInput = player.GetRewired().GetAxis2D("MoveHorizontal", "MoveVertical");
 		movementInput = Vector3.ClampMagnitude(movementInput,1);
 
 		if(player.GetRewired().GetButtonDown("ShoulderSwap"))

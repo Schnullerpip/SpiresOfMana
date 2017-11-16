@@ -16,7 +16,7 @@ public class Pool {
     private int mRoundRobinIdx = 0;
 
     //the original that is copied whenever new elements are instantiated into the pool
-    private readonly GameObject mOriginal;
+    public GameObject mOriginal;
     public NetworkHash128 assetID;
 
     //the list with the actual objects
@@ -105,7 +105,7 @@ public class Pool {
     }
 
 
-    public enum Activation { ReturnDeactivated, ReturnActivated};
+    public enum Activation { ReturnDeactivated, ReturnActivated };
     /// <summary>
     /// returns an object of the pool according to the used strategy in this pool
     /// this does    NOT   spawn the object on the clients! if you want to do this you need to manually call NetworkServer.Spawn(pool.Get())
@@ -132,7 +132,7 @@ public class Pool {
         {
             found.SetActive(true);
         }
-        
+
         return found;
     }
 

@@ -27,7 +27,8 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
     public override void Execute(PlayerScript caster)
     {
         //get a rock instance
-        RockProjectileBehaviour rp = PoolRegistry.RockProjectilePool.Get().GetComponent<RockProjectileBehaviour>();
+        //RockProjectileBehaviour rp = PoolRegistry.RockProjectilePool.Get().GetComponent<RockProjectileBehaviour>();
+        RockProjectileBehaviour rp = PoolRegistry.instance.Instantiate(this.gameObject).GetComponent<RockProjectileBehaviour>();
 
         //initialize it
         //rp.caster = caster;

@@ -35,17 +35,18 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 
     public override void Execute(PlayerScript caster)
     {
-		GrenadeBehaviour grenadeBehaviour = PoolRegistry.GrenadePool.Get().GetComponent<GrenadeBehaviour>();
-		//create an instance of this grenade on the client's machine
+		//GrenadeBehaviour grenadeBehaviour = PoolRegistry.GrenadePool.Get().GetComponent<GrenadeBehaviour>();
+		GrenadeBehaviour grenadeBehaviour = PoolRegistry.instance.Instantiate(this.gameObject).GetComponent<GrenadeBehaviour>();
+        //create an instance of this grenade on the client's machine
 
-		grenadeBehaviour.gameObject.SetActive(true);
+        grenadeBehaviour.gameObject.SetActive(true);
 
 		Vector3 aimDirection = GetAim(caster);
 		
 		grenadeBehaviour.Reset(caster.handTransform.position + aimDirection, caster.transform.rotation);
 		grenadeBehaviour.mRigid.velocity = aimDirection * throwForce;
 
-		NetworkServer.Spawn(grenadeBehaviour.gameObject, PoolRegistry.GrenadePool.assetID);
+		NetworkServer.Spawn(grenadeBehaviour.gameObject, grenadeBehaviour.GetComponent<NetworkIdentity>().assetId);
 
 		grenadeBehaviour.LightFuse(lifeTime);
     }

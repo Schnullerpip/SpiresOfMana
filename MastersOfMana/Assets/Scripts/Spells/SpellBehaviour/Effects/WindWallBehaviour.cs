@@ -33,7 +33,8 @@ public class WindWallBehaviour : A_SummoningBehaviour
 
     public override void Execute(PlayerScript caster)
     {
-        GameObject ww = PoolRegistry.WindWallPool.Get();
+        //GameObject ww = PoolRegistry.WindWallPool.Get();
+        GameObject ww = PoolRegistry.instance.Instantiate(this.gameObject);
         WindWallBehaviour windwall = ww.GetComponent<WindWallBehaviour>();
 
 		Vector3 direction =	GetAim(caster);

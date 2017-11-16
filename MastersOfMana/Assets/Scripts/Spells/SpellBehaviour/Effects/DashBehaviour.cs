@@ -12,16 +12,12 @@ public class DashBehaviour : A_EffectBehaviour
 {
 
     [SerializeField] private float mMaxDistance;
-
     [SerializeField] private float mOffsetToPlayer;
-
     [SerializeField] private float mCapsuleHeight;
-
     [SerializeField] private float mCapsuleRadius;
-
     [SerializeField] private float mPushForce;
-
     [SerializeField] private float mReduction;
+    public GameObject dashEffectPrefab; 
 
     public override void Execute(PlayerScript caster)
     {
@@ -51,7 +47,7 @@ public class DashBehaviour : A_EffectBehaviour
         }
 
         //cast a trail or something so the enemy does not recognize the dash as a glitch
-        GameObject ds = PoolRegistry.DashTrailPool.Get();
+        GameObject ds = PoolRegistry.instance.Instantiate(dashEffectPrefab);
         //position the trail
         Vector3 pos = caster.transform.position;
         pos.y += 1;

@@ -116,13 +116,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f140fc052e4cde04d9b50817a5505c81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosionAmplitude: 8
+  explosionAmplitude: 1
   mTrail: {fileID: 198403510945589772}
-  mExplosionForce: 11
-  mPushDownForce: 20
-  mMinimumDamage: 3
-  mMaximumDamage: 30
+  mExplosionForce: 1
+  mPushDownForce: 1
+  mMinimumDamage: 1
+  mMaximumDamage: 10
   mDamageFactor: 1
+  explosionPrefab: {fileID: 1074938900135206, guid: 6b0cdc220c5b11441be55c5be9b07c8d,
+    type: 2}
 --- !u!135 &135348172352856590
 SphereCollider:
   m_ObjectHideFlags: 1

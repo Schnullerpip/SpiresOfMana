@@ -16,6 +16,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     [SerializeField] private float mMinimumDamage;
     [SerializeField] private float mMaximumDamage;
     [SerializeField] [Range(0.0f, 1.0f)] private float mDamageFactor;
+    [SerializeField] private GameObject explosionPrefab;
 
     private List<GameObject> mAlreadyHit;
     //will store the transform.position of the caster when he casted - the difference between that and he collisionpoint will be a factor to the resulting damage
@@ -24,7 +25,8 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     public override void Execute(PlayerScript caster)
     {
         //get a fistoffury object
-        FistOfFuryBehaviour fof = PoolRegistry.FistOfFuryPool.Get(Pool.Activation.ReturnActivated).GetComponent<FistOfFuryBehaviour>();
+        //FistOfFuryBehaviour fof = PoolRegistry.FistOfFuryPool.Get(Pool.Activation.ReturnActivated).GetComponent<FistOfFuryBehaviour>();
+        FistOfFuryBehaviour fof = PoolRegistry.instance.Instantiate(this.gameObject).GetComponent<FistOfFuryBehaviour>();
         fof.caster = caster;
         fof.transform.position = fof.castPosition = caster.transform.position;
         fof.transform.parent = caster.transform;
@@ -47,7 +49,8 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         if (collider.isTrigger) return;
 
         //spawn an explosion
-        GameObject explosion = PoolRegistry.ExplosionPool.Get();
+        //GameObject explosion = PoolRegistry.ExplosionPool.Get();
+        GameObject explosion = PoolRegistry.instance.Instantiate(explosionPrefab);
         explosion.transform.position = caster.transform.position/* + caster.transform.forward * 5*/;
         explosion.SetActive(true);
         Explosion ex = explosion.GetComponent<Explosion>();

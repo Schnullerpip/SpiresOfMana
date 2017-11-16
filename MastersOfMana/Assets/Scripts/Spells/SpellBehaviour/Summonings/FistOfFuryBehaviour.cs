@@ -16,10 +16,11 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     [SerializeField] private float mPushDownForce;
     [SerializeField] private float mMinimumDamage;
     [SerializeField] private float mMaximumDamage;
-    [SerializeField] [Range(0.0f, 1.0f)] private float mVelocityScaledDamageFactor;
+    [SerializeField] [Range(0.0f, 1.0f)] private float mDamageFactor;
 
     private List<GameObject> mAlreadyHit;
-    private float mHighestMeasuredVelocity = 0;
+    //will store the transform.position of the caster when he casted - the difference between that and he collisionpoint will be a factor to the resulting damage
+    private Vector3 castPosition;
 
     public override void Awake()
     {
@@ -27,22 +28,12 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         mExplosion.amplitude = explosionAmplitude;
     }
 
-
-    void Update()
-    {
-        if (caster.movement.GetVelocity().y < mHighestMeasuredVelocity)
-        {
-            mHighestMeasuredVelocity = caster.movement.GetVelocity().y;
-        }
-    }
-
     public override void Execute(PlayerScript caster)
     {
-
         //get a fistoffury object
         FistOfFuryBehaviour fof = PoolRegistry.FistOfFuryPool.Get(Pool.Activation.ReturnActivated).GetComponent<FistOfFuryBehaviour>();
         fof.caster = caster;
-        fof.transform.position = caster.transform.position;
+        fof.transform.position = fof.castPosition = caster.transform.position;
         fof.transform.parent = caster.transform;
         fof.mAlreadyHit = new List<GameObject>();
         //spawn it on all clients
@@ -61,7 +52,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     protected override void ExecuteTriggerEnter_Host(Collider collider)
     {
         if (collider.isTrigger) return;
-        
+
         //spawn an explosion
         GameObject go = PoolRegistry.ExplosionPool.Get();
         go.transform.position = caster.transform.position/* + caster.transform.forward * 5*/;
@@ -84,15 +75,28 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
             if (rigid && !mAlreadyHit.Contains(rigid.gameObject))
             {
                 mAlreadyHit.Add(rigid.gameObject);
-                PlayerScript ps = colliders[i].attachedRigidbody.GetComponent<PlayerScript>();
                 Vector3 direction = rigid.position - caster.movement.mRigidbody.position;
                 direction.Normalize();
-                if (ps)
+
+                //if the hit object is hurtable - hurt it
+                float distance = Vector3.Magnitude(caster.transform.position - castPosition);
+                float resultingDamage = mMinimumDamage + distance*mDamageFactor;
+                HealthScript hs = rigid.GetComponentInParent<HealthScript>();//searches in the gameobject AND in its parents
+                if (hs && hs != caster.healthScript)
                 {
-                    if (ps != caster)
+                    //calculate damage
+                    resultingDamage = Mathf.Clamp(resultingDamage, mMinimumDamage, mMaximumDamage);
+                    Debug.Log("damage by fist: " + resultingDamage);
+                    hs.TakeDamage(resultingDamage);
+                }
+
+                //if the hit object is moveable - move it
+                ServerMoveable sm = rigid.gameObject.GetComponent<ServerMoveable>();
+                if (sm)
+                {
+                    if (sm.gameObject != caster.gameObject)
                     {
-                        Debug.Log("force: " + mExplosionForce*direction);
-                        ps.movement.RpcAddForce(mExplosionForce*direction, ForceMode.VelocityChange);
+                        sm.RpcAddForce(mExplosionForce*direction, ForceMode.VelocityChange);
                     }
                 }
                 else
@@ -100,16 +104,6 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
                     rigid.AddForce(mExplosionForce*direction, ForceMode.VelocityChange);
                 }
 
-                HealthScript hs = rigid.GetComponentInParent<HealthScript>();
-                if (hs && hs != caster.healthScript)
-                {
-                    if (mHighestMeasuredVelocity < 0) mHighestMeasuredVelocity *= -1;
-                    float damage = mMinimumDamage + mHighestMeasuredVelocity*mVelocityScaledDamageFactor;
-                    damage = Mathf.Clamp(damage, mMinimumDamage, mMaximumDamage);
-                    Debug.Log("damage by fist: " + damage);
-                    Debug.Log("highest vel: " + mHighestMeasuredVelocity);
-                    hs.TakeDamage(damage);
-                }
             }
         }
 

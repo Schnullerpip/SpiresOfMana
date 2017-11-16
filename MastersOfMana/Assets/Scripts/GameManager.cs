@@ -35,6 +35,9 @@ public class GameManager : MonoBehaviour
             eventSystem.SetActive(true);
             DontDestroyOnLoad(this);
         }
+
+        //Random seed initialization
+        Random.seed = (int)Time.time;
     }
 
     public void ResetLocalGameState()

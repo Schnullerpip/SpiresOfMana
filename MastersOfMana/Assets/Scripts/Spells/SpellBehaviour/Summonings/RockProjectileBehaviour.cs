@@ -7,13 +7,14 @@ using Random = UnityEngine.Random;
 
 public class RockProjectileBehaviour : A_ServerMoveableSummoning
 {
-
     [SerializeField] private BoxCollider mHitCollider;
     [SerializeField] private SphereCollider mDetectCollider;
     [SerializeField] private float mRockVelocity;
     [SerializeField] private float mDamageAmount;
     [SerializeField] private float mRotationVelocity;
     [SerializeField] private float mPushForce;
+    [SerializeField] private Vector3[] mRandomOffsets;
+    private static uint mRandomOffsetIndex = 0;
     private float mTimeCount = 0;
 
     private delegate void OnTriggerBehaviour(Collider collider);
@@ -47,18 +48,26 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         rp.gameObject.SetActive(true);
         NetworkServer.Spawn(rp.gameObject);
     }
+    [ContextMenu("InitializeRandomOffsets")]
+    public void InitializeRandomOffsets()
+    {
+        for (var i = 0; i < mRandomOffsets.Length; ++i)
+        {
+            mRandomOffsets[i] = GetRandomOffset();
+        }
+    }
 
-    public Vector3 GetRandomOffset()
+    private Vector3 GetRandomOffset()
     {
         return new Vector3
         {
-            x = Random.Range(0.0f, 1.0f)*(Random.value > 0.5f ? -1 : 1),
-            y = Random.Range(0.0f, 1.0f)*(Random.value > 0.5f ? -1 : 1),
-            z = Random.Range(0.0f, 1.0f)*(Random.value > 0.5f ? -1 : 1)
+            x = Random.Range(0.0f, 1.0f) * (Random.value > 0.5f ? -1 : 1),
+            y = Random.Range(0.0f, 1.0f) * (Random.value > 0.5f ? -1 : 1),
+            z = Random.Range(0.0f, 1.0f) * (Random.value > 0.5f ? -1 : 1)
         }.normalized;
     }
 
-    public void RepositionRock()
+    private void RepositionRock()
     {
         transform.SetPositionAndRotation(caster.movement.mRigidbody.worldCenterOfMass, Quaternion.AngleAxis(mTimeCount * mRotationVelocity, Vector3.up));
         transform.Translate(mOffset);
@@ -184,5 +193,13 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
 
         mRigid.position = position;
         mRigid.velocity = velocity;
+    }
+
+    public void OnValidate()
+    {
+        for (var i = 0; i < mRandomOffsets.Length; ++i)
+        {
+            mRandomOffsets[i].Normalize();
+        }
     }
 }

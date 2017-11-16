@@ -43,7 +43,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
 
         //spawn it
         rp.gameObject.SetActive(true);
-        //NetworkServer.Spawn(rp.gameObject);
+        NetworkServer.Spawn(rp.gameObject);
     }
 
     public Vector3 GetRandomOffset()

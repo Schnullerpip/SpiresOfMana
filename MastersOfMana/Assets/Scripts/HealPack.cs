@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 
 public class HealPack : NetworkBehaviour {
 
-    public float healAmount = 15;
+    public int healAmount = 15;
 
     public void OnTriggerEnter(Collider other)
     {

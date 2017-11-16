@@ -11,9 +11,9 @@ using UnityEngine.Networking;
 public class HealthScript : NetworkBehaviour
 {
     [SerializeField][SyncVar]
-    private float mMaxHealth = 50;
+    private int mMaxHealth = 50;
     [SerializeField][SyncVar(hook = "HealthHook")]
-    private float mCurrentHealth;
+    private int mCurrentHealth;
 
     //states whether the GameObject is alive or not
     [SyncVar]
@@ -32,17 +32,17 @@ public class HealthScript : NetworkBehaviour
     /// <summary>
     /// Calls whenever the health is changed
     /// </summary>
-    public void HealthHook(float newHealth)
+    public void HealthHook(int newHealth)
     {
         HealthChangedHook(newHealth);
     }
-    public virtual void HealthChangedHook(float newHealth) {}
+    public virtual void HealthChangedHook(int newHealth) {}
         
     /// <summary>
     /// the only thing, that should be adressed, to actually hurt a GameObject, this should only ever be run on the server!!!
     /// </summary>
     /// <param name="amount"></param>
-    public virtual void TakeDamage(float amount) {
+    public virtual void TakeDamage(int amount) {
         if ((mCurrentHealth -= amount) <= 0) {
             mCurrentHealth = 0;
             isAlive = false;
@@ -56,11 +56,11 @@ public class HealthScript : NetworkBehaviour
         isAlive = true;
     }
 
-    public float GetCurrentHealth() {
+    public int GetCurrentHealth() {
         return mCurrentHealth;
     }
 
-    public float GetMaxHealth()
+    public int GetMaxHealth()
     {
         return mMaxHealth;
     }
@@ -69,7 +69,7 @@ public class HealthScript : NetworkBehaviour
     /// the only thing, that should be adressed, to actually heal a GameObject, this should only ever be run on the server!!!
     /// </summary>
     /// <param name="amount"></param>
-    public virtual void TakeHeal(float amount)
+    public virtual void TakeHeal(int amount)
     {
         if(mCurrentHealth <= 0)
         {
@@ -77,7 +77,7 @@ public class HealthScript : NetworkBehaviour
         }
 
         //Setting mCurrenthealth here directly would provocate a health changed hook
-        float tempHealth = mCurrentHealth + amount;
+        int tempHealth = mCurrentHealth + amount;
         if(tempHealth > mMaxHealth)
         {
             mCurrentHealth = mMaxHealth;

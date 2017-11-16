@@ -14,8 +14,8 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
 
     [SerializeField] private float mExplosionForce;
     [SerializeField] private float mPushDownForce;
-    [SerializeField] private float mMinimumDamage;
-    [SerializeField] private float mMaximumDamage;
+    [SerializeField] private int mMinimumDamage;
+    [SerializeField] private int mMaximumDamage;
     [SerializeField] [Range(0.0f, 1.0f)] private float mVelocityScaledDamageFactor;
 
     private List<GameObject> mAlreadyHit;
@@ -104,7 +104,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
                 if (hs && hs != caster.healthScript)
                 {
                     if (mHighestMeasuredVelocity < 0) mHighestMeasuredVelocity *= -1;
-                    float damage = mMinimumDamage + mHighestMeasuredVelocity*mVelocityScaledDamageFactor;
+                    int damage = Mathf.RoundToInt(mMinimumDamage + mHighestMeasuredVelocity*mVelocityScaledDamageFactor);
                     damage = Mathf.Clamp(damage, mMinimumDamage, mMaximumDamage);
                     Debug.Log("damage by fist: " + damage);
                     Debug.Log("highest vel: " + mHighestMeasuredVelocity);

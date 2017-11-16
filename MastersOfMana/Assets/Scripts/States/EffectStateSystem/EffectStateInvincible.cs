@@ -5,7 +5,7 @@ using UnityEngine;
 public class EffectStateInvincible : EffectStateNoFallDamage {
     public EffectStateInvincible(PlayerScript player) : base(player) { }
 
-    public override float CalculateDamage(float amount)
+    public override int CalculateDamage(int amount)
     {
         return 0;
     }

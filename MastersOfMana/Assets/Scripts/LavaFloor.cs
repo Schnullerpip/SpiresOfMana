@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 public class LavaFloor : NetworkBehaviour
 {
 
-    public float damagePerSecond;
+    public int damagePerSecond;
     public float cycleTime = 40;
     public float amplitude = 4;
     public AnimationCurve lavaFlow;

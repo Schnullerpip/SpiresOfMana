@@ -73,7 +73,6 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 	}
 
     protected override void ExecuteTriggerEnter_Host(Collider collider)
-    //protected override void ExecuteCollision_Host(Collision collision) 
     {
         if (collider.isTrigger)
         {

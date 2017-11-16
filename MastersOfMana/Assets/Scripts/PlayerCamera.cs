@@ -25,6 +25,8 @@ public class PlayerCamera : MonoBehaviour {
 	private Camera mCamera;
 	private Vector3 mMovementVelocity; 
 
+	private CamSlider mSlider;
+
 	public Camera GetCamera()
 	{
 		return mCamera;
@@ -34,6 +36,7 @@ public class PlayerCamera : MonoBehaviour {
     {
 		mCamera = GetComponentInChildren<Camera>();
 		mStartFOV = mCamera.fieldOfView;
+		mSlider = GetComponentInChildren<CamSlider>();
     }
 
 	void Start()
@@ -41,6 +44,10 @@ public class PlayerCamera : MonoBehaviour {
 		if(followTarget == null)
 		{
 			Debug.LogWarning("No Follow Target assigned.", this.gameObject);
+		}
+		else
+		{
+			mSlider.SetPlayer(followTarget);
 		}
 	}
 

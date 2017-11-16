@@ -16,9 +16,10 @@ public class GameManager : MonoBehaviour
     private int mNeededToGo = 1;
 
     public static GameManager instance;
-    public string winnerName;
+    public uint winnerID;
     public PlayerScript localPlayer;
     public GameObject eventSystem;
+    public bool isUltimateActive = false;
 
     public delegate void GameStarted();
     public static event GameStarted OnGameStarted;
@@ -35,6 +36,9 @@ public class GameManager : MonoBehaviour
             eventSystem.SetActive(true);
             DontDestroyOnLoad(this);
         }
+
+        //Random seed initialization
+        Random.seed = (int)Time.time;
     }
 
     public void ResetLocalGameState()
@@ -75,7 +79,7 @@ public class GameManager : MonoBehaviour
             foreach (var p in mPlayers)
             {
                 p.RpcSetInputState(InputStateSystem.InputStateID.Normal);
-                p.RpcUpdateSpells(p.GetPlayerSpells().spellslot[0].spell.spellID, p.GetPlayerSpells().spellslot[1].spell.spellID, p.GetPlayerSpells().spellslot[2].spell.spellID);
+                p.RpcUpdateSpells(p.GetPlayerSpells().spellslot[0].spell.spellID, p.GetPlayerSpells().spellslot[1].spell.spellID, p.GetPlayerSpells().spellslot[2].spell.spellID, p.GetPlayerSpells().spellslot[3].spell.spellID);
             }
 
             NetManager.instance.RpcTriggerGameStarted();
@@ -104,15 +108,16 @@ public class GameManager : MonoBehaviour
             {
                 if(p.healthScript.IsAlive())
                 {
-                    winnerName = p.playerName;
+                    winnerID = p.netId.Value;
+                    
                     break;
                 }
             }
-            StartCoroutine(PostGameLobby(winnerName));
+            StartCoroutine(PostGameLobby(winnerID));
         }
     }
 
-    public IEnumerator PostGameLobby(string winner) {
+    public IEnumerator PostGameLobby(uint winner) {
         yield return new WaitForSeconds(0.0f);
         NetManager.instance.RpcLoadPostGameScreen(winner);
     }

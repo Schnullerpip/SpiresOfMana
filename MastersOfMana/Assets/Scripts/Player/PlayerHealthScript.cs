@@ -45,11 +45,6 @@ public class PlayerHealthScript : HealthScript {
         {
             OnHealthChanged(newHealth);
         }
-        ////At game start healthHud might not be available yet
-        //if (healthHUD)
-        //{
-        //    healthHUD.SetHealth(newHealth);
-        //}
 
         // If newHealth is smaller than current Health we have taken damage!
         float damage = GetCurrentHealth() - newHealth;

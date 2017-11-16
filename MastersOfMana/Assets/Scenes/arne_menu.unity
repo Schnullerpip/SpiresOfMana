@@ -108,6 +108,12 @@ NavMeshSettings:
     tileSize: 256
     accuratePlacement: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &69644341 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114029537620435312, guid: c0978251ff7b10d4fb954a4b56acd9f0,
+    type: 2}
+  m_PrefabInternal: {fileID: 1203926414}
+  m_Script: {fileID: 853051423, guid: f70555f144d8491a825f0804e09c671c, type: 3}
 --- !u!114 &560370118 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 114402217130636838, guid: c0978251ff7b10d4fb954a4b56acd9f0,
@@ -177,10 +183,6 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 1321811818}
     m_Modifications:
-    - target: {fileID: 11484364, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
-      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.size
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 22459552, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -253,8 +255,7 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 114402217130636838, guid: c0978251ff7b10d4fb954a4b56acd9f0,
-        type: 2}
+    - target: {fileID: 11478224, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
       propertyPath: lobbyManager
       value: 
       objectReference: {fileID: 1321811817}
@@ -262,34 +263,20 @@ Prefab:
       propertyPath: m_Name
       value: MainMenu
       objectReference: {fileID: 0}
-    - target: {fileID: 11478224, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
+    - target: {fileID: 114402217130636838, guid: c0978251ff7b10d4fb954a4b56acd9f0,
+        type: 2}
       propertyPath: lobbyManager
       value: 
       objectReference: {fileID: 1321811817}
-    - target: {fileID: 11422868, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
-      propertyPath: m_ScreenMatchMode
-      value: 2
+    - target: {fileID: 1613109371814600, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
+      propertyPath: m_Name
+      value: ControlSchemeDropdown
       objectReference: {fileID: 0}
-    - target: {fileID: 11484364, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
-      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+    - target: {fileID: 114368609507812750, guid: c0978251ff7b10d4fb954a4b56acd9f0,
+        type: 2}
+      propertyPath: controlScheme
       value: 
-      objectReference: {fileID: 560370118}
-    - target: {fileID: 11484364, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
-      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnClickCreateMatchmakingGame
-      objectReference: {fileID: 0}
-    - target: {fileID: 11484364, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
-      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11484364, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
-      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 11484364, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
-      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 69644341}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
   m_IsPrefabParent: 0
@@ -414,6 +401,7 @@ MonoBehaviour:
   - {fileID: 1830059462098460, guid: ea9e802ddd4680843a8062f42b224dc4, type: 2}
   - {fileID: 1619450679201972, guid: acd46b4d248498f4faba4e8ff9c23a2a, type: 2}
   - {fileID: 1867569295389258, guid: 82337880c0d9f4b10bd677ef4f80bcfa, type: 2}
+  - {fileID: 1553457549544014, guid: 828ade40530bd5c49a04be56ac7c9004, type: 2}
   m_CustomConfig: 1
   m_MaxConnections: 4
   m_ConnectionConfig:

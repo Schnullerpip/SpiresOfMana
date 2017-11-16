@@ -15,6 +15,12 @@ namespace Prototype.NetworkLobby
         //used on server to avoid assigning the same color to two player
         static List<int> _colorInUse = new List<int>();
 
+        public enum ControlSchemes
+        {
+            SelectAndTrigger = 0,
+            SelectEqualsTrigger = 1
+        }
+
         public Button colorButton;
         public InputField nameInput;
         public Button readyButton;
@@ -42,10 +48,12 @@ namespace Prototype.NetworkLobby
         public Button
             spellButton1,
             spellButton2,
-            spellButton3;
+            spellButton3,
+            spellButton4;
 
         //spellslots
         public List<A_Spell> spells;
+        private SpellRegistry spellregistry;
 
         private int mSpellToChange;
 
@@ -143,12 +151,20 @@ namespace Prototype.NetworkLobby
             readyButton.onClick.RemoveAllListeners();
             readyButton.onClick.AddListener(OnReadyClicked);
 
+            spellregistry = Prototype.NetworkLobby.LobbyManager.s_Singleton.mainMenu.spellSelectionPanel.GetComponent<SpellSelectionPanel>().spellregistry;
+            spells[0] = spellregistry.GetSpellByID(PlayerPrefs.GetInt("SpellSlot0",0));
+            spells[1] = spellregistry.GetSpellByID(PlayerPrefs.GetInt("SpellSlot1",1));
+            spells[2] = spellregistry.GetSpellByID(PlayerPrefs.GetInt("SpellSlot2",2));
+            spells[3] = spellregistry.GetSpellByID(PlayerPrefs.GetInt("SpellSlot3", 3));
+
             spellButton1.gameObject.SetActive(true);
             spellButton2.gameObject.SetActive(true);
             spellButton3.gameObject.SetActive(true);
+            spellButton4.gameObject.SetActive(true);
             spellButton1.interactable = true;
             spellButton2.interactable = true;
             spellButton3.interactable = true;
+            spellButton4.interactable = true;
             UpdateSpellButtons();
 
             //We need to assign the navigation for down directly, it seems to lose the explicit reference because the back button is on a different UI
@@ -157,6 +173,7 @@ namespace Prototype.NetworkLobby
             AssignCustomNavigation(spellButton1, backButton, OnSelectDirection.down);
             AssignCustomNavigation(spellButton2, backButton, OnSelectDirection.down);
             AssignCustomNavigation(spellButton3, backButton, OnSelectDirection.down);
+            AssignCustomNavigation(spellButton4, backButton, OnSelectDirection.down);
             AssignCustomNavigation(removePlayerButton, backButton, OnSelectDirection.down);
             AssignCustomNavigation(backButton, spellButton1, OnSelectDirection.up);
 
@@ -209,6 +226,7 @@ namespace Prototype.NetworkLobby
             spellButton1.transform.GetChild(0).GetComponent<Image>().sprite = spells[0].icon;
             spellButton2.transform.GetChild(0).GetComponent<Image>().sprite = spells[1].icon;
             spellButton3.transform.GetChild(0).GetComponent<Image>().sprite = spells[2].icon;
+            spellButton4.transform.GetChild(0).GetComponent<Image>().sprite = spells[3].icon;
         }
 
         public void OnSpellButtonClicked(int spellButton)
@@ -217,6 +235,8 @@ namespace Prototype.NetworkLobby
             RectTransform spellSelectionPanel;
             spellSelectionPanel = LobbyManager.s_Singleton.mainMenu.spellSelectionPanel;
             spellSelectionPanel.GetComponent<SpellSelectionPanel>().player = this;
+            //If spellslot 4 is selected, show ultimates
+            spellSelectionPanel.GetComponent<SpellSelectionPanel>().showUltimates = spellButton == 3;
             spellSelectionPanel.gameObject.SetActive(true);
         }
 
@@ -264,10 +284,17 @@ namespace Prototype.NetworkLobby
                 spellButton1.interactable = false;
                 spellButton2.interactable = false;
                 spellButton3.interactable = false;
+                spellButton4.interactable = false;
                 // Push chosen spells to server
                 if (isLocalPlayer)
                 {
-                    CmdSpellsChanged(spells[0].spellID, spells[1].spellID, spells[2].spellID);
+                    //Save Spells to PlayerPrefs
+                    PlayerPrefs.SetInt("SpellSlot0",spells[0].spellID);
+                    PlayerPrefs.SetInt("SpellSlot1", spells[1].spellID);
+                    PlayerPrefs.SetInt("SpellSlot2", spells[2].spellID);
+                    PlayerPrefs.SetInt("SpellSlot3", spells[3].spellID);
+                    PlayerPrefs.Save();
+                    CmdSpellsChanged(spells[0].spellID, spells[1].spellID, spells[2].spellID, spells[3].spellID);
                 }
             }
             else
@@ -283,16 +310,18 @@ namespace Prototype.NetworkLobby
                 spellButton1.interactable = isLocalPlayer;
                 spellButton2.interactable = isLocalPlayer;
                 spellButton3.interactable = isLocalPlayer;
+                spellButton4.interactable = isLocalPlayer;
             }
         }
 
         [Command]
-        public void CmdSpellsChanged(int Spell1, int Spell2, int Spell3)
+        public void CmdSpellsChanged(int Spell1, int Spell2, int Spell3, int Spell4)
         {
             SpellRegistry spellregistry = Prototype.NetworkLobby.LobbyManager.s_Singleton.mainMenu.spellSelectionPanel.GetComponent<SpellSelectionPanel>().spellregistry;
             spells[0] = spellregistry.GetSpellByID(Spell1);
             spells[1] = spellregistry.GetSpellByID(Spell2);
             spells[2] = spellregistry.GetSpellByID(Spell3);
+            spells[3] = spellregistry.GetSpellByID(Spell4);
         }
 
         public void OnPlayerListChanged(int idx)
@@ -358,6 +387,12 @@ namespace Prototype.NetworkLobby
 
 			LobbyManager.s_Singleton.mainMenu.GetRewiredPlayer().controllers.maps.SetMapsEnabled(false,"UI");
 			LobbyManager.s_Singleton.mainMenu.GetRewiredPlayer().controllers.maps.SetMapsEnabled(true,"Default");
+        }
+
+        [ClientRpc]
+        public void RpcGameStarts()
+        {
+            Cursor.lockState = CursorLockMode.Locked;
         }
 
         [ClientRpc]

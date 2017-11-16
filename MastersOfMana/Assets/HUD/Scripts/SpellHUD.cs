@@ -5,10 +5,13 @@ using UnityEngine.UI;
 
 public class SpellHUD : MonoBehaviour
 {
-    public List<RectTransform> spellSlots;
+    public List<SpellSlotHUD> spellSlots;
+    public Image ultimateEnergyProgess;
+    public Color ultimateEnergyDefaultColor;
+    public Color ultimateEnergyFullColor;
 
     private Canvas canvas;
-    private PlayerScript localPlayer;
+    private PlayerSpells localPlayerSpells;
 
     private List<Image> spellIcons = new List<Image>();
     private List<Image> spellHighlights = new List<Image>();
@@ -28,28 +31,18 @@ public class SpellHUD : MonoBehaviour
 
     public void Init()
     {
-        localPlayer = GameManager.instance.localPlayer;
+        localPlayerSpells = GameManager.instance.localPlayer.GetPlayerSpells();
 
-        //Prefetch all the needed children
-        spellHighlights.Add(spellSlots[0].GetChild(0).GetComponentInParent<Image>());
-        spellHighlights.Add(spellSlots[1].GetChild(0).GetComponentInParent<Image>());
-        spellHighlights.Add(spellSlots[2].GetChild(0).GetComponentInParent<Image>());
-
-        spellIcons.Add(spellSlots[0].GetChild(1).GetComponentInParent<Image>());
-        spellIcons.Add(spellSlots[1].GetChild(1).GetComponentInParent<Image>());
-        spellIcons.Add(spellSlots[2].GetChild(1).GetComponentInParent<Image>());
-
-        spellCooldowns.Add(spellSlots[0].GetChild(2).GetComponentInParent<Image>());
-        spellCooldowns.Add(spellSlots[1].GetChild(2).GetComponentInParent<Image>());
-        spellCooldowns.Add(spellSlots[2].GetChild(2).GetComponentInParent<Image>());
-
-        //Fill SpellSlots with correct spellIcons
-        spellIcons[0].sprite = localPlayer.GetPlayerSpells().spellslot[0].spell.icon;
-        spellIcons[1].sprite = localPlayer.GetPlayerSpells().spellslot[1].spell.icon;
-        spellIcons[2].sprite = localPlayer.GetPlayerSpells().spellslot[2].spell.icon;
+        foreach(SpellSlotHUD spellslot in spellSlots)
+        {
+            spellHighlights.Add(spellslot.highlight);
+            spellIcons.Add(spellslot.icon);
+            spellCooldowns.Add(spellslot.cooldownImage);
+            spellIcons[spellIcons.Count-1].sprite = localPlayerSpells.spellslot[spellIcons.Count-1].spell.icon;
+        }
 
         //set selected spell
-        displayedCurrentSpell = localPlayer.GetPlayerSpells().GetCurrentspellslotID();
+        displayedCurrentSpell = localPlayerSpells.GetCurrentspellslotID();
         spellHighlights[displayedCurrentSpell].GetComponent<Image>().enabled = true;
         canvas = GetComponentInParent<Canvas>();
         canvas.enabled = true;
@@ -94,26 +87,34 @@ public class SpellHUD : MonoBehaviour
         spellHighlights[displayedCurrentSpell].GetComponent<Image>().enabled = true;
     }
 
+    public void UpdateSlider(float ultimateEnergyPoints, float maximumUltimateEnergyPoints)
+    {
+        if(ultimateEnergyPoints < maximumUltimateEnergyPoints)
+        {
+            ultimateEnergyProgess.color = ultimateEnergyDefaultColor;
+            ultimateEnergyProgess.fillAmount = ultimateEnergyPoints / maximumUltimateEnergyPoints;
+        }
+        else
+        {
+            ultimateEnergyProgess.fillAmount = 1;
+            ultimateEnergyProgess.color = ultimateEnergyFullColor;
+        }
+    }
+
     public void Update()
     {
-        if (localPlayer)
+        if (localPlayerSpells)
         {
-            SetCooldown(0, localPlayer.GetPlayerSpells().spellslot[0]);
-            SetCooldown(1, localPlayer.GetPlayerSpells().spellslot[1]);
-            SetCooldown(2, localPlayer.GetPlayerSpells().spellslot[2]);
-            SetCurrentSpell(localPlayer.GetPlayerSpells().GetCurrentspellslotID());
+            SetCooldown(0, localPlayerSpells.spellslot[0]);
+            SetCooldown(1, localPlayerSpells.spellslot[1]);
+            SetCooldown(2, localPlayerSpells.spellslot[2]);
+            SetCurrentSpell(localPlayerSpells.GetCurrentspellslotID());
+            UpdateSlider(localPlayerSpells.ultimateEnergy, localPlayerSpells.ultimateEnergyThreshold);
         }
     }
 
     void OnDisable()
     {
         GameManager.OnGameStarted -= Init;
-    }
-
-    private void Reset()
-    {
-        spellSlots.Add(transform.GetChild(0).GetComponent<RectTransform>());
-        spellSlots.Add(transform.GetChild(1).GetComponent<RectTransform>());
-        spellSlots.Add(transform.GetChild(2).GetComponent<RectTransform>());
     }
 }

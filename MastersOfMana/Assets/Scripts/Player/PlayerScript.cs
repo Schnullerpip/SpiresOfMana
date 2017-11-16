@@ -65,8 +65,8 @@ public class PlayerScript : NetworkBehaviour
 
 
 	public LayerMask ignoreLayer;
-	private Collider[] mColliders;
-	private int[] mColliderLayers;
+
+	private ColliderPack mColliderPack;
 
 	void Awake()
 	{
@@ -97,13 +97,16 @@ public class PlayerScript : NetworkBehaviour
         {
             movement.onLandingWhileFalling += takeFallDamage;
         }
+			
+		Collider[] colliders = GetComponentsInChildren<Collider>(true);
+		int[] colliderLayers = new int[colliders.Length];
 
-		mColliders = GetComponentsInChildren<Collider>(true);
-		mColliderLayers = new int[mColliders.Length];
-		for (int i = 0; i < mColliders.Length; ++i) 
+		for (int i = 0; i < colliders.Length; ++i) 
 		{
-			mColliderLayers[i] = mColliders[i].gameObject.layer;
+			colliderLayers[i] = colliders[i].gameObject.layer;
 		}
+
+		mColliderPack = new ColliderPack(colliders, colliderLayers);
     }
 
     //We need this method, as it seems that delegates can't call commands
@@ -210,9 +213,13 @@ public class PlayerScript : NetworkBehaviour
 
 	public void SetColliderIgnoreRaycast(bool value)
 	{
-		for (int i = 0; i < mColliders.Length; ++i) 
+		if(value)
 		{
-			mColliders[i].gameObject.layer = value ? (ignoreLayer.value >> 1) : mColliderLayers[i];
+			mColliderPack.SetColliderLayer(ignoreLayer.value >> 1);
+		}
+		else
+		{
+			mColliderPack.RestoreOriginalLayer();
 		}
 	}
 
@@ -236,7 +243,7 @@ public class PlayerScript : NetworkBehaviour
     /// <param name="spell1"></param>
     /// <param name="spell2"></param>
     /// <param name="spell3"></param>
-    public void UpdateSpells(int spell1, int spell2, int spell3)
+    public void UpdateSpells(int spell1, int spell2, int spell3, int spell4)
     {
         Prototype.NetworkLobby.LobbyManager NetworkManager = Prototype.NetworkLobby.LobbyManager.s_Singleton;
         if (NetworkManager)
@@ -247,6 +254,7 @@ public class PlayerScript : NetworkBehaviour
                 mPlayerSpells.spellslot[0].spell = spellregistry.GetSpellByID(spell1);
                 mPlayerSpells.spellslot[1].spell = spellregistry.GetSpellByID(spell2);
                 mPlayerSpells.spellslot[2].spell = spellregistry.GetSpellByID(spell3);
+                mPlayerSpells.spellslot[3].spell = spellregistry.GetSpellByID(spell4);
             }
         }
     }
@@ -258,9 +266,9 @@ public class PlayerScript : NetworkBehaviour
     /// <param name="spell2"></param>
     /// <param name="spell3"></param>
     [ClientRpc]
-    public void RpcUpdateSpells(int spell1, int spell2, int spell3)
+    public void RpcUpdateSpells(int spell1, int spell2, int spell3, int spell4)
     {
-        UpdateSpells(spell1, spell2, spell3);
+        UpdateSpells(spell1, spell2, spell3, spell4);
     }
 
     //casting the chosen spell

@@ -23,10 +23,14 @@ public class LavaFloor : NetworkBehaviour
 
     public void OnTriggerStay(Collider other)
     {
-        PlayerScript player = other.GetComponentInParent<PlayerScript>();
-        if (player && isServer)
+        //Make sure we only trigger for the feetCollider
+        if(other.GetComponent<FeetCollider>())
         {
-            player.healthScript.TakeDamage(damagePerSecond * Time.deltaTime);
+            PlayerScript player = other.GetComponentInParent<PlayerScript>();
+            if (player && isServer)
+            {
+                player.healthScript.TakeDamage(damagePerSecond * Time.deltaTime);
+            }
         }
     }
 

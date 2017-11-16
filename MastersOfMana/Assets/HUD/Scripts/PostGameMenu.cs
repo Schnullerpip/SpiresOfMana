@@ -4,7 +4,7 @@ using Rewired;
 
 public class PostGameMenu : MonoBehaviour
 {
-    public Text winnerText;
+    public Text text;
     public Button resumeButton;
 
     public void GoToMainMenu()
@@ -14,7 +14,14 @@ public class PostGameMenu : MonoBehaviour
 
     public void OnEnable()
     {
-        winnerText.text = GameManager.instance.winnerName + " has won!";
+        if(GameManager.instance.winnerID == GameManager.instance.localPlayer.netId.Value)
+        {
+            text.text = "You have won!!!";
+        }
+        else
+        {
+            text.text = "You Lost!";
+        }
         GameObject.FindObjectsOfType<IngameMenu>()[0].mIsMenuActive = true;
         Rewired.ReInput.players.GetPlayer(0).controllers.maps.SetMapsEnabled(false, "Default");
         Rewired.ReInput.players.GetPlayer(0).controllers.maps.SetMapsEnabled(true, "UI");

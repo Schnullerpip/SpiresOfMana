@@ -13,6 +13,8 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
     [SerializeField] private float mRockVelocity;
     [SerializeField] private float mDamageAmount;
     [SerializeField] private float mRotationVelocity;
+    [SerializeField] private float mPushForce;
+    private float mTimeCount = 0;
 
     private delegate void OnTriggerBehaviour(Collider collider);
     private OnTriggerBehaviour behaviour;
@@ -58,7 +60,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
 
     public void RepositionRock()
     {
-        transform.SetPositionAndRotation(caster.movement.mRigidbody.worldCenterOfMass, Quaternion.AngleAxis(Time.time * mRotationVelocity, Vector3.up));
+        transform.SetPositionAndRotation(caster.movement.mRigidbody.worldCenterOfMass, Quaternion.AngleAxis(mTimeCount * mRotationVelocity, Vector3.up));
         transform.Translate(mOffset);
     }
 
@@ -101,6 +103,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
 
     public void Update()
     {
+        mTimeCount += Time.deltaTime;
         if (mRotateAroundCaster)
         {
             RepositionRock();
@@ -128,8 +131,9 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         {
             if (sm != caster.movement)
             {
+                Vector3 direction = sm.mRigidbody.worldCenterOfMass - transform.position;
                 //push the hit object 
-                sm.RpcAddForce(mRigid.velocity, ForceMode.VelocityChange);
+                sm.RpcAddForce(direction.normalized*mPushForce, ForceMode.VelocityChange);
             }
             else
             {

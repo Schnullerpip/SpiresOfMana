@@ -25,13 +25,13 @@ public class FloatingDamageTextSystem : MonoBehaviour {
         mMainCamera = Camera.main;
 
         player.healthScript.OnDamageTaken += CreateDamageText;
-        transform.SetParent(player.transform);
+        transform.Translate(player.transform.position);
+        transform.SetParent(player.transform,true);
     }
 
     public void CreateDamageText(int damage)
     {
         FloatingDamageText text = GetText();
-        text.transform.position =  mMainCamera.WorldToScreenPoint(player.transform.position);
         text.gameObject.SetActive(true);
         text.SetDamageText(damage);
     }

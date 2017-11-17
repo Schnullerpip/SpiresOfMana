@@ -38,7 +38,10 @@ public class IngameMenu : MonoBehaviour {
 
     public void Resume()
     {
-        lobbyManager.RemoveLastCancelDelegate();
+        if(lobbyManager)
+        {
+            lobbyManager.RemoveLastCancelDelegate();
+        }
         ToggleVisibility();
     }
 

@@ -16,7 +16,6 @@ public class PoolRegistry : NetworkBehaviour {
         if (instance == null)
         {
             instance = this;
-            Debug.Log(instance.name);
         }
     }
 

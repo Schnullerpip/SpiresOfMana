@@ -47,7 +47,7 @@ public class DashBehaviour : A_EffectBehaviour
         }
 
         //cast a trail or something so the enemy does not recognize the dash as a glitch
-        GameObject ds = PoolRegistry.instance.Instantiate(dashEffectPrefab);
+        GameObject ds = PoolRegistry.Instantiate(dashEffectPrefab);
         //position the trail
         Vector3 pos = caster.transform.position;
         pos.y += 1;

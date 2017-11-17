@@ -25,21 +25,21 @@ public class PoolRegistry : NetworkBehaviour {
         }
     }
 
-    public GameObject Instantiate(GameObject go)
+    public static GameObject Instantiate(GameObject go, Pool.Activation activationState = Pool.Activation.ReturnDeactivated)
     {
-        if (poolList.Count > 0)
+        if (instance.poolList.Count > 0)
         {
-            for (int i = 0; i < poolList.Count; i++)
+            for (int i = 0; i < instance.poolList.Count; i++)
             {
-                if (poolList[i].mOriginal == go)
+                if (instance.poolList[i].mOriginal == go)
                 {
-                    return poolList[i].Get();
+                    return instance.poolList[i].Get(activationState);
                 }
             }
         }
 
         Pool newPool = new Pool(go, 5, Pool.PoolingStrategy.OnMissSubjoinElements);
-        poolList.Add(newPool);
+        instance.poolList.Add(newPool);
 
         return newPool.Get();
     }

@@ -15,7 +15,7 @@ public class JumpBehaviour : A_EffectBehaviour
 	public override void Execute(PlayerScript caster)
 	{
         //Get a jumpinstance out of the pool
-        JumpBehaviour jumpBehaviour = PoolRegistry.instance.Instantiate(gameObject).GetComponent<JumpBehaviour>();
+        JumpBehaviour jumpBehaviour = PoolRegistry.Instantiate(gameObject).GetComponent<JumpBehaviour>();
 
         //now activate it
         jumpBehaviour.gameObject.SetActive(true);

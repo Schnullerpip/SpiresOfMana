@@ -42,7 +42,7 @@ public class WhipBehaviour : A_SummoningBehaviour
     public override void Execute(PlayerScript caster)
     {
 		//WhipBehaviour whipBehaviour = PoolRegistry.WhipPool.Get().GetComponent<WhipBehaviour>();
-		WhipBehaviour whipBehaviour = PoolRegistry.instance.Instantiate(this.gameObject).GetComponent<WhipBehaviour>();
+		WhipBehaviour whipBehaviour = PoolRegistry.Instantiate(this.gameObject).GetComponent<WhipBehaviour>();
 
         whipBehaviour.linePoint0 = caster.handTransform.position;
 

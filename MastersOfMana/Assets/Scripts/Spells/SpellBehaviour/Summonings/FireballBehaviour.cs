@@ -42,7 +42,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
     {
         //Get a fireballinstance out of the pool
 		//FireballBehaviour fireballBehaviour = PoolRegistry.FireballPool.Get().GetComponent<FireballBehaviour>();
-		FireballBehaviour fireballBehaviour = PoolRegistry.instance.Instantiate(this.gameObject).GetComponent<FireballBehaviour>();
+		FireballBehaviour fireballBehaviour = PoolRegistry.Instantiate(this.gameObject).GetComponent<FireballBehaviour>();
 
         //now activate it, so no weird interpolation errors occcure
         //TODO delete this eventually - RPCs are just too slow

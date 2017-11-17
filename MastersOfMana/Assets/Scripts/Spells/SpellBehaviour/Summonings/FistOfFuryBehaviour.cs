@@ -26,7 +26,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     {
         //get a fistoffury object
         //FistOfFuryBehaviour fof = PoolRegistry.FistOfFuryPool.Get(Pool.Activation.ReturnActivated).GetComponent<FistOfFuryBehaviour>();
-        FistOfFuryBehaviour fof = PoolRegistry.instance.Instantiate(this.gameObject).GetComponent<FistOfFuryBehaviour>();
+        FistOfFuryBehaviour fof = PoolRegistry.Instantiate(this.gameObject).GetComponent<FistOfFuryBehaviour>();
         fof.caster = caster;
         fof.transform.position = fof.castPosition = caster.transform.position;
         fof.transform.parent = caster.transform;
@@ -50,7 +50,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
 
         //spawn an explosion
         //GameObject explosion = PoolRegistry.ExplosionPool.Get();
-        GameObject explosion = PoolRegistry.instance.Instantiate(explosionPrefab);
+        GameObject explosion = PoolRegistry.Instantiate(explosionPrefab);
         explosion.transform.position = caster.transform.position/* + caster.transform.forward * 5*/;
         explosion.SetActive(true);
         Explosion ex = explosion.GetComponent<Explosion>();

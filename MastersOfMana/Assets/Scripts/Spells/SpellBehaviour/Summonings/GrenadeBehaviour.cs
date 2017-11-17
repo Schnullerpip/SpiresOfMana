@@ -36,7 +36,7 @@ public class GrenadeBehaviour : A_SummoningBehaviour
     public override void Execute(PlayerScript caster)
     {
 		//GrenadeBehaviour grenadeBehaviour = PoolRegistry.GrenadePool.Get().GetComponent<GrenadeBehaviour>();
-		GrenadeBehaviour grenadeBehaviour = PoolRegistry.instance.Instantiate(this.gameObject).GetComponent<GrenadeBehaviour>();
+		GrenadeBehaviour grenadeBehaviour = PoolRegistry.Instantiate(this.gameObject).GetComponent<GrenadeBehaviour>();
         //create an instance of this grenade on the client's machine
 
         grenadeBehaviour.gameObject.SetActive(true);

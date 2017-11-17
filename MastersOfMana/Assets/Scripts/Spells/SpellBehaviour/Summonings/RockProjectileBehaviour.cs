@@ -28,7 +28,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
     {
         //get a rock instance
         //RockProjectileBehaviour rp = PoolRegistry.RockProjectilePool.Get().GetComponent<RockProjectileBehaviour>();
-        RockProjectileBehaviour rp = PoolRegistry.instance.Instantiate(this.gameObject).GetComponent<RockProjectileBehaviour>();
+        RockProjectileBehaviour rp = PoolRegistry.Instantiate(this.gameObject).GetComponent<RockProjectileBehaviour>();
 
         //initialize it
         //rp.caster = caster;

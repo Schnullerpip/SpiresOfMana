@@ -147,12 +147,9 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 		}
 
         RpcExplosion(transform.position, transform.rotation);
-        var explosionObject = Instantiate(explosionPrefab, transform.position, transform.rotation);
-        RFX4_ColorHelper.ChangeObjectColorByHUE(explosionObject, RFX4_ColorHelper.ColorToHSV(effectColor).H);
-        OnCollisionDeactivateBehaviour(false);
-
-        //gameObject.SetActive(false);
-        //NetworkServer.UnSpawn(gameObject);
+        //var explosionObject = Instantiate(explosionPrefab, transform.position, transform.rotation);
+        //RFX4_ColorHelper.ChangeObjectColorByHUE(explosionObject, RFX4_ColorHelper.ColorToHSV(effectColor).H);
+        //OnCollisionDeactivateBehaviour(false);
     }
 
     void OnCollisionDeactivateBehaviour(bool active)
@@ -167,7 +164,6 @@ public class FireballBehaviour : A_ServerMoveableSummoning
     [ClientRpc]
 	void RpcExplosion(Vector3 position, Quaternion rotation)
 	{
-        //Instantiate(explosionPrefab,position,rotation);
         mRigid.isKinematic = true;
         var explosionObject = Instantiate(explosionPrefab, position, rotation);
         RFX4_ColorHelper.ChangeObjectColorByHUE(explosionObject, RFX4_ColorHelper.ColorToHSV(effectColor).H);

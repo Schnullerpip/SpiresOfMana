@@ -150,17 +150,24 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 		}
 
 		RpcExplosion(transform.position,transform.rotation);
-		Instantiate(explosionPrefab,transform.position,transform.rotation);
+        //Instantiate(explosionPrefab,transform.position,transform.rotation);
 
-		NetworkServer.UnSpawn(gameObject);
-		gameObject.SetActive(false);
-	}
+        StartCoroutine(Destroy());
+    }
 
 	[ClientRpc]
 	void RpcExplosion(Vector3 position, Quaternion rotation)
 	{
-		Instantiate(explosionPrefab,position,rotation);
+        Instantiate(explosionPrefab,position,rotation);
 	}
+
+    public IEnumerator Destroy()
+    {
+        yield return 0;//wait 1 frame
+
+        NetworkServer.UnSpawn(gameObject);
+        gameObject.SetActive(false);
+    }
 
 	void OnValidate()
 	{

@@ -31,6 +31,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         fof.transform.position = fof.castPosition = caster.transform.position;
         fof.transform.parent = caster.transform;
         fof.mAlreadyHit = new List<GameObject>();
+        fof.gameObject.SetActive(true);
         //spawn it on all clients
         NetworkServer.Spawn(fof.gameObject);
 

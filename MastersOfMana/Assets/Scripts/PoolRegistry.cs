@@ -7,18 +7,21 @@ public class PoolRegistry : NetworkBehaviour {
 
     public static PoolRegistry instance;
     public int defaultPoolSize;
-    public bool poolShouldGrow;
+    public Pool.PoolingStrategy poolingStrategy;
 
     public List<Pool> poolList = new List<Pool>();
 
+    public void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            Debug.Log(instance.name);
+        }
+    }
+
     public void Start()
     {
-        if(instance == null)
-        {
-            Debug.Log("PoolRegistry created!");
-            instance = this;
-        }
-
         if (isServer)
         {
             GameManager.instance.Go();
@@ -38,7 +41,7 @@ public class PoolRegistry : NetworkBehaviour {
             }
         }
 
-        Pool newPool = new Pool(go, 5, Pool.PoolingStrategy.OnMissSubjoinElements);
+        Pool newPool = new Pool(go, instance.defaultPoolSize, instance.poolingStrategy);
         instance.poolList.Add(newPool);
 
         return newPool.Get();

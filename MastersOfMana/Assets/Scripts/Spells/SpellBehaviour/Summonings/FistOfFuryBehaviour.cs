@@ -50,9 +50,8 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         if (collider.isTrigger) return;
 
         //spawn an explosion
-        //GameObject explosion = PoolRegistry.ExplosionPool.Get();
         GameObject explosion = PoolRegistry.Instantiate(explosionPrefab);
-        explosion.transform.position = caster.transform.position/* + caster.transform.forward * 5*/;
+        explosion.transform.position = caster.transform.position;
         explosion.SetActive(true);
         Explosion ex = explosion.GetComponent<Explosion>();
         if (ex)
@@ -61,8 +60,9 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         }
         NetworkServer.Spawn(explosion);
 
+        //unparent it
+        transform.parent = null;
 
-        //Debug.Log("velocity: " + caster.movement.GetVelocity());
 
         //apply explosiondamage to all healthscripts that were found
         Collider[] colliders = Physics.OverlapSphere(caster.transform.position, explosionAmplitude);

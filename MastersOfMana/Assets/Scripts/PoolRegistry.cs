@@ -15,7 +15,9 @@ public class PoolRegistry : NetworkBehaviour {
         WindWallPool,
         JetPool,
 		WhipPool,
-        JumpPool;
+        JumpPool,
+		ThunderStormPool,
+		LigthningStrikePool;
 
     public void Start()
     {
@@ -36,6 +38,8 @@ public class PoolRegistry : NetworkBehaviour {
 		DashTrailPool = new Pool(Resources.Load("SpellPrefabs/DashTrail") as GameObject, 5, Pool.PoolingStrategy.OnMissSubjoinElements);
 		WindWallPool = new Pool(Resources.Load("SpellPrefabs/WindWall") as GameObject, 5, Pool.PoolingStrategy.OnMissSubjoinElements);
 		JetPool = new Pool(Resources.Load("SpellPrefabs/Jet") as GameObject, 5, Pool.PoolingStrategy.OnMissSubjoinElements);
-        JumpPool = new Pool(Resources.Load("SpellPrefabs/Jump") as GameObject, 5, Pool.PoolingStrategy.OnMissSubjoinElements);
+		JumpPool = new Pool(Resources.Load("SpellPrefabs/Jump") as GameObject, 5, Pool.PoolingStrategy.OnMissSubjoinElements);
+        ThunderStormPool = new Pool(Resources.Load("SpellPrefabs/ThunderStorm") as GameObject, 1, Pool.PoolingStrategy.OnMissSubjoinElements);
+		LigthningStrikePool = new Pool(Resources.Load("SpellPrefabs/LightningStrike") as GameObject, 10, Pool.PoolingStrategy.OnMissSubjoinElements);
     }
 }

@@ -269,8 +269,10 @@ public class PlayerAim : NetworkBehaviour {
 		allPlayers.Sort(
 			delegate(PlayerScript a, PlayerScript b) 
 			{
-				return Vector3.Angle(currentLookRotation.eulerAngles, a.transform.position - mCameraRig.GetCamera().transform.position)
-					.CompareTo(Vector3.Angle(currentLookRotation.eulerAngles, b.transform.position - mCameraRig.GetCamera().transform.position));
+				var camPos = mCameraRig.GetCamera ().transform.position;
+				var eulerAngles = currentLookRotation.eulerAngles;
+				return Vector3.Angle(eulerAngles, a.transform.position - camPos)
+					.CompareTo(Vector3.Angle (eulerAngles, b.transform.position - camPos));
 			}
 		);
 
@@ -282,7 +284,7 @@ public class PlayerAim : NetworkBehaviour {
 			{
 				continue;
 			}
-
+				
 //			//skip if the target is behind the player
 //			if(transform.InverseTransformPoint(aHealthScript.transform.position).z < 0)
 //			{

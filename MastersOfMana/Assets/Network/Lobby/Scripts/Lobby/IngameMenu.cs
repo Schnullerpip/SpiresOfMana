@@ -23,8 +23,8 @@ public class IngameMenu : MonoBehaviour {
 
 		Cursor.lockState = mIsMenuActive ? CursorLockMode.None : CursorLockMode.Locked;
 
-		mRewiredPlayer.controllers.maps.SetMapsEnabled(mIsMenuActive,"UI");
-		mRewiredPlayer.controllers.maps.SetMapsEnabled(!mIsMenuActive,"Default");
+		mRewiredPlayer.controllers.maps.SetMapsEnabled(mIsMenuActive,"UI","Default");
+		mRewiredPlayer.controllers.maps.SetMapsEnabled(!mIsMenuActive,"Default","Selection");
 
 		if(mIsMenuActive)
 		{

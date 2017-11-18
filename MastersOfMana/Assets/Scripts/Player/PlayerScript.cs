@@ -84,13 +84,13 @@ public class PlayerScript : NetworkBehaviour
     // Use this for initialization
     public void Start()
     {
+		//initialize Inpur handler
+		rewiredPlayer = ReInput.players.GetPlayer(0);
+
         //initialize the statesystems
         inputStateSystem = new InputStateSystem(this);
         effectStateSystem = new EffectStateSystem(this);
         castStateSystem = new CastStateSystem(this);
-
-        //initialize Inpur handler
-	    rewiredPlayer = ReInput.players.GetPlayer(0);
 
         healthScript = GetComponent<PlayerHealthScript>();
         if (isLocalPlayer)

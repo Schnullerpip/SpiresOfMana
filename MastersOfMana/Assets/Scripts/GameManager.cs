@@ -37,6 +37,22 @@ public class GameManager : MonoBehaviour
         }
     }
 
+	void Update()
+	{
+		if(Input.GetKeyDown(KeyCode.I))
+		{
+			Rewired.ReInput.players.GetPlayer(0).controllers.maps.SetMapsEnabled(true,"Default","Direct");
+			Rewired.ReInput.players.GetPlayer(0).controllers.maps.SetMapsEnabled(false,"Default","Selection");
+		}
+
+		else if(Input.GetKeyDown(KeyCode.O))
+		{
+			Rewired.ReInput.players.GetPlayer(0).controllers.maps.SetMapsEnabled(true,"Default","Selection");
+			Rewired.ReInput.players.GetPlayer(0).controllers.maps.SetMapsEnabled(false,"Default","Direct");
+
+		}
+	}
+
     public void ResetLocalGameState()
     {
         mNeededToGo = mInitialNeededToGo;

@@ -186,17 +186,6 @@ public class PlayerScript : NetworkBehaviour
         return mCameraLookdirection;
     }
 
-
-	void FixedUpdate()
-	{
-		if(!isLocalPlayer)
-		{
-			return;
-		}
-
-		mPlayerSpells.PreviewCurrentSpell(this);
-	}
-
     // Update is called once per frame
     void Update () 
 	{

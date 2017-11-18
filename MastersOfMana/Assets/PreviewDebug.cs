@@ -22,6 +22,11 @@ public class PreviewDebug : MonoBehaviour
 		desiredPos = position;
 	}
 
+	public void Rotate(Vector3 up)
+	{
+		transform.rotation = Quaternion.LookRotation(up);
+	}
+
 	Vector3 vel;
 
 	void LateUpdate()

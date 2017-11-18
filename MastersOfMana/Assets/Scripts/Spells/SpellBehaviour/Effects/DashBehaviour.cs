@@ -124,7 +124,7 @@ public class DashBehaviour : A_EffectBehaviour
 		Vector3 newPosition = GetNewPosition(caster, direction, out hit);
 
 		previewIndicator.Move(newPosition);
-		previewIndicator.transform.rotation = caster.transform.rotation;
+		previewIndicator.Rotate(Vector3.up);
 
 		return true;
 	}

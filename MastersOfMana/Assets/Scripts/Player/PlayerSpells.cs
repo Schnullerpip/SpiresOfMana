@@ -62,18 +62,22 @@ public class PlayerSpells : NetworkBehaviour {
         }
     }
 
-	public void PreviewCurrentSpell(PlayerScript player)
+	public void PreviewCurrentSpell()
 	{
 		//TODO: delete
 
-		#if UNITY_EDITOR
-		UnityEngine.Profiling.Profiler.BeginSample("Preview");
-		#endif
-		GetCurrentspell().spell.SpellBehaviours[0].Preview(player);
-		#if UNITY_EDITOR
-		UnityEngine.Profiling.Profiler.EndSample();
-		#endif
+//		#if UNITY_EDITOR
+//		UnityEngine.Profiling.Profiler.BeginSample("Preview");
+//		#endif
+		GetCurrentspell().spell.SpellBehaviours[0].Preview(mPlayer);
+//		#if UNITY_EDITOR
+//		UnityEngine.Profiling.Profiler.EndSample();
+//		#endif
+	}
 
+	public void StopPreview()
+	{
+		GetCurrentspell().spell.SpellBehaviours[0].StopPreview(mPlayer);
 	}
 
 

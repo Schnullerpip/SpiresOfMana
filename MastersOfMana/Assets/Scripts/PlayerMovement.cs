@@ -45,13 +45,15 @@ public class PlayerMovement : ServerMoveable
 
     public void SetMoveInput(Vector3 input)
 	{
-		mMoveInput = input;
+		//clamp it to prevent faster diagonal movement
+		mMoveInput = Vector3.ClampMagnitude(input,1);
 	}
 
 	public void SetMoveInputHurt(Vector3 input)
 	{
 		mHurtSlowdownActive = true;
-		mMoveInput = input;
+		//clamp it to prevent faster diagonal movement
+		mMoveInput = Vector3.ClampMagnitude(input,1);
 	}
 
 	public void SetFocusActive(bool value){

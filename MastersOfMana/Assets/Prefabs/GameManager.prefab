@@ -304,17 +304,11 @@ MonoBehaviour:
         _layoutId: 0
       - _enabled: 0
         _categoryId: 0
-        _layoutId: 5
-      - _enabled: 0
-        _categoryId: 0
         _layoutId: 4
       _defaultMouseMaps:
       - _enabled: 1
-        _categoryId: 0
+        _categoryId: 4
         _layoutId: 0
-      - _enabled: 0
-        _categoryId: 0
-        _layoutId: 3
       - _enabled: 0
         _categoryId: 0
         _layoutId: 2
@@ -322,9 +316,6 @@ MonoBehaviour:
       - _enabled: 1
         _categoryId: 4
         _layoutId: 0
-      - _enabled: 0
-        _categoryId: 0
-        _layoutId: 3
       - _enabled: 0
         _categoryId: 0
         _layoutId: 2
@@ -566,7 +557,7 @@ MonoBehaviour:
       _buttonRepeatDelay: 0
     mapCategories:
     - _name: Default
-      _descriptiveName: Spell Selection & Casting
+      _descriptiveName: Default
       _tag: 
       _id: 0
       _userAssignable: 1
@@ -739,7 +730,7 @@ MonoBehaviour:
         _modifierKey2: 0
         _modifierKey3: 0
       - _actionCategoryId: 0
-        _actionId: 16
+        _actionId: 18
         _elementType: 1
         _elementIdentifierId: 13
         _axisRange: 0
@@ -750,7 +741,7 @@ MonoBehaviour:
         _modifierKey2: 0
         _modifierKey3: 0
       - _actionCategoryId: 0
-        _actionId: 17
+        _actionId: 16
         _elementType: 1
         _elementIdentifierId: 11
         _axisRange: 0
@@ -761,7 +752,7 @@ MonoBehaviour:
         _modifierKey2: 0
         _modifierKey3: 0
       - _actionCategoryId: 0
-        _actionId: 18
+        _actionId: 17
         _elementType: 1
         _elementIdentifierId: 12
         _axisRange: 0
@@ -785,7 +776,7 @@ MonoBehaviour:
       - _actionCategoryId: 0
         _actionId: 15
         _elementType: 1
-        _elementIdentifierId: 5
+        _elementIdentifierId: 8
         _axisRange: 0
         _invert: 0
         _axisContribution: 0
@@ -796,7 +787,7 @@ MonoBehaviour:
       - _actionCategoryId: 0
         _actionId: 7
         _elementType: 1
-        _elementIdentifierId: 8
+        _elementIdentifierId: 18
         _axisRange: 0
         _invert: 0
         _axisContribution: 0
@@ -1190,46 +1181,13 @@ MonoBehaviour:
         _modifierKey2: 0
         _modifierKey3: 0
       - _actionCategoryId: 0
-        _actionId: 16
-        _elementType: 1
-        _elementIdentifierId: -1
-        _axisRange: 0
-        _invert: 0
-        _axisContribution: 0
-        _keyboardKeyCode: 113
-        _modifierKey1: 0
-        _modifierKey2: 0
-        _modifierKey3: 0
-      - _actionCategoryId: 0
-        _actionId: 17
+        _actionId: 18
         _elementType: 1
         _elementIdentifierId: -1
         _axisRange: 0
         _invert: 0
         _axisContribution: 0
         _keyboardKeyCode: 101
-        _modifierKey1: 0
-        _modifierKey2: 0
-        _modifierKey3: 0
-      - _actionCategoryId: 0
-        _actionId: 18
-        _elementType: 1
-        _elementIdentifierId: -1
-        _axisRange: 0
-        _invert: 0
-        _axisContribution: 0
-        _keyboardKeyCode: 114
-        _modifierKey1: 0
-        _modifierKey2: 0
-        _modifierKey3: 0
-      - _actionCategoryId: 0
-        _actionId: 18
-        _elementType: 1
-        _elementIdentifierId: -1
-        _axisRange: 0
-        _invert: 0
-        _axisContribution: 0
-        _keyboardKeyCode: 114
         _modifierKey1: 0
         _modifierKey2: 0
         _modifierKey3: 0
@@ -1262,7 +1220,7 @@ MonoBehaviour:
         _axisRange: 0
         _invert: 0
         _axisContribution: 0
-        _keyboardKeyCode: 301
+        _keyboardKeyCode: 113
         _modifierKey1: 0
         _modifierKey2: 0
         _modifierKey3: 0
@@ -1346,7 +1304,7 @@ MonoBehaviour:
         _axisRange: 0
         _invert: 0
         _axisContribution: 0
-        _keyboardKeyCode: 49
+        _keyboardKeyCode: 113
         _modifierKey1: 0
         _modifierKey2: 0
         _modifierKey3: 0
@@ -1357,7 +1315,7 @@ MonoBehaviour:
         _axisRange: 0
         _invert: 0
         _axisContribution: 0
-        _keyboardKeyCode: 50
+        _keyboardKeyCode: 101
         _modifierKey1: 0
         _modifierKey2: 0
         _modifierKey3: 0
@@ -1368,7 +1326,7 @@ MonoBehaviour:
         _axisRange: 0
         _invert: 0
         _axisContribution: 0
-        _keyboardKeyCode: 51
+        _keyboardKeyCode: 114
         _modifierKey1: 0
         _modifierKey2: 0
         _modifierKey3: 0
@@ -1380,39 +1338,6 @@ MonoBehaviour:
         _invert: 0
         _axisContribution: 0
         _keyboardKeyCode: 9
-        _modifierKey1: 0
-        _modifierKey2: 0
-        _modifierKey3: 0
-      - _actionCategoryId: 0
-        _actionId: 16
-        _elementType: 1
-        _elementIdentifierId: -1
-        _axisRange: 0
-        _invert: 0
-        _axisContribution: 0
-        _keyboardKeyCode: 113
-        _modifierKey1: 0
-        _modifierKey2: 0
-        _modifierKey3: 0
-      - _actionCategoryId: 0
-        _actionId: 17
-        _elementType: 1
-        _elementIdentifierId: -1
-        _axisRange: 0
-        _invert: 0
-        _axisContribution: 0
-        _keyboardKeyCode: 101
-        _modifierKey1: 0
-        _modifierKey2: 0
-        _modifierKey3: 0
-      - _actionCategoryId: 0
-        _actionId: 18
-        _elementType: 1
-        _elementIdentifierId: -1
-        _axisRange: 0
-        _invert: 0
-        _axisContribution: 0
-        _keyboardKeyCode: 114
         _modifierKey1: 0
         _modifierKey2: 0
         _modifierKey3: 0

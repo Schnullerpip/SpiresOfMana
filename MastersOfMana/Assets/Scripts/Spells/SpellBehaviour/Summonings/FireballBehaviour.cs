@@ -35,7 +35,6 @@ public class FireballBehaviour : A_ServerMoveableSummoning
         }
     }
 
-		
 	public override bool Preview (PlayerScript caster)
 	{
 		if(!base.Preview(caster))
@@ -51,6 +50,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 //			GameObject prev = Instantiate(ballMesh,hit.point + hit.normal * 0.25f, Quaternion.identity);
 //			Destroy(prev,0.01f);
 			previewIndicator.Move(hit.point + hit.normal * 0.25f);
+			previewIndicator.Rotate(hit.normal);
 			return true;
 		}
 		else

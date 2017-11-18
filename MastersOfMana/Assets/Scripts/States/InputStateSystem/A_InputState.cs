@@ -21,6 +21,8 @@ public abstract class A_InputState : A_State{
      */
 
 	protected bool mPreviewActive;
+	protected bool mFocus;
+	protected bool mSprint;
 
     public override void UpdateLocal()
     {
@@ -89,16 +91,35 @@ public abstract class A_InputState : A_State{
 
 		if(mPreviewActive)
 		{
-			Debug.Log("PREVIEW");
+			player.GetPlayerSpells().PreviewCurrentSpell();
 		}
 		else
 		{
-			Debug.Log("NO PREVIEW");
+			player.GetPlayerSpells().StopPreview();
+		}
+
+		if(playerInput.GetButtonDown("Sprint"))
+		{
+			mSprint = !mSprint;
+			if(mSprint)
+			{
+				Debug.Log("Start Sprint");
+			}
+			else
+			{
+				Debug.Log("Stop Sprint");
+			}
+		}
+		else if(playerInput.GetButtonShortPressUp("Sprint"))
+		{
+			mSprint = false;
+			Debug.Log("Stop Sprint");
 		}
 
 		//store the input values
 		Vector2 movementInput = playerInput.GetAxis2D("MoveHorizontal", "MoveVertical");
-		movementInput = Vector3.ClampMagnitude(movementInput,1);
+		Move(movementInput);
+
 
 		if(playerInput.GetButtonDown("ShoulderSwap"))
 		{
@@ -110,16 +131,22 @@ public abstract class A_InputState : A_State{
 		{
 			Jump();
 		}
-
-		Move(movementInput);
 			
 		if(playerInput.GetButtonDown("Focus"))
 		{
-			StartFocus();
+			mFocus = !mFocus;
+			if(mFocus)
+			{
+				StartFocus();
+			}
+			else
+			{
+				StopFocus();
+			}
 		}
-
-		if(playerInput.GetButtonUp("Focus"))
+		else if(playerInput.GetButtonShortPressUp("Focus"))
 		{
+			mFocus = false;
 			StopFocus();
 		}
 

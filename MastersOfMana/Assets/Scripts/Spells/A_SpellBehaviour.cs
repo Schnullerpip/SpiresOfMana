@@ -32,6 +32,14 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 		return true;
 	}
 
+	public virtual void StopPreview(PlayerScript caster) 
+	{
+		if(previewIndicator)
+		{
+			previewIndicator.Deactivate();
+		}
+	}
+
 	/// <summary>
 	/// Gets the aim direction. This direction is from the hand transform to the position that corresponds with the center of the screen.
 	/// If there was no raycast hit, its the direction of the camera.

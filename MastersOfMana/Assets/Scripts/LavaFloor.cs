@@ -24,6 +24,10 @@ public class LavaFloor : NetworkBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
+        if(!isServer)
+        {
+            return;
+        }
         //Check if collision with player
         //Check FeetCollider to only trigger once per player
         if (other.GetComponent<FeetCollider>())
@@ -32,13 +36,17 @@ public class LavaFloor : NetworkBehaviour
             if (playerHealth)
             {
                 //Remember which player this coroutine belongs to
-                mInstanceCoroutineDictionary.Add(playerHealth.netId, StartCoroutine(IncreaseUltimateEnergy(playerHealth)));
+                mInstanceCoroutineDictionary.Add(playerHealth.netId, StartCoroutine(DealDamage(playerHealth)));
             }
         }
     }
 
     public void OnTriggerExit(Collider other)
     {
+        if (!isServer)
+        {
+            return;
+        }
         //Check if collision with player
         //Check FeetCollider to only trigger once per player
         if (other.GetComponent<FeetCollider>())
@@ -52,14 +60,11 @@ public class LavaFloor : NetworkBehaviour
         }
     }
 
-    public IEnumerator IncreaseUltimateEnergy(PlayerHealthScript playerHealth)
+    public IEnumerator DealDamage(PlayerHealthScript playerHealth)
     {
         while (enabled)
         {
-            if (!GameManager.instance.isUltimateActive)
-            {
-                playerHealth.TakeDamage(damagePerSecond);
-            }
+            playerHealth.TakeDamage(damagePerSecond);
             yield return new WaitForSeconds(1f);
         }
     }

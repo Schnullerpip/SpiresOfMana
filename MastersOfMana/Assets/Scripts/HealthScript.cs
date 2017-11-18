@@ -35,6 +35,7 @@ public class HealthScript : NetworkBehaviour
     public void HealthHook(int newHealth)
     {
         HealthChangedHook(newHealth);
+        mCurrentHealth = newHealth;
     }
     public virtual void HealthChangedHook(int newHealth) {}
         

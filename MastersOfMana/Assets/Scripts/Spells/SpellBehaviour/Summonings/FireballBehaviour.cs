@@ -35,6 +35,32 @@ public class FireballBehaviour : A_ServerMoveableSummoning
         }
     }
 
+		
+	public override bool Preview (PlayerScript caster)
+	{
+		if(!base.Preview(caster))
+		{
+			return false;
+		}
+
+		RaycastHit hit;
+		Vector3 aimDirection = GetAimLocal(caster, out hit);
+	
+		if(Physics.SphereCast(caster.handTransform.position, 0.25f, aimDirection, out hit))
+		{
+//			GameObject prev = Instantiate(ballMesh,hit.point + hit.normal * 0.25f, Quaternion.identity);
+//			Destroy(prev,0.01f);
+			previewIndicator.Move(hit.point + hit.normal * 0.25f);
+			return true;
+		}
+		else
+		{
+			previewIndicator.Deactivate();
+			return false;
+		}
+
+	}
+
     public override void Execute(PlayerScript caster)
     {
         //Get a fireballinstance out of the pool
@@ -127,6 +153,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 				cachedRigidbodies.Add(c.attachedRigidbody);
 
 				Vector3 force = c.attachedRigidbody.worldCenterOfMass - mRigid.position; 
+
 				force.Normalize();
 				force *= explosionForce;
 

@@ -152,7 +152,7 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 		RpcExplosion(transform.position,transform.rotation);
         //Instantiate(explosionPrefab,transform.position,transform.rotation);
 
-        StartCoroutine(Destroy());
+        StartCoroutine(DestroyNextFrame());
     }
 
 	[ClientRpc]
@@ -161,7 +161,7 @@ public class GrenadeBehaviour : A_SummoningBehaviour
         Instantiate(explosionPrefab,position,rotation);
 	}
 
-    public IEnumerator Destroy()
+    public IEnumerator DestroyNextFrame()
     {
         yield return 0;//wait 1 frame
 

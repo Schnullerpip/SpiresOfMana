@@ -9,6 +9,7 @@ public class JumpBehaviour : A_EffectBehaviour
 	public float implosionDelay = 0.1f;
 	public float pullInRadius = 4.0f;
 	public float pullInForce = 8.0f;
+    public float lifeTime = 0.0f;
 
 	public GameObject vacuumPrefab;
 
@@ -35,7 +36,8 @@ public class JumpBehaviour : A_EffectBehaviour
 	[ClientRpc]
 	void RpcImplosion(Vector3 position, Quaternion rotation)
 	{
-		Instantiate(vacuumPrefab, position, rotation);
+        StartCoroutine(DeactivateAndUnspawn(lifeTime));
+        Instantiate(vacuumPrefab, position, rotation);
 	}
 
 	public IEnumerator DelayedImpulse(float delay, Vector3 position, Transform casterTransform)
@@ -69,7 +71,15 @@ public class JumpBehaviour : A_EffectBehaviour
 		}
 	}
 
-	void OnValidate()
+    public IEnumerator DeactivateAndUnspawn(float time)
+    {
+        yield return new WaitForSeconds(time);
+        
+        gameObject.SetActive(false);
+        NetworkServer.UnSpawn(gameObject);
+    }
+
+    void OnValidate()
 	{
 	    if (vacuumPrefab)
 	    {

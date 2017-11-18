@@ -62,6 +62,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
         NetworkServer.Spawn(fireballBehaviour.gameObject, fireballBehaviour.GetComponent<NetworkIdentity>().assetId);
 
 		fireballBehaviour.Disappear();
+        //fireballBehaviour.StartCoroutine(Done()); <- this doesn't work, not sure why...
     }
 
 	void Reset (Vector3 pos, Quaternion rot)
@@ -169,13 +170,13 @@ public class FireballBehaviour : A_ServerMoveableSummoning
         RFX4_ColorHelper.ChangeObjectColorByHUE(explosionObject, RFX4_ColorHelper.ColorToHSV(effectColor).H);
         OnCollisionDeactivateBehaviour(false);
     }
-		
-	public void Disappear()
-	{
-		StartCoroutine(Done());
-	}
 
-	public IEnumerator Done()
+    public void Disappear()
+    {
+        StartCoroutine(Done());
+    }
+
+    public IEnumerator Done()
 	{
 		yield return new WaitForSeconds(disappearTimer);
 

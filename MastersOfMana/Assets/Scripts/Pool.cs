@@ -17,7 +17,7 @@ public class Pool {
 
     //the original that is copied whenever new elements are instantiated into the pool
     public GameObject mOriginal;
-    public NetworkHash128 assetID;
+    //public NetworkHash128 assetID;
 
     //the list with the actual objects
     private List<GameObject> mObjects = new List<GameObject>();
@@ -52,12 +52,12 @@ public class Pool {
         mGrowth = size;
 
         //get the originals assetID
-        assetID = original.GetComponent<NetworkIdentity>().assetId;
+        //assetID = original.GetComponent<NetworkIdentity>().assetId;
 
         //create some elements
         SubjoinElements();
 
-        ClientScene.RegisterSpawnHandler(assetID, SpawnObject, UnspawnObject);
+        //ClientScene.RegisterSpawnHandler(assetID, SpawnObject, UnspawnObject);
 
         //define the pools strategy
         switch (strategy) {

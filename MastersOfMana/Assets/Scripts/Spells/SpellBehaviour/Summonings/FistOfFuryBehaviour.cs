@@ -9,8 +9,6 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     private PlayerScript caster;
 
     [SerializeField] private float explosionAmplitude;
-    [SerializeField] private ParticleSystem mTrail;
-
     [SerializeField] private float mExplosionForce;
     [SerializeField] private float mPushDownForce;
     [SerializeField] private float mMinimumDamage;
@@ -31,10 +29,10 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         fof.transform.position = fof.castPosition = caster.transform.position;
         fof.transform.parent = caster.transform;
         fof.mAlreadyHit = new List<GameObject>();
+        fof.GetComponent<Collider>().enabled = true;
         fof.gameObject.SetActive(true);
         //spawn it on all clients
         NetworkServer.Spawn(fof.gameObject);
-
 
         //check whether caster is airborn or grounded
         if (!caster.movement.feet.IsGrounded())
@@ -49,20 +47,27 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     {
         if (collider.isTrigger) return;
 
-        //spawn an explosion
-        GameObject explosion = PoolRegistry.Instantiate(explosionPrefab);
-        explosion.transform.position = caster.transform.position;
-        explosion.SetActive(true);
-        Explosion ex = explosion.GetComponent<Explosion>();
-        if (ex)
+        if (!isServer)
         {
-            ex.amplitude = explosionAmplitude;
+            Debug.Log("isServer fof");
+            return;
         }
-        NetworkServer.Spawn(explosion);
+
+        this.GetComponent<Collider>().enabled = false;
+        RpcExplosion(caster.transform.position);
+        //spawn an explosion
+        //GameObject explosion = PoolRegistry.Instantiate(explosionPrefab);
+        //explosion.transform.position = caster.transform.position;
+        //explosion.SetActive(true);
+        //Explosion ex = explosion.GetComponent<Explosion>();
+        //if (ex)
+        //{
+        //    ex.amplitude = explosionAmplitude;
+        //}
+        //NetworkServer.Spawn(explosion);
 
         //unparent it
         transform.parent = null;
-
 
         //apply explosiondamage to all healthscripts that were found
         Collider[] colliders = Physics.OverlapSphere(caster.transform.position, explosionAmplitude);
@@ -105,11 +110,28 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         }
 
         //remove the fistoffury object on all clients
-        gameObject.SetActive(false);
-        NetworkServer.UnSpawn(gameObject);
+        StartCoroutine(DestroyNextFrame());
 
         //Set state of player to normal
         caster.RpcSetEffectState(EffectStateSystem.EffectStateID.Normal);
+    }
+
+    public IEnumerator DestroyNextFrame()
+    {
+        yield return 0;//wait 1 frame
+
+        NetworkServer.UnSpawn(gameObject);
+        gameObject.SetActive(false);
+    }
+
+    [ClientRpc]
+    void RpcExplosion(Vector3 position)
+    {
+        GameObject explosion = /*PoolRegistry.*/Instantiate(explosionPrefab);
+        explosion.transform.position = position;
+        //explosion.transform.localScale = new Vector3(explosionAmplitude, explosionAmplitude, explosionAmplitude);
+        explosion.SetActive(true);
+        //NetworkServer.Spawn(explosion);
     }
 
     protected override void ExecuteCollision_Host(Collision collision) { }

@@ -20,6 +20,7 @@ namespace Prototype.NetworkLobby
         public LobbyInfoPanel infoPanel;
         public LobbyCountdownPanel countdownPanel;
         public RectTransform spellSelectionPanel;
+        public RectTransform optionsPanel;
 
         public InputField matchNameInput;
         public Button backButton;
@@ -114,6 +115,11 @@ namespace Prototype.NetworkLobby
             {
                 OnClickCreateMatchmakingGame();
             }
+        }
+
+        public void OnClickOptions()
+        {
+            lobbyManager.ChangeTo(optionsPanel);
         }
 
         public void Quit()

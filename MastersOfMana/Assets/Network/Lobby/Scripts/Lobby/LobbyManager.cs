@@ -431,11 +431,11 @@ namespace Prototype.NetworkLobby
                 if (lobbySlots[i] != null)
                 {
                     (lobbySlots[i] as LobbyPlayer).RpcUpdateCountdown(0);
+                    //lock the mouse
+                    (lobbySlots[i] as LobbyPlayer).RpcGameStarts();
                     GameManager.instance.AddPlayerMessageCounter();
                 }
             }
-			//lock the mouse
-			Cursor.lockState = CursorLockMode.Locked;
 
             ServerChangeScene(playScene);
         }

@@ -9,42 +9,29 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     private PlayerScript caster;
 
     [SerializeField] private float explosionAmplitude;
-    [SerializeField] private Explosion mExplosion;
     [SerializeField] private ParticleSystem mTrail;
 
     [SerializeField] private float mExplosionForce;
     [SerializeField] private float mPushDownForce;
     [SerializeField] private float mMinimumDamage;
     [SerializeField] private float mMaximumDamage;
-    [SerializeField] [Range(0.0f, 1.0f)] private float mVelocityScaledDamageFactor;
+    [SerializeField] [Range(0.0f, 1.0f)] private float mDamageFactor;
+    [SerializeField] private GameObject explosionPrefab;
 
     private List<GameObject> mAlreadyHit;
-    private float mHighestMeasuredVelocity = 0;
-
-    public override void Awake()
-    {
-        base.Awake();
-        mExplosion.amplitude = explosionAmplitude;
-    }
-
-
-    void Update()
-    {
-        if (caster.movement.GetVelocity().y < mHighestMeasuredVelocity)
-        {
-            mHighestMeasuredVelocity = caster.movement.GetVelocity().y;
-        }
-    }
+    //will store the transform.position of the caster when he casted - the difference between that and he collisionpoint will be a factor to the resulting damage
+    private Vector3 castPosition;
 
     public override void Execute(PlayerScript caster)
     {
-
         //get a fistoffury object
-        FistOfFuryBehaviour fof = PoolRegistry.FistOfFuryPool.Get(Pool.Activation.ReturnActivated).GetComponent<FistOfFuryBehaviour>();
+        //FistOfFuryBehaviour fof = PoolRegistry.FistOfFuryPool.Get(Pool.Activation.ReturnActivated).GetComponent<FistOfFuryBehaviour>();
+        FistOfFuryBehaviour fof = PoolRegistry.Instantiate(this.gameObject).GetComponent<FistOfFuryBehaviour>();
         fof.caster = caster;
-        fof.transform.position = caster.transform.position;
+        fof.transform.position = fof.castPosition = caster.transform.position;
         fof.transform.parent = caster.transform;
         fof.mAlreadyHit = new List<GameObject>();
+        fof.gameObject.SetActive(true);
         //spawn it on all clients
         NetworkServer.Spawn(fof.gameObject);
 
@@ -61,20 +48,21 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     protected override void ExecuteTriggerEnter_Host(Collider collider)
     {
         if (collider.isTrigger) return;
-        
+
         //spawn an explosion
-        GameObject go = PoolRegistry.ExplosionPool.Get();
-        go.transform.position = caster.transform.position/* + caster.transform.forward * 5*/;
-        go.SetActive(true);
-        Explosion ex = go.GetComponent<Explosion>();
+        GameObject explosion = PoolRegistry.Instantiate(explosionPrefab);
+        explosion.transform.position = caster.transform.position;
+        explosion.SetActive(true);
+        Explosion ex = explosion.GetComponent<Explosion>();
         if (ex)
         {
             ex.amplitude = explosionAmplitude;
         }
-        NetworkServer.Spawn(go);
+        NetworkServer.Spawn(explosion);
 
+        //unparent it
+        transform.parent = null;
 
-        //Debug.Log("velocity: " + caster.movement.GetVelocity());
 
         //apply explosiondamage to all healthscripts that were found
         Collider[] colliders = Physics.OverlapSphere(caster.transform.position, explosionAmplitude);
@@ -84,15 +72,28 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
             if (rigid && !mAlreadyHit.Contains(rigid.gameObject))
             {
                 mAlreadyHit.Add(rigid.gameObject);
-                PlayerScript ps = colliders[i].attachedRigidbody.GetComponent<PlayerScript>();
                 Vector3 direction = rigid.position - caster.movement.mRigidbody.position;
                 direction.Normalize();
-                if (ps)
+
+                //if the hit object is hurtable - hurt it
+                float distance = Vector3.Magnitude(caster.transform.position - castPosition);
+                float resultingDamage = mMinimumDamage + distance*mDamageFactor;
+                HealthScript hs = rigid.GetComponentInParent<HealthScript>();//searches in the gameobject AND in its parents
+                if (hs && hs != caster.healthScript)
                 {
-                    if (ps != caster)
+                    //calculate damage
+                    resultingDamage = Mathf.Clamp(resultingDamage, mMinimumDamage, mMaximumDamage);
+                    Debug.Log("damage by fist: " + resultingDamage);
+                    hs.TakeDamage(resultingDamage);
+                }
+
+                //if the hit object is moveable - move it
+                ServerMoveable sm = rigid.gameObject.GetComponent<ServerMoveable>();
+                if (sm)
+                {
+                    if (sm.gameObject != caster.gameObject)
                     {
-                        Debug.Log("force: " + mExplosionForce*direction);
-                        ps.movement.RpcAddForce(mExplosionForce*direction, ForceMode.VelocityChange);
+                        sm.RpcAddForce(mExplosionForce*direction, ForceMode.VelocityChange);
                     }
                 }
                 else
@@ -100,16 +101,6 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
                     rigid.AddForce(mExplosionForce*direction, ForceMode.VelocityChange);
                 }
 
-                HealthScript hs = rigid.GetComponentInParent<HealthScript>();
-                if (hs && hs != caster.healthScript)
-                {
-                    if (mHighestMeasuredVelocity < 0) mHighestMeasuredVelocity *= -1;
-                    float damage = mMinimumDamage + mHighestMeasuredVelocity*mVelocityScaledDamageFactor;
-                    damage = Mathf.Clamp(damage, mMinimumDamage, mMaximumDamage);
-                    Debug.Log("damage by fist: " + damage);
-                    Debug.Log("highest vel: " + mHighestMeasuredVelocity);
-                    hs.TakeDamage(damage);
-                }
             }
         }
 

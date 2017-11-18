@@ -72,9 +72,10 @@ public class WhipBehaviour : A_SummoningBehaviour
 
     public override void Execute(PlayerScript caster)
     {
-		WhipBehaviour whipBehaviour = PoolRegistry.WhipPool.Get().GetComponent<WhipBehaviour>();
+		//WhipBehaviour whipBehaviour = PoolRegistry.WhipPool.Get().GetComponent<WhipBehaviour>();
+		WhipBehaviour whipBehaviour = PoolRegistry.Instantiate(this.gameObject).GetComponent<WhipBehaviour>();
 
-		whipBehaviour.linePoint0 = caster.handTransform.position;
+        whipBehaviour.linePoint0 = caster.handTransform.position;
 
 		RaycastHit hit;
         Ray ray = new Ray(caster.GetCameraPosition(), caster.GetCameraLookDirection());
@@ -89,7 +90,7 @@ public class WhipBehaviour : A_SummoningBehaviour
 		}
 
         whipBehaviour.gameObject.SetActive(true);
-		NetworkServer.Spawn(whipBehaviour.gameObject, PoolRegistry.WhipPool.assetID);
+		NetworkServer.Spawn(whipBehaviour.gameObject, whipBehaviour.GetComponent<NetworkIdentity>().assetId);
 
 		whipBehaviour.StartCoroutine(whipBehaviour.Done());
 

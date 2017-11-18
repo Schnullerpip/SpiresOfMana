@@ -163,9 +163,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b80e17390ca09145b74e1c74a565016, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  winnerName: 
+  winnerID: 0
   localPlayer: {fileID: 0}
   eventSystem: {fileID: 1566325945482672}
+  isUltimateActive: 0
 --- !u!114 &114830869772096972
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1469,7 +1470,7 @@ MonoBehaviour:
     customControllerMaps: []
     customControllers: []
     playerIdCounter: 2
-    actionIdCounter: 21
+    actionIdCounter: 22
     actionCategoryIdCounter: 3
     inputBehaviorIdCounter: 1
     mapCategoryIdCounter: 6

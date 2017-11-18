@@ -24,9 +24,9 @@ public class NetManager : NetworkBehaviour {
     }
 
     [ClientRpc]
-    public void RpcLoadPostGameScreen(string winner)
+    public void RpcLoadPostGameScreen(uint winner)
     {
-        GameManager.instance.winnerName = winner;
+        GameManager.instance.winnerID = winner;
         SceneManager.LoadSceneAsync("Scenes/arne_postGame", LoadSceneMode.Additive);
     }
 

@@ -42,7 +42,7 @@ public abstract class A_InputState : A_State{
 			mPreviewActive = false;
 			ChooseSpell(2);
         }
-		#endregion
+        #endregion
 
 		#region Quickcast
 		if(playerInput.GetButtonDown("QuickCast1"))
@@ -77,13 +77,28 @@ public abstract class A_InputState : A_State{
 			mPreviewActive = false;
 			CastSpell();
 		}
+
+		if (player.GetRewired().GetButtonDown("Ultimate"))
+		{
+			if(player.GetPlayerSpells().ultimateEnergy >= player.GetPlayerSpells().ultimateEnergyThreshold)
+			{
+				ChooseSpell(3);
+				mPreviewActive = !mPreviewActive;
+			}
+		}
+		else if(playerInput.GetButtonUp("Ultimate") && mPreviewActive)
+		{
+			mPreviewActive = false;
+			CastSpell();
+		}
+
 		#endregion
 
 		if(playerInput.GetButtonDown("CastSpell"))
 		{
 			mPreviewActive = true;
 		}
-		if(playerInput.GetButtonUp("CastSpell") && mPreviewActive)
+		if(Input.GetKeyDown(KeyCode.P) || (playerInput.GetButtonUp("CastSpell") && mPreviewActive))
 		{
 			mPreviewActive = false;
 			CastSpell();

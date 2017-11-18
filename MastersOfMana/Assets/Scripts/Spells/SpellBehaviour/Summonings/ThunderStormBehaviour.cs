@@ -16,18 +16,20 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
 	public float damagePerStrike = 5;
 	public float duration = 15;
 
+	public LightningStrike strikePrefab;
+
 	private PlayerScript[] mPlayers;
 	private PlayerScript mCaster;
 
 	#region implemented abstract members of A_SpellBehaviour
 	public override void Execute (PlayerScript caster)
 	{
-		ThunderStormBehaviour thunderStormBehaviour = PoolRegistry.ThunderStormPool.Get().GetComponent<ThunderStormBehaviour>();
+		ThunderStormBehaviour thunderStormBehaviour = PoolRegistry.Instantiate(this.gameObject).GetComponent<ThunderStormBehaviour>();
 
 		thunderStormBehaviour.mCaster = caster;
 		thunderStormBehaviour.transform.position = transform.position;
 
-		NetworkServer.Spawn(thunderStormBehaviour.gameObject, PoolRegistry.ThunderStormPool.assetID);
+		NetworkServer.Spawn(thunderStormBehaviour.gameObject, thunderStormBehaviour.GetComponent<NetworkIdentity>().assetId);
 		thunderStormBehaviour.gameObject.SetActive(true);
 
 		thunderStormBehaviour.Init();
@@ -104,10 +106,10 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
 
 	private IEnumerator Strike (Vector3 pos)
 	{
-		LightningStrike strike = PoolRegistry.LigthningStrikePool.Get ().GetComponent<LightningStrike> ();
+		LightningStrike strike = PoolRegistry.Instantiate(strikePrefab.gameObject).GetComponent<LightningStrike> ();
 		strike.transform.position = pos;
 
-		NetworkServer.Spawn (strike.gameObject, PoolRegistry.LigthningStrikePool.assetID);
+		NetworkServer.Spawn (strike.gameObject, strike.GetComponent<NetworkIdentity>().assetId);
 		strike.gameObject.SetActive (true);
 
 		yield return new WaitForSeconds(strike.anticipationTime);

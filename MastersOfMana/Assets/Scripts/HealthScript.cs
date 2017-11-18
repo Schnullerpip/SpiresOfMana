@@ -16,6 +16,7 @@ public class HealthScript : NetworkBehaviour
     private float mCurrentHealth;
 
     //states whether the GameObject is alive or not
+    [SyncVar]
     private bool isAlive = true;
     public bool IsAlive() {
         return isAlive;

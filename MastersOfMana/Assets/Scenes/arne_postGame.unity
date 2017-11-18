@@ -205,22 +205,6 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 114734555353998458, guid: 9c7c07432746d0b47b66710c041e1cdd,
-        type: 2}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 107450356}
-    - target: {fileID: 114734555353998458, guid: 9c7c07432746d0b47b66710c041e1cdd,
-        type: 2}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: GoToMainMenu
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9c7c07432746d0b47b66710c041e1cdd, type: 2}
   m_IsPrefabParent: 0
---- !u!114 &107450356 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114134383409440692, guid: 9c7c07432746d0b47b66710c041e1cdd,
-    type: 2}
-  m_PrefabInternal: {fileID: 107450355}
-  m_Script: {fileID: 11500000, guid: 8795606adfd58c042ae193567cdfafe2, type: 3}

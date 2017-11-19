@@ -22,7 +22,6 @@ public abstract class A_InputState : A_State{
 
 	protected bool mPreviewActive;
 	protected bool mFocus;
-	protected bool mSprint;
 
     public override void UpdateLocal()
     {
@@ -48,33 +47,33 @@ public abstract class A_InputState : A_State{
 		if(playerInput.GetButtonDown("QuickCast1"))
 		{
 			mPreviewActive = !mPreviewActive;
+			player.movement.StopSprint();
 			ChooseSpell(0);
 		}
 		else if(playerInput.GetButtonUp("QuickCast1") && mPreviewActive)
 		{
-			mPreviewActive = false;
 			CastSpell();
 		}
 
 		if(playerInput.GetButtonDown("QuickCast2"))
 		{
-			ChooseSpell(1);
 			mPreviewActive = !mPreviewActive;
+			player.movement.StopSprint();
+			ChooseSpell(1);
 		}
 		else if(playerInput.GetButtonUp("QuickCast2") && mPreviewActive)
 		{
-			mPreviewActive = false;
 			CastSpell();
 		}
 
 		if(playerInput.GetButtonDown("QuickCast3"))
 		{
-			ChooseSpell(2);
 			mPreviewActive = !mPreviewActive;
+			player.movement.StopSprint();
+			ChooseSpell(2);
 		}
 		else if(playerInput.GetButtonUp("QuickCast3") && mPreviewActive)
 		{
-			mPreviewActive = false;
 			CastSpell();
 		}
 
@@ -82,13 +81,13 @@ public abstract class A_InputState : A_State{
 		{
 			if(player.GetPlayerSpells().ultimateEnergy >= player.GetPlayerSpells().ultimateEnergyThreshold)
 			{
-				ChooseSpell(3);
 				mPreviewActive = !mPreviewActive;
+				player.movement.StopSprint();
+				ChooseSpell(3);
 			}
 		}
 		else if(playerInput.GetButtonUp("Ultimate") && mPreviewActive)
 		{
-			mPreviewActive = false;
 			CastSpell();
 		}
 
@@ -98,9 +97,8 @@ public abstract class A_InputState : A_State{
 		{
 			mPreviewActive = true;
 		}
-		if(Input.GetKeyDown(KeyCode.P) || (playerInput.GetButtonUp("CastSpell") && mPreviewActive))
+		if(mPreviewActive && playerInput.GetButtonUp("CastSpell"))
 		{
-			mPreviewActive = false;
 			CastSpell();
 		}
 
@@ -110,25 +108,20 @@ public abstract class A_InputState : A_State{
 		}
 		else
 		{
+			//TODO: stop calling this every frame
 			player.GetPlayerSpells().StopPreview();
 		}
 
-		if(playerInput.GetButtonDown("Sprint"))
+		if(!mPreviewActive && !mFocus)
 		{
-			mSprint = !mSprint;
-			if(mSprint)
+			if(playerInput.GetButtonDown("Sprint"))
 			{
-				Debug.Log("Start Sprint");
+				player.movement.ToggleSprint();
 			}
-			else
+			else if(playerInput.GetButtonShortPressUp("Sprint"))
 			{
-				Debug.Log("Stop Sprint");
+				player.movement.StopSprint();
 			}
-		}
-		else if(playerInput.GetButtonShortPressUp("Sprint"))
-		{
-			mSprint = false;
-			Debug.Log("Stop Sprint");
 		}
 
 		//store the input values
@@ -144,7 +137,7 @@ public abstract class A_InputState : A_State{
 		//propergate various inputs to the statesystems
 		if(playerInput.GetButtonDown("Jump"))
 		{
-			Jump();
+			player.movement.Jump();
 		}
 			
 		if(playerInput.GetButtonDown("Focus"))
@@ -152,17 +145,18 @@ public abstract class A_InputState : A_State{
 			mFocus = !mFocus;
 			if(mFocus)
 			{
-				StartFocus();
+				player.aim.StartFocus(player);
+				player.movement.StopSprint();
 			}
 			else
 			{
-				StopFocus();
+				player.aim.StopFocus();
 			}
 		}
 		else if(playerInput.GetButtonShortPressUp("Focus"))
 		{
 			mFocus = false;
-			StopFocus();
+			player.aim.StopFocus();
 		}
 
 		//store the aim input, either mouse or right analog stick
@@ -192,11 +186,6 @@ public abstract class A_InputState : A_State{
 		}
 	}
 
-    public virtual void Jump() 
-	{
-		player.movement.Jump();
-	}
-
     public virtual void ChooseSpell(int idx)
     {
         player.GetPlayerSpells().SetCurrentSpellslotID(idx);
@@ -206,18 +195,10 @@ public abstract class A_InputState : A_State{
     //casting the chosen spell
     public virtual void CastSpell()
     {
+		mPreviewActive = false;
+		player.movement.StopSprint();
         player.castStateSystem.current.CastCmdSpell();
     }
-
-	public virtual void StartFocus()
-	{
-		player.aim.StartFocus(player);
-	}
-
-	public virtual void StopFocus()
-	{
-		player.aim.StopFocus();
-	}
 
 	protected Vector3 World2DToLocal3D (Vector2 world2D, Transform transform)
 	{

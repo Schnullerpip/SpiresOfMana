@@ -9,36 +9,13 @@ using UnityEngine;
 /// </summary>
 public abstract class A_SpellBehaviour : NetworkBehaviour
 {
-	protected static PreviewDebug previewIndicator;
-
-	public virtual void Awake()
-	{
-		if(!previewIndicator)
-		{
-			previewIndicator = GameObject.FindObjectOfType<PreviewDebug>();
-			previewIndicator.Deactivate();
-		}
-	}
+	public virtual void Awake()	{}
 
 	public abstract void Execute(PlayerScript caster);
 
-	public virtual bool Preview(PlayerScript caster) 
-	{
-		if(previewIndicator == null)
-		{
-			return false;
-		}
+	public virtual void Preview(PlayerScript caster) {}
 
-		return true;
-	}
-
-	public virtual void StopPreview(PlayerScript caster) 
-	{
-		if(previewIndicator)
-		{
-			previewIndicator.Deactivate();
-		}
-	}
+	public virtual void StopPreview(PlayerScript caster) {}
 
 	/// <summary>
 	/// Gets the aim direction. This direction is from the hand transform to the position that corresponds with the center of the screen.

@@ -38,6 +38,9 @@ public class DashBehaviour : A_EffectBehaviour
 	[Tooltip("The offset of the capsule to handle standing very close to a wall. This value describes the offset of the capsule backwards. This has to be smaller than the radius.")]
 	public float backwardOffset = 0.02f;
 
+	public PreviewSpell previewPrefab;
+	private static PreviewSpell sPreview; 
+
 	Vector3 GetNewPosition (PlayerScript caster, Vector3 direction, out RaycastHit hit)
 	{
 		/*
@@ -109,12 +112,14 @@ public class DashBehaviour : A_EffectBehaviour
 			}
 		}
 	}
-
-	public override bool Preview (PlayerScript caster)
+		
+	public override void Preview (PlayerScript caster)
 	{
-		if(!base.Preview (caster))
+		base.Preview (caster);
+
+		if(!sPreview)
 		{
-			return false;
+			sPreview = GameObject.Instantiate(previewPrefab) as PreviewSpell;
 		}
 
 		Vector3 direction = caster.aim.currentLookRotation * Vector3.forward;
@@ -123,10 +128,16 @@ public class DashBehaviour : A_EffectBehaviour
 
 		Vector3 newPosition = GetNewPosition(caster, direction, out hit);
 
-		previewIndicator.Move(newPosition);
-		previewIndicator.Rotate(Vector3.up);
+		sPreview.MoveAndRotate(newPosition, caster.transform.rotation);
+	}
 
-		return true;
+	public override void StopPreview (PlayerScript caster)
+	{
+		base.StopPreview (caster);
+		if(sPreview)
+		{
+			sPreview.Deactivate();
+		}
 	}
 
     public GameObject dashEffectPrefab; 

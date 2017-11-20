@@ -106,11 +106,6 @@ public abstract class A_InputState : A_State{
 		{
 			player.GetPlayerSpells().PreviewCurrentSpell();
 		}
-		else
-		{
-			//TODO: stop calling this every frame
-			player.GetPlayerSpells().StopPreview();
-		}
 
 		if(!mPreviewActive && !mFocus)
 		{
@@ -188,8 +183,10 @@ public abstract class A_InputState : A_State{
 
     public virtual void ChooseSpell(int idx)
     {
-        player.GetPlayerSpells().SetCurrentSpellslotID(idx);
-        player.GetPlayerSpells().CmdChooseSpellslot(idx);
+		PlayerSpells playerSpells = player.GetPlayerSpells();
+		playerSpells.StopPreview();
+        playerSpells.SetCurrentSpellslotID(idx);
+        playerSpells.CmdChooseSpellslot(idx);
     }
 
     //casting the chosen spell
@@ -197,6 +194,7 @@ public abstract class A_InputState : A_State{
     {
 		mPreviewActive = false;
 		player.movement.StopSprint();
+		player.GetPlayerSpells().StopPreview();
         player.castStateSystem.current.CastCmdSpell();
     }
 

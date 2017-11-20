@@ -17,10 +17,8 @@ public class WhipBehaviour : A_SummoningBehaviour
 
 	public LineRenderer lineRenderer;
 
-    public override void Awake()
-    {
-        base.Awake();
-    }
+	public PreviewSpell previewPrefab;
+	private static PreviewSpell sPreview; 
 
 	[SyncVar(hook = "SetLinePoint0")]
 	private Vector3 linePoint0;
@@ -47,11 +45,14 @@ public class WhipBehaviour : A_SummoningBehaviour
 		return hitSomething;
 	}
 
-	public override bool Preview (PlayerScript caster)
+	public override void Preview (PlayerScript caster)
 	{
-		if(!base.Preview (caster))
+		base.Preview (caster);
+
+		if(!sPreview)
 		{
-			return false;
+			sPreview = GameObject.Instantiate(previewPrefab) as PreviewSpell;
+			sPreview.Deactivate();
 		}
 
 		RaycastHit hit;
@@ -59,15 +60,21 @@ public class WhipBehaviour : A_SummoningBehaviour
 
 		if(RayCast(caster, ray, out hit))
 		{
-			previewIndicator.Move(hit.point); 
-			return true;
+			sPreview.Move(hit.point); 
 		}
 		else
 		{
-			previewIndicator.Deactivate();
+			sPreview.Deactivate();
 		}
+	}
 
-		return false;
+	public override void StopPreview (PlayerScript caster)
+	{
+		base.StopPreview (caster);
+		if(sPreview)
+		{
+			sPreview.Deactivate();
+		}
 	}
 
     public override void Execute(PlayerScript caster)

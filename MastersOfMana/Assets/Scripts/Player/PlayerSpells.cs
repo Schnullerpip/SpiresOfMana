@@ -68,18 +68,12 @@ public class PlayerSpells : NetworkBehaviour {
 
 	public void PreviewCurrentSpell()
 	{
-		//TODO: delete
-
-//		#if UNITY_EDITOR
-//		UnityEngine.Profiling.Profiler.BeginSample("Preview");
-//		#endif
 		A_SpellBehaviour spell = GetCurrentspell().spell.SpellBehaviours[0];
 
 		if(spell)
+		{
 			spell.Preview(mPlayer);
-//		#if UNITY_EDITOR
-//		UnityEngine.Profiling.Profiler.EndSample();
-//		#endif
+		}
 	}
 
 	public void StopPreview()
@@ -87,7 +81,9 @@ public class PlayerSpells : NetworkBehaviour {
 		A_SpellBehaviour spell = GetCurrentspell().spell.SpellBehaviours[0];
 
 		if(spell)
+		{
 			spell.StopPreview(mPlayer);
+		}
 	}
 
 

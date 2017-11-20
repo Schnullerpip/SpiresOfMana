@@ -25,6 +25,9 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 
     public GameObject[] DeactivatedObjectsOnCollision;
 
+	public PreviewSpell previewPrefab;
+	private static PreviewSpell sPreview; 
+
     public override void Awake()
     {
         base.Awake();
@@ -38,11 +41,13 @@ public class FireballBehaviour : A_ServerMoveableSummoning
         }
     }
 
-	public override bool Preview (PlayerScript caster)
+	public override void Preview (PlayerScript caster)
 	{
-		if(!base.Preview(caster))
+		base.Preview(caster);
+
+		if(!sPreview)
 		{
-			return false;
+			sPreview = GameObject.Instantiate(previewPrefab) as PreviewSpell;
 		}
 
 		RaycastHit hit;
@@ -50,18 +55,21 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 	
 		if(Physics.SphereCast(caster.handTransform.position, 0.25f, aimDirection, out hit))
 		{
-//			GameObject prev = Instantiate(ballMesh,hit.point + hit.normal * 0.25f, Quaternion.identity);
-//			Destroy(prev,0.01f);
-			previewIndicator.Move(hit.point + hit.normal * 0.25f);
-			previewIndicator.Rotate(hit.normal);
-			return true;
+			sPreview.MoveAndRotate(hit.point + hit.normal * 0.25f, Quaternion.LookRotation(hit.normal));
 		}
 		else
 		{
-			previewIndicator.Deactivate();
-			return false;
+			sPreview.Deactivate();
 		}
+	}
 
+	public override void StopPreview (PlayerScript caster)
+	{
+		base.StopPreview (caster);
+		if(sPreview)
+		{
+			sPreview.Deactivate();
+		}
 	}
 
     public override void Execute(PlayerScript caster)

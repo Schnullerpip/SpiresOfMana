@@ -24,6 +24,8 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
 	#region implemented abstract members of A_SpellBehaviour
 	public override void Execute (PlayerScript caster)
 	{
+		GameManager.instance.isUltimateActive = true;
+
 		ThunderStormBehaviour thunderStormBehaviour = PoolRegistry.Instantiate(this.gameObject).GetComponent<ThunderStormBehaviour>();
 
 		thunderStormBehaviour.mCaster = caster;
@@ -70,6 +72,8 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
 		yield return new WaitForSeconds(duration);
 
 		StopAllCoroutines();
+
+		GameManager.instance.isUltimateActive = false;
 
 		NetworkServer.UnSpawn(this.gameObject);
 		this.gameObject.SetActive(false);

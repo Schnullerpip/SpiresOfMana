@@ -21,8 +21,7 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 	public GameObject grenadeMesh;
 
 	public PreviewSpellTrajectory previewPrefab;
-	private static PreviewSpellTrajectory sPreview; 
-	private static float sRigidMass;
+	private static float? sRigidMass = null;
 
 //    private Rigidbody mStickTo = null;
 //    private Vector3 mStickPosition;
@@ -41,25 +40,22 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 	{
 		base.Preview (caster);
 
-		if(!sPreview)
+		if(sRigidMass == null)
 		{
-			sPreview = GameObject.Instantiate(previewPrefab) as PreviewSpellTrajectory;
 			sRigidMass = GetComponent<Rigidbody>().mass;
 		}
 
 		Vector3 vel = GetAimLocal(caster) * throwForce;
 
 //		sPreview.Move(caster.transform.position + caster.transform.forward * 3);
-		sPreview.VisualizeTrajectory(caster.handTransform.position, vel, sRigidMass);
+		(previewPrefab.instance as PreviewSpellTrajectory).VisualizeTrajectory(caster.handTransform.position, vel, sRigidMass.Value);
 	}
 
 	public override void StopPreview (PlayerScript caster)
 	{
 		base.StopPreview (caster);
-		if(sPreview)
-		{
-			sPreview.Deactivate();
-		}
+		previewPrefab.instance.Deactivate();
+
 	}
 
     public override void Execute(PlayerScript caster)

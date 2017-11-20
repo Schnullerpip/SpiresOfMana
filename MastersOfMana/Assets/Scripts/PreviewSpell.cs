@@ -37,7 +37,9 @@ public class PreviewSpell : MonoBehaviour
 	/// </summary>
 	public void Deactivate()
 	{
+		#if UNITY_EDITOR
 		Assert.IsFalse(IsPrefab(), "Method called on Prefab. Use instance instead!");
+		#endif
 		gameObject.SetActive(false);
 	}
 
@@ -49,7 +51,9 @@ public class PreviewSpell : MonoBehaviour
 	/// <param name="rotation">Rotation.</param>
 	public void MoveAndRotate(Vector3 position, Quaternion rotation)
 	{
+		#if UNITY_EDITOR
 		Assert.IsFalse(IsPrefab(), "Method called on Prefab. Use instance instead!");
+		#endif		
 		mDesiredPos = position;
 		mDesiredRot = rotation;
 
@@ -67,7 +71,9 @@ public class PreviewSpell : MonoBehaviour
 	/// <param name="position">Position.</param>
 	public void Move(Vector3 position)
 	{
+		#if UNITY_EDITOR
 		Assert.IsFalse(IsPrefab(), "Method called on Prefab. Use instance instead!");
+		#endif		
 		mDesiredPos = position;
 
 		if(!gameObject.activeInHierarchy)
@@ -83,7 +89,9 @@ public class PreviewSpell : MonoBehaviour
 	/// <param name="rotation">Rotation.</param>
 	public void Rotate(Quaternion rotation)
 	{
+		#if UNITY_EDITOR
 		Assert.IsFalse(IsPrefab(), "Method called on Prefab. Use instance instead!");
+		#endif
 		mDesiredRot = rotation;
 
 		if(!gameObject.activeInHierarchy)
@@ -102,8 +110,10 @@ public class PreviewSpell : MonoBehaviour
 		transform.rotation = Extensions.SmoothDamp(transform.rotation, mDesiredRot, ref rot, smoothTime);
 	}
 
+	#if UNITY_EDITOR
 	private bool IsPrefab()
 	{
 		return UnityEditor.PrefabUtility.GetPrefabParent(gameObject) == null && UnityEditor.PrefabUtility.GetPrefabObject(gameObject) != null;
 	}
+	#endif
 }

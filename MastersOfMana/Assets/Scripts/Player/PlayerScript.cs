@@ -186,6 +186,12 @@ public class PlayerScript : NetworkBehaviour
         return mCameraLookdirection;
     }
 
+	private Quaternion mCurrentLookDirection;
+	public Quaternion Client_GetCurrentLookDirection()
+	{
+		return mCurrentLookDirection;
+	}
+
     // Update is called once per frame
     void Update () 
 	{
@@ -286,11 +292,11 @@ public class PlayerScript : NetworkBehaviour
 
     //resolving the chosen spell
     [Command]
-    public void CmdResolveSpell(Vector3 CameraPostion, Vector3 CameraLookDirection)
+    public void CmdResolveSpell(Vector3 CameraPostion, Vector3 CameraLookDirection, Quaternion currentLookDirection)
     {
         mCameraPosition = CameraPostion;
         mCameraLookdirection = CameraLookDirection;
-
+		mCurrentLookDirection = currentLookDirection;
         mPlayerSpells.spellslot[mPlayerSpells.currentSpell].Cast(this);
     }
 }

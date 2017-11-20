@@ -138,7 +138,7 @@ public class DashBehaviour : A_EffectBehaviour
 
     public override void Execute(PlayerScript caster)
     {
-		Vector3 direction = caster.aim.currentLookRotation * Vector3.forward;
+		Vector3 direction = caster.Client_GetCurrentLookDirection() * Vector3.forward;
 
 		RaycastHit hit;
 

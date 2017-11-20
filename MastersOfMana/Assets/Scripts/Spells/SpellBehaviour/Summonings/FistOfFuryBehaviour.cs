@@ -13,8 +13,8 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
 
     [SerializeField] private float mExplosionForce;
     [SerializeField] private float mPushDownForce;
-    [SerializeField] private float mMinimumDamage;
-    [SerializeField] private float mMaximumDamage;
+    [SerializeField] private int mMinimumDamage;
+    [SerializeField] private int mMaximumDamage;
     [SerializeField] [Range(0.0f, 1.0f)] private float mDamageFactor;
     [SerializeField] private GameObject explosionPrefab;
 
@@ -96,7 +96,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
 
                 //if the hit object is hurtable - hurt it
                 float distance = Vector3.Magnitude(caster.transform.position - castPosition);
-                float resultingDamage = mMinimumDamage + distance*mDamageFactor;
+                int resultingDamage = Mathf.RoundToInt(mMinimumDamage + distance*mDamageFactor);
                 HealthScript hs = rigid.GetComponentInParent<HealthScript>();//searches in the gameobject AND in its parents
                 if (hs && hs != caster.healthScript)
                 {

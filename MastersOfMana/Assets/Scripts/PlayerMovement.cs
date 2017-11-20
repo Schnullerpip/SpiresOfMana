@@ -172,7 +172,7 @@ public class PlayerMovement : ServerMoveable
 		mSprinting = false;
 	}
 
-	public delegate void OnLandingWhileFalling(float impactVelocity);
+	public delegate void OnLandingWhileFalling(int impactVelocity);
 	/// <summary>
 	/// This Delegate is called once, when the FeetCollider is touching ground again. Regardless of wether or not the ground is considered steady
 	/// </summary>
@@ -182,7 +182,7 @@ public class PlayerMovement : ServerMoveable
 	{
 		if(mIsFalling)
 		{
-			float delta = - mRigidbody.velocity.y - fallingDamageThreshold;
+            int delta = Mathf.RoundToInt(-mRigidbody.velocity.y - fallingDamageThreshold);
 
 			if(onLandingWhileFalling != null)
 			{

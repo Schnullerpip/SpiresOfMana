@@ -113,14 +113,14 @@ public class PlayerScript : NetworkBehaviour
     }
 
     //We need this method, as it seems that delegates can't call commands
-    public void takeFallDamage(float amount)
+    public void takeFallDamage(int amount)
     {
         CmdTakeFallDamage(amount);
     }
 
     //Take fall damage on the server
     [Command]
-    public void CmdTakeFallDamage(float amount)
+    public void CmdTakeFallDamage(int amount)
     {
         healthScript.TakeFallDamage(amount);
     }

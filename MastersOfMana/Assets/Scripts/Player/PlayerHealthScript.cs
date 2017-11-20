@@ -6,10 +6,10 @@ public class PlayerHealthScript : HealthScript {
 
     private PlayerScript mPlayer;
 
-    public delegate void DamageTaken(float damage);
+    public delegate void DamageTaken(int damage);
     public event DamageTaken OnDamageTaken;
 
-    public delegate void HealthChanged(float damage);
+    public delegate void HealthChanged(int damage);
     public event HealthChanged OnHealthChanged;
 
     public override void Start()
@@ -18,7 +18,7 @@ public class PlayerHealthScript : HealthScript {
         base.Start();
     }
 
-    public override void TakeDamage(float amount) {
+    public override void TakeDamage(int amount) {
         bool hasBeenAlive = IsAlive();
         base.TakeDamage(mPlayer.effectStateSystem.current.CalculateDamage(amount));
 
@@ -28,17 +28,17 @@ public class PlayerHealthScript : HealthScript {
         }
     }
 
-    public override void TakeHeal(float amount)
+    public override void TakeHeal(int amount)
     {
         base.TakeHeal(mPlayer.effectStateSystem.current.CalculateHeal(amount));
     }
 
-    public void TakeFallDamage(float amount)
+    public void TakeFallDamage(int amount)
     {
         TakeDamage(mPlayer.effectStateSystem.current.CalculateFallDamage(amount));
     }
 
-    public override void HealthChangedHook(float newHealth)
+    public override void HealthChangedHook(int newHealth)
     {
 
         if(OnHealthChanged != null)
@@ -47,7 +47,7 @@ public class PlayerHealthScript : HealthScript {
         }
 
         // If newHealth is smaller than current Health we have taken damage!
-        float damage = GetCurrentHealth() - newHealth;
+        int damage = GetCurrentHealth() - newHealth;
         if (damage > 0)
         {
             if (OnDamageTaken != null)

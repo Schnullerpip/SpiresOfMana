@@ -13,7 +13,7 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
 	public float randomOffset = 1f;
 	public float strikeRadius = 1;
 
-	public float damagePerStrike = 5;
+	public int damagePerStrike = 5;
 	public float duration = 15;
 
 	public LightningStrike strikePrefab;

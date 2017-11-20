@@ -14,7 +14,7 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 	public float lifeTime = 3;
 	public float explosionForce = 600;
 	public float explosionRadius = 7;
-	public float damage = 10;
+	public int damage = 10;
 	public float explosionTime = 0.5f;
 
 	public GameObject explosionPrefab;

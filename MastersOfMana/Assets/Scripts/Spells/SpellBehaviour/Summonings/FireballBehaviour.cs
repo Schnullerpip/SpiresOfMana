@@ -12,14 +12,14 @@ public class FireballBehaviour : A_ServerMoveableSummoning
     [SerializeField]
     private float mSpeed = 5.0f;
     [SerializeField]
-    private float mDamage = 5.0f;
+    private int mDamage = 5;
 
     public Color effectColor;
 	//public GameObject ballPrefab;
 	public GameObject explosionPrefab;
 	public float explosionRadius = 4;
 	public float explosionForce = 5;
-	public float explosionDamage = 5.0f;
+	public int explosionDamage = 5;
 
 	public float disappearTimer = 3;
 

@@ -13,7 +13,7 @@ public class HurtIndicator : MonoBehaviour {
     private bool mRising = false;
     private float mMinAlpha = 0.0f;
 
-    private float mPlayerMaxHealth;
+    private int mPlayerMaxHealth;
 
     // Use this for initialization
     void OnEnable()
@@ -62,13 +62,13 @@ public class HurtIndicator : MonoBehaviour {
         }
     }
 
-    private void HealthChanged(float newHealth)
+    private void HealthChanged(int newHealth)
     {
         //Calculate new minimum Alpha value
         mMinAlpha = alphaIncreasePerPercentHealthLost * (1- newHealth / mPlayerMaxHealth);
     }
 
-    private void DamageTaken(float damage)
+    private void DamageTaken(int damage)
     {
         if(sprite.color.a <= mMinAlpha)
         {

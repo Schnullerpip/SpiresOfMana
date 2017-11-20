@@ -6,8 +6,6 @@ public class InputStateHurt : A_InputState
 {
     public InputStateHurt(PlayerScript player) : base(player) { }
 
-    public override void Jump() { }
-
 	public override void Move (Vector2 input)
 	{
 		base.Move (input);

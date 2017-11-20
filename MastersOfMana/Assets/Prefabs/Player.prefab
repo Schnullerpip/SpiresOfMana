@@ -1875,7 +1875,6 @@ MonoBehaviour:
   focusAimSpeedFactor: 0.25
   focusAssistSpeed: 360
   maxYAngle: 80
-  handTransform: {fileID: 4322715158737734}
   handJoint: {fileID: 4679889578031652}
   currentLookRotation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!114 &114111673754988668
@@ -1890,7 +1889,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mRigidbody: {fileID: 0}
-  speed: 5
+  speed: 3
+  sprintSpeed: 6
   focusSpeedSlowdown: 0.25
   jumpStrength: 5
   additionalFallGravityMultiplier: 1
@@ -2053,7 +2053,7 @@ MonoBehaviour:
   - spell: {fileID: 11400000, guid: 550c3a75fecb949ec8c45ab4c38ef166, type: 2}
     cooldown: 0
     isUltimateSpellSlot: 0
-  - spell: {fileID: 11400000, guid: e233f7ca8bad7cc4482f17316c60348f, type: 2}
+  - spell: {fileID: 11400000, guid: a5e75869edd974a7f889e1661e0ef689, type: 2}
     cooldown: 0
     isUltimateSpellSlot: 0
   - spell: {fileID: 11400000, guid: a5e75869edd974a7f889e1661e0ef689, type: 2}

@@ -85,14 +85,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72f429ffdbb0d4672a68954676019904, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pullHitForce: 10
-  pullHitUpForce: 5
+  pullForce: 10
+  UpForce: 3
   rayRadius: 0.2
-  pullPlayerForce: 10
-  pullPlayerUpForce: 2
   maxDistance: 30
   disappearTimer: 1
   lineRenderer: {fileID: 120818958224146740}
+  previewPrefab: {fileID: 114041355954258062, guid: b951f265d48954d1c9e8e42958aa9d58,
+    type: 2}
 --- !u!120 &120818958224146740
 LineRenderer:
   m_ObjectHideFlags: 1

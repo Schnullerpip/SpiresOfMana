@@ -20,6 +20,9 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 	public GameObject explosionPrefab;
 	public GameObject grenadeMesh;
 
+	public PreviewSpellTrajectory previewPrefab;
+	private static float? sRigidMass = null;
+
 //    private Rigidbody mStickTo = null;
 //    private Vector3 mStickPosition;
 
@@ -33,19 +36,42 @@ public class GrenadeBehaviour : A_SummoningBehaviour
         }
     }
 
+	public override void Preview (PlayerScript caster)
+	{
+		base.Preview (caster);
+
+		if(sRigidMass == null)
+		{
+			sRigidMass = GetComponent<Rigidbody>().mass;
+		}
+
+		Vector3 vel = GetAimLocal(caster) * throwForce;
+
+//		sPreview.Move(caster.transform.position + caster.transform.forward * 3);
+		(previewPrefab.instance as PreviewSpellTrajectory).VisualizeTrajectory(caster.handTransform.position, vel, sRigidMass.Value);
+	}
+
+	public override void StopPreview (PlayerScript caster)
+	{
+		base.StopPreview (caster);
+		previewPrefab.instance.Deactivate();
+
+	}
+
     public override void Execute(PlayerScript caster)
     {
-		GrenadeBehaviour grenadeBehaviour = PoolRegistry.GrenadePool.Get().GetComponent<GrenadeBehaviour>();
-		//create an instance of this grenade on the client's machine
+		//GrenadeBehaviour grenadeBehaviour = PoolRegistry.GrenadePool.Get().GetComponent<GrenadeBehaviour>();
+		GrenadeBehaviour grenadeBehaviour = PoolRegistry.Instantiate(this.gameObject).GetComponent<GrenadeBehaviour>();
+        //create an instance of this grenade on the client's machine
 
-		grenadeBehaviour.gameObject.SetActive(true);
+        grenadeBehaviour.gameObject.SetActive(true);
 
 		Vector3 aimDirection = GetAim(caster);
 		
 		grenadeBehaviour.Reset(caster.handTransform.position + aimDirection, caster.transform.rotation);
 		grenadeBehaviour.mRigid.velocity = aimDirection * throwForce;
 
-		NetworkServer.Spawn(grenadeBehaviour.gameObject, PoolRegistry.GrenadePool.assetID);
+		NetworkServer.Spawn(grenadeBehaviour.gameObject, grenadeBehaviour.GetComponent<NetworkIdentity>().assetId);
 
 		grenadeBehaviour.LightFuse(lifeTime);
     }

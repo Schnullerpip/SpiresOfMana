@@ -36,6 +36,9 @@ public class GameManager : MonoBehaviour
             eventSystem.SetActive(true);
             DontDestroyOnLoad(this);
         }
+
+        //Random seed initialization
+        Random.seed = (int)Time.time;
     }
 
     public void ResetLocalGameState()
@@ -70,7 +73,7 @@ public class GameManager : MonoBehaviour
         {
             //activate the pools, to start isntantiating, now that all the players have joined the game
             mPoolRegistry = FindObjectOfType<PoolRegistry>();
-            mPoolRegistry.CreatePools();
+            //mPoolRegistry.CreatePools();
 
             //enable the players to actually do stuff and update the chosen Spells
             foreach (var p in mPlayers)

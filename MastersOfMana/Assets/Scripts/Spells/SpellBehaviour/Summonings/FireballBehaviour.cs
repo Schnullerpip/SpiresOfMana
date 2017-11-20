@@ -14,19 +14,24 @@ public class FireballBehaviour : A_ServerMoveableSummoning
     [SerializeField]
     private int mDamage = 5;
 
-	public GameObject ballMesh;
+    public Color effectColor;
+	//public GameObject ballPrefab;
 	public GameObject explosionPrefab;
 	public float explosionRadius = 4;
 	public float explosionForce = 5;
 	public int explosionDamage = 5;
 
-	public TrailRenderer trail;
-
 	public float disappearTimer = 3;
+
+    public GameObject[] DeactivatedObjectsOnCollision;
+
+	public PreviewSpell preview;
 
     public override void Awake()
     {
         base.Awake();
+
+        RFX4_ColorHelper.ChangeObjectColorByHUE(gameObject, RFX4_ColorHelper.ColorToHSV(effectColor).H);
 
         if (!mRigid)
         {
@@ -35,16 +40,44 @@ public class FireballBehaviour : A_ServerMoveableSummoning
         }
     }
 
+	public override void Preview (PlayerScript caster)
+	{
+		base.Preview(caster);
+
+//		if(!sPreview)
+//		{
+//			sPreview = GameObject.Instantiate(previewPrefab) as PreviewSpell;
+//		}
+
+		RaycastHit hit;
+		Vector3 aimDirection = GetAimLocal(caster, out hit);
+	
+		if(Physics.SphereCast(caster.handTransform.position, 0.25f, aimDirection, out hit))
+		{
+			preview.instance.MoveAndRotate(hit.point + hit.normal * 0.25f, Quaternion.LookRotation(hit.normal));
+		}
+		else
+		{
+			preview.instance.Deactivate();
+		}
+	}
+
+	public override void StopPreview (PlayerScript caster)
+	{
+		base.StopPreview (caster);
+		preview.instance.Deactivate();
+	}
+
     public override void Execute(PlayerScript caster)
     {
         //Get a fireballinstance out of the pool
-		FireballBehaviour fireballBehaviour = PoolRegistry.FireballPool.Get().GetComponent<FireballBehaviour>();
-		       
+		//FireballBehaviour fireballBehaviour = PoolRegistry.FireballPool.Get().GetComponent<FireballBehaviour>();
+		FireballBehaviour fireballBehaviour = PoolRegistry.Instantiate(this.gameObject).GetComponent<FireballBehaviour>();
+
         //now activate it, so no weird interpolation errors occcure
         //TODO delete this eventually - RPCs are just too slow
         //fireball.GetComponent<A_SummoningBehaviour>().RpcSetActive(true);
-		fireballBehaviour.gameObject.SetActive(true);
-		fireballBehaviour.trail.Clear();
+        fireballBehaviour.gameObject.SetActive(true);
 
 		Vector3 aimDirection = GetAim(caster); 
 
@@ -53,8 +86,10 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 		//speed up the fireball to fly into the lookdirection of the player
 		fireballBehaviour.mRigid.velocity = aimDirection * mSpeed;
 
+        OnCollisionDeactivateBehaviour(true);
+
         //create an instance of this fireball on the client's machine
-		NetworkServer.Spawn(fireballBehaviour.gameObject, PoolRegistry.FireballPool.assetID);
+        NetworkServer.Spawn(fireballBehaviour.gameObject, fireballBehaviour.GetComponent<NetworkIdentity>().assetId);
 
 		fireballBehaviour.Disappear();
     }
@@ -69,7 +104,6 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 	}
 
     protected override void ExecuteTriggerEnter_Host(Collider collider)
-    //protected override void ExecuteCollision_Host(Collision collision) 
     {
         if (collider.isTrigger)
         {
@@ -77,10 +111,9 @@ public class FireballBehaviour : A_ServerMoveableSummoning
         }
 
 		Vector3 directHitForce = mRigid.velocity;
-
 		mRigid.isKinematic = true;
 
-		if(!isServer)
+        if (!isServer)
 		{
 			return;
 		}
@@ -127,6 +160,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 				cachedRigidbodies.Add(c.attachedRigidbody);
 
 				Vector3 force = c.attachedRigidbody.worldCenterOfMass - mRigid.position; 
+
 				force.Normalize();
 				force *= explosionForce;
 
@@ -141,21 +175,35 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 					c.attachedRigidbody.AddForce(force, ForceMode.VelocityChange);
 				}
 			}
-
 		}
 
-		RpcExplosion(transform.position,transform.rotation);
-		Instantiate(explosionPrefab,transform.position,transform.rotation);
+        RpcExplosion(transform.position, transform.rotation);
+        var explosionObject = Instantiate(explosionPrefab, transform.position, transform.rotation);
+        RFX4_ColorHelper.ChangeObjectColorByHUE(explosionObject, RFX4_ColorHelper.ColorToHSV(effectColor).H);
+        OnCollisionDeactivateBehaviour(false);
 
-		gameObject.SetActive(false);
-		NetworkServer.UnSpawn(gameObject);
+        //gameObject.SetActive(false);
+        //NetworkServer.UnSpawn(gameObject);
     }
 
-	[ClientRpc]
+    void OnCollisionDeactivateBehaviour(bool active)
+    {
+        foreach (var effect in DeactivatedObjectsOnCollision)
+        {
+            //Debug.Log((active ? "" : "de") + "activate " + effect.name);
+            effect.SetActive(active);
+        }
+    }
+
+    [ClientRpc]
 	void RpcExplosion(Vector3 position, Quaternion rotation)
 	{
-		Instantiate(explosionPrefab,position,rotation);
-	}
+        //Instantiate(explosionPrefab,position,rotation);
+        mRigid.isKinematic = true;
+        var explosionObject = Instantiate(explosionPrefab, position, rotation);
+        RFX4_ColorHelper.ChangeObjectColorByHUE(explosionObject, RFX4_ColorHelper.ColorToHSV(effectColor).H);
+        OnCollisionDeactivateBehaviour(false);
+    }
 		
 	public void Disappear()
 	{
@@ -166,7 +214,8 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 	{
 		yield return new WaitForSeconds(disappearTimer);
 
-		gameObject.SetActive(false);
+        OnCollisionDeactivateBehaviour(true);
+        gameObject.SetActive(false);
 		NetworkServer.UnSpawn(gameObject);
 	}
 

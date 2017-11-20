@@ -35,7 +35,6 @@ public class CamSlider : MonoBehaviour {
 		if(Physics.SphereCast(transform.position, wallDistance, transform.TransformPoint(mLocalEndPosition) - transform.position, out mHit	, mMaxDistance))
 		{
 			cam.position = Vector3.MoveTowards(cam.position,mHit.point + mHit.normal * wallDistance, inSpeed * Time.deltaTime);
-			Debug.DrawLine(transform.position, mHit.point, Color.yellow);
 		}
 		else
 		{

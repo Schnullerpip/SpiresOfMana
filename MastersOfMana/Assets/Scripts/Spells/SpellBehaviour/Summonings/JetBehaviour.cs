@@ -21,7 +21,8 @@ public class JetBehaviour : A_SummoningBehaviour
         RaycastHit hit;
         if (Physics.Raycast( new Ray(caster.movement.mRigidbody.worldCenterOfMass + caster.transform.forward * mOffsetToCaster, Vector3.down), out hit, 50))
         {
-            GameObject jet = PoolRegistry.JetPool.Get();
+            //GameObject jet = PoolRegistry.JetPool.Get();
+            GameObject jet = PoolRegistry.Instantiate(this.gameObject);
             jet.transform.position = hit.point;
 
             jet.SetActive(true);

@@ -12,16 +12,30 @@ public class JumpBehaviour : A_EffectBehaviour
 
 	public GameObject vacuumPrefab;
 
+	public PreviewSpell previewPrefab;
+
+	public override void Preview (PlayerScript caster)
+	{
+		base.Preview (caster);
+		previewPrefab.instance.Move(caster.transform.position + Vector3.up * 0.05f);
+	}
+
+	public override void StopPreview (PlayerScript caster)
+	{
+		base.StopPreview (caster);
+		previewPrefab.instance.Deactivate();
+	}
+
 	public override void Execute(PlayerScript caster)
 	{
         //Get a jumpinstance out of the pool
-        JumpBehaviour jumpBehaviour = PoolRegistry.JumpPool.Get().GetComponent<JumpBehaviour>();
+        JumpBehaviour jumpBehaviour = PoolRegistry.Instantiate(gameObject).GetComponent<JumpBehaviour>();
 
         //now activate it
         jumpBehaviour.gameObject.SetActive(true);
 
         //create an instance of this jump on the client's machine
-        NetworkServer.Spawn(jumpBehaviour.gameObject, PoolRegistry.JumpPool.assetID);
+        NetworkServer.Spawn(jumpBehaviour.gameObject, jumpBehaviour.GetComponent<NetworkIdentity>().assetId);
 
         Vector3 velocity = caster.movement.mRigidbody.velocity;
 		velocity.y = jumpForce;

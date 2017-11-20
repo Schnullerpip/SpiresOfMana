@@ -15,7 +15,6 @@ public class WindWallBehaviour : A_SummoningBehaviour
     private float mCenterDistance;
 
     private Vector3 force;
-    private ForceMode mode;
     private Vector3 center;
     private PlayerScript caster;
 
@@ -34,7 +33,8 @@ public class WindWallBehaviour : A_SummoningBehaviour
 
     public override void Execute(PlayerScript caster)
     {
-        GameObject ww = PoolRegistry.WindWallPool.Get();
+        //GameObject ww = PoolRegistry.WindWallPool.Get();
+        GameObject ww = PoolRegistry.Instantiate(this.gameObject);
         WindWallBehaviour windwall = ww.GetComponent<WindWallBehaviour>();
 
 		Vector3 direction =	GetAim(caster);
@@ -43,11 +43,8 @@ public class WindWallBehaviour : A_SummoningBehaviour
 		windwall.center = caster.handTransform.position + direction * mCenterDistance;
 
 		windwall.force = mWindforceStrength*(caster.transform.rotation*mWindForceDirection);
-		windwall.mode = ForceMode.VelocityChange;
 
-        Vector3 rot = caster.transform.rotation.eulerAngles;
-        rot.x = caster.headJoint.transform.rotation.eulerAngles.x;
-        windwall.transform.rotation = Quaternion.Euler(rot);
+        windwall.transform.rotation = caster.aim.currentLookRotation;
 
         windwall.transform.position = windwall.center;
         windwall.caster = caster;

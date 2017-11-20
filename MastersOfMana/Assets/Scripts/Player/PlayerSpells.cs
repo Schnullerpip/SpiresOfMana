@@ -66,6 +66,27 @@ public class PlayerSpells : NetworkBehaviour {
         }
     }
 
+	public void PreviewCurrentSpell()
+	{
+		A_SpellBehaviour spell = GetCurrentspell().spell.SpellBehaviours[0];
+
+		if(spell)
+		{
+			spell.Preview(mPlayer);
+		}
+	}
+
+	public void StopPreview()
+	{
+		A_SpellBehaviour spell = GetCurrentspell().spell.SpellBehaviours[0];
+
+		if(spell)
+		{
+			spell.StopPreview(mPlayer);
+		}
+	}
+
+
     //choosing a spell
     [Command]
     public void CmdChooseSpellslot(int idx)

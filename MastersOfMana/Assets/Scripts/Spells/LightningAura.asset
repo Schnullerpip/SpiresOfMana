@@ -8,13 +8,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ca192bbc60a14cd691c946b0bbdf869, type: 3}
-  m_Name: WindWall
+  m_Script: {fileID: 11500000, guid: 68751b6b34594454eb0b238b9042d1bd, type: 3}
+  m_Name: LightningAura
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: cb7b5b402860355428e01c90b7d93bdd, type: 3}
-  coolDownInSeconds: 5
+  icon: {fileID: 21300000, guid: f7a45f21bdc40144cb43230ab6a0a2d3, type: 3}
+  coolDownInSeconds: 6
   castDurationInSeconds: 0
   resolveDurationInSeconds: 0
-  spellID: 5
+  spellID: 10
   SpellBehaviours:
-  - {fileID: 114252487412048618, guid: 9bf02e687f3417541a58261c408bcdd3, type: 2}
+  - {fileID: 114505947921050076, guid: b7425048072ed0442baf2752a690ee9a, type: 2}

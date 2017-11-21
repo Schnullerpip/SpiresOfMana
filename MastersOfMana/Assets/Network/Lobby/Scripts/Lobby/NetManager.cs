@@ -33,6 +33,16 @@ public class NetManager : NetworkBehaviour {
     [ClientRpc]
     public void RpcTriggerGameStarted()
     {
+        if (isClient)
+        {
+            //GameManager on client doe not have the players yet - get them
+            var players = FindObjectsOfType<PlayerScript>();
+            foreach (var p in players)
+            {
+                GameManager.instance.mPlayers.Add(p);
+            }
+        }
+
         GameManager.instance.TriggerGameStarted();
     }
 }

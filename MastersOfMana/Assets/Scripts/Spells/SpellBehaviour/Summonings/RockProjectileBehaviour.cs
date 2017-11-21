@@ -25,7 +25,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
     private bool mRotateAroundCaster = true;
     [SyncVar]
     private Vector3 mOffset;
-    private float mFixOffsetY = 1.5f;
+
 
     private List<GameObject> mAlreadyFound;
 
@@ -114,7 +114,6 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
             RepositionRock();
         }
     }
-
     protected override void ExecuteTriggerEnter_Host(Collider collider)
     {
         behaviour(collider);

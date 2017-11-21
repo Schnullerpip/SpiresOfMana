@@ -6,7 +6,8 @@ using UnityEngine.Networking;
 public class LightningAuraBehaviour : A_SummoningBehaviour
 {
     [SerializeField] private float mInitialEnergyLevel = 50;
-    [SerializeField] private float mDamagePerSecond = 1.0f;
+    [SerializeField] private float mCountTillDamage = 1.0f;
+    [SerializeField] private int mDamage = 1;
     private float mEnergyLevel;
     [SerializeField] private float mEnergyDecreaseFactor = 0.1f;
 
@@ -131,9 +132,9 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
 
             //apply damage to nearest opponent
             mTimeCount += Time.deltaTime;
-            if (mTimeCount >= 1.0f)
+            if (mTimeCount >= mCountTillDamage)
             {
-                nearest.healthScript.TakeDamage(1);
+                nearest.healthScript.TakeDamage(mDamage);
             }
         }
 

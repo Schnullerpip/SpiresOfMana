@@ -87,7 +87,7 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
         }
     }
 
-    private float mTimeCount = 0;
+    private float mTimeCount = 1;
     void Update()
     {
         //as long as we dont have a caster, do nothing

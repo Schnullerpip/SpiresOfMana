@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 public class GameManager : MonoBehaviour
 {
-    private List<PlayerScript> mPlayers;
+    public List<PlayerScript> mPlayers;
 
     private PoolRegistry mPoolRegistry;
 
@@ -40,6 +40,7 @@ public class GameManager : MonoBehaviour
 
     public void ResetLocalGameState()
     {
+        mPlayers = new List<PlayerScript>();
         mNeededToGo = mInitialNeededToGo;
         mNumberOfGoMessages = 0;
         mNumberOfDeadPlayers = 0;

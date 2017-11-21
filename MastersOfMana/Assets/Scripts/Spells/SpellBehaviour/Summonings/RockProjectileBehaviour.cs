@@ -14,15 +14,17 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
     [SerializeField] private float mRotationVelocity;
     [SerializeField] private float mPushForce;
     [SerializeField] private Vector3[] mRandomOffsets;
-    private static uint mRandomOffsetIndex = 0;
     private float mTimeCount = 0;
+
+    [SyncVar] private GameObject casterObject;
+    private PlayerScript caster;
 
     private delegate void OnTriggerBehaviour(Collider collider);
     private OnTriggerBehaviour behaviour;
     [SyncVar]
     private bool mRotateAroundCaster = true;
+    [SyncVar]
     private Vector3 mOffset;
-    private PlayerScript caster = null;
     private float mFixOffsetY = 1.5f;
 
     private List<GameObject> mAlreadyFound;
@@ -30,7 +32,6 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
     public override void Execute(PlayerScript caster)
     {
         //get a rock instance
-        //RockProjectileBehaviour rp = PoolRegistry.RockProjectilePool.Get().GetComponent<RockProjectileBehaviour>();
         RockProjectileBehaviour rp = PoolRegistry.Instantiate(this.gameObject).GetComponent<RockProjectileBehaviour>();
 
         //initialize it
@@ -39,6 +40,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         rp.mDetectCollider.enabled = true;
         rp.mRotateAroundCaster = true;
         rp.behaviour = rp.TriggerBehaviour_Detect;
+        rp.casterObject = caster.gameObject;
         rp.caster = caster;
         //rp.transform.SetLayer(9);
 
@@ -76,44 +78,37 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
 
     public void Start()
     {
-        if (caster == null)
-        {
-            //get the player that casted this rock
-            //since on the server the caster is set correctly, this should only ever be called on the clients
-            var colliders = Physics.OverlapSphere(transform.position, 1);
-            for (var i = 0; i < colliders.Length; ++i)
-            {
-                Rigidbody rigid = colliders[i].attachedRigidbody;
-                if (rigid)
-                {
-                    PlayerScript ps = rigid.gameObject.GetComponent<PlayerScript>();
-                    if (ps)
-                    {
-                        caster = ps;
-                        mOffset = GetRandomOffset();
-                        RepositionRock();
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (!isServer)
-        {
-            mHitCollider.enabled = false;
-            mDetectCollider.enabled = false;
-        }
-        else
+        if (isServer)
         {
             mAlreadyFound = new List<GameObject>();
             mRigid = GetComponent<Rigidbody>();
         }
     }
 
+    public override void OnStartClient()
+    {
+        if (!isServer)
+        {
+            caster = casterObject.GetComponent<PlayerScript>();
+            mHitCollider.enabled = false;
+            mDetectCollider.enabled = false;
+        }
+    }
+
 
     public void Update()
     {
+        //as long as we do not have a caster yet - do nothing
+        if (!caster)
+        {
+            return;
+        }
+
         mTimeCount += Time.deltaTime;
+    }
+
+    public void LateUpdate()
+    {
         if (mRotateAroundCaster)
         {
             RepositionRock();

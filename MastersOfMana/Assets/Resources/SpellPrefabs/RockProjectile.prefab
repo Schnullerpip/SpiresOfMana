@@ -24,7 +24,6 @@ GameObject:
   - component: {fileID: 114170302213897632}
   - component: {fileID: 23296771707370450}
   - component: {fileID: 54221785969162818}
-  - component: {fileID: 135647509941461540}
   - component: {fileID: 114438001905655322}
   - component: {fileID: 114035313697023828}
   - component: {fileID: 114238628051958222}
@@ -148,22 +147,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   serverMoveable: {fileID: 0}
   mHitCollider: {fileID: 65555454562840364}
-  mDetectCollider: {fileID: 135647509941461540}
   mRockVelocity: 23
   mDamageAmount: 2
   mRotationVelocity: 170
   mPushForce: 8
+  mShootingReach: 8
   mRandomOffsets:
-  - {x: 0.76892734, y: -0.15620105, z: -0.6199613}
-  - {x: 0.08572836, y: 0.31352866, z: 0.94570106}
-  - {x: -0.9006898, y: -0.4337027, z: 0.025688225}
-  - {x: 0.42465854, y: 0.8443113, z: 0.32680815}
-  - {x: 0.67154825, y: 0.37302262, z: 0.6402164}
-  - {x: 0.7505283, y: 0.31528562, z: -0.5807773}
-  - {x: -0.49300146, y: -0.34560192, z: 0.7984416}
-  - {x: 0.73512644, y: 0.6604088, z: -0.15313193}
-  - {x: -0.67346954, y: 0.43130928, z: 0.6003425}
-  - {x: 0.693369, y: 0.5990821, z: -0.40042496}
+  - {x: 0.40707004, y: 0.24961275, z: -0.87862813}
+  - {x: 0.76321423, y: 0.25337818, z: -0.5943935}
+  - {x: 0.4348528, y: 0.37827355, z: -0.81719774}
+  - {x: 0.27354053, y: -0.4988833, z: 0.8223691}
+  - {x: 0.8784043, y: -0.22649108, z: 0.4208416}
+  - {x: -0.9030098, y: -0.34425268, z: 0.25702813}
+  - {x: 0.7063809, y: -0.38893124, z: 0.5914039}
+  - {x: 0.68800265, y: -0.27984565, z: 0.66958094}
+  - {x: 0.68270034, y: 0.22485156, z: 0.6952424}
+  - {x: 0.8488183, y: 0.0983184, z: 0.5194623}
 --- !u!114 &114238628051958222
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -208,15 +207,3 @@ MonoBehaviour:
     i15: 4
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
---- !u!135 &135647509941461540
-SphereCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1553457549544014}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 40
-  m_Center: {x: 0, y: 0, z: 0}

@@ -8,19 +8,18 @@ using Random = UnityEngine.Random;
 public class RockProjectileBehaviour : A_ServerMoveableSummoning
 {
     [SerializeField] private BoxCollider mHitCollider;
-    [SerializeField] private SphereCollider mDetectCollider;
     [SerializeField] private float mRockVelocity;
     [SerializeField] private int mDamageAmount;
     [SerializeField] private float mRotationVelocity;
     [SerializeField] private float mPushForce;
+    [SerializeField] private float mShootingReach;
     [SerializeField] private Vector3[] mRandomOffsets;
     private float mTimeCount = 0;
+    private List<PlayerScript> enemys;
 
     [SyncVar] private GameObject casterObject;
     private PlayerScript caster;
 
-    private delegate void OnTriggerBehaviour(Collider collider);
-    private OnTriggerBehaviour behaviour;
     [SyncVar]
     private bool mRotateAroundCaster = true;
     [SyncVar]
@@ -37,12 +36,9 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         //initialize it
         //rp.caster = caster;
         rp.mHitCollider.enabled = false;
-        rp.mDetectCollider.enabled = true;
         rp.mRotateAroundCaster = true;
-        rp.behaviour = rp.TriggerBehaviour_Detect;
         rp.casterObject = caster.gameObject;
         rp.caster = caster;
-        //rp.transform.SetLayer(9);
 
         rp.mOffset = GetRandomOffset();
         rp.RepositionRock();
@@ -62,12 +58,14 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
 
     private Vector3 GetRandomOffset()
     {
-        return new Vector3
+        Vector3 r = new Vector3
         {
-            x = Random.Range(0.0f, 1.0f) * (Random.value > 0.5f ? -1 : 1),
-            y = Random.Range(0.0f, 1.0f) * (Random.value > 0.5f ? -1 : 1),
-            z = Random.Range(0.0f, 1.0f) * (Random.value > 0.5f ? -1 : 1)
+            x = Random.Range(0.2f, 1.0f) * (Random.value > 0.5f ? -1 : 1),
+            y = Random.Range(0.0f, 0.5f) * (Random.value > 0.5f ? -1 : 1),
+            z = Random.Range(0.2f, 1.0f) * (Random.value > 0.5f ? -1 : 1)
         }.normalized;
+        r.y += 0.3f;
+        return r;
     }
 
     private void RepositionRock()
@@ -87,11 +85,21 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
 
     public override void OnStartClient()
     {
+
+        //gather all the enemies
+        enemys = new List<PlayerScript>();
+        foreach (var p in GameManager.instance.mPlayers)
+        {
+            if (p != caster)
+            {
+                enemys.Add(p);
+            }
+        }
+
         if (!isServer)
         {
             caster = casterObject.GetComponent<PlayerScript>();
             mHitCollider.enabled = false;
-            mDetectCollider.enabled = false;
         }
     }
 
@@ -105,6 +113,51 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         }
 
         mTimeCount += Time.deltaTime;
+
+        if (!isServer)
+        {
+            return;
+        }
+
+        if (!mRotateAroundCaster) return;
+
+        //check for each enemy, wheather or not we should shoot towards them
+        //get nearest enemy
+        PlayerScript nearest = enemys[0];
+        float distance = Vector3.Distance(transform.position, nearest.movement.mRigidbody.worldCenterOfMass);
+        for (var i = 1; i < enemys.Count; ++i)
+        {
+            float dist = Vector3.Distance(transform.position, enemys[i].movement.mRigidbody.worldCenterOfMass);
+            if (dist < distance)
+            {
+                nearest = enemys[i];
+                distance = dist;
+            }
+        }
+        //if nearest is in reach shoot it!
+        if (distance < mShootingReach)
+        {
+            //now if the stones direct path to the enemy is free, shoot it
+            RaycastHit hit;
+            Vector3 direction = Vector3.Normalize(nearest.transform.position - transform.position);
+            if (Physics.Raycast(new Ray(transform.position + direction*1.5f, direction), out hit))
+            {
+                Rigidbody rigid = hit.rigidbody;
+                if (rigid)
+                {
+                    PlayerScript enemy = rigid.GetComponentInParent<PlayerScript>();
+                    if (enemy && enemy == nearest)
+                    {
+                        mRotateAroundCaster = false;
+                        mHitCollider.enabled = true;
+                        //set velocity to shoot towards enemy
+                        Vector3 projectileVelocity = Vector3.Normalize(nearest.movement.mRigidbody.worldCenterOfMass - transform.position)*mRockVelocity;
+
+                        RpcShoot(transform.position, projectileVelocity);
+                    }
+                }
+            }
+        }
     }
 
     public void LateUpdate()
@@ -115,11 +168,6 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         }
     }
     protected override void ExecuteTriggerEnter_Host(Collider collider)
-    {
-        behaviour(collider);
-    }
-
-    private void TriggerBehaviour_Hit(Collider collider)
     {
         if (collider.isTrigger) return;
 
@@ -149,33 +197,6 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
 		gameObject.SetActive(false);
         caster = null;
 		NetworkServer.UnSpawn(gameObject);
-    }
-
-    private void TriggerBehaviour_Detect(Collider collider)
-    {
-        Rigidbody rigid = collider.attachedRigidbody;
-        if (rigid && !mAlreadyFound.Contains(rigid.gameObject))
-        {
-            mAlreadyFound.Add(rigid.gameObject);
-            PlayerScript opponent = rigid.GetComponent<PlayerScript>();
-            if (opponent && opponent != caster)
-            {
-                //reset the already found list for further use
-                mAlreadyFound = new List<GameObject>();
-
-
-                //change the trigger enter behaviour
-                transform.SetLayer(2);
-                behaviour = TriggerBehaviour_Hit;
-                mHitCollider.enabled = true;
-                mDetectCollider.enabled = false;
-
-                //set velocity to shoot towards enemy
-                Vector3 projectileVelocity = Vector3.Normalize(opponent.movement.mRigidbody.worldCenterOfMass - transform.position)*mRockVelocity;
-
-                RpcShoot(transform.position, projectileVelocity);
-            }
-        }
     }
 
     [ClientRpc]

@@ -15,7 +15,7 @@ public class FloatingDamageText : MonoBehaviour {
 
     private Vector2 mVelocity;
     private RectTransform rect;
-    private Camera camera;
+    private Camera mCamera;
 
 	public void SetDamageText(int damage)
     {
@@ -24,7 +24,7 @@ public class FloatingDamageText : MonoBehaviour {
 
     public void Awake()
     {
-        camera = Camera.main;
+        mCamera = Camera.main;
         rect = GetComponent<RectTransform>();
 
     }
@@ -49,9 +49,9 @@ public class FloatingDamageText : MonoBehaviour {
         mVelocity *= drag;
 
         //Billboard to player
-        Vector3 v = camera.transform.position - transform.position;
+        Vector3 v = mCamera.transform.position - transform.position;
         v.x = v.z = 0.0f;
-        transform.LookAt(camera.transform.position - v);
+        transform.LookAt(mCamera.transform.position - v);
         transform.Rotate(0, 180, 0);
     }
 }

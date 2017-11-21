@@ -9,6 +9,7 @@ public class HealPack : NetworkBehaviour
     public int healAmount = 15;
     public int healPerTick = 1;
     public float tickDuration = 0.5f;
+    public System.Action<Transform> healSpawnCallback;
 
     private Dictionary<NetworkInstanceId, Coroutine> mInstanceCoroutineDictionary = new Dictionary<NetworkInstanceId, Coroutine>();
 
@@ -71,6 +72,7 @@ public class HealPack : NetworkBehaviour
     private void deactivate()
     {
         StopAllCoroutines();
+        healSpawnCallback(transform);
         gameObject.SetActive(false);
         NetworkServer.UnSpawn(gameObject);
         Destroy(gameObject);

@@ -9,7 +9,6 @@ public class FloatingDamageTextSystem : MonoBehaviour {
     public PlayerScript player;
     public int numberOfPooledTexts = 25;
     private int mCurrentObj = 0;
-    private Camera mMainCamera;
 
     private List<FloatingDamageText> mTextPool = new List<FloatingDamageText>();
 
@@ -22,7 +21,6 @@ public class FloatingDamageTextSystem : MonoBehaviour {
             text.transform.SetParent(canvas.transform, false);
             mTextPool.Add(text);
         }
-        mMainCamera = Camera.main;
 
         player.healthScript.OnDamageTaken += CreateDamageText;
         transform.Translate(player.transform.position);

@@ -30,12 +30,18 @@ public class HealPackSystem : NetworkBehaviour {
             currentIndex++;
 
             //Get a randome spawn position
-            Debug.Log(Random.Range(0, mHealSpawns.Count - 0.00001f));
             Transform healSpawnPosition = mHealSpawns[Mathf.FloorToInt(Random.Range(0, mHealSpawns.Count - 0.00001f))];
+            mHealSpawns.Remove(healSpawnPosition);
 
             //Instantiate and spawn
             GameObject obj = Instantiate(healPack, healSpawnPosition.position, healSpawnPosition.rotation);
+            obj.GetComponent<HealPack>().healSpawnCallback = AddHealSpawn;
             NetworkServer.Spawn(obj);
         }
+    }
+
+    public void AddHealSpawn(Transform trans)
+    {
+        mHealSpawns.Add(trans);
     }
 }

@@ -44,6 +44,8 @@ public abstract class A_CastState : A_State{
     /// </summary>
     public virtual void CastCmdSpell()
     {
+        var playerSpells = player.GetPlayerSpells();
+        playerSpells.expectingSpell = playerSpells.GetCurrentspell().spell;//so some spells can 'find' the right spell on client side
 		player.CmdResolveSpell(player.aim.GetCameraRig().GetCamera().transform.position, player.aim.GetCameraRig().GetCamera().transform.forward);
     }
 }

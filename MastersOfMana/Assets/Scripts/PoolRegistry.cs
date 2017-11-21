@@ -41,7 +41,7 @@ public class PoolRegistry : NetworkBehaviour {
             }
         }
 
-        Pool newPool = new Pool(go, instance.defaultPoolSize, instance.poolingStrategy);
+        Pool newPool = new Pool(go, 5, instance.poolingStrategy);
         instance.poolList.Add(newPool);
 
         return newPool.Get();

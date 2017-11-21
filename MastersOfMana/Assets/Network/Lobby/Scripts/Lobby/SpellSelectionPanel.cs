@@ -12,21 +12,19 @@ namespace Prototype.NetworkLobby {
         public Button spellButtonPrefab;
         public LobbyPlayer player;
         public bool showUltimates = false;
-        private bool initialized = false;
         private List<Button> spellButtons = new List<Button>();
 
-    private void OnEnable()
-        {
-            player.SetUiInteractive(false);
-            LobbyManager.s_Singleton.SetCancelDelegate(GoBack);
+        private void OnEnable()
+            {
+                player.SetUiInteractive(false);
+                LobbyManager.s_Singleton.SetCancelDelegate(GoBack);
 
-            Init();
-            spellButtons[0].OnSelect(null);
-        }
+                Init();
+                spellButtons[0].OnSelect(null);
+            }
 
         public void Init()
         {
-            initialized = true;
             List<A_Spell> spells = spellregistry.SpellList;
             if (showUltimates)
             {

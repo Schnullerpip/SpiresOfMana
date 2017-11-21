@@ -3,29 +3,76 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class HealPack : NetworkBehaviour {
+public class HealPack : NetworkBehaviour
+{
 
     public int healAmount = 15;
+    public int healPerTick = 1;
+    public float tickDuration = 0.5f;
+    public System.Action<Transform> healSpawnCallback;
+
+    private Dictionary<NetworkInstanceId, Coroutine> mInstanceCoroutineDictionary = new Dictionary<NetworkInstanceId, Coroutine>();
 
     public void OnTriggerEnter(Collider other)
     {
-        //Only ever do this on the server
-        if(!isServer)
+        if (!isServer)
         {
             return;
         }
+        //Check if collision with player
+        //Check FeetCollider to only trigger once per player
+        if (other.GetComponent<FeetCollider>())
+        {
+            PlayerHealthScript playerHealth = other.GetComponentInParent<PlayerHealthScript>();
+            if (playerHealth)
+            {
+                //Remember which player this coroutine belongs to
+                mInstanceCoroutineDictionary.Add(playerHealth.netId, StartCoroutine(Heal(playerHealth)));
+            }
+        }
+    }
 
-        //Check if a player has triggeredl
-        PlayerHealthScript playerHealthScript =  other.gameObject.GetComponentInParent<PlayerHealthScript>();
-        if(!playerHealthScript)
+    public void OnTriggerExit(Collider other)
+    {
+        if (!isServer)
         {
             return;
         }
+        //Check if collision with player
+        //Check FeetCollider to only trigger once per player
+        if (other.GetComponent<FeetCollider>())
+        {
+            PlayerHealthScript playerHealth = other.GetComponentInParent<PlayerHealthScript>();
+            if (playerHealth)
+            {
+                StopCoroutine(mInstanceCoroutineDictionary[playerHealth.netId]);
+                mInstanceCoroutineDictionary.Remove(playerHealth.netId);
+            }
+        }
+    }
 
-        //Heal the player
-        playerHealthScript.TakeHeal(healAmount);
+    public IEnumerator Heal(PlayerHealthScript playerHealth)
+    {
+        while (enabled)
+        {
+            if (playerHealth.GetCurrentHealth() < playerHealth.GetMaxHealth())
+            {
+                playerHealth.TakeHeal(healPerTick);
+                healAmount -= healPerTick;
+                //Check if the next heal would drain the healpack below 0
+                if (healAmount - healPerTick < 0)
+                {
+                    deactivate();
+                }
+            }
+            yield return new WaitForSeconds(tickDuration);
+        }
+    }
 
-        //And destroy this object
+    private void deactivate()
+    {
+        StopAllCoroutines();
+        healSpawnCallback(transform);
         gameObject.SetActive(false);
         NetworkServer.UnSpawn(gameObject);
         Destroy(gameObject);

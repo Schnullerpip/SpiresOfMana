@@ -505,7 +505,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerInterval:
-    min: 0.5
+    min: 0.3
     max: 2
   worldInterval:
     min: 0.1
@@ -513,9 +513,13 @@ MonoBehaviour:
   bounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 50, y: 0, z: 50}
-  randomOffset: 1
+  randomOffset: 0.5
   strikeRadius: 1
   damagePerStrike: 5
   duration: 20
+  hittingMasks:
+    serializedVersion: 2
+    m_Bits: 1024
+  preditionAccuracy: 1
   strikePrefab: {fileID: 114761499820415296, guid: 85c466ce9e9d247d4b14e85024d481f0,
     type: 2}

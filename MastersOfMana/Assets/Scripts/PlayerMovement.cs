@@ -67,6 +67,15 @@ public class PlayerMovement : ServerMoveable
 		mFocusActive = value;
 	}
 
+	/// <summary>
+	/// Gets the movement since last frame.
+	/// </summary>
+	/// <returns>The delta movement.</returns>
+	public Vector3 GetDeltaMovement()
+	{
+		return mDeltaPos;
+	}
+
 	public delegate void OnMovement(float velocityMag, Vector2 direction, bool isGrounded);
 	public OnMovement onMovement;
 

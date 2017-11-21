@@ -134,6 +134,7 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
             mTimeCount += Time.deltaTime;
             if (mTimeCount >= mCountTillDamage)
             {
+                mTimeCount = 0;
                 nearest.healthScript.TakeDamage(mDamage);
             }
         }

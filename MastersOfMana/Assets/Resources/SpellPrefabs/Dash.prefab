@@ -52,12 +52,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2a01037f5f361d4d9c951cbc3e81cfa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mMaxDistance: 10
-  mOffsetToPlayer: 0.2
-  mCapsuleHeight: 0.5
-  mCapsuleRadius: 0.26
-  mPushForce: 16
-  mReduction: 0
+  maxDistance: 10
+  pushForce: 7
+  playerRadius: 0.35
+  playerHeight: 2
+  shortening: 0.39
+  feetAdvancement: 0.1
+  backwardOffset: 0.02
+  preview: {fileID: 114041355954258062, guid: 0a1575a8cd39946f28ef5c186bc7c824, type: 2}
   dashEffectPrefab: {fileID: 1923240052563458, guid: acfeecacee7b9694a997a25e09f0e2a7,
     type: 2}
 --- !u!114 &114528237506480750

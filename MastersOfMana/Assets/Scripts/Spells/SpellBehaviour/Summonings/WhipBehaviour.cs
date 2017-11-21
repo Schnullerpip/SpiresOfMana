@@ -17,10 +17,8 @@ public class WhipBehaviour : A_SummoningBehaviour
 
 	public LineRenderer lineRenderer;
 
-    public override void Awake()
-    {
-        base.Awake();
-    }
+	public PreviewSpell previewPrefab;
+	private static PreviewSpell sPreview; 
 
 	[SyncVar(hook = "SetLinePoint0")]
 	private Vector3 linePoint0;
@@ -39,6 +37,46 @@ public class WhipBehaviour : A_SummoningBehaviour
 		lineRenderer.SetPosition(1, linePoint1);
 	}
 
+	bool RayCast(PlayerScript player, Ray ray, out RaycastHit hit)
+	{
+		player.SetColliderIgnoreRaycast(true);
+		bool hitSomething = Physics.SphereCast(ray, rayRadius, out hit, maxDistance);
+		player.SetColliderIgnoreRaycast(false);
+		return hitSomething;
+	}
+
+	public override void Preview (PlayerScript caster)
+	{
+		base.Preview (caster);
+
+		if(!sPreview)
+		{
+			sPreview = GameObject.Instantiate(previewPrefab) as PreviewSpell;
+			sPreview.Deactivate();
+		}
+
+		RaycastHit hit;
+		Ray ray = caster.aim.GetCameraRig().GetCenterRay();
+
+		if(RayCast(caster, ray, out hit))
+		{
+			sPreview.Move(hit.point); 
+		}
+		else
+		{
+			sPreview.Deactivate();
+		}
+	}
+
+	public override void StopPreview (PlayerScript caster)
+	{
+		base.StopPreview (caster);
+		if(sPreview)
+		{
+			sPreview.Deactivate();
+		}
+	}
+
     public override void Execute(PlayerScript caster)
     {
 		//WhipBehaviour whipBehaviour = PoolRegistry.WhipPool.Get().GetComponent<WhipBehaviour>();
@@ -49,11 +87,7 @@ public class WhipBehaviour : A_SummoningBehaviour
 		RaycastHit hit;
         Ray ray = new Ray(caster.GetCameraPosition(), caster.GetCameraLookDirection());
 
-		caster.SetColliderIgnoreRaycast(true);
-		bool hitSomething = Physics.SphereCast(ray, rayRadius, out hit, maxDistance);
-		caster.SetColliderIgnoreRaycast(false);
-
-		if(hitSomething)
+		if(RayCast(caster, ray, out hit))
 		{
 			whipBehaviour.linePoint1 = hit.point;
 		}
@@ -67,7 +101,7 @@ public class WhipBehaviour : A_SummoningBehaviour
 
 		whipBehaviour.StartCoroutine(whipBehaviour.Done());
 
-		if(hitSomething)
+		if(hit.collider != null)
 		{
 			Vector3 aimDirection = Vector3.Normalize(hit.point - caster.handTransform.position);
 

@@ -10,7 +10,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
     [SerializeField] private BoxCollider mHitCollider;
     [SerializeField] private SphereCollider mDetectCollider;
     [SerializeField] private float mRockVelocity;
-    [SerializeField] private float mDamageAmount;
+    [SerializeField] private int mDamageAmount;
     [SerializeField] private float mRotationVelocity;
     [SerializeField] private float mPushForce;
     [SerializeField] private Vector3[] mRandomOffsets;

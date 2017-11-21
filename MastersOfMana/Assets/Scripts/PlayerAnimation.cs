@@ -28,10 +28,10 @@ public class PlayerAnimation : NetworkBehaviour {
 
 	void UpdateMovement(float movementSpeed, Vector2 direction, bool isGrounded)
 	{
-		animator.SetFloat("movementSpeed",movementSpeed / mPlayer.movement.speed );
+		animator.SetFloat("movementSpeed",movementSpeed / mPlayer.movement.sprintSpeed );
 
-		animator.SetFloat("speed_right",direction.x / mPlayer.movement.speed);
-		animator.SetFloat("speed_forward",direction.y / mPlayer.movement.speed);
+		animator.SetFloat("speed_right",direction.x / mPlayer.movement.sprintSpeed);
+		animator.SetFloat("speed_forward",direction.y / mPlayer.movement.sprintSpeed);
 	
 		animator.SetBool("grounded",isGrounded);
 	}
@@ -41,7 +41,7 @@ public class PlayerAnimation : NetworkBehaviour {
 		animator.SetTrigger("jump");
 	}
 
-	void TookDamage(float damage)
+	void TookDamage(int damage)
 	{
 		if(!mPlayer.healthScript.IsAlive())
 		{

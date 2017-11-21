@@ -25,7 +25,6 @@ public class PlayerAim : NetworkBehaviour {
 	private float yAngle = 0;
 //	[HideInInspector][SyncVar]
 //	public Vector3 lookDirection;
-	public Transform handTransform;
 	public Transform handJoint;
 
 	public Quaternion currentLookRotation;
@@ -269,8 +268,10 @@ public class PlayerAim : NetworkBehaviour {
 		allPlayers.Sort(
 			delegate(PlayerScript a, PlayerScript b) 
 			{
-				return Vector3.Angle(currentLookRotation.eulerAngles, a.transform.position - mCameraRig.GetCamera().transform.position)
-					.CompareTo(Vector3.Angle(currentLookRotation.eulerAngles, b.transform.position - mCameraRig.GetCamera().transform.position));
+				var camPos = mCameraRig.GetCamera ().transform.position;
+				var eulerAngles = currentLookRotation.eulerAngles;
+				return Vector3.Angle(eulerAngles, a.transform.position - camPos)
+					.CompareTo(Vector3.Angle (eulerAngles, b.transform.position - camPos));
 			}
 		);
 
@@ -282,7 +283,7 @@ public class PlayerAim : NetworkBehaviour {
 			{
 				continue;
 			}
-
+				
 //			//skip if the target is behind the player
 //			if(transform.InverseTransformPoint(aHealthScript.transform.position).z < 0)
 //			{
@@ -299,7 +300,7 @@ public class PlayerAim : NetworkBehaviour {
 //			if(Vector3.ProjectOnPlane(dirToTarget, - lookDirection).sqrMagnitude < maxUnitsOff * maxUnitsOff)
 			{
 //				if(cameraRig.RaycastCheck(healthScriptCollider.bounds.center, out hit))
-				Debug.DrawLine(mCameraRig.GetCamera().transform.position, healthScriptCollider.bounds.center, Color.red, 20);
+//				Debug.DrawLine(mCameraRig.GetCamera().transform.position, healthScriptCollider.bounds.center, Color.red, 20);
 				if(Physics.Linecast(mCameraRig.GetCamera().transform.position, healthScriptCollider.bounds.center, out hit))
 				{
 					//TODO find a better method to varify target, perhabs tags?

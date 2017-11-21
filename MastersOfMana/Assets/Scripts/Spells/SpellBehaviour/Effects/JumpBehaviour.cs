@@ -13,6 +13,20 @@ public class JumpBehaviour : A_EffectBehaviour
 
 	public GameObject vacuumPrefab;
 
+	public PreviewSpell previewPrefab;
+
+	public override void Preview (PlayerScript caster)
+	{
+		base.Preview (caster);
+		previewPrefab.instance.Move(caster.transform.position + Vector3.up * 0.05f);
+	}
+
+	public override void StopPreview (PlayerScript caster)
+	{
+		base.StopPreview (caster);
+		previewPrefab.instance.Deactivate();
+	}
+
 	public override void Execute(PlayerScript caster)
 	{
         //Get a jumpinstance out of the pool

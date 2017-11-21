@@ -11,14 +11,33 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     [SerializeField] private float explosionAmplitude;
     [SerializeField] private float mExplosionForce;
     [SerializeField] private float mPushDownForce;
-    [SerializeField] private float mMinimumDamage;
-    [SerializeField] private float mMaximumDamage;
+    [SerializeField] private int mMinimumDamage;
+    [SerializeField] private int mMaximumDamage;
     [SerializeField] [Range(0.0f, 1.0f)] private float mDamageFactor;
     [SerializeField] private GameObject explosionPrefab;
+
+	public PreviewSpell previewPrefab;
 
     private List<GameObject> mAlreadyHit;
     //will store the transform.position of the caster when he casted - the difference between that and he collisionpoint will be a factor to the resulting damage
     private Vector3 castPosition;
+
+	public override void Preview (PlayerScript caster)
+	{
+		base.Preview (caster);
+		RaycastHit hit;
+
+		if(Physics.Raycast(caster.transform.position + Vector3.up * 0.2f, Vector3.down, out hit))
+		{
+			previewPrefab.instance.Move(hit.point);
+		}
+	}
+
+	public override void StopPreview (PlayerScript caster)
+	{
+		base.StopPreview (caster);
+		previewPrefab.instance.Deactivate();
+	}
 
     public override void Execute(PlayerScript caster)
     {
@@ -76,7 +95,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
 
                 //if the hit object is hurtable - hurt it
                 float distance = Vector3.Magnitude(caster.transform.position - castPosition);
-                float resultingDamage = mMinimumDamage + distance*mDamageFactor;
+                int resultingDamage = Mathf.RoundToInt(mMinimumDamage + distance*mDamageFactor);
                 HealthScript hs = rigid.GetComponentInParent<HealthScript>();//searches in the gameobject AND in its parents
                 if (hs && hs != caster.healthScript)
                 {

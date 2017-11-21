@@ -8,82 +8,158 @@ using UnityEngine.Networking;
 /// </summary>
 public abstract class A_InputState : A_State{
 
-    public A_InputState(PlayerScript player) : base(player) { }
+	protected Rewired.Player playerInput;
+
+    public A_InputState(PlayerScript player) : base(player) 
+	{ 
+		playerInput = player.GetRewired();
+	}
 
     /*behaviour distinction
      * those are kept empty on purpose because they're ment to be implemented in the subclasses
      * implementations inside the abstract A_Spell should only describe default behaviour
      */
 
+	protected bool mPreviewActive;
+	protected bool mFocus;
+
     public override void UpdateLocal()
     {
-        //poll the input coming from rewired
-
-        //poll wheather a spell was chosen
-        if (player.GetRewired().GetButtonDown("ChooseSpell1")) {
-           ChooseSpell(0);
+		#region Spell Selection
+		if (playerInput.GetButtonDown("SpellSelection1")) 
+		{
+			mPreviewActive = false;
+        	ChooseSpell(0);
         }
-		if (player.GetRewired().GetButtonDown("ChooseSpell2")) {
-            ChooseSpell(1);
+		if (playerInput.GetButtonDown("SpellSelection2")) 
+		{
+			mPreviewActive = false;
+			ChooseSpell(1);
         }
-		if (player.GetRewired().GetButtonDown("ChooseSpell3")) {
-            ChooseSpell(2);
+		if (playerInput.GetButtonDown("SpellSelection3")) 
+		{
+			mPreviewActive = false;
+			ChooseSpell(2);
         }
-        if (player.GetRewired().GetButtonDown("ChooseUltimate"))
-        {
-            if(player.GetPlayerSpells().ultimateEnergy >= player.GetPlayerSpells().ultimateEnergyThreshold)
-            {
-                ChooseSpell(3);
-            }
-        }
+        #endregion
+
+		#region Quickcast
+		if(playerInput.GetButtonDown("QuickCast1"))
+		{
+			mPreviewActive = !mPreviewActive;
+			player.movement.StopSprint();
+			ChooseSpell(0);
+		}
+		else if(playerInput.GetButtonUp("QuickCast1") && mPreviewActive)
+		{
+			CastSpell();
+		}
+
+		if(playerInput.GetButtonDown("QuickCast2"))
+		{
+			mPreviewActive = !mPreviewActive;
+			player.movement.StopSprint();
+			ChooseSpell(1);
+		}
+		else if(playerInput.GetButtonUp("QuickCast2") && mPreviewActive)
+		{
+			CastSpell();
+		}
+
+		if(playerInput.GetButtonDown("QuickCast3"))
+		{
+			mPreviewActive = !mPreviewActive;
+			player.movement.StopSprint();
+			ChooseSpell(2);
+		}
+		else if(playerInput.GetButtonUp("QuickCast3") && mPreviewActive)
+		{
+			CastSpell();
+		}
+
+		if (player.GetRewired().GetButtonDown("Ultimate"))
+		{
+			if(player.GetPlayerSpells().ultimateEnergy >= player.GetPlayerSpells().ultimateEnergyThreshold)
+			{
+				mPreviewActive = !mPreviewActive;
+				player.movement.StopSprint();
+				ChooseSpell(3);
+			}
+		}
+		else if(playerInput.GetButtonUp("Ultimate") && mPreviewActive)
+		{
+			CastSpell();
+		}
+
+		#endregion
+
+		if(playerInput.GetButtonDown("CastSpell"))
+		{
+			mPreviewActive = true;
+		}
+		if(mPreviewActive && playerInput.GetButtonUp("CastSpell"))
+		{
+			CastSpell();
+		}
+
+		if(mPreviewActive)
+		{
+			player.GetPlayerSpells().PreviewCurrentSpell();
+		}
+
+		if(!mPreviewActive && !mFocus)
+		{
+			if(playerInput.GetButtonDown("Sprint"))
+			{
+				player.movement.ToggleSprint();
+			}
+			else if(playerInput.GetButtonShortPressUp("Sprint"))
+			{
+				player.movement.StopSprint();
+			}
+		}
+
+		//store the input values
+		Vector2 movementInput = playerInput.GetAxis2D("MoveHorizontal", "MoveVertical");
+		Move(movementInput);
 
 
-
-
-        //store the input values
-        Vector2 movementInput = player.GetRewired().GetAxis2D("MoveHorizontal", "MoveVertical");
-		movementInput = Vector3.ClampMagnitude(movementInput,1);
-
-		if(player.GetRewired().GetButtonDown("ShoulderSwap"))
+		if(playerInput.GetButtonDown("ShoulderSwap"))
 		{
 			player.aim.GetCameraRig().SwapShoulder();
 		}
 
 		//propergate various inputs to the statesystems
-		#region Input
-		if(player.GetRewired().GetButtonDown("Jump"))
+		if(playerInput.GetButtonDown("Jump"))
 		{
-			Jump();
+			player.movement.Jump();
 		}
-
-
-		Move(movementInput);
-
-		//TODO: define mouse & keyboard / controller schemes, "CastSpell" not final axis name
-		if(player.GetRewired().GetButtonDown("CastSpell"))
+			
+		if(playerInput.GetButtonDown("Focus"))
 		{
-			CastSpell();
+			mFocus = !mFocus;
+			if(mFocus)
+			{
+				player.aim.StartFocus(player);
+				player.movement.StopSprint();
+			}
+			else
+			{
+				player.aim.StopFocus();
+			}
 		}
-
-		Move(movementInput);
-
-		if(player.GetRewired().GetButtonDown("Focus"))
+		else if(playerInput.GetButtonShortPressUp("Focus"))
 		{
-			StartFocus();
-		}
-
-		if(player.GetRewired().GetButtonUp("Focus"))
-		{
-			StopFocus();
+			mFocus = false;
+			player.aim.StopFocus();
 		}
 
 		//store the aim input, either mouse or right analog stick
-		Vector2 aimInput = player.GetRewired().GetAxis2D("AimHorizontal", "AimVertical");
+		Vector2 aimInput = playerInput.GetAxis2D("AimHorizontal", "AimVertical");
 //		aimInput = Vector3.ClampMagnitude(aimInput,1); //TODO: delete maybe?
 
 		Aim(aimInput);
 
-		#endregion
     }
 
 	public virtual void Move(Vector2 input) { }
@@ -105,32 +181,22 @@ public abstract class A_InputState : A_State{
 		}
 	}
 
-    public virtual void Jump() 
-	{
-		player.movement.Jump();
-	}
-
     public virtual void ChooseSpell(int idx)
     {
-        player.GetPlayerSpells().SetCurrentSpellslotID(idx);
-        player.GetPlayerSpells().CmdChooseSpellslot(idx);
+		PlayerSpells playerSpells = player.GetPlayerSpells();
+		playerSpells.StopPreview();
+        playerSpells.SetCurrentSpellslotID(idx);
+        playerSpells.CmdChooseSpellslot(idx);
     }
 
     //casting the chosen spell
     public virtual void CastSpell()
     {
+		mPreviewActive = false;
+		player.movement.StopSprint();
+		player.GetPlayerSpells().StopPreview();
         player.castStateSystem.current.CastCmdSpell();
     }
-
-	public virtual void StartFocus()
-	{
-		player.aim.StartFocus(player);
-	}
-
-	public virtual void StopFocus()
-	{
-		player.aim.StopFocus();
-	}
 
 	protected Vector3 World2DToLocal3D (Vector2 world2D, Transform transform)
 	{

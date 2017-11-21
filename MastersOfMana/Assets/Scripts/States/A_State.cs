@@ -45,7 +45,7 @@ public class A_State
     /// the state may decide or have an effect on how much damage is dealt in this situation,
     /// but it may never actually touch the health field. This is the responsibility of the PlayerHealthScript
     /// </returns>
-    public virtual float CalculateDamage(float amount)
+    public virtual int CalculateDamage(int amount)
     {
         return amount;
     }
@@ -55,7 +55,7 @@ public class A_State
     /// </summary>
     /// <param name="amount"></param>
     /// <returns></returns>
-    public virtual float CalculateFallDamage(float amount)
+    public virtual int CalculateFallDamage(int amount)
     {
         return amount;
     }
@@ -69,7 +69,7 @@ public class A_State
     /// the state may decide or have an effect on how much heal is given in this situation,
     /// but it may never actually touch the health field. This is the responsibility of the PlayerHealthScript
     /// </returns>
-    public virtual float CalculateHeal(float amount)
+    public virtual int CalculateHeal(int amount)
     {
         return amount;
     }

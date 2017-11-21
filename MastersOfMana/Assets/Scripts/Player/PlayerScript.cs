@@ -61,6 +61,9 @@ public class PlayerScript : NetworkBehaviour
 
     public PlayerHealthScript healthScript;
 
+	/// <summary>
+	/// The head joint. This object should only ever be used for graphical purposes!
+	/// </summary>
 	public Transform headJoint;
 
 
@@ -84,13 +87,13 @@ public class PlayerScript : NetworkBehaviour
     // Use this for initialization
     public void Start()
     {
+		//initialize Inpur handler
+		rewiredPlayer = ReInput.players.GetPlayer(0);
+
         //initialize the statesystems
         inputStateSystem = new InputStateSystem(this);
         effectStateSystem = new EffectStateSystem(this);
         castStateSystem = new CastStateSystem(this);
-
-        //initialize Inpur handler
-	    rewiredPlayer = ReInput.players.GetPlayer(0);
 
         healthScript = GetComponent<PlayerHealthScript>();
         if (isLocalPlayer)
@@ -110,14 +113,14 @@ public class PlayerScript : NetworkBehaviour
     }
 
     //We need this method, as it seems that delegates can't call commands
-    public void takeFallDamage(float amount)
+    public void takeFallDamage(int amount)
     {
         CmdTakeFallDamage(amount);
     }
 
     //Take fall damage on the server
     [Command]
-    public void CmdTakeFallDamage(float amount)
+    public void CmdTakeFallDamage(int amount)
     {
         healthScript.TakeFallDamage(amount);
     }
@@ -183,7 +186,11 @@ public class PlayerScript : NetworkBehaviour
         return mCameraLookdirection;
     }
 
-
+	private Quaternion mCurrentLookDirection;
+	public Quaternion Client_GetCurrentLookDirection()
+	{
+		return mCurrentLookDirection;
+	}
 
     // Update is called once per frame
     void Update () 
@@ -228,6 +235,11 @@ public class PlayerScript : NetworkBehaviour
 		//rotate the head joint, do this in the lateupdate to override the animation (?)
 		//TODO: put it somewhere else or get rid of it entirely
 		headJoint.localRotation = Quaternion.AngleAxis(aim.GetYAngle(), Vector3.right); 
+	}
+
+	public bool HandTransformIsObscured()
+	{
+		return Physics.Linecast(handTransform.parent.position, handTransform.position);
 	}
 		
     ////Remote Procedure Calls!
@@ -280,11 +292,11 @@ public class PlayerScript : NetworkBehaviour
 
     //resolving the chosen spell
     [Command]
-    public void CmdResolveSpell(Vector3 CameraPostion, Vector3 CameraLookDirection)
+    public void CmdResolveSpell(Vector3 CameraPostion, Vector3 CameraLookDirection, Quaternion currentLookDirection)
     {
         mCameraPosition = CameraPostion;
         mCameraLookdirection = CameraLookDirection;
-
+		mCurrentLookDirection = currentLookDirection;
         mPlayerSpells.spellslot[mPlayerSpells.currentSpell].Cast(this);
     }
 }

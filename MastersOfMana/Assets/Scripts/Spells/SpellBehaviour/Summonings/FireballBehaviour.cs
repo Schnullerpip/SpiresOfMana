@@ -12,18 +12,20 @@ public class FireballBehaviour : A_ServerMoveableSummoning
     [SerializeField]
     private float mSpeed = 5.0f;
     [SerializeField]
-    private float mDamage = 5.0f;
+    private int mDamage = 5;
 
     public Color effectColor;
 	//public GameObject ballPrefab;
 	public GameObject explosionPrefab;
 	public float explosionRadius = 4;
 	public float explosionForce = 5;
-	public float explosionDamage = 5.0f;
+	public int explosionDamage = 5;
 
 	public float disappearTimer = 3;
 
     public GameObject[] DeactivatedObjectsOnCollision;
+
+	public PreviewSpell preview;
 
     public override void Awake()
     {
@@ -37,6 +39,34 @@ public class FireballBehaviour : A_ServerMoveableSummoning
             throw new MissingMemberException();
         }
     }
+
+	public override void Preview (PlayerScript caster)
+	{
+		base.Preview(caster);
+
+//		if(!sPreview)
+//		{
+//			sPreview = GameObject.Instantiate(previewPrefab) as PreviewSpell;
+//		}
+
+		RaycastHit hit;
+		Vector3 aimDirection = GetAimLocal(caster, out hit);
+	
+		if(Physics.SphereCast(caster.handTransform.position, 0.25f, aimDirection, out hit))
+		{
+			preview.instance.MoveAndRotate(hit.point + hit.normal * 0.25f, Quaternion.LookRotation(hit.normal));
+		}
+		else
+		{
+			preview.instance.Deactivate();
+		}
+	}
+
+	public override void StopPreview (PlayerScript caster)
+	{
+		base.StopPreview (caster);
+		preview.instance.Deactivate();
+	}
 
     public override void Execute(PlayerScript caster)
     {
@@ -131,6 +161,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 				cachedRigidbodies.Add(c.attachedRigidbody);
 
 				Vector3 force = c.attachedRigidbody.worldCenterOfMass - mRigid.position; 
+
 				force.Normalize();
 				force *= explosionForce;
 

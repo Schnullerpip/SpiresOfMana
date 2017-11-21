@@ -37,6 +37,7 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
     {
         mAlreadyCaught = new List<PlayerScript>();
         mEnergyLevel = mInitialEnergyLevel;
+        mTimeCount = mCountTillDamage;
     }
 
     public override void Execute(PlayerScript caster)
@@ -87,7 +88,7 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
         }
     }
 
-    private float mTimeCount = 1;
+    private float mTimeCount;
     void Update()
     {
         //as long as we dont have a caster, do nothing

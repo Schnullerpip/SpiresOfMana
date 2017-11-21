@@ -25,9 +25,6 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
     [SyncVar]
     private Vector3 mOffset;
 
-
-    private List<GameObject> mAlreadyFound;
-
     public override void Execute(PlayerScript caster)
     {
         //get a rock instance
@@ -81,7 +78,6 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
     {
         if (isServer)
         {
-            mAlreadyFound = new List<GameObject>();
             mRigid = GetComponent<Rigidbody>();
         }
     }

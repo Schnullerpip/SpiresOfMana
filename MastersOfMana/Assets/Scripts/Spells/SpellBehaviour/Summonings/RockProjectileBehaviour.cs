@@ -122,9 +122,9 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
 
         //check for each enemy, wheather or not we should shoot towards them
         //get nearest enemy
-        PlayerScript nearest = enemys[0];
-        float distance = Vector3.Distance(transform.position, nearest.movement.mRigidbody.worldCenterOfMass);
-        for (var i = 1; i < enemys.Count; ++i)
+        PlayerScript nearest = null;
+        float distance = 10000;
+        for (var i = 0; i < enemys.Count; ++i)
         {
             float dist = Vector3.Distance(transform.position, enemys[i].movement.mRigidbody.worldCenterOfMass);
             if (dist < distance)

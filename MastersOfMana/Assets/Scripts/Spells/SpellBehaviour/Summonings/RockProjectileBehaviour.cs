@@ -70,6 +70,10 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
 
     private void RepositionRock()
     {
+        if (caster == null)
+        {
+            
+        }
         transform.SetPositionAndRotation(caster.movement.mRigidbody.worldCenterOfMass, Quaternion.AngleAxis(mTimeCount * mRotationVelocity, Vector3.up));
         transform.Translate(mOffset);
     }
@@ -108,6 +112,9 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         //as long as we do not have a caster yet - do nothing
         if (!caster)
         {
+            gameObject.SetActive(false);
+            caster = null;
+            NetworkServer.UnSpawn(gameObject);
             return;
         }
 

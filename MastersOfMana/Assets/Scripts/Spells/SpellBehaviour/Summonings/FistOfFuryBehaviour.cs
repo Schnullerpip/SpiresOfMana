@@ -47,12 +47,6 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     {
         if (collider.isTrigger) return;
 
-        if (!isServer)
-        {
-            Debug.Log("isServer fof");
-            return;
-        }
-
         this.GetComponent<Collider>().enabled = false;
         RpcExplosion(caster.transform.position);
         //spawn an explosion

@@ -21,7 +21,7 @@ public class PlayerHealthScript : HealthScript {
     public override void TakeDamage(int amount) {
         bool hasBeenAlive = IsAlive();
         base.TakeDamage(mPlayer.effectStateSystem.current.CalculateDamage(amount));
-
+        Debug.Log(amount);
         if (!IsAlive() && hasBeenAlive) {
             //this mPlayer is dead!!! tell the Gamemanager, that one is down
             GameManager.instance.PlayerDown();

@@ -41,7 +41,6 @@ GameObject:
   - component: {fileID: 4759319563353992}
   - component: {fileID: 33587426073145406}
   - component: {fileID: 23852596919613806}
-  - component: {fileID: 95148768205718116}
   m_Layer: 0
   m_Name: FloorOfLava
   m_TagString: Untagged
@@ -139,23 +138,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2, y: 1, z: 2}
   m_Center: {x: 0, y: -1.3, z: 0}
---- !u!95 &95148768205718116
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1310517581602906}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 4ad3cfbe55da76640afd1835d308b2eb, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &114509025285551534
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -220,7 +202,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbbba37821416b643abbb95010c81a62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damagePerSecond: 4
+  damagePerSecond: 8
   cycleTime: 180
   amplitude: 12
   lavaFlow:
@@ -277,6 +259,3 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
-  inward: {fileID: 0}
-  outward: {fileID: 0}
-  warningTime: 0.2

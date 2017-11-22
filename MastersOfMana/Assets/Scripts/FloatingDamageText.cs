@@ -12,6 +12,9 @@ public class FloatingDamageText : MonoBehaviour {
     public float gravity = 0.0f;
     public float lifetime = 1.0f;
     public float drag = 0.9f;
+    public float maxDistance = 80;
+    public float maxAdditionalScale = 4;
+    private float mMaxDistanceSqrt;
 
     private Vector2 mVelocity;
     private RectTransform rect;
@@ -26,6 +29,7 @@ public class FloatingDamageText : MonoBehaviour {
     {
         mCamera = Camera.main;
         rect = GetComponent<RectTransform>();
+        mMaxDistanceSqrt = maxDistance * maxDistance;
 
     }
 
@@ -44,12 +48,16 @@ public class FloatingDamageText : MonoBehaviour {
 
     public void Update()
     {
-        mVelocity.y -= gravity;
-        rect.anchoredPosition += mVelocity * Time.deltaTime;
-        mVelocity *= drag;
-
         //Billboard to player
         Vector3 v = mCamera.transform.position - transform.position;
+        float scaleFactor = Mathf.Clamp01(v.sqrMagnitude / mMaxDistanceSqrt) * maxAdditionalScale + 1;
+        transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
+
+        mVelocity.y -= gravity;
+        rect.anchoredPosition += mVelocity * Time.deltaTime * scaleFactor;
+        mVelocity *= drag;
+
+
         v.x = v.z = 0.0f;
         transform.LookAt(mCamera.transform.position - v);
         transform.Rotate(0, 180, 0);

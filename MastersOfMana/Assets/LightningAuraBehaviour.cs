@@ -139,7 +139,10 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
             if (mTimeCount >= mCountTillDamage)
             {
                 mTimeCount = 0;
-                nearest.healthScript.TakeDamage(mDamage);
+                if (isServer)
+                {
+                    nearest.healthScript.TakeDamage(mDamage);
+                }
             }
         }
 

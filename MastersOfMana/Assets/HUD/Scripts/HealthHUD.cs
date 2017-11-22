@@ -5,6 +5,7 @@ public class HealthHUD : MonoBehaviour
 {
     public Text healthText;
     public FloatingDamageTextSystem damageTextSystem;
+    public Healthbar healthbarPrefab;
 
     private PlayerHealthScript localPlayerHealthScript;
     private Canvas canvas;
@@ -37,6 +38,10 @@ public class HealthHUD : MonoBehaviour
             FloatingDamageTextSystem damageSystem = Instantiate(damageTextSystem);
             damageSystem.player = player;
             damageSystem.Init();
+
+            Healthbar healthbar = damageSystem.GetComponent<Healthbar>();
+            healthbar.player = player;
+            healthbar.Init();
         }
     }
 

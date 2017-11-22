@@ -109,11 +109,10 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
 
     public void Update()
     {
-        //as long as we do not have a caster yet - do nothing
+        //if we dont have a caster anymore - disappear
         if (!caster)
         {
             gameObject.SetActive(false);
-            caster = null;
             NetworkServer.UnSpawn(gameObject);
             return;
         }
@@ -133,15 +132,18 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         float distance = 10000;
         for (var i = 0; i < enemys.Count; ++i)
         {
-            float dist = Vector3.Distance(transform.position, enemys[i].movement.mRigidbody.worldCenterOfMass);
-            if (dist < distance)
+            if (enemys[i] != null)
             {
-                nearest = enemys[i];
-                distance = dist;
+                float dist = Vector3.Distance(transform.position, enemys[i].movement.mRigidbody.worldCenterOfMass);
+                if (dist < distance)
+                {
+                    nearest = enemys[i];
+                    distance = dist;
+                }
             }
         }
         //if nearest is in reach shoot it!
-        if (distance < mShootingReach)
+        if (distance < mShootingReach && nearest)
         {
             //now if the stones direct path to the enemy is free, shoot it
             RaycastHit hit;

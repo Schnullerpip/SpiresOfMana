@@ -81,11 +81,14 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
 
     void FixedUpdate()
     {
-        if (caster)
+        if (!caster)
         {
-            //reposition
-            transform.position = caster.movement.mRigidbody.worldCenterOfMass;
+            gameObject.SetActive(false);
+            NetworkServer.UnSpawn(gameObject);
+            return;
         }
+        //reposition
+        transform.position = caster.movement.mRigidbody.worldCenterOfMass;
     }
 
     private float mTimeCount;

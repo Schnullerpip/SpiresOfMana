@@ -17,9 +17,6 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
     private float mTimeCount = 0;
     private List<PlayerScript> enemys;
 
-    [SyncVar] private GameObject casterObject;
-    private PlayerScript caster;
-
     [SyncVar]
     private bool mRotateAroundCaster = true;
     [SyncVar]
@@ -88,6 +85,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
 
     public override void OnStartClient()
     {
+        base.OnStartClient();
 
         //gather all the enemies
         enemys = new List<PlayerScript>();
@@ -97,12 +95,6 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
             {
                 enemys.Add(p);
             }
-        }
-
-        if (!isServer)
-        {
-            caster = casterObject.GetComponent<PlayerScript>();
-            mHitCollider.enabled = false;
         }
     }
 

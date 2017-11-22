@@ -15,6 +15,8 @@ public class JetBehaviour : A_SummoningBehaviour
     [SerializeField]
     private float mGravityreduction;
 
+    private List<GameObject> affecting;
+
 
     public override void Execute(PlayerScript caster)
     {
@@ -39,9 +41,17 @@ public class JetBehaviour : A_SummoningBehaviour
             return;
         }
 
+
         Rigidbody rigid = other.attachedRigidbody;
         if (rigid)
         {
+            //if we're colliding with a projectile from our own caster, dont affect it
+            A_SummoningBehaviour summoning = rigid.GetComponentInParent<A_SummoningBehaviour>();
+            if (summoning && summoning.caster == caster)
+            {
+                return;
+            }
+
             ServerMoveable sm = other.attachedRigidbody.GetComponent<ServerMoveable>();
             if (sm)
             {

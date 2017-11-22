@@ -17,6 +17,29 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 
 	public virtual void StopPreview(PlayerScript caster) {}
 
+    /// <summary>
+    /// references the spell's caster, must be set in OnStartClient!!
+    /// </summary>
+    public PlayerScript caster = null;
+    /// <summary>
+    /// This is only used for initializing the caster reference on clientside!
+    /// GameObjects (or rather their networkID can be passed down via syncvar and OnStartClient guarantees, to be called after the syncvars have been synchronized,
+    /// so inside OnStartClient caster can be set by getting the respective Component from the casterobject
+    /// </summary>
+    [SyncVar]
+    protected GameObject casterObject;
+
+    public override void OnStartClient()
+    {
+        //initialize the caster - serverSpell's casters can and should be set in the Execute routine, so we're only interested in Clientside calls
+        if (!isServer && casterObject)
+        {
+            caster = casterObject.GetComponent<PlayerScript>();
+        }
+    }
+
+    
+
 	/// <summary>
 	/// Gets the aim direction. This direction is from the hand transform to the position that corresponds with the center of the screen.
 	/// If there was no raycast hit, its the direction of the camera.

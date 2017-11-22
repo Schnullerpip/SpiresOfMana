@@ -17,9 +17,6 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
     private float mTimeCount = 0;
     private List<PlayerScript> enemys;
 
-    [SyncVar] private GameObject casterObject;
-    private PlayerScript caster;
-
     [SyncVar]
     private bool mRotateAroundCaster = true;
     [SyncVar]
@@ -70,6 +67,10 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
 
     private void RepositionRock()
     {
+        if (caster == null)
+        {
+            
+        }
         transform.SetPositionAndRotation(caster.movement.mRigidbody.worldCenterOfMass, Quaternion.AngleAxis(mTimeCount * mRotationVelocity, Vector3.up));
         transform.Translate(mOffset);
     }
@@ -84,6 +85,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
 
     public override void OnStartClient()
     {
+        base.OnStartClient();
 
         //gather all the enemies
         enemys = new List<PlayerScript>();
@@ -94,20 +96,16 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
                 enemys.Add(p);
             }
         }
-
-        if (!isServer)
-        {
-            caster = casterObject.GetComponent<PlayerScript>();
-            mHitCollider.enabled = false;
-        }
     }
 
 
     public void Update()
     {
-        //as long as we do not have a caster yet - do nothing
+        //if we dont have a caster anymore - disappear
         if (!caster)
         {
+            gameObject.SetActive(false);
+            NetworkServer.UnSpawn(gameObject);
             return;
         }
 
@@ -122,19 +120,22 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
 
         //check for each enemy, wheather or not we should shoot towards them
         //get nearest enemy
-        PlayerScript nearest = enemys[0];
-        float distance = Vector3.Distance(transform.position, nearest.movement.mRigidbody.worldCenterOfMass);
-        for (var i = 1; i < enemys.Count; ++i)
+        PlayerScript nearest = null;
+        float distance = 10000;
+        for (var i = 0; i < enemys.Count; ++i)
         {
-            float dist = Vector3.Distance(transform.position, enemys[i].movement.mRigidbody.worldCenterOfMass);
-            if (dist < distance)
+            if (enemys[i] != null)
             {
-                nearest = enemys[i];
-                distance = dist;
+                float dist = Vector3.Distance(transform.position, enemys[i].movement.mRigidbody.worldCenterOfMass);
+                if (dist < distance)
+                {
+                    nearest = enemys[i];
+                    distance = dist;
+                }
             }
         }
         //if nearest is in reach shoot it!
-        if (distance < mShootingReach)
+        if (distance < mShootingReach && nearest)
         {
             //now if the stones direct path to the enemy is free, shoot it
             RaycastHit hit;

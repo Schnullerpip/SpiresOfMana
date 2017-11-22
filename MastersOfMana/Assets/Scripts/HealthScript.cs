@@ -35,6 +35,7 @@ public class HealthScript : NetworkBehaviour
     public void HealthHook(int newHealth)
     {
         HealthChangedHook(newHealth);
+        // we need to set this value manually, because we have a hook attached 
         mCurrentHealth = newHealth;
     }
     public virtual void HealthChangedHook(int newHealth) {}

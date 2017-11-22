@@ -20,18 +20,6 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
 
     //the list that captures which players are shot
     private List<PlayerScript> mAlreadyCaught;
-    //so the lightning aura wont hurt the caster
-    private PlayerScript caster;
-    [SyncVar]
-    private GameObject casterObject;
-
-    public override void OnStartClient()
-    {
-        if (!isServer)
-        {
-            caster = casterObject.GetComponent<PlayerScript>();
-        }
-    }
 
     void Start()
     {
@@ -81,11 +69,14 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
 
     void FixedUpdate()
     {
-        if (caster)
+        if (!caster)
         {
-            //reposition
-            transform.position = caster.movement.mRigidbody.worldCenterOfMass;
+            gameObject.SetActive(false);
+            NetworkServer.UnSpawn(gameObject);
+            return;
         }
+        //reposition
+        transform.position = caster.movement.mRigidbody.worldCenterOfMass;
     }
 
     private float mTimeCount;
@@ -136,7 +127,10 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
             if (mTimeCount >= mCountTillDamage)
             {
                 mTimeCount = 0;
-                nearest.healthScript.TakeDamage(mDamage);
+                if (isServer)
+                {
+                    nearest.healthScript.TakeDamage(mDamage);
+                }
             }
         }
 

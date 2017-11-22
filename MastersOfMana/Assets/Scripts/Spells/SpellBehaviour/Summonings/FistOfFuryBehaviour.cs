@@ -6,8 +6,6 @@ using UnityEngine.Networking;
 [RequireComponent(typeof(Collider))]
 public class FistOfFuryBehaviour : A_SummoningBehaviour
 {
-    private PlayerScript caster;
-
     [SerializeField] private float explosionAmplitude;
     [SerializeField] private float mExplosionForce;
     [SerializeField] private float mPushDownForce;
@@ -45,6 +43,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         //FistOfFuryBehaviour fof = PoolRegistry.FistOfFuryPool.Get(Pool.Activation.ReturnActivated).GetComponent<FistOfFuryBehaviour>();
         FistOfFuryBehaviour fof = PoolRegistry.Instantiate(this.gameObject).GetComponent<FistOfFuryBehaviour>();
         fof.caster = caster;
+        fof.casterObject = caster.gameObject;
         fof.transform.position = fof.castPosition = caster.transform.position;
         fof.transform.parent = caster.transform;
         fof.mAlreadyHit = new List<GameObject>();
@@ -60,6 +59,13 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
             caster.SetEffectState(EffectStateSystem.EffectStateID.NoFallDamage);
             caster.movement.RpcAddForce(Vector3.down * mPushDownForce, ForceMode.VelocityChange);
         }
+    }
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+
+        transform.parent = caster.transform;
     }
 
     protected override void ExecuteTriggerEnter_Host(Collider collider)

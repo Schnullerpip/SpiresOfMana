@@ -85,6 +85,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 		fireballBehaviour.Reset(caster.handTransform.position + aimDirection, caster.transform.rotation);
 		//speed up the fireball to fly into the lookdirection of the player
 		fireballBehaviour.mRigid.velocity = aimDirection * mSpeed;
+        fireballBehaviour.caster = caster;
 
         OnCollisionDeactivateBehaviour(true);
 

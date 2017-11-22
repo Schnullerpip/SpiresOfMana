@@ -39,8 +39,7 @@ public class PlayerHealthScript : HealthScript {
 
     public override void HealthChangedHook(int newHealth)
     {
-
-        if(OnHealthChanged != null)
+        if (OnHealthChanged != null)
         {
             OnHealthChanged(newHealth);
         }

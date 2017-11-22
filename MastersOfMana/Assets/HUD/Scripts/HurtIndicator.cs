@@ -9,11 +9,12 @@ public class HurtIndicator : MonoBehaviour {
     public Image sprite;
     public float flashSpeed = 0.06f;
     public float alphaIncreasePerPercentHealthLost = 0.75f;
+    public AnimationCurve alphaLevel;
 
     private bool mRising = false;
     private float mMinAlpha = 0.0f;
 
-    private int mPlayerMaxHealth;
+    private float mPlayerMaxHealth;
 
     // Use this for initialization
     void OnEnable()
@@ -65,7 +66,7 @@ public class HurtIndicator : MonoBehaviour {
     private void HealthChanged(int newHealth)
     {
         //Calculate new minimum Alpha value
-        mMinAlpha = alphaIncreasePerPercentHealthLost * (1- newHealth / mPlayerMaxHealth);
+        mMinAlpha = alphaLevel.Evaluate(1 - (float)newHealth / mPlayerMaxHealth);
     }
 
     private void DamageTaken(int damage)

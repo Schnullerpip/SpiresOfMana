@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 224882198252721554}
   - component: {fileID: 222370393639263004}
   - component: {fileID: 114562677525243774}
+  - component: {fileID: 114836138071579882}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -62,6 +63,8 @@ MonoBehaviour:
   gravity: 50
   lifetime: 2
   drag: 0.95
+  maxDistance: 80
+  maxAdditionalScale: 6
 --- !u!114 &114562677525243774
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -95,6 +98,20 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 10
+--- !u!114 &114836138071579882
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1327297147187092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -900027084, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 1, g: 0.7494929, b: 0.30147058, a: 1}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1
 --- !u!222 &222370393639263004
 CanvasRenderer:
   m_ObjectHideFlags: 1

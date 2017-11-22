@@ -20,18 +20,6 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
 
     //the list that captures which players are shot
     private List<PlayerScript> mAlreadyCaught;
-    //so the lightning aura wont hurt the caster
-    private PlayerScript caster;
-    [SyncVar]
-    private GameObject casterObject;
-
-    public override void OnStartClient()
-    {
-        if (!isServer)
-        {
-            caster = casterObject.GetComponent<PlayerScript>();
-        }
-    }
 
     void Start()
     {

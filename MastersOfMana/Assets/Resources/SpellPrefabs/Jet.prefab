@@ -36,10 +36,10 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4735348242775708}
+  - component: {fileID: 114936674229906994}
   - component: {fileID: 95249631164551596}
   - component: {fileID: 114833913476530698}
   - component: {fileID: 114867332974388910}
-  - component: {fileID: 114936674229906994}
   - component: {fileID: 54945642934992360}
   - component: {fileID: 136843206926783506}
   m_Layer: 0
@@ -172,9 +172,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68ff8f63c8558d1498fbc4e00dfe4169, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  caster: {fileID: 0}
   mOffsetToCaster: 1
   mUpForce: 6
-  mLifeTime: 20
+  mLifeTime: 100000
   mGravityreduction: 1
 --- !u!136 &136843206926783506
 CapsuleCollider:
@@ -185,7 +186,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 1.5
+  m_Radius: 4
   m_Height: 16.13
   m_Direction: 1
   m_Center: {x: 0, y: 7.82, z: 0}
@@ -713,7 +714,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 1
+      value: 4
       mode: 0
       spread: 0
       speed:

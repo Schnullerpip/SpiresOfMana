@@ -20,7 +20,7 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
     /// <summary>
     /// references the spell's caster, must be set in OnStartClient!!
     /// </summary>
-    protected PlayerScript caster;
+    public PlayerScript caster = null;
     /// <summary>
     /// This is only used for initializing the caster reference on clientside!
     /// GameObjects (or rather their networkID can be passed down via syncvar and OnStartClient guarantees, to be called after the syncvars have been synchronized,

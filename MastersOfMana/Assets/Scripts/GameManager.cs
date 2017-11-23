@@ -99,7 +99,6 @@ public class GameManager : MonoBehaviour
 
         //TODO: What happens if both die simultaniously?
         if (mNumberOfDeadPlayers >= (mPlayers.Count - 1)) { //only one player left -> he/she won the game!
-            ResetLocalGameState();
 
             //Find out who has won and call post game screen
             foreach (var p in mPlayers)
@@ -111,12 +110,17 @@ public class GameManager : MonoBehaviour
                     break;
                 }
             }
-            StartCoroutine(PostGameLobby(winnerID));
+            PostGameLobby(winnerID);
+            ResetLocalGameState();
         }
     }
 
-    public IEnumerator PostGameLobby(uint winner) {
-        yield return new WaitForSeconds(0.0f);
+    public void PostGameLobby(uint winner) {
         NetManager.instance.RpcLoadPostGameScreen(winner);
+    }
+
+    public void localPlayerDead()
+    {
+        SceneManager.LoadSceneAsync("Scenes/arne_postGame", LoadSceneMode.Additive);
     }
 }

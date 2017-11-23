@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class PlayerHealthScript : HealthScript {
 
@@ -24,6 +25,17 @@ public class PlayerHealthScript : HealthScript {
         if (!IsAlive() && hasBeenAlive) {
             //this mPlayer is dead!!! tell the Gamemanager, that one is down
             GameManager.instance.PlayerDown();
+            //Show the postGame screen for this player
+            RpcPlayerDead();
+        }
+    }
+
+    [ClientRpc]
+    void RpcPlayerDead()
+    {
+        if(isLocalPlayer)
+        {
+            GameManager.instance.localPlayerDead();
         }
     }
 

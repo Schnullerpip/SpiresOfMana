@@ -5,6 +5,7 @@ using UnityEngine.Networking;
 public class PlayerMovement : ServerMoveable
 {
 	[Header("Movement")]
+    public float originalSpeed = 4;
 	public float speed = 4;  
 	public float sprintSpeed = 7;
 	[Range(0,1)]
@@ -41,6 +42,7 @@ public class PlayerMovement : ServerMoveable
     public override void Awake()
     {
         base.Awake();
+        speed = originalSpeed;
         feet.onLanding += Landing;
 		mLastPos = mRigidbody.position;
     }

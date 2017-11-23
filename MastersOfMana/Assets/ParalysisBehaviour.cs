@@ -6,9 +6,7 @@ using UnityEngine.Networking;
 public class ParalysisBehaviour : A_EffectBehaviour
 {
     [SerializeField] private float mMaxReach;
-    [SerializeField] private float mRayRadius;
     [SerializeField] private float mLifetime;
-    [SerializeField] private float mSlowFactor;
     [SerializeField] private ParticleSystem mParticleSystem;
 
     private float mTimeCount;
@@ -53,9 +51,13 @@ public class ParalysisBehaviour : A_EffectBehaviour
 
     private IEnumerator AffectPlayer()
     {
-        mAffectedPlayer.movement.speed = mAffectedPlayer.movement.originalSpeed*mSlowFactor;
+        //slow down/stop the affected player
+        //mAffectedPlayer.movement.speed = mAffectedPlayer.movement.originalSpeed*mSlowFactor;
+        mAffectedPlayer.inputStateSystem.SetState(InputStateSystem.InputStateID.Paralyzed);
         yield return new WaitForSeconds(mLifetime);
-        mAffectedPlayer.movement.speed = mAffectedPlayer.movement.originalSpeed;
+        //revert back to normal status
+        mAffectedPlayer.inputStateSystem.SetState(InputStateSystem.InputStateID.Normal);
+        //mAffectedPlayer.movement.speed = mAffectedPlayer.movement.originalSpeed;
     }
 
 
@@ -65,12 +67,7 @@ public class ParalysisBehaviour : A_EffectBehaviour
         //Unspawn after mLifetime - on server!
         if ((mTimeCount += Time.deltaTime) > mLifetime)
         {
-            if (!isServer)
-            {
-                //revert affected players Speed back to original
-                mAffectedPlayer.movement.speed = mAffectedPlayer.movement.originalSpeed*mSlowFactor;
-            }
-            else
+            if (isServer)
             {
                 //let the effect disappear
                 gameObject.SetActive(false);

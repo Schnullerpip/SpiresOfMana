@@ -6,7 +6,6 @@ public class PlayerMovement : ServerMoveable
 {
 	[Header("Movement")]
 	public float speed = 4;  
-	public float sprintSpeed = 7;
 	[Range(0,1)]
 	public float focusSpeedSlowdown = .25f;
 	public float jumpStrength = 5;
@@ -31,9 +30,7 @@ public class PlayerMovement : ServerMoveable
 	private Vector3 mMoveInput;
 	private bool mFocusActive;
 
-	private bool mHurtSlowdownActive;
-
-	private bool mSprinting;
+    private bool mHurtSlowdownActive;
 
 	private Vector3 mDeltaPos;
 	private Vector3 mLastPos;
@@ -83,9 +80,7 @@ public class PlayerMovement : ServerMoveable
 	{
 		Vector3 movement = mMoveInput;
 
-		float currentSpeed = mSprinting && feet.IsGrounded() ? sprintSpeed : speed;
-
-		movement *= currentSpeed;
+        movement *= speed;
 
 		movement *= mFocusActive ? focusSpeedSlowdown : 1;
 		movement *= mHurtSlowdownActive ? hurtSlowdown : 1;
@@ -115,7 +110,7 @@ public class PlayerMovement : ServerMoveable
 			//the anglefactor is a value between 0 (same direction) and 1 (opposite direction)
 			float angleFactor = angle / 180;
 
-			float influence = currentSpeed * Time.deltaTime * angleFactor;
+			float influence = speed * Time.deltaTime * angleFactor;
 			Vector3 desiredVelocity = new Vector3(0,mRigidbody.velocity.y,0);
 			//move the rigidbody's velocity towards zero in the xz plane, proportional to the angle
 			mRigidbody.velocity = Vector3.MoveTowards(mRigidbody.velocity, desiredVelocity, influence * inputVelocityInfluence);
@@ -131,11 +126,11 @@ public class PlayerMovement : ServerMoveable
 				float veloXZMagnitude = veloXZ.magnitude;
 
 				Vector2 accumulatedVectors = veloXZ + movementXZ;
-				accumulatedVectors = Vector2.ClampMagnitude(accumulatedVectors, Mathf.Max(veloXZMagnitude, currentSpeed));
+				accumulatedVectors = Vector2.ClampMagnitude(accumulatedVectors, Mathf.Max(veloXZMagnitude, speed));
 				Vector2 newMovementXZ = accumulatedVectors - veloXZ;
 
 				//if the velocity was higher than the maximum speed, reduce the new direction by a factor corresponding to the angle 
-				if(veloXZMagnitude > currentSpeed)
+				if(veloXZMagnitude > speed)
 				{
 					newMovementXZ *= (1-angleFactor);
 				}
@@ -161,24 +156,6 @@ public class PlayerMovement : ServerMoveable
 
 		mDeltaPos = mRigidbody.position - mLastPos;
 		mLastPos = mRigidbody.position;
-	}
-		
-	public void ToggleSprint()
-	{
-//		if(mSprinting)
-//		{
-//			mSprinting = false;
-//		}
-//		else
-//		{
-//			mSprinting = feet.IsGrounded();
-//		}
-		mSprinting = !mSprinting;
-	}
-
-	public void StopSprint()
-	{
-		mSprinting = false;
 	}
 
 	public delegate void OnLandingWhileFalling(int impactVelocity);
@@ -219,18 +196,8 @@ public class PlayerMovement : ServerMoveable
 	{
 		if(feet.IsGrounded() || !onlyIfGrounded)
 		{
-			if(mSprinting)
-			{
-				//sprint jump
-				Vector3 vel = mDeltaPos / Time.fixedDeltaTime;
-				vel.y = jumpStrength;
-				mRigidbody.velocity = vel;
-			}
-			else
-			{
-				mRigidbody.SetVelocityY(jumpStrength);
-			}
-//			mSprinting = false;
+			mRigidbody.SetVelocityY(jumpStrength);
+			
 			if(onJumping != null)
 			{
 				onJumping();

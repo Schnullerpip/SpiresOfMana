@@ -28,10 +28,10 @@ public class PlayerAnimation : NetworkBehaviour {
 
 	void UpdateMovement(float movementSpeed, Vector2 direction, bool isGrounded)
 	{
-		animator.SetFloat("movementSpeed",movementSpeed / mPlayer.movement.sprintSpeed );
+		animator.SetFloat("movementSpeed",movementSpeed / mPlayer.movement.speed );
 
-		animator.SetFloat("speed_right",direction.x / mPlayer.movement.sprintSpeed);
-		animator.SetFloat("speed_forward",direction.y / mPlayer.movement.sprintSpeed);
+        animator.SetFloat("speed_right",direction.x / mPlayer.movement.speed);
+        animator.SetFloat("speed_forward",direction.y / mPlayer.movement.speed);
 	
 		animator.SetBool("grounded",isGrounded);
 	}

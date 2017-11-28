@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class SpellRegistry : MonoBehaviour {
 
-    public List<A_Spell> SpellList;
-    public List<A_Spell> UltimateSpellList;
+    public List<A_Spell> spellList;
+    public List<A_Spell> ultimateSpellList;
 
     public A_Spell GetSpellByID(int id)
     {
-        foreach (A_Spell spell in SpellList)
+        foreach (A_Spell spell in spellList)
         {
             if (spell.spellID == id)
             {
@@ -18,7 +18,7 @@ public class SpellRegistry : MonoBehaviour {
         }
 
         //Check if we search for an Ultimate Spell
-        foreach (A_Spell spell in UltimateSpellList)
+        foreach (A_Spell spell in ultimateSpellList)
         {
             if (spell.spellID == id)
             {
@@ -27,12 +27,12 @@ public class SpellRegistry : MonoBehaviour {
         }
 
         //Rather return a default spell than nothing
-        return SpellList[0];
+        return spellList[0];
     }
 
     public bool ValidateUltimate(A_Spell spell)
     {
-        foreach (A_Spell ulti in UltimateSpellList)
+        foreach (A_Spell ulti in ultimateSpellList)
         {
             if (ulti.spellID == spell.spellID)
             {
@@ -44,7 +44,7 @@ public class SpellRegistry : MonoBehaviour {
 
     public bool ValidateNormal(A_Spell spell)
     {
-        foreach (A_Spell normal in SpellList)
+        foreach (A_Spell normal in spellList)
         {
             if (normal.spellID == spell.spellID)
             {
@@ -56,7 +56,7 @@ public class SpellRegistry : MonoBehaviour {
 
     public List<A_Spell> generateRandomSpells()
     {
-        List<A_Spell> resultSpellList = new List<A_Spell>(SpellList);
+        List<A_Spell> resultSpellList = new List<A_Spell>(spellList);
 
         //Randomize spellList
         resultSpellList.Shuffle();
@@ -64,14 +64,33 @@ public class SpellRegistry : MonoBehaviour {
         resultSpellList.RemoveRange(3, resultSpellList.Count - 3);
 
         //Add random Ultimate
-        List<A_Spell> randomUltimateSpellList = new List<A_Spell>(UltimateSpellList);
+        List<A_Spell> randomUltimateSpellList = new List<A_Spell>(ultimateSpellList);
 
         //Randomize spellList
-        UltimateSpellList.Shuffle();
+        randomUltimateSpellList.Shuffle();
 
         //And add the first to the result list
-        resultSpellList.Add(UltimateSpellList[0]);
+        resultSpellList.Add(randomUltimateSpellList[0]);
 
         return resultSpellList;
+    }
+
+    /// <summary>
+    /// This is here to apply the ids according to the position in the array.
+    /// Normal spells start at 0.
+    /// Ultispells start at 100.
+    /// </summary>
+    private void OnValidate()
+    {
+        for (int i = 0; i < spellList.Count; i++)
+        {
+            if(spellList[i])
+                spellList[i].spellID = i;
+        }
+        for (int i = 0; i < ultimateSpellList.Count; i++)
+        {
+            if (ultimateSpellList[i])
+                ultimateSpellList[i].spellID = 100 + i;
+        }
     }
 }

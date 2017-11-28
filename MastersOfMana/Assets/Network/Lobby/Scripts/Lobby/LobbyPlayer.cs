@@ -204,14 +204,14 @@ namespace Prototype.NetworkLobby
                 //Replace illegal spells by legal spells that have not been chosen yet
                 int currentSpellSlot = 0;
                 //Search for first spell that has not already been taken
-                for (int i = 0; i < spellregistry.SpellList.Count; i++)
+                for (int i = 0; i < spellregistry.spellList.Count; i++)
                 {
                     bool isSpellLegal = true;
                     //Check against already taken spells
                     foreach (A_Spell takenSpell in legalSpells)
                     {
                         //if the registry spell has already been taken, flag as illegal an move to next spell in registry
-                        if (spellregistry.SpellList[i].spellID == takenSpell.spellID)
+                        if (spellregistry.spellList[i].spellID == takenSpell.spellID)
                         {
                             isSpellLegal = false;
                             break;
@@ -222,7 +222,7 @@ namespace Prototype.NetworkLobby
                     if (isSpellLegal)
                     {
                         //Otherwise, put it into the spellslot
-                        spells[illegalSpellSlots[currentSpellSlot]] = spellregistry.SpellList[i];
+                        spells[illegalSpellSlots[currentSpellSlot]] = spellregistry.spellList[i];
 
                         //And move to next illegal spell
                         currentSpellSlot++;
@@ -236,7 +236,7 @@ namespace Prototype.NetworkLobby
             
             if (!spellregistry.ValidateUltimate(spells[3]))
             {
-                spells[3] = spellregistry.UltimateSpellList[0];
+                spells[3] = spellregistry.ultimateSpellList[0];
             }
 
             UpdateSpellButtons();

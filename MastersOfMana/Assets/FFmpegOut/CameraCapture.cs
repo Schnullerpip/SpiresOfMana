@@ -13,7 +13,7 @@ namespace FFmpegOut
         [SerializeField] int _height = 720;
         [SerializeField] int _frameRate = 30;
         [SerializeField] bool _allowSlowDown = true;
-        [SerializeField] FFmpegPipe.Codec _codec;
+        [SerializeField] FFmpegPipe.Preset _preset;
         [SerializeField] float _startTime = 0;
         [SerializeField] float _recordLength = 5;
 
@@ -91,7 +91,7 @@ namespace FFmpegOut
                 var tempRT = RenderTexture.GetTemporary(source.width, source.height);
                 Graphics.Blit(source, tempRT, _material, 0);
 
-                var tempTex = new Texture2D(source.width, source.height, TextureFormat.RGB24, false);
+                var tempTex = new Texture2D(source.width, source.height, TextureFormat.RGBA32, false);
                 tempTex.ReadPixels(new Rect(0, 0, source.width, source.height), 0, 0, false);
                 tempTex.Apply();
 
@@ -119,7 +119,7 @@ namespace FFmpegOut
             // Apply the screen resolution settings.
             if (_setResolution)
             {
-                _tempTarget = RenderTexture.GetTemporary(width, height);
+                _tempTarget = RenderTexture.GetTemporary(width, height, 24);
                 camera.targetTexture = _tempTarget;
                 _tempBlitter = Blitter.CreateGameObject(camera);
             }
@@ -130,7 +130,7 @@ namespace FFmpegOut
             }
 
             // Open an output stream.
-            _pipe = new FFmpegPipe(name, width, height, _frameRate, _codec);
+            _pipe = new FFmpegPipe(name, width, height, _frameRate, _preset);
             _activePipeCount++;
 
             // Change the application frame rate on the first pipe.

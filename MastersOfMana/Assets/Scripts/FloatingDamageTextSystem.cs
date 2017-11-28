@@ -11,7 +11,6 @@ public class FloatingDamageTextSystem : MonoBehaviour {
     public Color damageColor;
     public Color healColor;
     private int mCurrentObj = 0;
-
     private List<FloatingDamageText> mTextPool = new List<FloatingDamageText>();
 
     public void Init()
@@ -23,7 +22,6 @@ public class FloatingDamageTextSystem : MonoBehaviour {
             text.transform.SetParent(canvas.transform, false);
             mTextPool.Add(text);
         }
-
         player.healthScript.OnDamageTaken += CreateDamageText;
         player.healthScript.OnHealTaken += CreateHealText;
         transform.Translate(player.transform.position);

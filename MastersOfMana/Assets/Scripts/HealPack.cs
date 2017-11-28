@@ -12,7 +12,7 @@ public class HealPack : NetworkBehaviour
     public System.Action<Transform> healSpawnCallback;
     public ParticleSystem particles;
     public AnimationCurve alphaValue;
-    public MeshRenderer renderer;
+    public MeshRenderer healPackRenderer;
     private Material material;
     private int mInitialheal;
 
@@ -20,7 +20,7 @@ public class HealPack : NetworkBehaviour
 
     public void OnEnable()
     {
-        material = renderer.material;
+        material = healPackRenderer.material;
         mInitialheal = healAmount;
         updateAlpha();
     }

@@ -135,8 +135,8 @@ namespace Prototype.NetworkLobby
             EventSystem.current.SetSelectedGameObject(readyButton.gameObject);
 
             //have to use child count of player prefab already setup as "this.slot" is not set yet
-            if (playerName == "")
-                CmdNameChanged("Player" + (LobbyPlayerList._instance.playerListContentTransform.childCount-1));
+            playerName = PlayerPrefs.GetString("Playername","Player" + (LobbyPlayerList._instance.playerListContentTransform.childCount - 1));
+            CmdNameChanged(playerName);
 
             //we switch from simple name display to name input
             colorButton.interactable = true;
@@ -360,6 +360,7 @@ namespace Prototype.NetworkLobby
                     PlayerPrefs.SetInt("SpellSlot1", spells[1].spellID);
                     PlayerPrefs.SetInt("SpellSlot2", spells[2].spellID);
                     PlayerPrefs.SetInt("SpellSlot3", spells[3].spellID);
+                    PlayerPrefs.SetString("Playername", playerName);
                     PlayerPrefs.Save();
                     CmdSpellsChanged(spells[0].spellID, spells[1].spellID, spells[2].spellID, spells[3].spellID);
                 }

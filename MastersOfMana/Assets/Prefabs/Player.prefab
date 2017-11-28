@@ -1890,7 +1890,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mRigidbody: {fileID: 0}
   speed: 5
-  sprintSpeed: 5
   focusSpeedSlowdown: 0.25
   jumpStrength: 5
   additionalFallGravityMultiplier: 1
@@ -2002,6 +2001,8 @@ MonoBehaviour:
   ignoreLayer:
     serializedVersion: 2
     m_Bits: 4
+  specCamPrefab: {fileID: 114149247573842926, guid: ea47f3136feac4469bb2476cf0188b80,
+    type: 2}
 --- !u!114 &114651380410554418
 MonoBehaviour:
   m_ObjectHideFlags: 1

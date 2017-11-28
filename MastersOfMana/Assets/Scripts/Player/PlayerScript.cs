@@ -71,6 +71,16 @@ public class PlayerScript : NetworkBehaviour
 
 	private ColliderPack mColliderPack;
 
+    /// <summary>
+    /// Is the provided collider part of the players whole compound collider?
+    /// </summary>
+    /// <returns><c>true</c>, if collider part of was ised, <c>false</c> otherwise.</returns>
+    /// <param name="col">Col.</param>
+    public bool IsColliderPartOf(Collider col)
+    {
+        return mColliderPack.Contains(col);
+    }
+
 	void Awake()
 	{
         mPlayerSpells = GetComponent<PlayerSpells>();

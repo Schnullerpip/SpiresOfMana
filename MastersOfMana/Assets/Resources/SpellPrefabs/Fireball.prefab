@@ -182,7 +182,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4131181306071820
 Transform:
   m_ObjectHideFlags: 1
@@ -296,7 +296,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1748008529846994}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.2204475, y: 14, z: 21.23291}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4701238154431624}
@@ -739,13 +739,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   caster: {fileID: 0}
   serverMoveable: {fileID: 0}
-  mSpeed: 50
-  mDamage: 4
+  speed: 50
+  directDamage: 8
   effectColor: {r: 1, g: 0.5379311, b: 0, a: 0}
   explosionPrefab: {fileID: 167520, guid: bb6aac8f0034cde49a98a3a92aa8270d, type: 2}
   explosionRadius: 2
-  explosionForce: 5
-  explosionDamage: 8
+  explosionForce: 3
+  explosionDamage: 4
   disappearTimer: 10
   DeactivatedObjectsOnCollision:
   - {fileID: 1120015493409102}
@@ -826,7 +826,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.25
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!198 &198575346559292968
 ParticleSystem:

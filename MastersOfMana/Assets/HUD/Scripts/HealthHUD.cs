@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class HealthHUD : MonoBehaviour
 {
     public Text healthText;
-    public FloatingDamageTextSystem damageTextSystem;
+    public OpponentHUD opponentHUDPrefab;
 
     private PlayerHealthScript localPlayerHealthScript;
     private Canvas canvas;
@@ -34,9 +34,9 @@ public class HealthHUD : MonoBehaviour
                 continue;
             }
 
-            FloatingDamageTextSystem damageSystem = Instantiate(damageTextSystem);
-            damageSystem.player = player;
-            damageSystem.Init();
+            OpponentHUD oponnentHUD = Instantiate(opponentHUDPrefab);
+            oponnentHUD.player = player;
+            oponnentHUD.Init();
         }
     }
 

@@ -48,7 +48,7 @@ public class JetBehaviour : A_SummoningBehaviour
         {
             //if we're colliding with a projectile from our own caster, dont affect it
             A_SummoningBehaviour summoning = rigid.GetComponentInParent<A_SummoningBehaviour>();
-            if (summoning && summoning.caster == caster)
+            if (summoning && summoning.GetCaster() == caster)
             {
                 return;
             }

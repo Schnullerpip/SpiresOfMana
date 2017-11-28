@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class PlayerHealthScript : HealthScript {
 
@@ -8,6 +9,9 @@ public class PlayerHealthScript : HealthScript {
 
     public delegate void DamageTaken(int damage);
     public event DamageTaken OnDamageTaken;
+
+    public delegate void HealTaken(int damage);
+    public event HealTaken OnHealTaken;
 
     public delegate void HealthChanged(int damage);
     public event HealthChanged OnHealthChanged;
@@ -24,6 +28,17 @@ public class PlayerHealthScript : HealthScript {
         if (!IsAlive() && hasBeenAlive) {
             //this mPlayer is dead!!! tell the Gamemanager, that one is down
             GameManager.instance.PlayerDown();
+            //Show the postGame screen for this player
+            RpcPlayerDead();
+        }
+    }
+
+    [ClientRpc]
+    void RpcPlayerDead()
+    {
+        if(isLocalPlayer)
+        {
+            GameManager.instance.localPlayerDead();
         }
     }
 
@@ -51,6 +66,13 @@ public class PlayerHealthScript : HealthScript {
             if (OnDamageTaken != null)
             {
                 OnDamageTaken(damage);
+            }
+        }
+        else if(damage < 0)
+        {
+            if(OnHealTaken != null)
+            {
+                OnHealTaken(Mathf.Abs(damage));
             }
         }
     }

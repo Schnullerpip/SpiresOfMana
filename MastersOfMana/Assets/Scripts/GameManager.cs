@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 {
     public List<PlayerScript> mPlayers;
 
-    private PoolRegistry mPoolRegistry;
+    //private PoolRegistry mPoolRegistry;
 
     private int mNumberOfGoMessages = 0,
                 mNumberOfDeadPlayers = 0;
@@ -44,6 +44,7 @@ public class GameManager : MonoBehaviour
         mNeededToGo = mInitialNeededToGo;
         mNumberOfGoMessages = 0;
         mNumberOfDeadPlayers = 0;
+        isUltimateActive = false;
     }
 
     public void Go()
@@ -70,7 +71,7 @@ public class GameManager : MonoBehaviour
         if (NetManager.instance.amIServer())
         {
             //activate the pools, to start isntantiating, now that all the players have joined the game
-            mPoolRegistry = FindObjectOfType<PoolRegistry>();
+            //mPoolRegistry = FindObjectOfType<PoolRegistry>();
             //mPoolRegistry.CreatePools();
 
             //enable the players to actually do stuff and update the chosen Spells
@@ -99,7 +100,6 @@ public class GameManager : MonoBehaviour
 
         //TODO: What happens if both die simultaniously?
         if (mNumberOfDeadPlayers >= (mPlayers.Count - 1)) { //only one player left -> he/she won the game!
-            ResetLocalGameState();
 
             //Find out who has won and call post game screen
             foreach (var p in mPlayers)
@@ -111,12 +111,17 @@ public class GameManager : MonoBehaviour
                     break;
                 }
             }
-            StartCoroutine(PostGameLobby(winnerID));
+            PostGameLobby(winnerID);
+            ResetLocalGameState();
         }
     }
 
-    public IEnumerator PostGameLobby(uint winner) {
-        yield return new WaitForSeconds(0.0f);
+    public void PostGameLobby(uint winner) {
         NetManager.instance.RpcLoadPostGameScreen(winner);
+    }
+
+    public void localPlayerDead()
+    {
+        SceneManager.LoadSceneAsync("Scenes/arne_postGame", LoadSceneMode.Additive);
     }
 }

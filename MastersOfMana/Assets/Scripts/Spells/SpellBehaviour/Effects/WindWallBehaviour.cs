@@ -16,7 +16,6 @@ public class WindWallBehaviour : A_SummoningBehaviour
 
     private Vector3 force;
     private Vector3 center;
-    private PlayerScript caster;
 
     //prevent players from getting forces of the windwall for each collider they have
     private List<GameObject> mAlreadyAffected;

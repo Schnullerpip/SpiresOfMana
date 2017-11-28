@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 {
     public List<PlayerScript> mPlayers;
 
-    private PoolRegistry mPoolRegistry;
+    //private PoolRegistry mPoolRegistry;
 
     private int mNumberOfGoMessages = 0,
                 mNumberOfDeadPlayers = 0;
@@ -44,6 +44,7 @@ public class GameManager : MonoBehaviour
         mNeededToGo = mInitialNeededToGo;
         mNumberOfGoMessages = 0;
         mNumberOfDeadPlayers = 0;
+        isUltimateActive = false;
     }
 
     public void Go()
@@ -70,7 +71,7 @@ public class GameManager : MonoBehaviour
         if (NetManager.instance.amIServer())
         {
             //activate the pools, to start isntantiating, now that all the players have joined the game
-            mPoolRegistry = FindObjectOfType<PoolRegistry>();
+            //mPoolRegistry = FindObjectOfType<PoolRegistry>();
             //mPoolRegistry.CreatePools();
 
             //enable the players to actually do stuff and update the chosen Spells

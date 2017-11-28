@@ -67,10 +67,10 @@ public class SpellRegistry : MonoBehaviour {
         List<A_Spell> randomUltimateSpellList = new List<A_Spell>(ultimateSpellList);
 
         //Randomize spellList
-        ultimateSpellList.Shuffle();
+        randomUltimateSpellList.Shuffle();
 
         //And add the first to the result list
-        resultSpellList.Add(ultimateSpellList[0]);
+        resultSpellList.Add(randomUltimateSpellList[0]);
 
         return resultSpellList;
     }

@@ -155,7 +155,7 @@ namespace Prototype.NetworkLobby
             spells[0] = spellregistry.GetSpellByID(PlayerPrefs.GetInt("SpellSlot0",0));
             spells[1] = spellregistry.GetSpellByID(PlayerPrefs.GetInt("SpellSlot1",1));
             spells[2] = spellregistry.GetSpellByID(PlayerPrefs.GetInt("SpellSlot2",2));
-            spells[3] = spellregistry.GetSpellByID(PlayerPrefs.GetInt("SpellSlot3", 3));
+            spells[3] = spellregistry.GetSpellByID(PlayerPrefs.GetInt("SpellSlot3", 11));
 
             spellButton1.gameObject.SetActive(true);
             spellButton2.gameObject.SetActive(true);
@@ -165,7 +165,7 @@ namespace Prototype.NetworkLobby
             spellButton2.interactable = true;
             spellButton3.interactable = true;
             spellButton4.interactable = true;
-            UpdateSpellButtons();
+            ValidateSpellSelection();
 
             //We need to assign the navigation for down directly, it seems to lose the explicit reference because the back button is on a different UI
             backButton = GetComponentInParent<LobbyPlayerList>().backButton;
@@ -180,6 +180,66 @@ namespace Prototype.NetworkLobby
             //when OnClientEnterLobby is called, the loval PlayerController is not yet created, so we need to redo that here to disable
             //the add button if we reach maxLocalPlayer. We pass 0, as it was already counted on OnClientEnterLobby
             if (LobbyManager.s_Singleton != null) LobbyManager.s_Singleton.OnPlayersNumberModified(0);
+        }
+
+        private void ValidateSpellSelection()
+        {
+            //seperate illegal and legal spells
+            List<int> illegalSpellSlots = new List<int>();
+            List<A_Spell> legalSpells = new List<A_Spell>();
+            for(int i = 0; i < spells.Count; i++)
+            {
+                if (!spellregistry.ValidateNormal(spells[i]))
+                {
+                    illegalSpellSlots.Add(i);
+                }
+                else
+                {
+                    legalSpells.Add(spells[i]);
+                }
+            }
+
+            if (illegalSpellSlots.Count > 0)
+            {
+                //Replace illegal spells by legal spells that have not been chosen yet
+                int currentSpellSlot = 0;
+                //Search for first spell that has not already been taken
+                for (int i = 0; i < spellregistry.SpellList.Count; i++)
+                {
+                    bool isSpellLegal = true;
+                    //Check against already taken spells
+                    foreach (A_Spell takenSpell in legalSpells)
+                    {
+                        //if the registry spell has already been taken, flag as illegal an move to next spell in registry
+                        if (spellregistry.SpellList[i].spellID == takenSpell.spellID)
+                        {
+                            isSpellLegal = false;
+                            break;
+                        }
+                    }
+
+                    // Only if the spell is legal, move it into our spellslot
+                    if (isSpellLegal)
+                    {
+                        //Otherwise, put it into the spellslot
+                        spells[illegalSpellSlots[currentSpellSlot]] = spellregistry.SpellList[i];
+
+                        //And move to next illegal spell
+                        currentSpellSlot++;
+                        if (currentSpellSlot == illegalSpellSlots.Count)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            if (!spellregistry.ValidateUltimate(spells[3]))
+            {
+                spells[3] = spellregistry.UltimateSpellList[0];
+            }
+
+            UpdateSpellButtons();
         }
 
         public enum OnSelectDirection
@@ -253,6 +313,12 @@ namespace Prototype.NetworkLobby
                 }
             }
             spells[mSpellToChange] = spell;
+            ValidateSpellSelection();
+        }
+
+        public void RandomizeSpells()
+        {
+            spells = spellregistry.generateRandomSpells();
             UpdateSpellButtons();
         }
 
@@ -288,6 +354,7 @@ namespace Prototype.NetworkLobby
                 // Push chosen spells to server
                 if (isLocalPlayer)
                 {
+                    ValidateSpellSelection();
                     //Save Spells to PlayerPrefs
                     PlayerPrefs.SetInt("SpellSlot0",spells[0].spellID);
                     PlayerPrefs.SetInt("SpellSlot1", spells[1].spellID);

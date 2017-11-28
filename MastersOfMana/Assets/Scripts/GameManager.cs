@@ -44,6 +44,7 @@ public class GameManager : MonoBehaviour
         mNeededToGo = mInitialNeededToGo;
         mNumberOfGoMessages = 0;
         mNumberOfDeadPlayers = 0;
+        isUltimateActive = false;
     }
 
     public void Go()

@@ -10,6 +10,9 @@ public class PlayerHealthScript : HealthScript {
     public delegate void DamageTaken(int damage);
     public event DamageTaken OnDamageTaken;
 
+    public delegate void HealTaken(int damage);
+    public event HealTaken OnHealTaken;
+
     public delegate void HealthChanged(int damage);
     public event HealthChanged OnHealthChanged;
 
@@ -63,6 +66,13 @@ public class PlayerHealthScript : HealthScript {
             if (OnDamageTaken != null)
             {
                 OnDamageTaken(damage);
+            }
+        }
+        else if(damage < 0)
+        {
+            if(OnHealTaken != null)
+            {
+                OnHealTaken(Mathf.Abs(damage));
             }
         }
     }

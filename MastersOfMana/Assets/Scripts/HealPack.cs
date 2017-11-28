@@ -10,8 +10,20 @@ public class HealPack : NetworkBehaviour
     public int healPerTick = 1;
     public float tickDuration = 0.5f;
     public System.Action<Transform> healSpawnCallback;
+    public ParticleSystem particles;
+    public AnimationCurve alphaValue;
+    public MeshRenderer renderer;
+    private Material material;
+    private int mInitialheal;
 
     private Dictionary<NetworkInstanceId, Coroutine> mInstanceCoroutineDictionary = new Dictionary<NetworkInstanceId, Coroutine>();
+
+    public void OnEnable()
+    {
+        material = renderer.material;
+        mInitialheal = healAmount;
+        updateAlpha();
+    }
 
     public void OnTriggerEnter(Collider other)
     {
@@ -28,6 +40,10 @@ public class HealPack : NetworkBehaviour
             {
                 //Remember which player this coroutine belongs to
                 mInstanceCoroutineDictionary.Add(playerHealth.netId, StartCoroutine(Heal(playerHealth)));
+                if (mInstanceCoroutineDictionary.Count == 1)
+                {
+                    startHealing();
+                }
             }
         }
     }
@@ -47,6 +63,10 @@ public class HealPack : NetworkBehaviour
             {
                 StopCoroutine(mInstanceCoroutineDictionary[playerHealth.netId]);
                 mInstanceCoroutineDictionary.Remove(playerHealth.netId);
+                if(mInstanceCoroutineDictionary.Count == 0)
+                {
+                    stopHealing();
+                }
             }
         }
     }
@@ -59,6 +79,7 @@ public class HealPack : NetworkBehaviour
             {
                 playerHealth.TakeHeal(healPerTick);
                 healAmount -= healPerTick;
+                updateAlpha();
                 //Check if the next heal would drain the healpack below 0
                 if (healAmount - healPerTick < 0)
                 {
@@ -67,6 +88,23 @@ public class HealPack : NetworkBehaviour
             }
             yield return new WaitForSeconds(tickDuration);
         }
+    }
+
+    private void updateAlpha()
+    {
+        Color color = material.color;
+        color.a = alphaValue.Evaluate((float)healAmount / (float)mInitialheal);
+        material.color = color;
+    }
+
+    private void startHealing()
+    {
+        particles.Play();
+    }
+
+    private void stopHealing()
+    {
+        particles.Stop();
     }
 
     private void deactivate()

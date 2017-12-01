@@ -115,10 +115,22 @@ MonoBehaviour:
   particles: {fileID: 198661611403999376}
   alphaValue:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 2
+      time: 0.012352528
+      value: 0.103782356
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+    - serializedVersion: 2
+      time: 0.9973807
+      value: 0.8065952
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
   healPackRenderer: {fileID: 23684452867839996}
 --- !u!114 &114368188165271190
 MonoBehaviour:

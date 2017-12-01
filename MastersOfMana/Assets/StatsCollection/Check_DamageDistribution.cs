@@ -189,9 +189,10 @@ public class Check_DamageDistribution : ICheck
 
 
         WriteString("----- dealers accumulated damage -----", log_path);
-        var o = 0;
+        var o = -1;
         foreach (var i in source_damage)
         {
+            ++o;
             //log to file
             WriteString("" + i.Key + ":\n" + (damageBars[o] = AccumulateDamage(i.Value)), log_path);
             //log to plotFile
@@ -260,7 +261,7 @@ public class Check_DamageDistribution : ICheck
         //accumulate damage for the plot
 
         string plotcode = "plot(";
-        string legendCode = "legend(";
+        string legendCode = "h = legend(";
         for (int i = 0; i < source_damage.Count; ++i)
         {
             plotcode += xAxis[i] + ", " + data[i];
@@ -272,7 +273,7 @@ public class Check_DamageDistribution : ICheck
             }
         }
         plotcode += ")\n";
-        legendCode += ")";
+        legendCode += ")\nlegend(h, 'location', 'outside')";
         WriteString(plotcode + legendCode, plotpath);
     }
 

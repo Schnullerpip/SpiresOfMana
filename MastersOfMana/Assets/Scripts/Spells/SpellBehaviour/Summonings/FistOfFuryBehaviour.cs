@@ -108,7 +108,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
                     //calculate damage
                     resultingDamage = Mathf.Clamp(resultingDamage, mMinimumDamage, mMaximumDamage);
                     Debug.Log("damage by fist: " + resultingDamage);
-                    hs.TakeDamage(resultingDamage);
+                    hs.TakeDamage(resultingDamage, this.GetType());
                 }
 
                 //if the hit object is moveable - move it

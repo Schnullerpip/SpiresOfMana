@@ -64,7 +64,7 @@ public class LavaFloor : NetworkBehaviour
     {
         while (enabled)
         {
-            playerHealth.TakeDamage(damagePerSecond);
+            playerHealth.TakeDamage(damagePerSecond, this.GetType());
             yield return new WaitForSeconds(1f);
         }
     }

@@ -123,7 +123,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 		HealthScript directHit = collider.gameObject.GetComponentInParent<HealthScript>();
         if (directHit)
         {
-            directHit.TakeDamage(mDamage);
+            directHit.TakeDamage(mDamage, this.GetType());
 
             PlayerScript player = directHit.GetComponent<PlayerScript>();
             if (player)
@@ -153,7 +153,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 
 			if(health && health != directHit && !cachedHealthScripts.Contains(health))
 			{
-				health.TakeDamage(explosionDamage);
+				health.TakeDamage(explosionDamage, this.GetType());
 				cachedHealthScripts.Add(health);
 			}
 				

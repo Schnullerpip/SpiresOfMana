@@ -34,7 +34,12 @@ public class HealthScript : NetworkBehaviour
     /// </summary>
     public void HealthHook(int newHealth)
     {
+        if(newHealth == 0)
+        {
+            isAlive = false;
+        }
         HealthChangedHook(newHealth);
+        // we need to set this value manually, because we have a hook attached 
         mCurrentHealth = newHealth;
     }
     public virtual void HealthChangedHook(int newHealth) {}
@@ -44,9 +49,14 @@ public class HealthScript : NetworkBehaviour
     /// </summary>
     /// <param name="amount"></param>
     public virtual void TakeDamage(int amount, System.Type typeOfDamageDealer) {
-        if ((mCurrentHealth -= amount) <= 0) {
+        // The temp variable is used because otherwise the syncvar hook will fire with a negative value if we do the if((mCurrentHealth -= amoun) <= 0) comparison 
+        int tempCurrentHealth = mCurrentHealth - amount;
+        if (tempCurrentHealth <= 0) {
             mCurrentHealth = 0;
-            isAlive = false;
+        }
+        else
+        {
+            mCurrentHealth = tempCurrentHealth;
         }
     }
     

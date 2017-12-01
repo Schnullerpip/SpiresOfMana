@@ -9,17 +9,15 @@ using System.Collections.Generic;
 /// </summary>
 public class FireballBehaviour : A_ServerMoveableSummoning
 {
-    [SerializeField]
-    private float mSpeed = 5.0f;
-    [SerializeField]
-    private int mDamage = 5;
+    public float speed = 50.0f;
+    public int directDamage = 8;
 
     public Color effectColor;
 	//public GameObject ballPrefab;
 	public GameObject explosionPrefab;
 	public float explosionRadius = 4;
 	public float explosionForce = 5;
-	public int explosionDamage = 5;
+	public int explosionDamage = 4;
 
 	public float disappearTimer = 3;
 
@@ -81,10 +79,10 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 
 		Vector3 aimDirection = GetAim(caster); 
 
-		//position the fireball to 'spawn' at the casters hand, including an offset so it does not collide instantly with the hand
-		fireballBehaviour.Reset(caster.handTransform.position + aimDirection, caster.transform.rotation);
+		//position the fireball to 'spawn' at the casters hand
+		fireballBehaviour.Reset(caster.handTransform.position, caster.transform.rotation);
 		//speed up the fireball to fly into the lookdirection of the player
-		fireballBehaviour.mRigid.velocity = aimDirection * mSpeed;
+		fireballBehaviour.mRigid.velocity = aimDirection * speed;
         fireballBehaviour.caster = caster;
 
         OnCollisionDeactivateBehaviour(true);
@@ -103,11 +101,15 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 
 		mRigid.Reset();
 		mRigid.isKinematic = false;
+
+        cachedHealth = new List<HealthScript>();
 	}
+
+    private List<HealthScript> cachedHealth;
 
     protected override void ExecuteTriggerEnter_Host(Collider collider)
     {
-        if (collider.isTrigger)
+        if (collider.isTrigger || caster.IsColliderPartOf(collider))
         {
             return;
         }
@@ -118,68 +120,76 @@ public class FireballBehaviour : A_ServerMoveableSummoning
         if (!isServer)
 		{
 			return;
-		}
+        }
+		
+        RpcExplosion(transform.position, transform.rotation);
 
-		HealthScript directHit = collider.gameObject.GetComponentInParent<HealthScript>();
-        if (directHit)
+        HealthScript directHit = null;
+
+        if(!collider.gameObject.isStatic)
         {
-            directHit.TakeDamage(mDamage, this.GetType());
-
-            PlayerScript player = directHit.GetComponent<PlayerScript>();
-            if (player)
+            directHit = collider.gameObject.GetComponentInParent<HealthScript>();
+            if (directHit && !cachedHealth.Contains(directHit))
             {
-                directHitForce.Normalize();
-                directHitForce *= explosionForce;
-                player.movement.RpcAddForce(directHitForce, ForceMode.VelocityChange);
+                cachedHealth.Add(directHit);
+
+                Debug.Log("direct damage: " + directDamage);
+                directHit.TakeDamage(directDamage, GetType());
+
+                PlayerScript player = directHit.GetComponent<PlayerScript>();
+                if (player)
+                {
+                    directHitForce.Normalize();
+                    directHitForce *= explosionForce;
+                    player.movement.RpcAddForce(directHitForce, ForceMode.VelocityChange);
+                }
             }
         }
 
-		Collider[] colliders = Physics.OverlapSphere(mRigid.position,explosionRadius);
+        Collider[] colliders = Physics.OverlapSphere(mRigid.position,explosionRadius);
 
-		//TODO: TEMP SOLUTION
-		List<HealthScript> cachedHealthScripts = new List<HealthScript>(colliders.Length);
-		List<Rigidbody> cachedRigidbodies = new List<Rigidbody>(colliders.Length);
+        //TODO: TEMP SOLUTION
+        List<Rigidbody> cachedRigidbodies = new List<Rigidbody>(colliders.Length);
 
-		foreach(Collider c in colliders)
-		{
+        foreach(Collider c in colliders)
+        {
 
-			HealthScript health = c.GetComponentInParent<HealthScript>();
+            HealthScript health = c.GetComponentInParent<HealthScript>();
 
-			if(health && health == directHit)
-			{
-				//took already damage and got a force
-				continue;
-			}
+            if(health && health == directHit)
+            {
+                //took already damage and got a force
+                continue;
+            }
 
-			if(health && health != directHit && !cachedHealthScripts.Contains(health))
-			{
-				health.TakeDamage(explosionDamage, this.GetType());
-				cachedHealthScripts.Add(health);
-			}
-				
-			if(c.attachedRigidbody && !cachedRigidbodies.Contains(c.attachedRigidbody))
-			{
-				cachedRigidbodies.Add(c.attachedRigidbody);
+            if(health && !cachedHealth.Contains(health))
+            {
+                health.TakeDamage(explosionDamage, GetType());
+                cachedHealth.Add(health);
+            }
+                
+            if(c.attachedRigidbody && !cachedRigidbodies.Contains(c.attachedRigidbody))
+            {
+                cachedRigidbodies.Add(c.attachedRigidbody);
 
-				Vector3 force = c.attachedRigidbody.worldCenterOfMass - mRigid.position; 
+                Vector3 force = c.attachedRigidbody.worldCenterOfMass - mRigid.position; 
 
-				force.Normalize();
-				force *= explosionForce;
+                force.Normalize();
+                force *= explosionForce;
 
-				//check wheather or not we are handling a player or just some random rigidbody
-				if (c.attachedRigidbody.CompareTag("Player"))
-				{
-					PlayerScript ps = c.attachedRigidbody.GetComponent<PlayerScript>();
-					ps.movement.RpcAddForce(force, ForceMode.VelocityChange);
-				}
-				else
-				{
-					c.attachedRigidbody.AddForce(force, ForceMode.VelocityChange);
-				}
-			}
-		}
+                //check wheather or not we are handling a player or just some random rigidbody
+                if (c.attachedRigidbody.CompareTag("Player"))
+                {
+                    PlayerScript ps = c.attachedRigidbody.GetComponent<PlayerScript>();
+                    ps.movement.RpcAddForce(force, ForceMode.VelocityChange);
+                }
+                else
+                {
+                    c.attachedRigidbody.AddForce(force, ForceMode.VelocityChange);
+                }
+            }
+        }
 
-        RpcExplosion(transform.position, transform.rotation);
         //var explosionObject = Instantiate(explosionPrefab, transform.position, transform.rotation);
         //RFX4_ColorHelper.ChangeObjectColorByHUE(explosionObject, RFX4_ColorHelper.ColorToHSV(effectColor).H);
         //OnCollisionDeactivateBehaviour(false);

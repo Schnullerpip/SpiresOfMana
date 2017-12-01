@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class PlayerHealthScript : HealthScript {
 
@@ -9,6 +10,9 @@ public class PlayerHealthScript : HealthScript {
 
     public delegate void DamageTaken(int damage);
     public event DamageTaken OnDamageTaken;
+
+    public delegate void HealTaken(int damage);
+    public event HealTaken OnHealTaken;
 
     public delegate void HealthChanged(int damage);
     public event HealthChanged OnHealthChanged;
@@ -29,12 +33,23 @@ public class PlayerHealthScript : HealthScript {
         if (!IsAlive() && hasBeenAlive) {
             //this mPlayer is dead!!! tell the Gamemanager, that one is down
             GameManager.instance.PlayerDown();
+            //Show the postGame screen for this player
+            RpcPlayerDead();
         }
 
         //fire the stats checks
         if (OnStatsRelevantDamage != null)
         {
             OnStatsRelevantDamage(actualDamage, typeOfDamageDealer);
+        }
+    }
+
+    [ClientRpc]
+    void RpcPlayerDead()
+    {
+        if(isLocalPlayer)
+        {
+            GameManager.instance.localPlayerDead();
         }
     }
 
@@ -53,8 +68,7 @@ public class PlayerHealthScript : HealthScript {
 
     public override void HealthChangedHook(int newHealth)
     {
-
-        if(OnHealthChanged != null)
+        if (OnHealthChanged != null)
         {
             OnHealthChanged(newHealth);
         }
@@ -66,6 +80,13 @@ public class PlayerHealthScript : HealthScript {
             if (OnDamageTaken != null)
             {
                 OnDamageTaken(damage);
+            }
+        }
+        else if(damage < 0)
+        {
+            if(OnHealTaken != null)
+            {
+                OnHealTaken(Mathf.Abs(damage));
             }
         }
     }

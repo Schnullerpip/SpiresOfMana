@@ -245,7 +245,7 @@ public class PlayerAim : NetworkBehaviour {
 			self.SetColliderIgnoreRaycast(false);
 			//if we hit a healthscript, take that as our aim assist target
 			PlayerScript target = hit.collider.GetComponentInParent<PlayerScript>();
-			if(target != null)
+			if(target != null && target.healthScript.IsAlive())
 			{
 				self.SetColliderIgnoreRaycast(false);
 				return hit.collider;
@@ -254,7 +254,7 @@ public class PlayerAim : NetworkBehaviour {
 		//otherwise look for the next best target
 
 		//TODO: cache this, maybe gamemanager?
-		List<PlayerScript> allPlayers = new List<PlayerScript>(GameObject.FindObjectsOfType<PlayerScript>());
+		List<PlayerScript> allPlayers = new List<PlayerScript>(FindObjectsOfType<PlayerScript>());
 
 //		//sort by distance 
 //		allHealthScripts.Sort(
@@ -279,7 +279,7 @@ public class PlayerAim : NetworkBehaviour {
 		foreach (PlayerScript aPlayer in allPlayers) 
 		{
 			//skip player him/herself
-			if(aPlayer.gameObject == this.gameObject)
+			if(aPlayer.gameObject == this.gameObject || !aPlayer.healthScript.IsAlive())
 			{
 				continue;
 			}

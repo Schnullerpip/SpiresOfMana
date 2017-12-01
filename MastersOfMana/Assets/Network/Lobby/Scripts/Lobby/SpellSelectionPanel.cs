@@ -25,10 +25,10 @@ namespace Prototype.NetworkLobby {
 
         public void Init()
         {
-            List<A_Spell> spells = spellregistry.SpellList;
+            List<A_Spell> spells = spellregistry.spellList;
             if (showUltimates)
             {
-                spells = spellregistry.UltimateSpellList;
+                spells = spellregistry.ultimateSpellList;
             }
             for (int i = 0; i < spells.Count; i++)
             {

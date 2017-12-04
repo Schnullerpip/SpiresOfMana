@@ -55,9 +55,16 @@ public class Check_DamageDistribution : ICheck
     public static uint DISCRETE_PER_PLAYER_DELT_DAMAGE = 3;
 
 
+    public void GameEndRoutine()
+    {
+        LogAll();
+    }
 
     public void Init()
     {
+
+        Debug.Log("[" + this.GetType() + "] starting to log damage stats to: " + preferedFileLocation);
+
         source_damage = new Dictionary<Type, List<damage_time>>();
         player_source_damage = new List<Dictionary<Type, List<damage_time>>>();
         player_lastDealer = new damageInstance[GameManager.instance.mPlayers.Count];
@@ -111,6 +118,17 @@ public class Check_DamageDistribution : ICheck
                 source_damage[dealer].Add(newDamageTime);
 	        };
 	    }
+
+        //register at gamemanager to get OnGameEnded events
+        GameManager gm;
+        if ((gm = GameManager.instance) != null)
+        {
+            gm.OnGameEnded += GameEndRoutine;
+        }
+        else
+        {
+            Debug.Log("[Check_DamageDistribution]::[Init]:: Could not find a GameManager instance!");
+        }
     }
 
 	// Use this for initialization
@@ -118,7 +136,7 @@ public class Check_DamageDistribution : ICheck
 	{
 	    base.Start();
 
-        //revert all the log files, so they can e written freshly
+        //revert all the log files, so they can be written freshly
         foreach (var p in fileName)
         {
             System.IO.File.WriteAllText(p,string.Empty);
@@ -149,20 +167,26 @@ public class Check_DamageDistribution : ICheck
         return accumulatedDamage;
     }
 
-    private static void AppendDamageAndTime(List<damage_time> dmg_time, out int[] damage, out string time)
+    private static float AppendDamageAndTime(List<damage_time> dmg_time, out int[] damage, out string time)
     {
         damage = new int[dmg_time.Count];
         time = "";
+        float lastDamage = 0;
         for(int i = 0; i < dmg_time.Count; ++i)
         {
             var dt = dmg_time[i];
             damage[i] = dt.damage;
             time += dt.time;
+            if (dt.time > lastDamage)
+            {
+                lastDamage = dt.time;
+            }
             if (i < dmg_time.Count - 1)
             {
                 time += ", ";
             }
         }
+        return lastDamage;
     }
 
     [ContextMenu("revert all damage-logfiles")]
@@ -179,7 +203,7 @@ public class Check_DamageDistribution : ICheck
     {
 
         int[] damageBars = new int[source_damage.Count];
-        string barCode = "bar(sort([";
+        string barCode = "bar([";
         string labelCode = "set(gca, 'xticklabel', {";
 
         var log_path = fileName[ACCUMULATED_DAMAGE];
@@ -204,7 +228,7 @@ public class Check_DamageDistribution : ICheck
                 labelCode += ", ";
             }
         }
-        barCode += "]), 0.5)\n";
+        barCode += "], 0.5)\n";
         labelCode += "})";
         WriteString(barCode, plot_path);
         WriteString(labelCode, plot_path);
@@ -222,10 +246,12 @@ public class Check_DamageDistribution : ICheck
         string[] xAxis = new string[source_damage.Count];
         string[] data = new string[source_damage.Count];
         string[] legend = new string[source_damage.Count];
+        int[] highestDamage = new int[source_damage.Count];
 
 
         WriteString("----- discrete dealers damage -----", logpath);
         var o = -1;
+        float lastDamage = 0;
         foreach (var sd in source_damage)
         {
             ++o;
@@ -233,25 +259,31 @@ public class Check_DamageDistribution : ICheck
             string dataCode = "[";
             int[] damageSteps;
             string timeSteps;
-            AppendDamageAndTime(sd.Value, out damageSteps, out timeSteps);
+            float last;
 
-            xAxis[o] = (axisCode += timeSteps + "]");
-            //data[o] = (dataCode += damageSteps + "]");
-            legend[o] = sd.Key+"";
+            //track last damage so plot can fill the lines to the end
+            if ( (last = AppendDamageAndTime(sd.Value, out damageSteps, out timeSteps)) > lastDamage)
+            {
+                lastDamage = last;
+            }
+
+            xAxis[o] = axisCode += timeSteps;
+            legend[o] = sd.Key.ToString();
             string damageLine = "";
             int accumulator = 0;
             for(int i = 0; i < damageSteps.Length; ++i)
             {
                 damageLine += damageSteps[i];
                 accumulator += damageSteps[i];
-                dataCode += accumulator+"";
+                dataCode += accumulator.ToString();
                 if (i < damageSteps.Length - 1)
                 {
                     damageLine += ", ";
                     dataCode += ", ";
                 }
             }
-            data[o] = (dataCode += "]");
+            highestDamage[o] = accumulator;
+            data[o] = dataCode;
 
             WriteString(sd.Key + ":", logpath);
             WriteString(damageLine, logpath);
@@ -262,9 +294,10 @@ public class Check_DamageDistribution : ICheck
 
         string plotcode = "plot(";
         string legendCode = "h = legend(";
+        lastDamage += lastDamage/10;//add a tenth of the time to the charts x-axis so there is a little space and also if the last damage dealer was only dealing one time it is seen! otherwise it disappears in the frame
         for (int i = 0; i < source_damage.Count; ++i)
         {
-            plotcode += xAxis[i] + ", " + data[i];
+            plotcode += xAxis[i] + ", " + lastDamage + "], " + data[i] + ", " + highestDamage[i] + "]";
             legendCode += "'" + legend[i] + "' ";
             if (i < (source_damage.Count - 1))
             {

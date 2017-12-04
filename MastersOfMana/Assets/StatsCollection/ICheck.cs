@@ -15,6 +15,12 @@ public class ICheck : MonoBehaviour
     {
         for (int i = 0; i < fileName.Length; ++i)
         {
+            //just in case the prefered filelocation was entered to be misunderstood as part of the filename not the path
+            if (preferedFileLocation != "" && !preferedFileLocation.EndsWith("/"))
+            {
+                preferedFileLocation += "/";
+            }
+
             var val = fileName[i];
             //lead the files to their dedicated destination
             //make sure they are treated as txt files 

@@ -93,6 +93,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public delegate void GameEnded();
+    public event GameEnded OnGameEnded;
+
     // INGAME
     // This is only executed on the Server
     public void PlayerDown() {
@@ -110,6 +113,10 @@ public class GameManager : MonoBehaviour
                     
                     break;
                 }
+            }
+            if (OnGameEnded != null)
+            {
+                OnGameEnded();
             }
             PostGameLobby(winnerID);
             ResetLocalGameState();

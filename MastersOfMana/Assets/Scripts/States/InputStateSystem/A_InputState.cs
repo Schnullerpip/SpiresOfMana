@@ -25,14 +25,6 @@ public abstract class A_InputState : A_State{
 
     public override void UpdateLocal()
     {
-
-        if (Input.GetKeyDown("j"))
-        {
-            mPreviewActive = false;
-            ChooseSpell(0);
-            CastSpell();
-        }
-
 		#region Spell Selection
 		if (playerInput.GetButtonDown("SpellSelection1")) 
 		{

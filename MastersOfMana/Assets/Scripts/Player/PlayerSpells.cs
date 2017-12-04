@@ -102,13 +102,6 @@ public class PlayerSpells : NetworkBehaviour {
     }
 
     /// <summary>
-    /// TODO whenever
-    /// </summary>
-    [Command]
-    public void CmdChooseAndCast() { }
-
-
-    /// <summary>
     /// Simple Datacontainer (inner class) for a Pair of Spell and cooldown
     /// </summary>
     [System.Serializable]

@@ -38,6 +38,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4576013107953822}
   - component: {fileID: 114065326504621492}
+  - component: {fileID: 114257327369681994}
   m_Layer: 0
   m_Name: DamageStats
   m_TagString: Untagged
@@ -123,6 +124,38 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114257327369681994
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1319157056195304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 35
+    i1: 190
+    i2: 225
+    i3: 229
+    i4: 197
+    i5: 51
+    i6: 44
+    i7: 228
+    i8: 41
+    i9: 33
+    i10: 132
+    i11: 110
+    i12: 163
+    i13: 217
+    i14: 83
+    i15: 65
+  m_ServerOnly: 1
+  m_LocalPlayerAuthority: 0
 --- !u!114 &114662778437390888
 MonoBehaviour:
   m_ObjectHideFlags: 1

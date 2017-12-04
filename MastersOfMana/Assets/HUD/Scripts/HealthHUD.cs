@@ -13,6 +13,7 @@ public class HealthHUD : MonoBehaviour
     void OnEnable()
     {
         GameManager.OnGameStarted += Init;
+		GameManager.OnLocalPlayerDead += LocalPlayerDead;
     }
 
     public void Init()
@@ -49,4 +50,9 @@ public class HealthHUD : MonoBehaviour
     {
         healthText.text = "Health: " + health;
     }
+
+	private void LocalPlayerDead()
+	{
+		canvas.enabled = false;
+	}
 }

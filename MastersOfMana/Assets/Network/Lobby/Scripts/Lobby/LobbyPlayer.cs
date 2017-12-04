@@ -187,7 +187,7 @@ namespace Prototype.NetworkLobby
             //seperate illegal and legal spells
             List<int> illegalSpellSlots = new List<int>();
             List<A_Spell> legalSpells = new List<A_Spell>();
-            for(int i = 0; i < spells.Count; i++)
+            for(int i = 0; i < spells.Count - 1; i++)
             {
                 if (!spellregistry.ValidateNormal(spells[i]))
                 {

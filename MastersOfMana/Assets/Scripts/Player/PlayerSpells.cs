@@ -101,6 +101,12 @@ public class PlayerSpells : NetworkBehaviour {
         mPlayer.RpcSetCastState(CastStateSystem.CastStateID.Normal);
     }
 
+    /// <summary>
+    /// TODO whenever
+    /// </summary>
+    [Command]
+    public void CmdChooseAndCast() { }
+
 
     /// <summary>
     /// Simple Datacontainer (inner class) for a Pair of Spell and cooldown

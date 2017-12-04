@@ -8,12 +8,6 @@ public class PlayerSpells : NetworkBehaviour {
     //cached instance of the playerscript
     private PlayerScript mPlayer;
 
-    /// <summary>
-    /// for synchronization purposes - spells will sometimes have to search their player on client side
-    /// in order to find the right one - they now can search for a player, that expects to be found by a certain spelltype
-    /// </summary>
-    public A_Spell expectingSpell = null;
-
     [SyncVar]
     public float ultimateEnergy = 0;
     public float ultimateEnergyThreshold = 30;

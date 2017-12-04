@@ -86,7 +86,6 @@ public class PlayerSpells : NetworkBehaviour {
 		}
 	}
 
-
     //choosing a spell
     [Command]
     public void CmdChooseSpellslot(int idx)
@@ -103,25 +102,6 @@ public class PlayerSpells : NetworkBehaviour {
 		public A_Spell spell;
 		public float cooldown;
         public bool isUltimateSpellSlot = false;
-
-        /// <summary>
-        /// activates the casting animation, after the spells castduration it activates the 'holding spell' animation
-        /// </summary>
-        /// <param name="caster"></param>
-        /// <param name="castDuration"></param>
-        /// <returns></returns>
-        private IEnumerator CastRoutine(PlayerScript caster, float castDuration)
-        {
-            //set caster in 'casting mode'
-            caster.RpcSetCastState(CastStateSystem.CastStateID.Resolving);
-
-            yield return new WaitForSeconds(castDuration);
-            //resolve the spell
-            spell.Resolve(caster);
-
-            //set caster in 'normal mode'
-            caster.RpcSetCastState(CastStateSystem.CastStateID.Normal);
-        }
 
         /// <summary>
         /// casts the spell inside the slot and also adjusts the cooldown accordingly
@@ -141,8 +121,12 @@ public class PlayerSpells : NetworkBehaviour {
                     }
                     caster.GetPlayerSpells().ultimateEnergy = 0;
                 }
-                //start the switch to 'holding spell' animation after the castduration
-                caster.GetPlayerSpells().EnlistSpellRoutine(caster.StartCoroutine(CastRoutine(caster, spell.castDurationInSeconds)));
+                //set caster in 'casting mode'
+                caster.RpcSetCastState(CastStateSystem.CastStateID.Resolving);
+                //resolve the spell
+                spell.Resolve(caster);
+                //set caster in 'normal mode'
+                caster.RpcSetCastState(CastStateSystem.CastStateID.Normal);
             }
         }
 	}

@@ -31,6 +31,8 @@ public class ParalysisBehaviour : A_EffectBehaviour
                     pb.mAffectedPlayerObject = hitPlayer.gameObject;
                     pb.gameObject.SetActive(true);
                     NetworkServer.Spawn(pb.gameObject);
+                    //apply damage just so the system registeres it as an affect
+                    hitPlayer.healthScript.TakeDamage(0, GetType());
                 }
             }
         }

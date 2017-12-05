@@ -45,6 +45,13 @@ public class StormBlastBehaviour : A_EffectBehaviour
 	                    //move it according to the force
 	                    Vector3 velocity = (sm.transform.position - caster.transform.position).normalized*mForce;
 	                    sm.RpcSetVelocity(velocity);
+
+                        //if its a player also affect it
+                        PlayerScript ps;
+                        if (ps = rigid.GetComponentInParent<PlayerScript>())
+                        {
+                            ps.healthScript.TakeDamage(0, GetType());
+                        }
 	                }
 	            }
 	        }

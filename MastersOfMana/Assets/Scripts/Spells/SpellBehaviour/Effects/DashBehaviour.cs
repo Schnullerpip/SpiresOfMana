@@ -150,6 +150,7 @@ public class DashBehaviour : A_EffectBehaviour
             if (ps)
             {
                 Vector3 pushDirection = Vector3.Normalize(ps.transform.TransformPoint(ps.movement.mRigidbody.centerOfMass) - caster.transform.position);
+                ps.healthScript.TakeDamage(0, this.GetType());
                 ps.movement.RpcSetVelocity(pushDirection*pushForce);
             }
         }

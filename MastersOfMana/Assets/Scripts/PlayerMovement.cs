@@ -55,6 +55,11 @@ public class PlayerMovement : ServerMoveable
 		mMoveInput = Vector3.ClampMagnitude(input,1);
 	}
 
+    public void ClearMovementInput()
+    {
+        mMoveInput = Vector3.zero;
+    }
+
 	public void SetMoveInputHurt(Vector3 input)
 	{
 		mHurtSlowdownActive = true;
@@ -158,9 +163,6 @@ public class PlayerMovement : ServerMoveable
 
 		mDeltaPos = mRigidbody.position - mLastPos;
 		mLastPos = mRigidbody.position;
-
-        //clear movementinput
-	    mMoveInput = Vector3.zero;
 	}
 
 	public delegate void OnLandingWhileFalling(int impactVelocity);

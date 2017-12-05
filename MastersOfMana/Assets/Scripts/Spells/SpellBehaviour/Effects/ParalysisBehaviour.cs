@@ -53,6 +53,8 @@ public class ParalysisBehaviour : A_EffectBehaviour
 
     private IEnumerator AffectPlayer()
     {
+        //clear movement input with player
+        mAffectedPlayer.movement.ClearMovementInput();
         //slow down/stop the affected player
         //mAffectedPlayer.movement.speed = mAffectedPlayer.movement.originalSpeed*mSlowFactor;
         mAffectedPlayer.inputStateSystem.SetState(InputStateSystem.InputStateID.Paralyzed);

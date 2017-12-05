@@ -24,6 +24,9 @@ public class GameManager : MonoBehaviour
     public delegate void GameStarted();
     public static event GameStarted OnGameStarted;
 
+    public delegate void LocalPlayerDead();
+    public static event LocalPlayerDead OnLocalPlayerDead;
+
     public void Awake()
     {
         if (instance)
@@ -70,10 +73,6 @@ public class GameManager : MonoBehaviour
     {
         if (NetManager.instance.amIServer())
         {
-            //activate the pools, to start isntantiating, now that all the players have joined the game
-            //mPoolRegistry = FindObjectOfType<PoolRegistry>();
-            //mPoolRegistry.CreatePools();
-
             //enable the players to actually do stuff and update the chosen Spells
             foreach (var p in mPlayers)
             {
@@ -129,6 +128,10 @@ public class GameManager : MonoBehaviour
 
     public void localPlayerDead()
     {
-        SceneManager.LoadSceneAsync("Scenes/arne_postGame", LoadSceneMode.Additive);
+        localPlayer.SpawnSpectator();
+        if(OnLocalPlayerDead != null)
+        {
+            OnLocalPlayerDead();
+        }
     }
 }

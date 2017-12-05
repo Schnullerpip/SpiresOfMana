@@ -44,9 +44,11 @@ public abstract class A_CastState : A_State{
     /// </summary>
     public virtual void CastCmdSpell()
     {
+        var camera = player.aim.GetCameraRig().GetCamera();
+
 		player.CmdResolveSpell(
-			player.aim.GetCameraRig().GetCamera().transform.position, 
-			player.aim.GetCameraRig().GetCamera().transform.forward,
+			camera.transform.position, 
+			camera.transform.forward,
 			player.aim.currentLookRotation
 		);
     }

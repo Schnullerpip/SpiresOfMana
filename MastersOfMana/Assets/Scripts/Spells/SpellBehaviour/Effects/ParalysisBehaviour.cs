@@ -31,6 +31,8 @@ public class ParalysisBehaviour : A_EffectBehaviour
                     pb.mAffectedPlayerObject = hitPlayer.gameObject;
                     pb.gameObject.SetActive(true);
                     NetworkServer.Spawn(pb.gameObject);
+                    //apply damage just so the system registeres it as an affect
+                    hitPlayer.healthScript.TakeDamage(0, GetType());
                 }
             }
         }
@@ -51,6 +53,8 @@ public class ParalysisBehaviour : A_EffectBehaviour
 
     private IEnumerator AffectPlayer()
     {
+        //clear movement input with player
+        mAffectedPlayer.movement.ClearMovementInput();
         //slow down/stop the affected player
         //mAffectedPlayer.movement.speed = mAffectedPlayer.movement.originalSpeed*mSlowFactor;
         mAffectedPlayer.inputStateSystem.SetState(InputStateSystem.InputStateID.Paralyzed);
@@ -58,6 +62,7 @@ public class ParalysisBehaviour : A_EffectBehaviour
         //revert back to normal status
         mAffectedPlayer.inputStateSystem.SetState(InputStateSystem.InputStateID.Normal);
         //mAffectedPlayer.movement.speed = mAffectedPlayer.movement.originalSpeed;
+
     }
 
 

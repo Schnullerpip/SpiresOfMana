@@ -129,7 +129,7 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
                 mTimeCount = 0;
                 if (isServer)
                 {
-                    nearest.healthScript.TakeDamage(mDamage);
+                    nearest.healthScript.TakeDamage(mDamage, this.GetType());
                 }
             }
         }

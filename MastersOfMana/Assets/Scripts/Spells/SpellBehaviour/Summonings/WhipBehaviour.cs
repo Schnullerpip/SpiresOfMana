@@ -110,7 +110,9 @@ public class WhipBehaviour : A_SummoningBehaviour
 				Vector3 force = -aimDirection * pullForce + Vector3.up * UpForce;
 			    if (hit.collider.attachedRigidbody.CompareTag("Player"))
 			    {
-					hit.collider.attachedRigidbody.GetComponent<PlayerScript>().movement.RpcAddForce(force, ForceMode.VelocityChange);
+                    var ps = hit.collider.attachedRigidbody.GetComponent<PlayerScript>();
+					ps.movement.RpcAddForce(force, ForceMode.VelocityChange);
+                    ps.healthScript.TakeDamage(0, GetType());
 			    }
 				else
 				{

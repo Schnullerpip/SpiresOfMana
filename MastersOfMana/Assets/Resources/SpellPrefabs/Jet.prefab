@@ -172,11 +172,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68ff8f63c8558d1498fbc4e00dfe4169, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  caster: {fileID: 0}
   mOffsetToCaster: 4
-  mUpForce: 40
-  mLifeTime: 10
+  mUpForce: 20
+  mLifeTime: 5
   mGravityreduction: 1
+  trigger: {fileID: 136843206926783506}
 --- !u!136 &136843206926783506
 CapsuleCollider:
   m_ObjectHideFlags: 1

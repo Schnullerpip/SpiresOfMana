@@ -43,12 +43,12 @@ public class HealthScript : NetworkBehaviour
         mCurrentHealth = newHealth;
     }
     public virtual void HealthChangedHook(int newHealth) {}
-        
+
     /// <summary>
     /// the only thing, that should be adressed, to actually hurt a GameObject, this should only ever be run on the server!!!
     /// </summary>
     /// <param name="amount"></param>
-    public virtual void TakeDamage(int amount) {
+    public virtual void TakeDamage(int amount, System.Type typeOfDamageDealer) {
         // The temp variable is used because otherwise the syncvar hook will fire with a negative value if we do the if((mCurrentHealth -= amoun) <= 0) comparison 
         int tempCurrentHealth = mCurrentHealth - amount;
         if (tempCurrentHealth <= 0) {

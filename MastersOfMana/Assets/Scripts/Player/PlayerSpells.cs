@@ -8,12 +8,6 @@ public class PlayerSpells : NetworkBehaviour {
     //cached instance of the playerscript
     private PlayerScript mPlayer;
 
-    /// <summary>
-    /// for synchronization purposes - spells will sometimes have to search their player on client side
-    /// in order to find the right one - they now can search for a player, that expects to be found by a certain spelltype
-    /// </summary>
-    public A_Spell expectingSpell = null;
-
     [SyncVar]
     public float ultimateEnergy = 0;
     public float ultimateEnergyThreshold = 30;
@@ -92,7 +86,6 @@ public class PlayerSpells : NetworkBehaviour {
 		}
 	}
 
-
     //choosing a spell
     [Command]
     public void CmdChooseSpellslot(int idx)
@@ -100,7 +93,6 @@ public class PlayerSpells : NetworkBehaviour {
         currentSpell = idx;
         mPlayer.RpcSetCastState(CastStateSystem.CastStateID.Normal);
     }
-
 
     /// <summary>
     /// Simple Datacontainer (inner class) for a Pair of Spell and cooldown
@@ -110,25 +102,6 @@ public class PlayerSpells : NetworkBehaviour {
 		public A_Spell spell;
 		public float cooldown;
         public bool isUltimateSpellSlot = false;
-
-        /// <summary>
-        /// activates the casting animation, after the spells castduration it activates the 'holding spell' animation
-        /// </summary>
-        /// <param name="caster"></param>
-        /// <param name="castDuration"></param>
-        /// <returns></returns>
-        private IEnumerator CastRoutine(PlayerScript caster, float castDuration)
-        {
-            //set caster in 'casting mode'
-            caster.RpcSetCastState(CastStateSystem.CastStateID.Resolving);
-
-            yield return new WaitForSeconds(castDuration);
-            //resolve the spell
-            spell.Resolve(caster);
-
-            //set caster in 'normal mode'
-            caster.RpcSetCastState(CastStateSystem.CastStateID.Normal);
-        }
 
         /// <summary>
         /// casts the spell inside the slot and also adjusts the cooldown accordingly
@@ -148,8 +121,12 @@ public class PlayerSpells : NetworkBehaviour {
                     }
                     caster.GetPlayerSpells().ultimateEnergy = 0;
                 }
-                //start the switch to 'holding spell' animation after the castduration
-                caster.GetPlayerSpells().EnlistSpellRoutine(caster.StartCoroutine(CastRoutine(caster, spell.castDurationInSeconds)));
+                //set caster in 'casting mode'
+                caster.RpcSetCastState(CastStateSystem.CastStateID.Resolving);
+                //resolve the spell
+                spell.Resolve(caster);
+                //set caster in 'normal mode'
+                caster.RpcSetCastState(CastStateSystem.CastStateID.Normal);
             }
         }
 	}

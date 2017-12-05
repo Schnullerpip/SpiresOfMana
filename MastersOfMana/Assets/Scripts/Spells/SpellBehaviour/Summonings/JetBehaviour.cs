@@ -15,24 +15,26 @@ public class JetBehaviour : A_SummoningBehaviour
     [SerializeField]
     private float mGravityreduction;
 
+    [SerializeField] private CapsuleCollider trigger;
+
     private List<ServerMoveable> mAffecting;
 
 
     public override void Execute(PlayerScript caster)
     {
         RaycastHit hit;
-        if (Physics.Raycast( new Ray(caster.movement.mRigidbody.worldCenterOfMass + caster.transform.forward * mOffsetToCaster, Vector3.down), out hit, 50))
+        if (Physics.Raycast( new Ray(caster.movement.mRigidbody.worldCenterOfMass + caster.transform.forward * mOffsetToCaster, Vector3.down), out hit, 100))
         {
-            this.caster = caster;
-            casterObject = caster.gameObject;
             //GameObject jet = PoolRegistry.JetPool.Get();
-            GameObject jet = PoolRegistry.Instantiate(this.gameObject);
+            JetBehaviour jet = PoolRegistry.Instantiate(this.gameObject).GetComponent<JetBehaviour>();
             jet.transform.position = hit.point;
+            jet.caster = caster;
+            jet.casterObject = caster.gameObject;
 
-            jet.SetActive(true);
-            NetworkServer.Spawn(jet);
+            jet.gameObject.SetActive(true);
+            NetworkServer.Spawn(jet.gameObject);
 
-            caster.StartCoroutine(UnSpawnJetAfterSeconds(jet, mLifeTime));
+            caster.StartCoroutine(UnSpawnJetAfterSeconds(jet.gameObject, mLifeTime));
         }
     }
 
@@ -80,43 +82,6 @@ public class JetBehaviour : A_SummoningBehaviour
 
     }
 
-
-    //public void OnTriggerStay(Collider other)
-    //{
-    //    if (!isServer)
-    //    {
-    //        return;
-    //    }
-
-
-    //    Rigidbody rigid = other.attachedRigidbody;
-    //    if (rigid)
-    //    {
-    //        //if we're colliding with a projectile from our own caster, dont affect it
-    //        A_SummoningBehaviour summoning = rigid.GetComponentInParent<A_SummoningBehaviour>();
-    //        if (summoning && summoning.caster == caster)
-    //        {
-    //            return;
-    //        }
-
-    //        ServerMoveable sm = other.attachedRigidbody.GetComponent<ServerMoveable>();
-    //        if (sm)
-    //        {
-    //            Vector3 upforce = Vector3.up*mUpForce;
-    //            if (sm.mRigidbody.velocity.y < 0)
-    //            {
-    //                Vector3 damping = -1*sm.mRigidbody.velocity;
-    //                damping.x = 0;
-    //                damping.z = 0;
-    //                damping *= mGravityreduction;
-    //                upforce += damping;
-    //            }
-    //            sm.RpcAddForce(upforce, ForceMode.Force);
-    //        }
-    //    }
-    //}
-
-
     public void Update()
     {
         if (!isServer || !caster)
@@ -136,6 +101,7 @@ public class JetBehaviour : A_SummoningBehaviour
                 damping *= mGravityreduction;
                 upforce += damping;
             }
+
             sm.RpcAddForce(upforce, ForceMode.Force);
         }
     }

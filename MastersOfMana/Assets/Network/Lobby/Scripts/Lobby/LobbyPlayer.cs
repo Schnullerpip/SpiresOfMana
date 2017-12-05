@@ -26,6 +26,7 @@ namespace Prototype.NetworkLobby
         public Button readyButton;
         public Button waitingPlayerButton;
         public Button removePlayerButton;
+		public Button RandomizeButton;
 
         public GameObject localIcone;
         public GameObject remoteIcone;
@@ -351,6 +352,7 @@ namespace Prototype.NetworkLobby
                 spellButton2.interactable = false;
                 spellButton3.interactable = false;
                 spellButton4.interactable = false;
+				RandomizeButton.interactable = false;
                 // Push chosen spells to server
                 if (isLocalPlayer)
                 {

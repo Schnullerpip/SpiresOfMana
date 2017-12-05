@@ -306,7 +306,7 @@ public class Check_DamageDistribution : ICheck
             }
         }
         plotcode += ")\n";
-        legendCode += ")\nlegend(h, 'location', 'outside')";
+        legendCode += ")\nlegend(h, 'location', 'northeastoutside')";
         WriteString(plotcode + legendCode, plotpath);
     }
 

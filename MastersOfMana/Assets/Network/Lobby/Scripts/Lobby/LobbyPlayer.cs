@@ -46,6 +46,9 @@ namespace Prototype.NetworkLobby
         static Color ReadyColor = new Color(0.0f, 204.0f / 255.0f, 204.0f / 255.0f, 1.0f);
         static Color TransparentColor = new Color(0, 0, 0, 0);
 
+		[SyncVar]
+		private bool isReady = false;
+
         public Button
             spellButton1,
             spellButton2,
@@ -109,13 +112,21 @@ namespace Prototype.NetworkLobby
         {
             nameInput.interactable = false;
             removePlayerButton.interactable = NetworkServer.active;
-
-            ChangeReadyButtonColor(NotReadyColor);
-
-            readyButton.transform.GetChild(0).GetComponent<Text>().text = "...";
+			Text readyButtonText = readyButton.transform.GetChild (0).GetComponent<Text>();
+			//OnClientReady(false);
+			if (!isReady) 
+			{
+				ChangeReadyButtonColor(NotReadyColor);
+				readyButtonText.text = "...";
+			} else 
+			{
+				ChangeReadyButtonColor(TransparentColor);
+				readyButtonText.text = "READY";
+				readyButtonText.color = ReadyColor;
+			}
             readyButton.interactable = false;
+			Debug.Log(isReady);
 
-            OnClientReady(false);
         }
 
         void SetupLocalPlayer()
@@ -161,11 +172,13 @@ namespace Prototype.NetworkLobby
             spellButton1.gameObject.SetActive(true);
             spellButton2.gameObject.SetActive(true);
             spellButton3.gameObject.SetActive(true);
-            spellButton4.gameObject.SetActive(true);
+            spellButton4.transform.parent.gameObject.SetActive(true);
+			RandomizeButton.transform.parent.gameObject.SetActive (true);
             spellButton1.interactable = true;
             spellButton2.interactable = true;
             spellButton3.interactable = true;
             spellButton4.interactable = true;
+			RandomizeButton.interactable = true;
             ValidateSpellSelection();
 
             //We need to assign the navigation for down directly, it seems to lose the explicit reference because the back button is on a different UI
@@ -340,6 +353,7 @@ namespace Prototype.NetworkLobby
         {
             if (readyState)
             {
+				isReady = true;
                 ChangeReadyButtonColor(TransparentColor);
 
                 Text textComponent = readyButton.transform.GetChild(0).GetComponent<Text>();
@@ -370,7 +384,7 @@ namespace Prototype.NetworkLobby
             else
             {
                 ChangeReadyButtonColor(isLocalPlayer ? JoinColor : NotReadyColor);
-
+				isReady = false;
                 Text textComponent = readyButton.transform.GetChild(0).GetComponent<Text>();
                 textComponent.text = isLocalPlayer ? "JOIN" : "...";
                 textComponent.color = Color.white;

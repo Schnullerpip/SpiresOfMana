@@ -44,6 +44,7 @@ public class HealthHUD : MonoBehaviour
     void OnDisable()
     {
         GameManager.OnGameStarted -= Init;
+        GameManager.OnLocalPlayerDead -= LocalPlayerDead;
     }
 
     public void SetHealth(int health)
@@ -53,6 +54,11 @@ public class HealthHUD : MonoBehaviour
 
 	private void LocalPlayerDead()
 	{
-		canvas.enabled = false;
+        Debug.Log(canvas);
+        if(!canvas)
+        {
+            canvas = GetComponentInParent<Canvas>();
+        }
+        canvas.enabled = false;
 	}
 }

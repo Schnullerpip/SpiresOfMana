@@ -61,8 +61,6 @@ public class ParalysisBehaviour : A_EffectBehaviour
         mAffectedPlayer.inputStateSystem.SetState(InputStateSystem.InputStateID.Normal);
         //mAffectedPlayer.movement.speed = mAffectedPlayer.movement.originalSpeed;
 
-        //clear movement input
-        mAffectedPlayer.movement.ClearMovementInput();
     }
 
 

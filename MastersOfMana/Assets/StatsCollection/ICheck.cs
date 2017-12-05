@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using Rewired.Dev.Tools;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class ICheck : MonoBehaviour
+public class ICheck : NetworkBehaviour
 {
     public string[] fileName;
     public string preferedFileExtension = ".txt";
@@ -13,6 +14,13 @@ public class ICheck : MonoBehaviour
 
     public void Start()
     {
+
+        if (!isServer)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+
         for (int i = 0; i < fileName.Length; ++i)
         {
             //just in case the prefered filelocation was entered to be misunderstood as part of the filename not the path

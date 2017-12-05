@@ -125,8 +125,6 @@ namespace Prototype.NetworkLobby
 				readyButtonText.color = ReadyColor;
 			}
             readyButton.interactable = false;
-			Debug.Log(isReady);
-
         }
 
         void SetupLocalPlayer()

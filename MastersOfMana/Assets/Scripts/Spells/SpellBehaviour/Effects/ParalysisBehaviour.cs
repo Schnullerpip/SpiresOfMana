@@ -22,7 +22,6 @@ public class ParalysisBehaviour : A_EffectBehaviour
         {
             if (p == caster) continue;
 
-            var direction = caster.GetCameraLookDirection();
             if (ConfirmedHit(p.headJoint.position, caster, mRange) ||
                 ConfirmedHit(p.transform.position, caster, mRange) ||
                 ConfirmedHit(p.movement.mRigidbody.worldCenterOfMass, caster, mRange))

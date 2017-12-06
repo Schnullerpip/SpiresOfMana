@@ -23,16 +23,19 @@ public class InputStateParalyzed : A_InputState {
 		#region Spell Selection
 		if (playerInput.GetButtonDown("SpellSelection1")) 
 		{
+            player.GetPlayerSpells().StopPreview();
 			mPreviewActive = false;
         	ChooseSpell(0);
         }
 		if (playerInput.GetButtonDown("SpellSelection2")) 
 		{
+            player.GetPlayerSpells().StopPreview();
 			mPreviewActive = false;
 			ChooseSpell(1);
         }
 		if (playerInput.GetButtonDown("SpellSelection3")) 
 		{
+            player.GetPlayerSpells().StopPreview();
 			mPreviewActive = false;
 			ChooseSpell(2);
         }
@@ -43,10 +46,15 @@ public class InputStateParalyzed : A_InputState {
 			player.aim.GetCameraRig().SwapShoulder();
 		}
 
-		//store the aim input, either mouse or right analog stick
-		Vector2 aimInput = playerInput.GetAxis2D("AimHorizontal", "AimVertical");
-//		aimInput = Vector3.ClampMagnitude(aimInput,1); //TODO: delete maybe?
+        if ( mPreviewActive &&
+            (playerInput.GetButtonUp("QuickCast1") ||
+            playerInput.GetButtonUp("QuickCast2") ||
+            playerInput.GetButtonUp("QuickCast3") ||
+            playerInput.GetButtonUp("CastSpell")))
+        {
+            player.GetPlayerSpells().StopPreview();
+        }
 
-		Aim(aimInput);
+		Aim(playerInput.GetAxis2D("AimHorizontal", "AimVertical"));
     }
 }

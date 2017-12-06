@@ -39,6 +39,7 @@ public class HurtIndicator : MonoBehaviour {
             localPlayerHealthScript.OnHealthChanged -= HealthChanged;
             localPlayerHealthScript.OnDamageTaken -= DamageTaken;
         }
+		GameManager.OnLocalPlayerDead -= localPlayerDead;
     }
 
     private void Update()

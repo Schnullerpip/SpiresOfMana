@@ -81,4 +81,10 @@ public class ServerMoveable : NetworkBehaviour
     {
         mRigidbody.position = vec3;
     }
+
+    [ClientRpc]
+    public void RpcMovePosition(Vector3 vec3)
+    {
+        mRigidbody.MovePosition(vec3);
+    }
 }

@@ -14,11 +14,14 @@ public class JetBehaviour : A_SummoningBehaviour
     private float mLifeTime;
     [SerializeField]
     private float mGravityreduction;
+    [SerializeField]
+    [Range(0.0f, 1.0f)]
+    private float mMinimalHeightFactor;
 
     [SerializeField] private CapsuleCollider trigger;
+    private Vector3 triggerPos;
 
-    private List<ServerMoveable> mAffecting;
-
+    private List<ServerMoveable> mAffecting = null;
 
     public override void Execute(PlayerScript caster)
     {
@@ -30,6 +33,8 @@ public class JetBehaviour : A_SummoningBehaviour
             jet.transform.position = hit.point;
             jet.caster = caster;
             jet.casterObject = caster.gameObject;
+            jet.triggerPos = jet.trigger.transform.position;
+            jet.triggerPos = new Vector3(0, jet.triggerPos.y, 0);
 
             jet.gameObject.SetActive(true);
             NetworkServer.Spawn(jet.gameObject);
@@ -40,7 +45,10 @@ public class JetBehaviour : A_SummoningBehaviour
 
     void Start()
     {
-        mAffecting = new List<ServerMoveable>();
+        if (mAffecting == null)
+        {
+            mAffecting = new List<ServerMoveable>();
+        }
     }
 
     protected override void ExecuteTriggerEnter_Host(Collider other)
@@ -89,20 +97,31 @@ public class JetBehaviour : A_SummoningBehaviour
             return;
         }
 
-        Vector3 upforce = Vector3.up*mUpForce;
+
+        Vector3 upforce = Vector3.up*mUpForce*Time.deltaTime;
 
         foreach (var sm in mAffecting)
         {
+            Vector3 upforceIndividual = upforce;
+            //we only wanna deal with the 
+            Vector3 smPos = sm.transform.position;
+            smPos.x = 0;
+            smPos.z = 0;
+
+            float factor = mMinimalHeightFactor + 1-(triggerPos - smPos).sqrMagnitude/(trigger.height*trigger.height);
+            factor *= factor;
+            upforceIndividual *= factor;
+
             if (sm.mRigidbody.velocity.y < 0)
             {
                 Vector3 damping = -1*sm.mRigidbody.velocity;
                 damping.x = 0;
                 damping.z = 0;
                 damping *= mGravityreduction;
-                upforce += damping;
+                upforceIndividual += damping;
             }
 
-            sm.RpcAddForce(upforce, ForceMode.Force);
+            sm.RpcAddForce(upforceIndividual, ForceMode.Force);
         }
     }
 

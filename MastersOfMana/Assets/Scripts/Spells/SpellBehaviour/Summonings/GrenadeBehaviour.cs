@@ -8,7 +8,7 @@ using UnityEngine.Networking;
 /// The specific behaviour of the fireball, that is manifested in the scene
 /// </summary>
 [RequireComponent(typeof(Rigidbody))]
-public class GrenadeBehaviour : A_SummoningBehaviour
+public class GrenadeBehaviour : A_ServerMoveableSummoning
 {
 	public float throwForce = 20;
 	public float lifeTime = 3;

@@ -69,7 +69,7 @@ public class Tornado : NetworkBehaviour
             {
                 PlayerScript ps = rigid.GetComponent<PlayerScript>();
                 ps.movement.RpcAddForce(appliedForce, ForceMode.VelocityChange);
-                ps.healthScript.TakeDamage(damage);
+                ps.healthScript.TakeDamage(damage, GetType());
             }
             else
             {

@@ -25,7 +25,7 @@ public class ServerMoveable : NetworkBehaviour
         mRigidbody = gameObject.GetComponent<Rigidbody>();
     }
 
-
+    ///<summary>
     /// method to move the client instance, even though client has authority over his position
     /// </summary>
     /// <param name="force"></param>
@@ -42,11 +42,6 @@ public class ServerMoveable : NetworkBehaviour
 		mRigidbody.velocity = velocity;
 	}
 
-    /// <summary>
-    /// adds explosion force to player on server side - kinda
-    /// </summary>
-    /// <param name="force"></param>
-    /// <param name="mode"></param>
     [ClientRpc]
     public void RpcAddExplosionForce(float explosionForce, Vector3 explosionPosition, float explosionRadius)
     {
@@ -58,6 +53,13 @@ public class ServerMoveable : NetworkBehaviour
     {
         mRigidbody.AddForce(force, mode);
         mRigidbody.position = newPosition;
+    }
+
+    [ClientRpc]
+    public void RpcSetVelocityAndMovePosition(Vector3 velocity, Vector3 newPosition)
+    {
+        mRigidbody.velocity = velocity;
+        mRigidbody.MovePosition(newPosition);
     }
 
     [ClientRpc]
@@ -74,5 +76,11 @@ public class ServerMoveable : NetworkBehaviour
     public void RpcSetPosition(Vector3 vec3)
     {
         mRigidbody.position = vec3;
+    }
+
+    [ClientRpc]
+    public void RpcMovePosition(Vector3 vec3)
+    {
+        mRigidbody.MovePosition(vec3);
     }
 }

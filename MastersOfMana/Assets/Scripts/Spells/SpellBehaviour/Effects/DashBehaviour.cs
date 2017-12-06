@@ -10,19 +10,6 @@ using UnityEngine.Networking;
 /// </summary>
 public class DashBehaviour : A_EffectBehaviour
 {
-
-//    [SerializeField] private float mMaxDistance;
-//
-//    [SerializeField] private float mOffsetToPlayer;
-//
-//    [SerializeField] private float mCapsuleHeight;
-//
-//    [SerializeField] private float mCapsuleRadius;
-//
-//    [SerializeField] private float mPushForce;
-//
-//    [SerializeField] private float mReduction;
-
 	public float maxDistance = 10;
 	public float pushForce = 10;
 
@@ -30,94 +17,93 @@ public class DashBehaviour : A_EffectBehaviour
 	public float playerHeight = 2;
 
 	[Tooltip("Additional height for the lower sphere of the capsule. This is used to effectively 'pull in' the feet, so the character doesn't get stuck so easily on the ground.")]
-	public float shortening = 0.3f;
+	public float upwardsOffset = 1.0f;
 
 	[Tooltip("This is the distance the lower sphere of the capsule is pushed forwards to handle straight walls better. This should be rather low")]
 	public float feetAdvancement = 0.1f;
 
-	[Tooltip("The offset of the capsule to handle standing very close to a wall. This value describes the offset of the capsule backwards. This has to be smaller than the radius.")]
-	public float backwardOffset = 0.02f;
-
 	public PreviewSpell preview;
+    public GameObject dashEffectPrefab; 
 
-	Vector3 GetNewPosition (PlayerScript caster, Vector3 direction, out RaycastHit hit)
+	Vector3 GetNewPosition (PlayerScript player, Vector3 direction, out RaycastHit hit)
 	{
-		/*
-		//properties the spellneeds
-		Vector3 point1, point2;
-		Vector3 originalPosition = caster.transform.position;
+        //when the player is up against a wall
+        if(player.HandTransformIsObscured())
+        {
+            hit = new RaycastHit();
+            //return the current position and do nothing
+            return player.transform.position;
+        }
 
-		point1 = point2 = caster.handTransform.position + direction*mOffsetToPlayer;
-		point2 -= new Vector3(0, mCapsuleHeight, 0);
+        //temporaraly disable the colliders
+        player.SetColliderIgnoreRaycast(true);
 
-		//capsulecast to find new position
-		bool hitSomething = Physics.CapsuleCast(point1, point2, mCapsuleRadius, direction, out hit, mMaxDistance, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+        //lower and upper point that define the capsule cast
+        Vector3 lowerPoint = player.transform.position //base position
+                                   + Vector3.up * (playerRadius + upwardsOffset); //offset of the capsule radius to get to the center of the lower sphere
 
-		//find position of player to that position
-		//if the way is free go until maxdistance is reached - else go until the hit object
-		return originalPosition + direction*(hitSomething ? hit.distance-mReduction : mMaxDistance);
-		*/
+        Vector3 upperPoint = player.transform.position //base position
+                                   + Vector3.up * (playerHeight + upwardsOffset) //add the height to get to the top
+                                   + Vector3.down * playerRadius //go down the radius to get to the center of the sphere that defines the capsule
+                                   - player.transform.forward * feetAdvancement; //subtract the feetadvance in order to make sure the feet touch a vertical wall first
 
-//		if(Physics.SphereCast(caster.handTransform.position, playerRadius, direction, out hit, mMaxDistance))
-//		{
-//			return hit.point + hit.normal * Vector3.Angle(hit.normal, Vector3.up) / 90 * .35f;
-//		}
+        //Debug.DrawRay(lowerPoint + Vector3.down * playerRadius, direction * maxDistance,Color.yellow);
+        //Debug.DrawRay(lowerPoint, direction * maxDistance);
+        //Debug.DrawRay(upperPoint, direction * maxDistance);
+        //Debug.DrawRay(upperPoint + Vector3.up * playerRadius, direction * maxDistance,Color.yellow);
 
-		Vector3 lowerPoint = caster.transform.position + Vector3.up * (playerRadius + shortening) - caster.transform.forward * backwardOffset;
-		Vector3 upperPoint = caster.transform.position + Vector3.up * playerHeight + Vector3.down * playerRadius - caster.transform.forward * (feetAdvancement + backwardOffset);
+		Vector3 returnPoint;
 
-		Debug.DrawRay(lowerPoint + Vector3.down * playerRadius, direction * maxDistance,Color.yellow);
-		Debug.DrawRay(lowerPoint, direction * maxDistance);
-		Debug.DrawRay(upperPoint, direction * maxDistance);
-		Debug.DrawRay(upperPoint + Vector3.up * playerRadius, direction * maxDistance,Color.yellow);
-
-		if(Physics.CapsuleCast(lowerPoint,upperPoint,playerRadius, direction, out hit, maxDistance))
+        //case 1: the capsule cast hit something
+        if(Physics.CapsuleCast(lowerPoint, upperPoint, playerRadius, direction, out hit, maxDistance))
 		{
+            //Debug.DrawRay(hit.point, hit.normal, Color.cyan);
+
 			float surfaceAngle = Vector3.Angle(hit.normal, Vector3.up);
 
-			if(surfaceAngle > 90)
+            //case 1.1: check for potential ceilings and overhangs. 95 because some walls could be 91-ish and therefore ruin the assumptions
+			if(surfaceAngle > 95)
 			{
-				Debug.Log("Ceiling");
-
-				RaycastHit ceilingHit;
-
-				if(Physics.Raycast(hit.point, hit.normal, out ceilingHit, playerHeight))
-				{
-					return hit.point + hit.normal * (surfaceAngle / 90) * playerRadius;
-				}
-				else
-				{
-					return caster.transform.position + (direction * hit.distance);
-				}
+                Vector3 offset = -direction * playerRadius //go back a bit
+                    + Vector3.down * (playerHeight - playerRadius); //go down the height and radius, since the capsule hits earlier than the head
+				//Debug.DrawRay(hit.point, offset, Color.red);
+                returnPoint = hit.point + offset;
 			} 
+            //case 1.2: the hit surface is a wall or the ground
 			else 
 			{
 				//place the player to the hit point, but add the normal of the surface with a weighting depending on the angle of the surface.
 				//a wall should add the full player's radius, placing him/her right next to wall instead of into it 
-				return hit.point + hit.normal * (surfaceAngle / 90) * playerRadius;
-
+                returnPoint = hit.point + hit.normal * (surfaceAngle / 90) * playerRadius;
 			}
 		}
+        //case 2: ray ends in midair
 		else
 		{
 			RaycastHit hitDown;
-			if(Physics.SphereCast(lowerPoint + direction * maxDistance, playerRadius, Vector3.down, out hitDown, playerRadius + shortening))
+            //case 2.1: the ground is nearby
+			if(Physics.SphereCast(lowerPoint + direction * maxDistance, playerRadius, Vector3.down, out hitDown, playerRadius + upwardsOffset))
 			{
-				return hitDown.point;
+                returnPoint = hitDown.point;
 			}
+            //case 2.2: no ground near
 			else
 			{
-				return caster.transform.position + (direction * maxDistance) + Vector3.down * playerRadius;
+                //just move in the aimed direction, max distance
+                returnPoint = player.transform.position + (direction * maxDistance) + Vector3.down * playerRadius;
 			}
 		}
+
+        //enable collision again!
+        player.SetColliderIgnoreRaycast(false);
+        return returnPoint;
 	}
 		
 	public override void Preview (PlayerScript caster)
 	{
 		base.Preview (caster);
 
-
-		Vector3 direction = caster.aim.currentLookRotation * Vector3.forward;
+        Vector3 direction = caster.aim.currentLookRotation * Vector3.forward;
 
 		RaycastHit hit;
 
@@ -134,24 +120,23 @@ public class DashBehaviour : A_EffectBehaviour
 
 	}
 
-    public GameObject dashEffectPrefab; 
-
     public override void Execute(PlayerScript caster)
     {
 		Vector3 direction = caster.Client_GetCurrentLookDirection() * Vector3.forward;
 
 		RaycastHit hit;
 
-		Vector3 newPosition = GetNewPosition(caster, direction, out hit);
+        Vector3 newPosition = GetNewPosition(caster, direction, out hit);
 
 		if (hit.collider != null)
         {
-            PlayerScript ps = hit.collider.GetComponentInParent<PlayerScript>();
-            if (ps)
+            PlayerScript opponent = hit.collider.GetComponentInParent<PlayerScript>();
+            if (opponent && opponent != caster)
             {
-                Vector3 pushDirection = Vector3.Normalize(ps.transform.TransformPoint(ps.movement.mRigidbody.centerOfMass) - caster.transform.position);
-                ps.healthScript.TakeDamage(0, this.GetType());
-                ps.movement.RpcSetVelocity(pushDirection*pushForce);
+                Vector3 pushVector = opponent.movement.mRigidbody.worldCenterOfMass - newPosition;
+                Vector3 pushDirection = Vector3.Normalize(pushVector);
+                opponent.healthScript.TakeDamage(0, this.GetType());
+                opponent.movement.RpcSetVelocityAndMovePosition(pushDirection * pushForce, newPosition + pushVector - opponent.movement.mRigidbody.centerOfMass);
             }
         }
 
@@ -167,7 +152,8 @@ public class DashBehaviour : A_EffectBehaviour
         NetworkServer.Spawn(ds);
 
         //set the new position of the player
-        caster.movement.RpcSetPosition(newPosition);
+        //caster.movement.RpcSetPosition(newPosition);
+        caster.movement.RpcMovePosition(newPosition);
 
         //make the trail disappear after one second
         caster.StartCoroutine(UnspawnTrail(ds));
@@ -179,9 +165,4 @@ public class DashBehaviour : A_EffectBehaviour
         obj.SetActive(false);
         NetworkServer.UnSpawn(obj);
     }
-
-	void OnValidate()
-	{
-		backwardOffset = Mathf.Clamp(backwardOffset, 0, playerRadius);
-	}
 }

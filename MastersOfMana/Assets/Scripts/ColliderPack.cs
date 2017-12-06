@@ -13,6 +13,10 @@ public struct ColliderPack
 		mOriginalLayer = originalLayers;
 	}
 
+    /// <summary>
+    /// Sets the collider layer.
+    /// </summary>
+    /// <param name="layer">Layer.</param>
 	public void SetColliderLayer(int layer)
 	{
 		for (int i = 0; i < mColliders.Length; ++i) 
@@ -21,6 +25,9 @@ public struct ColliderPack
 		}
 	}
 
+    /// <summary>
+    /// Restores the original layer.
+    /// </summary>
 	public void RestoreOriginalLayer()
 	{
 		for (int i = 0; i < mColliders.Length; ++i) 
@@ -28,4 +35,18 @@ public struct ColliderPack
 			mColliders[i].gameObject.layer = mOriginalLayer[i];
 		}
 	}
+
+    /// <summary>
+    /// Does the ColliderPack contains the specified collider?
+    /// </summary>
+    /// <returns>The contains.</returns>
+    /// <param name="col">Col.</param>
+    public bool Contains(Collider col)
+    {
+        for (int i = 0; i < mColliders.Length; ++i)
+        {
+            if (mColliders[i] == col) return true;
+        }
+        return false;
+    }
 }

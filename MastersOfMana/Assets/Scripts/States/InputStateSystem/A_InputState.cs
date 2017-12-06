@@ -47,7 +47,6 @@ public abstract class A_InputState : A_State{
 		if(playerInput.GetButtonDown("QuickCast1"))
 		{
 			mPreviewActive = !mPreviewActive;
-			player.movement.StopSprint();
 			ChooseSpell(0);
 		}
 		else if(playerInput.GetButtonUp("QuickCast1") && mPreviewActive)
@@ -58,7 +57,6 @@ public abstract class A_InputState : A_State{
 		if(playerInput.GetButtonDown("QuickCast2"))
 		{
 			mPreviewActive = !mPreviewActive;
-			player.movement.StopSprint();
 			ChooseSpell(1);
 		}
 		else if(playerInput.GetButtonUp("QuickCast2") && mPreviewActive)
@@ -69,7 +67,6 @@ public abstract class A_InputState : A_State{
 		if(playerInput.GetButtonDown("QuickCast3"))
 		{
 			mPreviewActive = !mPreviewActive;
-			player.movement.StopSprint();
 			ChooseSpell(2);
 		}
 		else if(playerInput.GetButtonUp("QuickCast3") && mPreviewActive)
@@ -82,7 +79,6 @@ public abstract class A_InputState : A_State{
 			if(player.GetPlayerSpells().ultimateEnergy >= player.GetPlayerSpells().ultimateEnergyThreshold)
 			{
 				mPreviewActive = !mPreviewActive;
-				player.movement.StopSprint();
 				ChooseSpell(3);
 			}
 		}
@@ -107,18 +103,6 @@ public abstract class A_InputState : A_State{
 			player.GetPlayerSpells().PreviewCurrentSpell();
 		}
 
-		if(!mPreviewActive && !mFocus)
-		{
-			if(playerInput.GetButtonDown("Sprint"))
-			{
-				player.movement.ToggleSprint();
-			}
-			else if(playerInput.GetButtonShortPressUp("Sprint"))
-			{
-				player.movement.StopSprint();
-			}
-		}
-
 		//store the input values
 		Vector2 movementInput = playerInput.GetAxis2D("MoveHorizontal", "MoveVertical");
 		Move(movementInput);
@@ -141,7 +125,6 @@ public abstract class A_InputState : A_State{
 			if(mFocus)
 			{
 				player.aim.StartFocus(player);
-				player.movement.StopSprint();
 			}
 			else
 			{
@@ -193,7 +176,6 @@ public abstract class A_InputState : A_State{
     public virtual void CastSpell()
     {
 		mPreviewActive = false;
-		player.movement.StopSprint();
 		player.GetPlayerSpells().StopPreview();
         player.castStateSystem.current.CastCmdSpell();
     }

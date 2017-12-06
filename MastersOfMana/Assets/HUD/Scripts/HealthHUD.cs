@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class HealthHUD : MonoBehaviour
 {
     public Text healthText;
-    public FloatingDamageTextSystem damageTextSystem;
+    public OpponentHUD opponentHUDPrefab;
 
     private PlayerHealthScript localPlayerHealthScript;
     private Canvas canvas;
@@ -13,6 +13,7 @@ public class HealthHUD : MonoBehaviour
     void OnEnable()
     {
         GameManager.OnGameStarted += Init;
+		GameManager.OnLocalPlayerDead += LocalPlayerDead;
     }
 
     public void Init()
@@ -34,9 +35,9 @@ public class HealthHUD : MonoBehaviour
                 continue;
             }
 
-            FloatingDamageTextSystem damageSystem = Instantiate(damageTextSystem);
-            damageSystem.player = player;
-            damageSystem.Init();
+            OpponentHUD oponnentHUD = Instantiate(opponentHUDPrefab);
+            oponnentHUD.player = player;
+            oponnentHUD.Init();
         }
     }
 
@@ -49,4 +50,9 @@ public class HealthHUD : MonoBehaviour
     {
         healthText.text = "Health: " + health;
     }
+
+	private void LocalPlayerDead()
+	{
+		canvas.enabled = false;
+	}
 }

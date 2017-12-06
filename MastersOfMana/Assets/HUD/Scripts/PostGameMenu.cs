@@ -16,7 +16,7 @@ public class PostGameMenu : MonoBehaviour
     {
         if(GameManager.instance.winnerID == GameManager.instance.localPlayer.netId.Value)
         {
-            text.text = "You have won!!!";
+            text.text = "You won!!!";
         }
         else
         {

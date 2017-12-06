@@ -1889,8 +1889,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mRigidbody: {fileID: 0}
+  originalSpeed: 5
   speed: 5
-  sprintSpeed: 7
   focusSpeedSlowdown: 0.25
   jumpStrength: 5
   additionalFallGravityMultiplier: 1
@@ -2002,6 +2002,8 @@ MonoBehaviour:
   ignoreLayer:
     serializedVersion: 2
     m_Bits: 4
+  specCamPrefab: {fileID: 114149247573842926, guid: ea47f3136feac4469bb2476cf0188b80,
+    type: 2}
 --- !u!114 &114651380410554418
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2044,7 +2046,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ab377a874e87ce419291cc9c24e055b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  expectingSpell: {fileID: 0}
   ultimateEnergy: 0
   ultimateEnergyThreshold: 45
   spellslot:
@@ -2054,10 +2055,10 @@ MonoBehaviour:
   - spell: {fileID: 11400000, guid: a4a0543833220a24da6238faa7d30a8a, type: 2}
     cooldown: 0
     isUltimateSpellSlot: 0
-  - spell: {fileID: 11400000, guid: 26da99f040a95c0488b693dfc5edcc01, type: 2}
+  - spell: {fileID: 11400000, guid: b9434bcfeabbb764480b3647610d4551, type: 2}
     cooldown: 0
     isUltimateSpellSlot: 0
-  - spell: {fileID: 11400000, guid: 7ae306a51de35493d93d5048415f3986, type: 2}
+  - spell: {fileID: 11400000, guid: 5e315aa3d4f76b146be106becf3c0f60, type: 2}
     cooldown: 0
     isUltimateSpellSlot: 1
   currentSpell: 0

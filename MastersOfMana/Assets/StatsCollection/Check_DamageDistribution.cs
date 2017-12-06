@@ -57,7 +57,8 @@ public class Check_DamageDistribution : ICheck
 
     public void GameEndRoutine()
     {
-        LogAll();
+        LogDiscreteDamageSources();
+        LogAccumulatedDamageSources();
     }
 
     public void Init()
@@ -136,11 +137,7 @@ public class Check_DamageDistribution : ICheck
 	{
 	    base.Start();
 
-        //revert all the log files, so they can be written freshly
-        foreach (var p in fileName)
-        {
-            System.IO.File.WriteAllText(p,string.Empty);
-        }
+
 	    GameManager.OnGameStarted += Init;
 
         //copy the fileName array
@@ -148,12 +145,11 @@ public class Check_DamageDistribution : ICheck
         fileName.CopyTo(plotFile, 0);
         //now change their endings to .m
         for(int i = 0; i < plotFile.Length; ++i)
-	    {
-	        plotFile[i] = plotFile[i].Replace(preferedFileExtension, ".m");
+        {
+            fileName[i] += preferedFileExtension;
+	        plotFile[i] += ".m";
 	    }
 	}
-
-
     //----------------------- functions and methods relevant for LOG functionality  ----------------------------------------------//
 
 
@@ -189,13 +185,11 @@ public class Check_DamageDistribution : ICheck
         return lastDamage;
     }
 
-    [ContextMenu("revert all damage-logfiles")]
-    public void RevertAllFiles()
+    [ContextMenu("log discrete and accumulated")]
+    public void LogDiscreteAndAccumulated()
     {
-        foreach (var f in fileName)
-        {
-            File.WriteAllText(f, string.Empty);
-        }
+        LogDiscreteDamageSources();
+        LogAccumulatedDamageSources();
     }
 
     [ContextMenu("log accumulated damage sources")]

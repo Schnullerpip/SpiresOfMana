@@ -134,7 +134,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
                 cachedHealth.Add(directHit);
 
                 Debug.Log("direct damage: " + directDamage);
-                directHit.TakeDamage(directDamage);
+                directHit.TakeDamage(directDamage, GetType());
 
                 PlayerScript player = directHit.GetComponent<PlayerScript>();
                 if (player)
@@ -164,7 +164,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 
             if(health && !cachedHealth.Contains(health))
             {
-                health.TakeDamage(explosionDamage);
+                health.TakeDamage(explosionDamage, GetType());
                 cachedHealth.Add(health);
             }
                 

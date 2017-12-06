@@ -7,7 +7,6 @@ using UnityEngine.Networking;
 [RequireComponent(typeof(ServerMoveable))]
 public abstract class A_ServerMoveableSummoning : A_SummoningBehaviour
 {
-
     public ServerMoveable serverMoveable;
 
     public override void Awake()

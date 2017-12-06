@@ -149,7 +149,7 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
 			if(!cachedRigids.Contains(c.attachedRigidbody))
 			{
 				cachedRigids.Add(c.attachedRigidbody);
-				c.GetComponentInParent<PlayerHealthScript>().TakeDamage(damagePerStrike);
+				c.GetComponentInParent<PlayerHealthScript>().TakeDamage(damagePerStrike, this.GetType());
 			}
 		}
 	}

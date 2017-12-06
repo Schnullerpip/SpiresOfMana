@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Reflection.Emit;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -22,14 +23,24 @@ public class PlayerHealthScript : HealthScript {
         base.Start();
     }
 
-    public override void TakeDamage(int amount) {
+    public delegate void StatsRelevant(int damage, System.Type typeOfDamageDealer);
+    public event StatsRelevant OnStatsRelevantDamage;
+
+    public override void TakeDamage(int amount, System.Type typeOfDamageDealer) {
         bool hasBeenAlive = IsAlive();
-        base.TakeDamage(mPlayer.effectStateSystem.current.CalculateDamage(amount));
+        int actualDamage = mPlayer.effectStateSystem.current.CalculateDamage(amount);
+        base.TakeDamage(actualDamage, typeOfDamageDealer);
         if (!IsAlive() && hasBeenAlive) {
             //this mPlayer is dead!!! tell the Gamemanager, that one is down
             GameManager.instance.PlayerDown();
             //Show the postGame screen for this player
             RpcPlayerDead();
+        }
+
+        //fire the stats checks
+        if (OnStatsRelevantDamage != null)
+        {
+            OnStatsRelevantDamage(actualDamage, typeOfDamageDealer);
         }
     }
 
@@ -47,9 +58,12 @@ public class PlayerHealthScript : HealthScript {
         base.TakeHeal(mPlayer.effectStateSystem.current.CalculateHeal(amount));
     }
 
+    public struct FallDamage { };
+    public static FallDamage fallDamageInstance;
+
     public void TakeFallDamage(int amount)
     {
-        TakeDamage(mPlayer.effectStateSystem.current.CalculateFallDamage(amount));
+        TakeDamage(mPlayer.effectStateSystem.current.CalculateFallDamage(amount), fallDamageInstance.GetType());
     }
 
     public override void HealthChangedHook(int newHealth)

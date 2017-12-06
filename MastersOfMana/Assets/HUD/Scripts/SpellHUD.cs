@@ -27,6 +27,7 @@ public class SpellHUD : MonoBehaviour
     void OnEnable ()
     {
         GameManager.OnGameStarted += Init;
+        GameManager.OnLocalPlayerDead += LocalPlayerDead;
     }
 
     public void Init()
@@ -116,5 +117,14 @@ public class SpellHUD : MonoBehaviour
     void OnDisable()
     {
         GameManager.OnGameStarted -= Init;
+        GameManager.OnLocalPlayerDead -= LocalPlayerDead;
+    }
+
+    private void LocalPlayerDead()
+    {
+        foreach (SpellSlotHUD spellslot in spellSlots)
+        {
+            spellslot.setActive(false);
+        }
     }
 }

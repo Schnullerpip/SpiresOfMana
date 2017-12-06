@@ -32,6 +32,13 @@ public class OpponentHUD : MonoBehaviour {
         damageTextSystem = GetComponent<FloatingDamageTextSystem>();
         damageTextSystem.player = player;
         damageTextSystem.Init();
+
+        GameManager.OnLocalPlayerDead += localPlayerDead;
+    }
+
+    public void OnEnable()
+    {
+        GameManager.OnLocalPlayerDead -= localPlayerDead;
     }
 
     public void Update()
@@ -47,5 +54,10 @@ public class OpponentHUD : MonoBehaviour {
             transform.LookAt(mCamera.transform.position - v);
             transform.Rotate(0, 180, 0);
         }
+    }
+
+    private void localPlayerDead()
+    {
+        mCamera = Camera.main;
     }
 }

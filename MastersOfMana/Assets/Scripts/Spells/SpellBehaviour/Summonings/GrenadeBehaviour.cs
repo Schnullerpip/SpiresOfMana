@@ -169,7 +169,7 @@ public class GrenadeBehaviour : A_SummoningBehaviour
 			HealthScript health = c.GetComponentInParent<HealthScript>();
 			if(health && !cachedHealthScripts.Contains(health))
 			{
-				health.TakeDamage(damage);
+				health.TakeDamage(damage, this.GetType());
 				cachedHealthScripts.Add(health);
 			}
 		}

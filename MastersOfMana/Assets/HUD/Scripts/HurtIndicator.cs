@@ -28,6 +28,7 @@ public class HurtIndicator : MonoBehaviour {
         localPlayerHealthScript.OnHealthChanged += HealthChanged;
         localPlayerHealthScript.OnDamageTaken += DamageTaken;
         mPlayerMaxHealth = localPlayerHealthScript.GetMaxHealth();
+        GameManager.OnLocalPlayerDead += localPlayerDead;
     }
 
 
@@ -38,6 +39,7 @@ public class HurtIndicator : MonoBehaviour {
             localPlayerHealthScript.OnHealthChanged -= HealthChanged;
             localPlayerHealthScript.OnDamageTaken -= DamageTaken;
         }
+		GameManager.OnLocalPlayerDead -= localPlayerDead;
     }
 
     private void Update()
@@ -75,5 +77,10 @@ public class HurtIndicator : MonoBehaviour {
         {
             mRising = true;
         }
+    }
+
+    private void localPlayerDead()
+    {
+        sprite.enabled = false;
     }
 }

@@ -46,6 +46,7 @@ namespace Prototype.NetworkLobby
 			rewiredPlayer = ReInput.players.GetPlayer(0);
 			rewiredPlayer.controllers.maps.SetMapsEnabled(true,"UI");
             rewiredPlayer.controllers.maps.SetMapsEnabled(false, "Default");
+			matchNameInput.text = PlayerPrefs.GetString ("Playername", "DefaultName") + "'s Gameroom";
         }
 
         public void OnClickHost()

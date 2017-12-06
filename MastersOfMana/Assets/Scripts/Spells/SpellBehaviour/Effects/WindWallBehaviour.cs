@@ -81,6 +81,7 @@ public class WindWallBehaviour : A_SummoningBehaviour
                 if (opponent != caster )
                 {
                     opponent.movement.RpcSetVelocity(force);
+                    opponent.healthScript.TakeDamage(0, GetType());
                 }
             }
             else

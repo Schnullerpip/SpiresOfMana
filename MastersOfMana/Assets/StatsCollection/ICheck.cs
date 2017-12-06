@@ -44,7 +44,7 @@ public class ICheck : NetworkBehaviour
         preferedFileLocation = logFileDirectoryPath;
         if (!preferedFileLocation.EndsWith("/"))
         {
-            preferedFileLocation = preferedFileLocation += "/";
+            preferedFileLocation = preferedFileLocation + "/";
         }
 
         Debug.Log("dataPath: "+preferedFileLocation);

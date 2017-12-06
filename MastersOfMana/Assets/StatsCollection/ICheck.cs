@@ -26,16 +26,28 @@ public class ICheck : NetworkBehaviour
             return;
         }
 
-        //just in case the prefered filelocation was entered to be misunderstood as part of the filename not the path
-        if (preferedFileLocation != "" && !preferedFileLocation.EndsWith("/"))
+        //if nothing was assigned - use the default path
+        if (preferedFileLocation == "")
         {
-            preferedFileLocation += "/";
+            preferedFileLocation = "LogData";
         }
-        else if (preferedFileLocation == "")
+        var logDirectoryPath = Application.dataPath + "/StatsCollection";
+        var logFileDirectoryPath = logDirectoryPath + "/" + preferedFileLocation;
+        if (!System.IO.Directory.Exists(logDirectoryPath))
         {
-            //if nothing was assigned - use the default path
-            preferedFileLocation = Application.dataPath + "/StatsCollection/LogData/";
+            Directory.CreateDirectory(logDirectoryPath);
         }
+        if (!System.IO.Directory.Exists(logFileDirectoryPath))
+        {
+            Directory.CreateDirectory(logFileDirectoryPath);
+        }
+        preferedFileLocation = logFileDirectoryPath;
+        if (!preferedFileLocation.EndsWith("/"))
+        {
+            preferedFileLocation = preferedFileLocation += "/";
+        }
+
+        Debug.Log("dataPath: "+preferedFileLocation);
 
         //initialize unique identifier
 	    mUniqueIdentifier = System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");

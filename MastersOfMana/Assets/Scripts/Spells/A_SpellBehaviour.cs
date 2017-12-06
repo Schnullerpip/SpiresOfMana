@@ -103,7 +103,7 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
     ///project the casters lookdirection on the plane of the other player's position
     /// </summary>
     /// <param name="point"> point to be projected </param>
-    /// <param name="normal"> normal of the plane to be projected on</param>
+    /// <param name="caster"> provides information about it's whereabouts, as well as it's camera's </param>
     /// <param name="hitRange"> tolerance to hit or no hit </param>
     /// <returns>whether or not point should be hit or not</returns>
     protected static bool ConfirmedHit(Vector3 point, PlayerScript caster, float hitRange)

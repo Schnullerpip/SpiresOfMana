@@ -130,12 +130,13 @@ public class DashBehaviour : A_EffectBehaviour
 
 		if (hit.collider != null)
         {
-            PlayerScript ps = hit.collider.GetComponentInParent<PlayerScript>();
-            if (ps && ps != caster)
+            PlayerScript opponent = hit.collider.GetComponentInParent<PlayerScript>();
+            if (opponent && opponent != caster)
             {
-                Vector3 pushDirection = Vector3.Normalize(ps.transform.TransformPoint(ps.movement.mRigidbody.centerOfMass) - caster.transform.position);
-                ps.healthScript.TakeDamage(0, this.GetType());
-                ps.movement.RpcSetVelocity(pushDirection*pushForce);
+                Vector3 pushVector = opponent.movement.mRigidbody.worldCenterOfMass - newPosition;
+                Vector3 pushDirection = Vector3.Normalize(pushVector);
+                opponent.healthScript.TakeDamage(0, this.GetType());
+                opponent.movement.RpcSetVelocityAndMovePosition(pushDirection * pushForce, newPosition + pushVector - opponent.movement.mRigidbody.centerOfMass);
             }
         }
 

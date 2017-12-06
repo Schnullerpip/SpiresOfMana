@@ -36,33 +36,31 @@ public class LavaFloor : NetworkBehaviour
             if (playerHealth)
             {
                 //Remember which player this coroutine belongs to
-                //mInstanceCoroutineDictionary.Add(playerHealth.netId, StartCoroutine(DealDamage(playerHealth)));
-
-                playerHealth.TakeDamage(damagePerSecond, this.GetType());
+                mInstanceCoroutineDictionary.Add(playerHealth.netId, StartCoroutine(DealDamage(playerHealth)));
 
                 playerHealth.GetComponent<PlayerMovement>().RpcSetVelocityY(10);
             }
         }
     }
 
-    //public void OnTriggerExit(Collider other)
-    //{
-    //    if (!isServer)
-    //    {
-    //        return;
-    //    }
-    //    //Check if collision with player
-    //    //Check FeetCollider to only trigger once per player
-    //    if (other.GetComponent<FeetCollider>())
-    //    {
-    //        PlayerHealthScript playerHealth = other.GetComponentInParent<PlayerHealthScript>();
-    //        if (playerHealth)
-    //        {
-    //            StopCoroutine(mInstanceCoroutineDictionary[playerHealth.netId]);
-    //            mInstanceCoroutineDictionary.Remove(playerHealth.netId);
-    //        }
-    //    }
-    //}
+    public void OnTriggerExit(Collider other)
+    {
+        if (!isServer)
+        {
+            return;
+        }
+        //Check if collision with player
+        //Check FeetCollider to only trigger once per player
+        if (other.GetComponent<FeetCollider>())
+        {
+            PlayerHealthScript playerHealth = other.GetComponentInParent<PlayerHealthScript>();
+            if (playerHealth)
+            {
+                StopCoroutine(mInstanceCoroutineDictionary[playerHealth.netId]);
+                mInstanceCoroutineDictionary.Remove(playerHealth.netId);
+            }
+        }
+    }
 
     public IEnumerator DealDamage(PlayerHealthScript playerHealth)
     {

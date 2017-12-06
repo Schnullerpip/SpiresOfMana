@@ -43,6 +43,12 @@ public class ServerMoveable : NetworkBehaviour
 	}
 
     [ClientRpc]
+    public void RpcSetVelocityY(float veloY)
+    {
+        mRigidbody.SetVelocityY(veloY);
+    }
+
+    [ClientRpc]
     public void RpcAddExplosionForce(float explosionForce, Vector3 explosionPosition, float explosionRadius)
     {
         mRigidbody.AddExplosionForce(explosionForce, explosionPosition, explosionRadius);

@@ -170,7 +170,7 @@ public class PlayerMovement : ServerMoveable
 	    var squaredMax = mMaxVelocityMagnitude*mMaxVelocityMagnitude;
 	    if (mRigidbody.velocity.sqrMagnitude > squaredMax)
 	    {
-	        mRigidbody.velocity = mRigidbody.velocity.normalized*mMaxVelocityMagnitude;
+            mRigidbody.velocity = Vector3.ClampMagnitude(mRigidbody.velocity, mMaxVelocityMagnitude);
 	    }
 	}
 

@@ -1897,6 +1897,7 @@ MonoBehaviour:
   amountOfReverseSlowdown: 0.25
   maxFullspeedAngle: 90
   fallingDamageThreshold: 18
+  mMaxVelocityMagnitude: 20
   hurtSlowdown: 0.5
   inputVelocityInfluence: 0.75
   feet: {fileID: 114211396574403768}
@@ -2051,13 +2052,13 @@ MonoBehaviour:
   ultimateEnergy: 0
   ultimateEnergyThreshold: 45
   spellslot:
-  - spell: {fileID: 11400000, guid: d41a648d6ad49334090f1c47fbc8cd34, type: 2}
+  - spell: {fileID: 11400000, guid: b9434bcfeabbb764480b3647610d4551, type: 2}
     cooldown: 0
     isUltimateSpellSlot: 0
   - spell: {fileID: 11400000, guid: a4a0543833220a24da6238faa7d30a8a, type: 2}
     cooldown: 0
     isUltimateSpellSlot: 0
-  - spell: {fileID: 11400000, guid: b9434bcfeabbb764480b3647610d4551, type: 2}
+  - spell: {fileID: 11400000, guid: 550c3a75fecb949ec8c45ab4c38ef166, type: 2}
     cooldown: 0
     isUltimateSpellSlot: 0
   - spell: {fileID: 11400000, guid: 5e315aa3d4f76b146be106becf3c0f60, type: 2}

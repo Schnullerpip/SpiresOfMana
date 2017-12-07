@@ -5,9 +5,9 @@ using UnityEngine.Networking;
 
 public class ParalysisBehaviour : A_EffectBehaviour
 {
-    [SerializeField] private float mMaxReach;
     [SerializeField] private float mLifetime;
     [SerializeField] private ParticleSystem mParticleSystem;
+    [SerializeField] private float mRange;
 
     private float mTimeCount;
 
@@ -16,24 +16,25 @@ public class ParalysisBehaviour : A_EffectBehaviour
 
     public override void Execute(PlayerScript caster)
     {
-        RaycastHit hit;
-        if (Physics.Raycast(new Ray(caster.GetCameraPosition(), caster.GetCameraLookDirection()), out hit,
-            mMaxReach))
+        //check for a hit
+        var opponents = GameManager.instance.mPlayers;
+        foreach (var p in opponents)
         {
-            Rigidbody rigid = hit.rigidbody;
-            if (rigid)
+            if (p == caster) continue;
+
+            if (ConfirmedHit(p.headJoint.position, caster, mRange) ||
+                ConfirmedHit(p.transform.position, caster, mRange) ||
+                ConfirmedHit(p.movement.mRigidbody.worldCenterOfMass, caster, mRange))
             {
-                PlayerScript hitPlayer = rigid.GetComponentInParent<PlayerScript>();
-                if (hitPlayer)
-                {
-                    //create a Paralysis behaviour, that sticks to the hitPlayer
-                    ParalysisBehaviour pb = PoolRegistry.Instantiate(this.gameObject).GetComponent<ParalysisBehaviour>();
-                    pb.mAffectedPlayerObject = hitPlayer.gameObject;
-                    pb.gameObject.SetActive(true);
-                    NetworkServer.Spawn(pb.gameObject);
-                    //apply damage just so the system registeres it as an affect
-                    hitPlayer.healthScript.TakeDamage(0, GetType());
-                }
+                //create a Paralysis behaviour, that sticks to the hitPlayer
+                ParalysisBehaviour pb = PoolRegistry.Instantiate(this.gameObject).GetComponent<ParalysisBehaviour>();
+                pb.mAffectedPlayerObject = p.gameObject;
+                pb.gameObject.SetActive(true);
+                pb.mTimeCount = 0;
+                NetworkServer.Spawn(pb.gameObject);
+                //apply damage just so the system registeres it as an affect
+                p.healthScript.TakeDamage(0, GetType());
+                return;
             }
         }
     }
@@ -53,6 +54,8 @@ public class ParalysisBehaviour : A_EffectBehaviour
 
     private IEnumerator AffectPlayer()
     {
+        //clear movement input with player
+        mAffectedPlayer.movement.ClearMovementInput();
         //slow down/stop the affected player
         //mAffectedPlayer.movement.speed = mAffectedPlayer.movement.originalSpeed*mSlowFactor;
         mAffectedPlayer.inputStateSystem.SetState(InputStateSystem.InputStateID.Paralyzed);

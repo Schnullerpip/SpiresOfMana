@@ -9,31 +9,31 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1967088201402432}
+  m_RootGameObject: {fileID: 1556870100030302}
   m_IsPrefabParent: 1
---- !u!1 &1967088201402432
+--- !u!1 &1556870100030302
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 4974138389341618}
-  - component: {fileID: 114503240476764506}
-  - component: {fileID: 114528237506480750}
+  - component: {fileID: 4263096188548412}
+  - component: {fileID: 114818199474394038}
+  - component: {fileID: 114973153922297684}
   m_Layer: 0
-  m_Name: Dash
+  m_Name: Tornadopocalype
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4974138389341618
+--- !u!4 &4263096188548412
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1967088201402432}
+  m_GameObject: {fileID: 1556870100030302}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -41,33 +41,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114503240476764506
+--- !u!114 &114818199474394038
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1967088201402432}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2a01037f5f361d4d9c951cbc3e81cfa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxDistance: 10
-  pushForce: 10
-  playerRadius: 0.35
-  playerHeight: 2
-  upwardsOffset: 1
-  feetAdvancement: 0.1
-  backwardOffset: 0
-  preview: {fileID: 114041355954258062, guid: 0a1575a8cd39946f28ef5c186bc7c824, type: 2}
-  dashEffectPrefab: {fileID: 1923240052563458, guid: acfeecacee7b9694a997a25e09f0e2a7,
-    type: 2}
---- !u!114 &114528237506480750
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1967088201402432}
+  m_GameObject: {fileID: 1556870100030302}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
@@ -76,21 +55,39 @@ MonoBehaviour:
   m_SceneId:
     m_Value: 0
   m_AssetId:
-    i0: 140
-    i1: 215
-    i2: 237
-    i3: 111
-    i4: 154
-    i5: 109
-    i6: 117
-    i7: 20
-    i8: 168
-    i9: 82
-    i10: 21
-    i11: 150
-    i12: 27
-    i13: 0
-    i14: 38
-    i15: 207
+    i0: 102
+    i1: 234
+    i2: 187
+    i3: 22
+    i4: 156
+    i5: 55
+    i6: 228
+    i7: 236
+    i8: 202
+    i9: 31
+    i10: 55
+    i11: 189
+    i12: 105
+    i13: 76
+    i14: 66
+    i15: 232
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
+--- !u!114 &114973153922297684
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1556870100030302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af63172eaba2746bbb4e9fc831fac7b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  amount: 8
+  duration: 15
+  tornadoPrefab: {fileID: 114407706377747128, guid: a87a39044965c4d47bbbef5401a46044,
+    type: 2}

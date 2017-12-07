@@ -20,6 +20,8 @@ public class PlayerMovement : ServerMoveable
 	[Tooltip("How many meters per second falling is considered too much?")]
 	public float fallingDamageThreshold = 18.0f;
 
+    public float mMaxVelocityMagnitude;
+
 	public float hurtSlowdown = 0.5f;
 
 	[Range(0,1)]
@@ -54,6 +56,11 @@ public class PlayerMovement : ServerMoveable
 		//clamp it to prevent faster diagonal movement
 		mMoveInput = Vector3.ClampMagnitude(input,1);
 	}
+
+    public void ClearMovementInput()
+    {
+        mMoveInput = Vector3.zero;
+    }
 
 	public void SetMoveInputHurt(Vector3 input)
 	{
@@ -158,6 +165,13 @@ public class PlayerMovement : ServerMoveable
 
 		mDeltaPos = mRigidbody.position - mLastPos;
 		mLastPos = mRigidbody.position;
+
+        //adjust velocity if its to high
+	    var squaredMax = mMaxVelocityMagnitude*mMaxVelocityMagnitude;
+	    if (mRigidbody.velocity.sqrMagnitude > squaredMax)
+	    {
+            mRigidbody.velocity = Vector3.ClampMagnitude(mRigidbody.velocity, mMaxVelocityMagnitude);
+	    }
 	}
 
 	public delegate void OnLandingWhileFalling(int impactVelocity);

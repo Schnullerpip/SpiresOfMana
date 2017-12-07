@@ -37,6 +37,8 @@ public class LavaFloor : NetworkBehaviour
             {
                 //Remember which player this coroutine belongs to
                 mInstanceCoroutineDictionary.Add(playerHealth.netId, StartCoroutine(DealDamage(playerHealth)));
+
+                playerHealth.GetComponent<PlayerMovement>().RpcSetVelocityY(10);
             }
         }
     }

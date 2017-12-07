@@ -10,7 +10,6 @@ public class SpellHUD : MonoBehaviour
     public Color ultimateEnergyDefaultColor;
     public Color ultimateEnergyFullColor;
 
-    private Canvas canvas;
     private PlayerSpells localPlayerSpells;
 
     private List<Image> spellIcons = new List<Image>();
@@ -26,8 +25,9 @@ public class SpellHUD : MonoBehaviour
     // Use this for initialization
     void OnEnable ()
     {
-        GameManager.OnGameStarted += Init;
+        //GameManager.OnGameStarted += Init;
         GameManager.OnLocalPlayerDead += LocalPlayerDead;
+        Init();
     }
 
     public void Init()
@@ -45,8 +45,14 @@ public class SpellHUD : MonoBehaviour
         //set selected spell
         displayedCurrentSpell = localPlayerSpells.GetCurrentspellslotID();
         spellHighlights[displayedCurrentSpell].GetComponent<Image>().enabled = true;
-        canvas = GetComponentInParent<Canvas>();
-        canvas.enabled = true;
+    }
+
+    public void UpdateSpellIcons()
+    {
+        for(int i = 0; i < spellSlots.Count; i++)
+        {
+            spellIcons[i].sprite = localPlayerSpells.spellslot[i].spell.icon;
+        }
     }
 
     public void SetCooldown(int SpellSlotID, PlayerSpells.SpellSlot SpellSlot)
@@ -112,6 +118,11 @@ public class SpellHUD : MonoBehaviour
             SetCurrentSpell(localPlayerSpells.GetCurrentspellslotID());
             UpdateSlider(localPlayerSpells.ultimateEnergy, localPlayerSpells.ultimateEnergyThreshold);
         }
+    }
+
+    public void OnSpellButtonClicked(int spellButton)
+    {
+        localPlayerSpells.SetCurrentSpellslotID(spellButton);
     }
 
     void OnDisable()

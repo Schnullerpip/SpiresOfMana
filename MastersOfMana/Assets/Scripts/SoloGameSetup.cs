@@ -73,7 +73,7 @@ public class SoloGameSetup : MonoBehaviour {
         else
         {
             Instantiate(healthHUD);//.GetComponent<HealthHUD>().Init();
-            Instantiate(spellHUD);//.GetComponent<SpellHUD>().Init();
+            //Instantiate(spellHUD);//.GetComponent<SpellHUD>().Init();
         }
         GameManager.instance.localPlayer.transform.position = transform.position;
     }

@@ -9,24 +9,24 @@ public class IngameMenu : MonoBehaviour {
 
 	public UnityEngine.UI.Selectable defaultSelected;
 
-	public bool mIsMenuActive = false;
-
-	public bool GetIsMenuActive()
-	{
-		return mIsMenuActive;
-	}
-
     public void ToggleVisibility()
     {
-		mIsMenuActive = !mIsMenuActive;
-		canvas.enabled = mIsMenuActive;
+        if(canvas.enabled)
+        {
+            GameManager.instance.numOfActiveMenus--;
+        }
+        else
+        {
+            GameManager.instance.numOfActiveMenus++;
+        }
+		canvas.enabled = !canvas.enabled;
 
-		Cursor.lockState = mIsMenuActive ? CursorLockMode.None : CursorLockMode.Locked;
+		Cursor.lockState = GameManager.instance.numOfActiveMenus > 0 ? CursorLockMode.None : CursorLockMode.Locked;
 
-		mRewiredPlayer.controllers.maps.SetMapsEnabled(mIsMenuActive,"UI");
-		mRewiredPlayer.controllers.maps.SetMapsEnabled(!mIsMenuActive,"Default");
+		mRewiredPlayer.controllers.maps.SetMapsEnabled(GameManager.instance.numOfActiveMenus > 0, "UI");
+		mRewiredPlayer.controllers.maps.SetMapsEnabled(!(GameManager.instance.numOfActiveMenus > 0), "Default");
 
-		if(mIsMenuActive && lobbyManager)
+		if(GameManager.instance.numOfActiveMenus > 0 && lobbyManager)
 		{
 			if(defaultSelected != null)
 			{
@@ -43,14 +43,6 @@ public class IngameMenu : MonoBehaviour {
             lobbyManager.RemoveLastCancelDelegate();
         }
         ToggleVisibility();
-    }
-
-    public void OnApplicationFocus(bool focus)
-    {
-        if(focus)
-        {
-            Cursor.lockState = mIsMenuActive ? CursorLockMode.None : CursorLockMode.Locked;
-        }
     }
 
     void OnEnable()

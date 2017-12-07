@@ -7,6 +7,7 @@ public class PlayerSpells : NetworkBehaviour {
 
     //cached instance of the playerscript
     private PlayerScript mPlayer;
+    public SpellRegistry spellregistry;
 
     [SyncVar]
     public float ultimateEnergy = 0;
@@ -60,7 +61,7 @@ public class PlayerSpells : NetworkBehaviour {
     public void SetCurrentSpellslotID(int idx)
     {
         currentSpell = idx;
-        if (currentSpell > 2 || currentSpell < 0)
+        if (currentSpell > 3 || currentSpell < 0)
         {
             currentSpell = 0;
         }
@@ -92,6 +93,15 @@ public class PlayerSpells : NetworkBehaviour {
     {
         currentSpell = idx;
         mPlayer.RpcSetCastState(CastStateSystem.CastStateID.Normal);
+    }
+
+    [Command]
+    public void CmdSpellsChanged(int Spell1, int Spell2, int Spell3, int Spell4)
+    {
+        spellslot[0].spell = spellregistry.GetSpellByID(Spell1);
+        spellslot[1].spell = spellregistry.GetSpellByID(Spell2);
+        spellslot[2].spell = spellregistry.GetSpellByID(Spell3);
+        spellslot[3].spell = spellregistry.GetSpellByID(Spell4);
     }
 
     /// <summary>

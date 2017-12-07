@@ -22,7 +22,7 @@ public class PostGameMenu : MonoBehaviour
         {
             text.text = "You Lost!";
         }
-        GameObject.FindObjectsOfType<IngameMenu>()[0].mIsMenuActive = true;
+        GameManager.instance.numOfActiveMenus++;
         Rewired.ReInput.players.GetPlayer(0).controllers.maps.SetMapsEnabled(false, "Default");
         Rewired.ReInput.players.GetPlayer(0).controllers.maps.SetMapsEnabled(true, "UI");
         Cursor.lockState =  CursorLockMode.None;

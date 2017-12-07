@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     public PlayerScript localPlayer;
     public GameObject eventSystem;
     public bool isUltimateActive = false;
+    public int numOfActiveMenus = 0;
 
     public delegate void GameStarted();
     public static event GameStarted OnGameStarted;
@@ -132,6 +133,14 @@ public class GameManager : MonoBehaviour
         if(OnLocalPlayerDead != null)
         {
             OnLocalPlayerDead();
+        }
+    }
+
+    public void OnApplicationFocus(bool focus)
+    {
+        if (focus)
+        {
+            Cursor.lockState = numOfActiveMenus > 0 ? CursorLockMode.None : CursorLockMode.Locked;
         }
     }
 }

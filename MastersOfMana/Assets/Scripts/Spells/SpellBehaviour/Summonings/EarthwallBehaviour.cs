@@ -10,8 +10,6 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
 
     public float distance = 2;
 
-    private int mWallCount = 0;
-
     //TODO exchange magic numbers with actual data
     public override void Execute(PlayerScript caster)
     {

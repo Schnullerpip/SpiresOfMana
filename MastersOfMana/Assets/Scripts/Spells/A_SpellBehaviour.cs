@@ -109,9 +109,14 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
     protected static bool ConfirmedHit(Vector3 point, PlayerScript caster, float hitRadius, float hitRange)
     {
         RaycastHit hit;
+        Vector3 onPlane = Vector3.ProjectOnPlane((point - caster.GetCameraPosition()), caster.GetCameraLookDirection());
+        float dotProduct = Vector3.Dot((point - onPlane), caster.GetCameraLookDirection());
+        Debug.Log("dotproduct: " + dotProduct);
         return
             /*hit by raw aim?*/
-            Vector3.ProjectOnPlane((point - caster.GetCameraPosition()), -caster.GetCameraLookDirection()).sqrMagnitude <= hitRadius*hitRadius &&
+            onPlane.sqrMagnitude <= hitRadius*hitRadius &&
+            //hit object is infront of me?
+            dotProduct > 0 &&
             /*direct sight? - avoid hit when an obstacle is inbetween*/
             Physics.Raycast(new Ray(point, (caster.movement.mRigidbody.worldCenterOfMass - point).normalized), out hit) &&
             hit.distance <= hitRange &&

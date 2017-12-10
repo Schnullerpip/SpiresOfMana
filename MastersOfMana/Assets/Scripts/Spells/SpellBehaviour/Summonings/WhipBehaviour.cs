@@ -82,9 +82,8 @@ public class WhipBehaviour : A_SummoningBehaviour
     {
 		WhipBehaviour whipBehaviour = PoolRegistry.GetInstance(this.gameObject, 4, 4).GetComponent<WhipBehaviour>();
 
-        //initialize the linepoint (second linepoint - default)
+        //initialize the linepoint
         whipBehaviour.linePoint0 = caster.handTransform.position;
-        whipBehaviour.linePoint1 = caster.handTransform.position + caster.GetCameraLookDirection() * maxDistance;
 
         //check for a hit
         var opponents = GameManager.instance.mPlayers;
@@ -118,23 +117,30 @@ public class WhipBehaviour : A_SummoningBehaviour
             }
         }
 
-        whipBehaviour.gameObject.SetActive(true);
-		NetworkServer.Spawn(whipBehaviour.gameObject, whipBehaviour.GetComponent<NetworkIdentity>().assetId);
 
-		whipBehaviour.StartCoroutine(whipBehaviour.Done());
-
-        Vector3 aimDirection = Vector3.Normalize(whipBehaviour.linePoint1 - caster.handTransform.position);
+        RaycastHit hit;
         if (hitPlayer)
         {
+            Vector3 aimDirection = Vector3.Normalize(whipBehaviour.linePoint1 - caster.handTransform.position);
             Vector3 force = -aimDirection*pullForce + Vector3.up*UpForce;
             hitPlayer.movement.RpcAddForce(force, ForceMode.VelocityChange);
             hitPlayer.healthScript.TakeDamage(0, GetType());
         }
-        else
+        else if (RayCast(caster, caster.aim.GetCameraRig().GetCenterRay(), out hit) && hit.distance <= maxDistance)
         {
+            whipBehaviour.linePoint1 = hit.point;
+            Vector3 aimDirection = Vector3.Normalize(whipBehaviour.linePoint1 - caster.handTransform.position);
             Vector3 forceVector = aimDirection * pullForce + Vector3.up * UpForce;
             caster.movement.RpcAddForce(forceVector, ForceMode.VelocityChange);
         }
+        else {
+            whipBehaviour.linePoint1 = caster.handTransform.position + caster.GetCameraLookDirection() * maxDistance;
+        }
+
+        whipBehaviour.gameObject.SetActive(true);
+		NetworkServer.Spawn(whipBehaviour.gameObject, whipBehaviour.GetComponent<NetworkIdentity>().assetId);
+
+		whipBehaviour.StartCoroutine(whipBehaviour.Done());
     }
 
 	public IEnumerator Done()

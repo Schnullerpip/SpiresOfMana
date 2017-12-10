@@ -30,7 +30,7 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
 
     public override void Execute(PlayerScript caster)
     {
-        LightningAuraBehaviour la = PoolRegistry.Instantiate(this.gameObject).GetComponent<LightningAuraBehaviour>();
+        LightningAuraBehaviour la = PoolRegistry.GetInstance(this.gameObject, 4, 4).GetComponent<LightningAuraBehaviour>();
         la.transform.position = caster.movement.mRigidbody.worldCenterOfMass;
         la.gameObject.SetActive(true);
         la.transform.rotation = Quaternion.Euler(Vector3.zero);

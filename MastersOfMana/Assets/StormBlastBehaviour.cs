@@ -46,7 +46,7 @@ public class StormBlastBehaviour : A_EffectBehaviour
 	                    Vector3 velocity = (sm.transform.position - caster.transform.position).normalized*mForce;
 	                    sm.RpcSetVelocity(velocity);
 
-                        //if its a player also affect it
+                        //if its a player also affect it (for stats)
                         PlayerScript ps;
                         if (ps = rigid.GetComponentInParent<PlayerScript>())
                         {
@@ -60,7 +60,7 @@ public class StormBlastBehaviour : A_EffectBehaviour
 
     public override void Execute(PlayerScript caster)
     {
-        StormBlastBehaviour sbb = PoolRegistry.Instantiate(this.gameObject).GetComponent<StormBlastBehaviour>();
+        StormBlastBehaviour sbb = PoolRegistry.GetInstance(gameObject, 1, 1).GetComponent<StormBlastBehaviour>();
         sbb.casterObject = caster.gameObject;
         sbb.caster = caster;
         sbb.mTimeCount = mInterval;

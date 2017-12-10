@@ -27,7 +27,7 @@ public class ParalysisBehaviour : A_EffectBehaviour
                 ConfirmedHit(p.movement.mRigidbody.worldCenterOfMass, caster, mRange))
             {
                 //create a Paralysis behaviour, that sticks to the hitPlayer
-                ParalysisBehaviour pb = PoolRegistry.Instantiate(this.gameObject).GetComponent<ParalysisBehaviour>();
+                ParalysisBehaviour pb = PoolRegistry.GetInstance(this.gameObject, 4, 4).GetComponent<ParalysisBehaviour>();
                 pb.mAffectedPlayerObject = p.gameObject;
                 pb.gameObject.SetActive(true);
                 pb.mTimeCount = 0;

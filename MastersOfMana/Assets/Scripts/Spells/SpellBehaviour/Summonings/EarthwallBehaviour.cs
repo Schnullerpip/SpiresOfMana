@@ -15,7 +15,7 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
         if (Physics.Raycast(caster.transform.position + 0.8f * (caster.transform.forward + caster.transform.up), caster.transform.up * -1, out hit, 50))
         {
             //GameObject wall = PoolRegistry.EarthwallPool.Get(Pool.Activation.ReturnActivated);
-            GameObject wall = PoolRegistry.Instantiate(this.gameObject);
+            GameObject wall = PoolRegistry.GetInstance(gameObject, 5, 5);
             wall.SetActive(true);
             wall.transform.position = hit.point;
             wall.transform.rotation = caster.transform.rotation;

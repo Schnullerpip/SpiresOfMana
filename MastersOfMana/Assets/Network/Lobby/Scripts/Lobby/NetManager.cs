@@ -49,4 +49,10 @@ public class NetManager : NetworkBehaviour {
 
         GameManager.instance.TriggerGameStarted();
     }
+
+    [ClientRpc]
+    public void RpcTriggerRoundStarted()
+    {
+        GameManager.instance.TriggerOnRoundStarted();
+    }
 }

@@ -8,7 +8,18 @@ public class IngameLobby : MonoBehaviour {
     protected Rewired.Player mRewiredPlayer;
     private bool mIsMenuActive = false;
     public Canvas canvas;
-    public Prototype.NetworkLobby.SpellSelectionPanel spellselectionPanel;
+    public GameObject spellselectionPanel;
+    public GameObject lobby;
+
+    void OnEnable()
+    {
+        GameManager.OnRoundStarted += RoundStarted;
+    }
+
+    void RoundStarted()
+    {
+        gameObject.SetActive(false);
+    }
 
     // Use this for initialization
     void Start ()
@@ -34,11 +45,14 @@ public class IngameLobby : MonoBehaviour {
 
     public void SpellselectionFinished()
     {
-        spellselectionPanel.gameObject.SetActive(false);
+        spellselectionPanel.SetActive(false);
+        lobby.gameObject.SetActive(true);
+        GameManager.instance.localPlayer.playerLobby.CmdSetReady(true);
     }
 
     public void OnDisable()
     {
         ToggleVisibility();
+        GameManager.OnRoundStarted -= RoundStarted;
     }
 }

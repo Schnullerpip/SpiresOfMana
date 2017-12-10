@@ -49,7 +49,9 @@ public class PlayerScript : NetworkBehaviour
 	public PlayerMovement movement;
 	public PlayerAim aim;
 	public PlayerCamera cameraRigPrefab;
+    private PlayerCamera mPlayerCamera;
     public Transform handTransform;
+    public PlayerLobby playerLobby;
 
 	protected Rewired.Player rewiredPlayer;
     public Rewired.Player GetRewired()
@@ -146,10 +148,15 @@ public class PlayerScript : NetworkBehaviour
     {
         GameManager.instance.localPlayer = this;
         CmdGiveGo();
-		PlayerCamera cam = Instantiate(cameraRigPrefab);
-		cam.followTarget = this;
-//		cam.gameObject.SetActive(true);
-		aim.SetCameraRig(cam);
+        mPlayerCamera = Instantiate(cameraRigPrefab);
+        mPlayerCamera.followTarget = this;
+		aim.SetCameraRig(mPlayerCamera);
+        SetCameraActive(false);
+    }
+
+    public void SetCameraActive(bool active)
+    {
+        mPlayerCamera.gameObject.SetActive(active);
     }
 
     //Statechanging ----------------------------------------

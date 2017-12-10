@@ -212,6 +212,7 @@ GameObject:
   - component: {fileID: 114651380410554418}
   - component: {fileID: 95559592168868734}
   - component: {fileID: 114808234077334614}
+  - component: {fileID: 114949374622293176}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -1997,6 +1998,7 @@ MonoBehaviour:
   cameraRigPrefab: {fileID: 114371251292269686, guid: 21611dcaa52d8441ba40cf1e83852a1e,
     type: 2}
   handTransform: {fileID: 4322715158737734}
+  playerLobby: {fileID: 114949374622293176}
   playerName: 
   healthScript: {fileID: 114581584314824656}
   headJoint: {fileID: 4496500260466464}
@@ -2065,6 +2067,18 @@ MonoBehaviour:
     cooldown: 0
     isUltimateSpellSlot: 1
   currentSpell: 0
+--- !u!114 &114949374622293176
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1285255658560174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f91ac45116ad4fa4fae4f26a068c9073, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isReady: 0
 --- !u!135 &135614149572130878
 SphereCollider:
   m_ObjectHideFlags: 1

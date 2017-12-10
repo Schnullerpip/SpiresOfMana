@@ -6,6 +6,8 @@ public class HUD : MonoBehaviour {
 
     public List<GameObject> HudPrefabs = new List<GameObject>();
     private SpellHUD mSpellHUD;
+    //private IngameLobby mLobby;
+    //private Prototype.NetworkLobby.SpellSelectionPanel mSpellSelection;
 
     void OnEnable()
     {

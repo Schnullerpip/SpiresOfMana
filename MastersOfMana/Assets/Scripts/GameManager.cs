@@ -25,8 +25,13 @@ public class GameManager : MonoBehaviour
     public delegate void GameStarted();
     public static event GameStarted OnGameStarted;
 
+    public delegate void RoundStarted();
+    public static event RoundStarted OnRoundStarted;
+
     public delegate void LocalPlayerDead();
     public static event LocalPlayerDead OnLocalPlayerDead;
+
+    private int mNumOfReadyPlayers = 0;
 
     public void Awake()
     {
@@ -141,6 +146,27 @@ public class GameManager : MonoBehaviour
         if (focus)
         {
             Cursor.lockState = numOfActiveMenus > 0 ? CursorLockMode.None : CursorLockMode.Locked;
+        }
+    }
+
+    //called on the server only!
+    public void playerReady()
+    {
+        mNumOfReadyPlayers++;
+        if(mNumOfReadyPlayers >= mPlayers.Count)
+        {
+            if(OnRoundStarted != null)
+            {
+                OnRoundStarted();
+            }
+        }
+    }
+
+    public void TriggerOnRoundStarted()
+    {
+        if (OnRoundStarted != null)
+        {
+            OnRoundStarted();
         }
     }
 }

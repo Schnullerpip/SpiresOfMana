@@ -7,7 +7,8 @@ public class ParalysisBehaviour : A_EffectBehaviour
 {
     [SerializeField] private float mLifetime;
     [SerializeField] private ParticleSystem mParticleSystem;
-    [SerializeField] private float mRange;
+    [SerializeField] private float mHitRadius;
+    [SerializeField] private float mHitRange;
 
     private float mTimeCount;
 
@@ -22,12 +23,12 @@ public class ParalysisBehaviour : A_EffectBehaviour
         {
             if (p == caster) continue;
 
-            if (ConfirmedHit(p.headJoint.position, caster, mRange) ||
-                ConfirmedHit(p.transform.position, caster, mRange) ||
-                ConfirmedHit(p.movement.mRigidbody.worldCenterOfMass, caster, mRange))
+            if (ConfirmedHit(p.headJoint.position, caster, mHitRadius, mHitRange) ||
+                ConfirmedHit(p.transform.position, caster, mHitRadius, mHitRange) ||
+                ConfirmedHit(p.movement.mRigidbody.worldCenterOfMass, caster, mHitRadius, mHitRange))
             {
                 //create a Paralysis behaviour, that sticks to the hitPlayer
-                ParalysisBehaviour pb = PoolRegistry.Instantiate(this.gameObject).GetComponent<ParalysisBehaviour>();
+                ParalysisBehaviour pb = PoolRegistry.GetInstance(this.gameObject, 4, 4).GetComponent<ParalysisBehaviour>();
                 pb.mAffectedPlayerObject = p.gameObject;
                 pb.gameObject.SetActive(true);
                 pb.mTimeCount = 0;

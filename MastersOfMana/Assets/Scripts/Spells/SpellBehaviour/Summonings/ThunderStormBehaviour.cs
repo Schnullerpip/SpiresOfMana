@@ -32,7 +32,7 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
 	{
 		GameManager.instance.isUltimateActive = true;
 
-		ThunderStormBehaviour thunderStormBehaviour = PoolRegistry.Instantiate(this.gameObject).GetComponent<ThunderStormBehaviour>();
+		ThunderStormBehaviour thunderStormBehaviour = PoolRegistry.GetInstance(this.gameObject, 1, 1).GetComponent<ThunderStormBehaviour>();
 
 		thunderStormBehaviour.mCaster = caster;
 		thunderStormBehaviour.transform.position = transform.position;
@@ -131,7 +131,7 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
 	/// <param name="pos">Position.</param>
 	private IEnumerator Strike (Vector3 pos)
 	{
-		LightningStrike strike = PoolRegistry.Instantiate(strikePrefab.gameObject).GetComponent<LightningStrike> ();
+		LightningStrike strike = PoolRegistry.GetInstance(strikePrefab.gameObject, 10, 4).GetComponent<LightningStrike> ();
 		strike.transform.position = pos;
 
 		NetworkServer.Spawn (strike.gameObject, strike.GetComponent<NetworkIdentity>().assetId);

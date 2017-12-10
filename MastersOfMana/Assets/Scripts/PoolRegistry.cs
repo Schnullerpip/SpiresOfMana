@@ -6,10 +6,7 @@ using UnityEngine.Networking;
 public class PoolRegistry : NetworkBehaviour
 {
 
-    public static List<Pool> POOL = new List<Pool>();
-
     public static PoolRegistry instance;
-    public int defaultPoolSize;
     public Pool.PoolingStrategy poolingStrategy;
 
     public List<Pool> poolList = new List<Pool>();
@@ -30,37 +27,82 @@ public class PoolRegistry : NetworkBehaviour
         }
     }
 
-    public static GameObject Instantiate(GameObject go, Pool.Activation activationState = Pool.Activation.ReturnDeactivated)
+    /// <summary>
+    /// returns an object out of a pool or creates a pool if it is nonexistent
+    /// </summary>
+    /// <param name="go"></param>
+    /// <param name="poolSize"></param>
+    /// <param name="poolGrowth"></param>
+    /// <param name="poolingStrategy"></param>
+    /// <param name="activationState"></param>
+    /// <returns></returns>
+    public static GameObject GetInstance(
+        GameObject go,
+        int poolSize,
+        int poolGrowth,
+        Pool.PoolingStrategy poolingStrategy = Pool.PoolingStrategy.OnMissSubjoinElements,
+        Pool.Activation activationState = Pool.Activation.ReturnDeactivated)
     {
-        if (instance.poolList.Count > 0)
+        foreach (Pool p in instance.poolList)
         {
-            for (int i = 0; i < instance.poolList.Count; i++)
+            if (p.mOriginal == go)
             {
-                if (instance.poolList[i].mOriginal == go)
-                {
-                    return instance.poolList[i].Get(activationState);
-                }
+                return p.Get(activationState);
             }
         }
 
-        Pool newPool = new Pool(go, 5, instance.poolingStrategy);
+        Pool newPool = new Pool(go, poolSize, poolGrowth, poolingStrategy);
         instance.poolList.Add(newPool);
 
-        return newPool.Get();
+        return newPool.Get(activationState);
     }
 
-    public static GameObject Make(GameObject original, Pool.Activation activationStateOnReturn = Pool.Activation.ReturnDeactivated)
+    /// <summary>
+    /// returns an object out of a pool or creates a pool if it is nonexistent - instances can be given a default transform
+    /// </summary>
+    /// <param name="go"></param>
+    /// <param name="transform"></param>
+    /// <param name="poolSize"></param>
+    /// <param name="poolGrowth"></param>
+    /// <param name="poolingStrategy"></param>
+    /// <param name="activationState"></param>
+    /// <returns></returns>
+    public static GameObject GetInstance(GameObject go, Transform transform, int poolSize, int poolGrowth, Pool.PoolingStrategy poolingStrategy = Pool.PoolingStrategy.OnMissSubjoinElements, Pool.Activation activationState = Pool.Activation.ReturnDeactivated)
     {
-        foreach (var pool in POOL)
+        return GetInstance(go, transform.position, transform.rotation, poolSize, poolGrowth, poolingStrategy, activationState);
+    }
+
+    /// <summary>
+    /// returns an object out of a pool or creates a pool if it is nonexistent - instances can be given a default transform
+    /// </summary>
+    /// <param name="go"></param>
+    /// <param name="position"></param>
+    /// <param name="rotation"></param>
+    /// <param name="poolSize"></param>
+    /// <param name="poolGrowth"></param>
+    /// <param name="poolingStrategy"></param>
+    /// <param name="activationState"></param>
+    /// <returns></returns>
+    public static GameObject GetInstance(
+        GameObject go,
+        Vector3 position,
+        Quaternion rotation,
+        int poolSize,
+        int poolGrowth,
+        Pool.PoolingStrategy poolingStrategy = Pool.PoolingStrategy.OnMissSubjoinElements,
+        Pool.Activation activationState = Pool.Activation.ReturnDeactivated)
+    {
+        foreach (Pool p in instance.poolList)
         {
-            if (pool.mOriginal == original)//found the right pool
+            if (p.mOriginal == go)
             {
-                return pool.Get(activationStateOnReturn);
+                return p.Get(position, rotation, activationState);
             }
         }
 
-        Pool newPool = new Pool(original, 5, Pool.PoolingStrategy.OnMissSubjoinElements);
-        POOL.Add(newPool);
-        return newPool.Get(activationStateOnReturn);
+        Pool newPool = new Pool(go, poolSize, poolGrowth, poolingStrategy, position, rotation);
+        instance.poolList.Add(newPool);
+
+        return newPool.Get(position, rotation, activationState);
     }
 }

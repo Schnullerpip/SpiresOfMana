@@ -4,9 +4,6 @@ using UnityEngine;
 using Rewired;
 
 public class IngameLobby : MonoBehaviour {
-
-    protected Rewired.Player mRewiredPlayer;
-    private bool mIsMenuActive = false;
     public Canvas canvas;
     public GameObject spellselectionPanel;
     public GameObject lobby;
@@ -14,33 +11,15 @@ public class IngameLobby : MonoBehaviour {
     void OnEnable()
     {
         GameManager.OnRoundStarted += RoundStarted;
+        GameManager.instance.numOfActiveMenus++;
+        GameManager.instance.OnApplicationFocus(true);
+        spellselectionPanel.SetActive(true);
+        lobby.gameObject.SetActive(false);
     }
 
     void RoundStarted()
     {
         gameObject.SetActive(false);
-    }
-
-    // Use this for initialization
-    void Start ()
-    {
-        mRewiredPlayer = ReInput.players.GetPlayer(0);
-        ToggleVisibility();
-    }
-
-    public void ToggleVisibility()
-    {
-        mIsMenuActive = !mIsMenuActive;
-        canvas.enabled = mIsMenuActive;
-
-        Cursor.lockState = mIsMenuActive ? CursorLockMode.None : CursorLockMode.Locked;
-
-        mRewiredPlayer.controllers.maps.SetMapsEnabled(mIsMenuActive, "UI");
-        mRewiredPlayer.controllers.maps.SetMapsEnabled(!mIsMenuActive, "Default");
-
-        if (mIsMenuActive)
-        {
-        }
     }
 
     public void SpellselectionFinished()
@@ -52,7 +31,8 @@ public class IngameLobby : MonoBehaviour {
 
     public void OnDisable()
     {
-        ToggleVisibility();
+        GameManager.instance.numOfActiveMenus--;
+        GameManager.instance.OnApplicationFocus(true);
         GameManager.OnRoundStarted -= RoundStarted;
     }
 }

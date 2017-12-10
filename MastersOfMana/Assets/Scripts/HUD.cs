@@ -6,12 +6,15 @@ public class HUD : MonoBehaviour {
 
     public List<GameObject> HudPrefabs = new List<GameObject>();
     private SpellHUD mSpellHUD;
-    //private IngameLobby mLobby;
+    private PostGameMenu mPostGameScreen;
+    private IngameLobby mLobby;
+    private HealthHUD mHealthHUD;
     //private Prototype.NetworkLobby.SpellSelectionPanel mSpellSelection;
 
     void OnEnable()
     {
         GameManager.OnGameStarted += Init;
+        GameManager.OnRoundStarted += RoundStarted;
     }
 
 	// Use this for initialization
@@ -22,6 +25,12 @@ public class HUD : MonoBehaviour {
             Instantiate(obj, transform);
         }
         mSpellHUD = GetComponentInChildren<SpellHUD>();
+        mPostGameScreen = GetComponentInChildren<PostGameMenu>();
+        mPostGameScreen.gameObject.SetActive(false);
+        mLobby = GetComponentInChildren<IngameLobby>();
+        mHealthHUD = GetComponentInChildren<HealthHUD>();
+        mHealthHUD.gameObject.SetActive(false);
+
     }
 
     public SpellHUD GetSpellHUD()
@@ -32,5 +41,24 @@ public class HUD : MonoBehaviour {
     void OnDisable()
     {
         GameManager.OnGameStarted -= Init;
+    }
+
+   public void ShowPostGameScreen(bool show)
+    {
+        mPostGameScreen.gameObject.SetActive(show);
+    }
+
+    void RoundStarted()
+    {
+        mHealthHUD.gameObject.SetActive(true);
+    }
+
+    public void ExitPostGameScreen()
+    {
+        ShowPostGameScreen(false);
+        mLobby.gameObject.SetActive(true);
+        mSpellHUD.gameObject.SetActive(true);
+        SpectatorCamera cam = FindObjectOfType<SpectatorCamera>();
+        Destroy(cam.gameObject);
     }
 }

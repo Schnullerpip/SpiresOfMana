@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using Rewired;
 using UnityEngine.EventSystems;
 
 public class GameManager : MonoBehaviour
@@ -31,8 +31,12 @@ public class GameManager : MonoBehaviour
     public delegate void LocalPlayerDead();
     public static event LocalPlayerDead OnLocalPlayerDead;
 
+    public delegate void GameEnded();
+    public event GameEnded OnGameEnded;
+
     private int mNumOfReadyPlayers = 0;
     private StartPoints mStartPoints;
+    private Player mRewiredPlayer;
 
     public void Awake()
     {
@@ -48,12 +52,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void Start()
+    {
+        mRewiredPlayer = ReInput.players.GetPlayer(0);
+        mPlayers = new List<PlayerScript>();
+    }
+
     public void ResetLocalGameState()
     {
-        mPlayers = new List<PlayerScript>();
         mNeededToGo = mInitialNeededToGo;
         mNumberOfGoMessages = 0;
         mNumberOfDeadPlayers = 0;
+        mNumOfReadyPlayers = 0;
         isUltimateActive = false;
     }
 
@@ -100,9 +110,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public delegate void GameEnded();
-    public event GameEnded OnGameEnded;
-
     // INGAME
     // This is only executed on the Server
     public void PlayerDown() {
@@ -117,21 +124,24 @@ public class GameManager : MonoBehaviour
                 if(p.healthScript.IsAlive())
                 {
                     winnerID = p.netId.Value;
-                    
                     break;
                 }
-            }
-            if (OnGameEnded != null)
-            {
-                OnGameEnded();
             }
             PostGameLobby(winnerID);
             ResetLocalGameState();
         }
     }
 
+    public void TriggerGameEnded()
+    {
+        if (OnGameEnded != null)
+        {
+            OnGameEnded();
+        }
+    }
+
     public void PostGameLobby(uint winner) {
-        NetManager.instance.RpcLoadPostGameScreen(winner);
+        NetManager.instance.RpcGameEnded(winner);
     }
 
     public void localPlayerDead()
@@ -145,9 +155,12 @@ public class GameManager : MonoBehaviour
 
     public void OnApplicationFocus(bool focus)
     {
-        if (focus)
+        if (focus && ReInput.isReady)
         {
+            mRewiredPlayer.controllers.maps.SetMapsEnabled(numOfActiveMenus > 0, "UI");
+            mRewiredPlayer.controllers.maps.SetMapsEnabled(!(numOfActiveMenus > 0), "Default");
             Cursor.lockState = numOfActiveMenus > 0 ? CursorLockMode.None : CursorLockMode.Locked;
+            Cursor.visible = numOfActiveMenus > 0;
         }
     }
 
@@ -157,16 +170,26 @@ public class GameManager : MonoBehaviour
         mNumOfReadyPlayers++;
         if(mNumOfReadyPlayers >= mPlayers.Count)
         {
-            if(OnRoundStarted != null)
-            {
-                OnRoundStarted();
-            }
+            NetManager.instance.RpcTriggerRoundStarted();
+        }
+    }
+
+    void ResetGame()
+    {
+        foreach(PlayerScript player in mPlayers)
+        {
+            player.enabled = true;
         }
     }
 
     public void TriggerOnRoundStarted()
     {
+        ResetGame();
         List<Transform> startPositions = mStartPoints.GetRandomStartPositions();
+        for(int i = 0; i < mPlayers.Count; i++)
+        {
+            mPlayers[i].movement.RpcSetPosition(startPositions[i].position);
+        }
 
         if (OnRoundStarted != null)
         {

@@ -25,7 +25,8 @@ public class HealthScript : NetworkBehaviour
     // Use this for initialization
     public virtual void Start()
     {
-        Reset();
+        ResetState();
+        GameManager.OnRoundStarted += ResetState;
     }
 
     //public interface
@@ -61,7 +62,7 @@ public class HealthScript : NetworkBehaviour
     }
     
     //bring a GameObject to life
-    public void Reset()
+    public void ResetState()
     {
         mCurrentHealth = mMaxHealth;
         isAlive = true;

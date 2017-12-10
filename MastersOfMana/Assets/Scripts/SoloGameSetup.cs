@@ -50,7 +50,7 @@ public class SoloGameSetup : MonoBehaviour {
 		{
 			yield return null;
 		}
-
+        GameManager.instance.mPlayers.Add(GameManager.instance.localPlayer);
 		GameManager.instance.Go();
 		Init();
 	}
@@ -72,7 +72,7 @@ public class SoloGameSetup : MonoBehaviour {
         }
         else
         {
-            Instantiate(healthHUD);//.GetComponent<HealthHUD>().Init();
+            //Instantiate(healthHUD);//.GetComponent<HealthHUD>().Init();
             //Instantiate(spellHUD);//.GetComponent<SpellHUD>().Init();
         }
         GameManager.instance.localPlayer.transform.position = transform.position;

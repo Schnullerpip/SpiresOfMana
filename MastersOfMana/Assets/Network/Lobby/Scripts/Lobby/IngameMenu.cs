@@ -21,10 +21,7 @@ public class IngameMenu : MonoBehaviour {
         }
 		canvas.enabled = !canvas.enabled;
 
-		Cursor.lockState = GameManager.instance.numOfActiveMenus > 0 ? CursorLockMode.None : CursorLockMode.Locked;
-
-		mRewiredPlayer.controllers.maps.SetMapsEnabled(GameManager.instance.numOfActiveMenus > 0, "UI");
-		mRewiredPlayer.controllers.maps.SetMapsEnabled(!(GameManager.instance.numOfActiveMenus > 0), "Default");
+        GameManager.instance.OnApplicationFocus(true);
 
 		if(GameManager.instance.numOfActiveMenus > 0 && lobbyManager)
 		{

@@ -36,7 +36,6 @@ namespace Prototype.NetworkLobby {
             fillList();
             // This will make sure the first spell is highlighted when opening
             GetComponentInParent<MultipleMenuInput>().firstSelected = spellButtons[0].gameObject;
-            GameManager.instance.numOfActiveMenus++;
         }
 
         private void fillList()
@@ -239,7 +238,6 @@ namespace Prototype.NetworkLobby {
         public void OnDisable()
         {
             clearList();
-            GameManager.instance.numOfActiveMenus--;
         }
     }
 }

@@ -12,6 +12,7 @@ public class WhipBehaviour : A_SummoningBehaviour
 	public float rayRadius = 0.2f;
 
 	public float maxDistance = 30;
+    public float hitRadius = 2.0f;
 
 	public float disappearTimer = 1.0f;
 
@@ -79,58 +80,68 @@ public class WhipBehaviour : A_SummoningBehaviour
 
     public override void Execute(PlayerScript caster)
     {
-		//WhipBehaviour whipBehaviour = PoolRegistry.WhipPool.Get().GetComponent<WhipBehaviour>();
-		WhipBehaviour whipBehaviour = PoolRegistry.Instantiate(this.gameObject).GetComponent<WhipBehaviour>();
+		WhipBehaviour whipBehaviour = PoolRegistry.GetInstance(this.gameObject, 4, 4).GetComponent<WhipBehaviour>();
 
+        //initialize the linepoint
         whipBehaviour.linePoint0 = caster.handTransform.position;
 
-		RaycastHit hit;
-        Ray ray = new Ray(caster.GetCameraPosition(), caster.GetCameraLookDirection());
+        //check for a hit
+        var opponents = GameManager.instance.mPlayers;
+        PlayerScript hitPlayer = null;
+        foreach (var p in opponents)
+        {
+            if (p == caster)
+            {
+                continue;
+            }
 
-		if(RayCast(caster, ray, out hit))
-		{
-			whipBehaviour.linePoint1 = hit.point;
-		}
-		else
-		{
-			whipBehaviour.linePoint1 = caster.handTransform.position + caster.GetCameraLookDirection() * maxDistance;
-		}
+            if (ConfirmedHit(p.movement.mRigidbody.worldCenterOfMass, caster, hitRadius, maxDistance))
+            {
+                hitPlayer = p;
+                whipBehaviour.linePoint1 = p.movement.mRigidbody.worldCenterOfMass;
+            }
+            else if (ConfirmedHit(p.headJoint.position, caster, hitRadius, maxDistance))
+            {
+                hitPlayer = p;
+                whipBehaviour.linePoint1 = p.headJoint.position;
+            }
+            else if (ConfirmedHit(p.transform.position, caster, hitRadius, maxDistance))
+            {
+                hitPlayer = p;
+                whipBehaviour.linePoint1 = p.transform.position;
+            }
+
+            if (hitPlayer)
+            {
+                break;
+            }
+        }
+
+
+        RaycastHit hit;
+        if (hitPlayer)
+        {
+            Vector3 aimDirection = Vector3.Normalize(whipBehaviour.linePoint1 - caster.handTransform.position);
+            Vector3 force = -aimDirection*pullForce + Vector3.up*UpForce;
+            hitPlayer.movement.RpcAddForce(force, ForceMode.VelocityChange);
+            hitPlayer.healthScript.TakeDamage(0, GetType());
+        }
+        else if (RayCast(caster, caster.aim.GetCameraRig().GetCenterRay(), out hit) && hit.distance <= maxDistance)
+        {
+            whipBehaviour.linePoint1 = hit.point;
+            Vector3 aimDirection = Vector3.Normalize(whipBehaviour.linePoint1 - caster.handTransform.position);
+            Vector3 forceVector = aimDirection * pullForce + Vector3.up * UpForce;
+            caster.movement.RpcAddForce(forceVector, ForceMode.VelocityChange);
+        }
+        else {
+            whipBehaviour.linePoint1 = caster.handTransform.position + caster.GetCameraLookDirection() * maxDistance;
+        }
 
         whipBehaviour.gameObject.SetActive(true);
 		NetworkServer.Spawn(whipBehaviour.gameObject, whipBehaviour.GetComponent<NetworkIdentity>().assetId);
 
 		whipBehaviour.StartCoroutine(whipBehaviour.Done());
-
-		if(hit.collider != null)
-		{
-			Vector3 aimDirection = Vector3.Normalize(hit.point - caster.handTransform.position);
-
-			if(hit.collider.attachedRigidbody != null)
-			{
-				Vector3 force = -aimDirection * pullForce + Vector3.up * UpForce;
-			    if (hit.collider.attachedRigidbody.CompareTag("Player"))
-			    {
-                    var ps = hit.collider.attachedRigidbody.GetComponent<PlayerScript>();
-					ps.movement.RpcAddForce(force, ForceMode.VelocityChange);
-                    ps.healthScript.TakeDamage(0, GetType());
-			    }
-				else
-				{
-					hit.collider.attachedRigidbody.AddForce(force, ForceMode.VelocityChange);
-				}
-			}
-			else
-			{
-				Vector3 forceVector = aimDirection * pullForce + Vector3.up * UpForce;
-				caster.movement.RpcAddForce(forceVector, ForceMode.VelocityChange);
-			}
-		}
     }
-
-//	public void Disappear()
-//	{
-//		StartCoroutine(Done());
-//	}
 
 	public IEnumerator Done()
 	{

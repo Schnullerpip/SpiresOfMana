@@ -8,7 +8,7 @@ using UnityEngine.Networking;
 /// The specific behaviour of the fireball, that is manifested in the scene
 /// </summary>
 [RequireComponent(typeof(Rigidbody))]
-public class GrenadeBehaviour : A_SummoningBehaviour
+public class GrenadeBehaviour : A_ServerMoveableSummoning
 {
 	public float throwForce = 20;
 	public float lifeTime = 3;
@@ -61,7 +61,7 @@ public class GrenadeBehaviour : A_SummoningBehaviour
     public override void Execute(PlayerScript caster)
     {
 		//GrenadeBehaviour grenadeBehaviour = PoolRegistry.GrenadePool.Get().GetComponent<GrenadeBehaviour>();
-		GrenadeBehaviour grenadeBehaviour = PoolRegistry.Instantiate(this.gameObject).GetComponent<GrenadeBehaviour>();
+		GrenadeBehaviour grenadeBehaviour = PoolRegistry.GetInstance(this.gameObject, 4, 4).GetComponent<GrenadeBehaviour>();
         //create an instance of this grenade on the client's machine
 
         grenadeBehaviour.gameObject.SetActive(true);

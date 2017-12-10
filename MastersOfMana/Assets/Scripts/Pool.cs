@@ -26,7 +26,11 @@ public class Pool {
     private int mSize = 0;
     private int mGrowth = 0;
 
-    public enum PoolingStrategy { OnMissSubjoinElements, OnMissReturnNull, OnMissRoundRobin };
+    //prefered positions and rotations for new objects
+    private Vector3 mPreferedPostition = A_SummoningBehaviour.OBLIVION;
+    private Quaternion mPreferedrotation = Quaternion.identity;
+
+    public enum PoolingStrategy {OnMissSubjoinElements, OnMissReturnNull, OnMissRoundRobin};
 
     //delegate to the used pooling strategy
     private delegate GameObject mStrategy();
@@ -46,18 +50,57 @@ public class Pool {
     //----------------------------------the implemented strategys
 
     //CONSTRUCTOR
-    public Pool(GameObject original, int size, PoolingStrategy strategy) {
+    public Pool(GameObject original, int size, PoolingStrategy strategy, Vector3 preferedLocation,
+        Quaternion preferedRotation) :
+        this(original, size, size, strategy, preferedLocation, preferedRotation) { }
+
+    public Pool(GameObject original, int size, int growth, PoolingStrategy strategy, Vector3 preferedLocation, Quaternion preferedRotation)
+    {
+        mPreferedPostition = preferedLocation;
+        mPreferedrotation = preferedRotation;
 
         mOriginal = original;
-        mGrowth = size;
 
-        //get the originals assetID
-        //assetID = original.GetComponent<NetworkIdentity>().assetId;
+        //so the first time it grows to the capacity
+        mGrowth = size;
 
         //create some elements
         SubjoinElements();
 
-        //ClientScene.RegisterSpawnHandler(assetID, SpawnObject, UnspawnObject);
+        //now apply the actual growth
+        mGrowth = growth;
+
+        //define the pools strategy
+        switch (strategy) {
+            case PoolingStrategy.OnMissReturnNull:
+                OnMissBehaviour = OnMissReturnNull;
+                break;
+            case PoolingStrategy.OnMissSubjoinElements:
+                OnMissBehaviour = OnMissSubjoinElements;
+                break;
+            case PoolingStrategy.OnMissRoundRobin:
+                OnMissBehaviour = OnMissRoundRobin;
+                break;
+            default:
+                OnMissBehaviour = OnMissReturnNull;
+                break;
+        }
+    }
+
+    public Pool(GameObject original, int size, PoolingStrategy strategy) :
+        this(original, size, size, strategy) { }
+
+    public Pool(GameObject original, int size, int growth, PoolingStrategy strategy) {
+
+        mOriginal = original;
+        //so the first time it grows to the capacity
+        mGrowth = size;
+
+        //create some elements
+        SubjoinElements();
+
+        //now apply the actual growth
+        mGrowth = growth;
 
         //define the pools strategy
         switch (strategy) {
@@ -83,13 +126,7 @@ public class Pool {
         List<GameObject> newElements = new List<GameObject>();
         for (int i = 0; i < mGrowth; ++i) {
             //create a new Instance of the original
-            GameObject newObject;
-            //put the new instance to somewhere far far away, e.g. to reduce network interpolation problems
-            newObject = GameObject.Instantiate(mOriginal, A_SummoningBehaviour.OBLIVION, Quaternion.identity);
-
-            //create the instance on the clients
-            //NetworkServer.Spawn(newObject); this will now happen ingame... lame i know...
-
+            GameObject newObject = Object.Instantiate(mOriginal, mPreferedPostition, mPreferedrotation);
 
             //deactivate the poolinstance per default
             newObject.SetActive(false);
@@ -125,7 +162,7 @@ public class Pool {
             mRoundRobinIdx = 0;
         }
 
-        //if the current index poitns to an inactive instance take it, else invoke the OnMissBehaviour
+        //if the current index points to an inactive instance take it, else invoke the OnMissBehaviour
         found = !mObjects[mRoundRobinIdx].activeSelf ? mObjects[mRoundRobinIdx] : OnMissBehaviour();
 
         if (found && (activateOnReturn == Activation.ReturnActivated))
@@ -137,22 +174,58 @@ public class Pool {
     }
 
     /// <summary>
-    /// handles spawning
+    /// returns an object of the pool according to the used strategy in this pool
+    /// this does    NOT   spawn the object on the clients! if you want to do this you need to manually call NetworkServer.Spawn(pool.Get())
+    /// if no elements are ready to be returned there are several strategies to use
+    /// 1. OnMissReturnNull --> returns null on a miss
+    /// 2. OnMissSubjoinElements --> creates new instances and then returns a new one
+    /// 3. OnMissRoundRobin --> returns first found inactive element
+    /// </summary>
+    /// <param name="transform"></param>
+    /// <param name="activateOnReturn"></param>
+    /// <returns></returns>
+    public GameObject Get(Transform transform, Activation activateOnReturn = Activation.ReturnDeactivated)
+    {
+        return Get(transform.position, transform.rotation, activateOnReturn);
+    }
+
+    /// <summary>
+    /// returns an object of the pool according to the used strategy in this pool
+    /// this does    NOT   spawn the object on the clients! if you want to do this you need to manually call NetworkServer.Spawn(pool.Get())
+    /// if no elements are ready to be returned there are several strategies to use
+    /// 1. OnMissReturnNull --> returns null on a miss
+    /// 2. OnMissSubjoinElements --> creates new instances and then returns a new one
+    /// 3. OnMissRoundRobin --> returns first found inactive element
     /// </summary>
     /// <param name="position"></param>
-    /// <param name="assetID"></param>
+    /// <param name="rotation"></param>
+    /// <param name="activateOnReturn"></param>
     /// <returns></returns>
-    public GameObject SpawnObject(Vector3 position, NetworkHash128 assetID)
+    public GameObject Get(Vector3 position, Quaternion rotation, Activation activateOnReturn = Activation.ReturnDeactivated)
     {
-        //return Get();
-        return null;
-    }
-    /// <summary>
-    /// handles despawning
-    /// </summary>
-    /// <param name="spawned"></param>
-    public void UnspawnObject(GameObject spawned)
-    {
-        spawned.SetActive(false);
+        GameObject found = null;
+
+        //point to the next object
+        if ((++mRoundRobinIdx) >= mSize)
+        {
+            mRoundRobinIdx = 0;
+        }
+
+        //if the current index points to an inactive instance take it, else invoke the OnMissBehaviour
+        found = !mObjects[mRoundRobinIdx].activeSelf ? mObjects[mRoundRobinIdx] : OnMissBehaviour();
+
+        if (found)
+        {
+            var transform = found.transform;
+            transform.position = position;
+            transform.rotation = rotation;
+
+            if (activateOnReturn == Activation.ReturnActivated)
+            {
+                found.SetActive(true);
+            }
+        }
+
+        return found;
     }
 }

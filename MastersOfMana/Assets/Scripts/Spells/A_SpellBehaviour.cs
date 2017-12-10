@@ -116,4 +116,22 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
             Physics.Raycast(new Ray(point, (caster.movement.mRigidbody.worldCenterOfMass - point).normalized), out hit) &&
             hit.transform.gameObject == caster.gameObject;
     }
+
+    protected static void IterateCollidersAndApply<H>(Collider[] array, Action<H> action)
+    {
+        foreach (var element in array)
+        {
+            Rigidbody rigid = element.attachedRigidbody;
+            H h;
+            if (rigid)
+            {
+                h = rigid.GetComponentInParent<H>();
+                if (h != null)
+                {
+                    action(h);
+                }
+            }
+        }
+    }
+
 }

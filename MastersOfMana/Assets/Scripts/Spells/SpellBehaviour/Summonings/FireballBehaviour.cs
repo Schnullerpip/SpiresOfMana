@@ -69,12 +69,9 @@ public class FireballBehaviour : A_ServerMoveableSummoning
     public override void Execute(PlayerScript caster)
     {
         //Get a fireballinstance out of the pool
-		//FireballBehaviour fireballBehaviour = PoolRegistry.FireballPool.Get().GetComponent<FireballBehaviour>();
-		FireballBehaviour fireballBehaviour = PoolRegistry.Instantiate(this.gameObject).GetComponent<FireballBehaviour>();
+		FireballBehaviour fireballBehaviour = PoolRegistry.GetInstance(gameObject, caster.handTransform.position, caster.transform.rotation, 5, 5).GetComponent<FireballBehaviour>();
 
         //now activate it, so no weird interpolation errors occcure
-        //TODO delete this eventually - RPCs are just too slow
-        //fireball.GetComponent<A_SummoningBehaviour>().RpcSetActive(true);
         fireballBehaviour.gameObject.SetActive(true);
 
 		Vector3 aimDirection = GetAim(caster); 
@@ -96,8 +93,8 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 
 	void Reset (Vector3 pos, Quaternion rot)
 	{
-		transform.position = pos;
-		transform.rotation = rot;
+		//transform.position = pos;
+		//transform.rotation = rot;
 
 		mRigid.Reset();
 		mRigid.isKinematic = false;

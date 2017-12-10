@@ -41,7 +41,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     {
         //get a fistoffury object
         //FistOfFuryBehaviour fof = PoolRegistry.FistOfFuryPool.Get(Pool.Activation.ReturnActivated).GetComponent<FistOfFuryBehaviour>();
-        FistOfFuryBehaviour fof = PoolRegistry.Instantiate(this.gameObject).GetComponent<FistOfFuryBehaviour>();
+        FistOfFuryBehaviour fof = PoolRegistry.GetInstance(this.gameObject, 4, 4).GetComponent<FistOfFuryBehaviour>();
         fof.caster = caster;
         fof.casterObject = caster.gameObject;
         fof.transform.position = fof.castPosition = caster.transform.position;

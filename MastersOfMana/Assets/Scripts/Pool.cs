@@ -126,9 +126,7 @@ public class Pool {
         List<GameObject> newElements = new List<GameObject>();
         for (int i = 0; i < mGrowth; ++i) {
             //create a new Instance of the original
-            GameObject newObject;
-            //put the new instance to somewhere far far away, e.g. to reduce network interpolation problems
-            newObject = GameObject.Instantiate(mOriginal, mPreferedPostition, mPreferedrotation);
+            GameObject newObject = Object.Instantiate(mOriginal, mPreferedPostition, mPreferedrotation);
 
             //deactivate the poolinstance per default
             newObject.SetActive(false);

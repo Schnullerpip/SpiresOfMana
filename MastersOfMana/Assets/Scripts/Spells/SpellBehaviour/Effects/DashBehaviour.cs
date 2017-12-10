@@ -12,6 +12,7 @@ public class DashBehaviour : A_EffectBehaviour
 {
 	public float maxDistance = 10;
 	public float pushForce = 10;
+    public float pushRadius = 2;
 
 	public float playerRadius = 0.35f;
 	public float playerHeight = 2;
@@ -23,7 +24,10 @@ public class DashBehaviour : A_EffectBehaviour
 	public float feetAdvancement = 0.1f;
 
 	public PreviewSpell preview;
-    public GameObject dashEffectPrefab; 
+
+    //spawnable effectprefabs
+    public GameObject dashEffectPrefab;
+    public GameObject dashBlastEffect;
 
 	Vector3 GetNewPosition (PlayerScript player, Vector3 direction, out RaycastHit hit)
 	{
@@ -128,17 +132,18 @@ public class DashBehaviour : A_EffectBehaviour
 
         Vector3 newPosition = GetNewPosition(caster, direction, out hit);
 
-		if (hit.collider != null)
-        {
-            PlayerScript opponent = hit.collider.GetComponentInParent<PlayerScript>();
-            if (opponent && opponent != caster)
-            {
-                Vector3 pushVector = opponent.movement.mRigidbody.worldCenterOfMass - newPosition;
-                Vector3 pushDirection = Vector3.Normalize(pushVector);
-                opponent.healthScript.TakeDamage(0, this.GetType());
-                opponent.movement.RpcSetVelocityAndMovePosition(pushDirection * pushForce, newPosition + pushVector - opponent.movement.mRigidbody.centerOfMass);
-            }
-        }
+        //TODO should direct hit be stronger? else the collective push force handles this later in IterateCollidersAndApply
+		//if (hit.collider != null)
+  //      {
+            //PlayerScript opponent = hit.collider.GetComponentInParent<PlayerScript>();
+            //if (opponent && opponent != caster)
+            //{
+                //Vector3 pushVector = opponent.movement.mRigidbody.worldCenterOfMass - newPosition;
+                //Vector3 pushDirection = Vector3.Normalize(pushVector);
+                //opponent.healthScript.TakeDamage(0, this.GetType());
+                //opponent.movement.RpcSetVelocityAndMovePosition(pushDirection * pushForce, newPosition + pushVector - opponent.movement.mRigidbody.centerOfMass);
+            //}
+        //}
 
         //cast a trail or something so the enemy does not recognize the dash as a glitch
         GameObject ds = PoolRegistry.GetInstance(dashEffectPrefab, 4, 4);
@@ -147,13 +152,42 @@ public class DashBehaviour : A_EffectBehaviour
         pos.y += 1;
         ds.transform.position = pos;
         ds.transform.rotation = caster.headJoint.transform.rotation;
+
         //activate the trail on all clients
         ds.SetActive(true);
         NetworkServer.Spawn(ds);
 
         //set the new position of the player
-        //caster.movement.RpcSetPosition(newPosition);
         caster.movement.RpcMovePosition(newPosition);
+
+        //push objects near the caster toward his direction (softly - should not replace windwall)
+        IterateCollidersAndApply(Physics.OverlapSphere(newPosition, pushRadius), (ServerMoveable sm) =>
+        {
+            if (sm != caster.movement)
+            {
+                //Vector3 pushVector = sm.transform.position - newPosition;
+                //Vector3 pushDirection = pushVector.normalized;
+                //Vector3 pushVector = sm.mRigidbody.worldCenterOfMass - newPosition;
+                //Vector3 pushDirection = Vector3.Normalize(pushVector);
+                //sm.RpcSetVelocityAndMovePosition(pushDirection * pushForce, newPosition + pushVector - sm.mRigidbody.worldCenterOfMass);
+
+                Vector3 pushVector = sm.mRigidbody.worldCenterOfMass - newPosition;
+                Vector3 pushDirection = Vector3.Normalize(pushVector);
+                sm.RpcSetVelocityAndMovePosition(pushDirection * pushForce, newPosition + pushVector - sm.mRigidbody.centerOfMass);
+
+                //if its a player, affect it (for statscollection)
+                PlayerScript ps = sm.GetComponentInParent<PlayerScript>();
+                if (ps)
+                {
+                    ps.healthScript.TakeDamage(0, GetType());
+                }
+            }
+        });
+
+        //fire the blastParticleEffect
+        GameObject pe = PoolRegistry.GetInstance(dashBlastEffect, newPosition + Vector3.up, Quaternion.identity, 4, 4);
+        pe.gameObject.SetActive(true);
+        NetworkServer.Spawn(pe.gameObject);
 
         //make the trail disappear after one second
         caster.StartCoroutine(UnspawnTrail(ds));

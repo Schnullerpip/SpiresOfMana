@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
     public static event LocalPlayerDead OnLocalPlayerDead;
 
     private int mNumOfReadyPlayers = 0;
+    private StartPoints mStartPoints;
 
     public void Awake()
     {
@@ -92,6 +93,7 @@ public class GameManager : MonoBehaviour
 
     public void TriggerGameStarted()
     {
+        mStartPoints = FindObjectOfType<StartPoints>();
         if (OnGameStarted != null)
         {
             OnGameStarted();
@@ -164,6 +166,8 @@ public class GameManager : MonoBehaviour
 
     public void TriggerOnRoundStarted()
     {
+        List<Transform> startPositions = mStartPoints.GetRandomStartPositions();
+
         if (OnRoundStarted != null)
         {
             OnRoundStarted();

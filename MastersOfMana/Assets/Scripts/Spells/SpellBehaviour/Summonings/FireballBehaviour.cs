@@ -10,15 +10,19 @@ using System.Collections.Generic;
 public class FireballBehaviour : A_ServerMoveableSummoning
 {
     public float speed = 50.0f;
-    public int directDamage = 8;
 
-    public Color effectColor;
-	//public GameObject ballPrefab;
+	[Header("Direct Hits")]
+    public int directDamage = 8;
+	public float directForce = 4;
+
+	[Header("Explosion")]
+	public Color effectColor;
 	public GameObject explosionPrefab;
 	public float explosionRadius = 4;
 	public float explosionForce = 5;
 	public int explosionDamage = 4;
 
+	[Space()]
 	public float disappearTimer = 3;
 
     public GameObject[] DeactivatedObjectsOnCollision;
@@ -99,13 +103,29 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 		mRigid.Reset();
 		mRigid.isKinematic = false;
 
-        cachedHealth = new List<HealthScript>();
+		mTriggerEnabled = true;
+
+		if(cachedHealth == null)
+		{
+			cachedHealth = new List<HealthScript>();
+		}
+		else
+		{
+			cachedHealth.Clear();
+		}
 	}
 
     private List<HealthScript> cachedHealth;
+	private bool mTriggerEnabled = true;
 
     protected override void ExecuteTriggerEnter_Host(Collider collider)
     {
+		if(!mTriggerEnabled)
+		{
+			return;
+		}
+
+		//skip trigger and the casters collision boxes
         if (collider.isTrigger || caster.IsColliderPartOf(collider))
         {
             return;
@@ -113,16 +133,15 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 
 		Vector3 directHitForce = mRigid.velocity;
 		mRigid.isKinematic = true;
-
-        if (!isServer)
-		{
-			return;
-        }
 		
         RpcExplosion(transform.position, transform.rotation);
 
+		//disallow a double trigger when touching multiple collider
+		mTriggerEnabled = false;
+
         HealthScript directHit = null;
 
+		//only hurt non static objects
         if(!collider.gameObject.isStatic)
         {
             directHit = collider.gameObject.GetComponentInParent<HealthScript>();
@@ -130,19 +149,23 @@ public class FireballBehaviour : A_ServerMoveableSummoning
             {
                 cachedHealth.Add(directHit);
 
-                Debug.Log("direct damage: " + directDamage);
-                directHit.TakeDamage(directDamage, GetType());
+				//apply direct hit damage
+				directHit.TakeDamage(directDamage, GetType());
 
-                PlayerScript player = directHit.GetComponent<PlayerScript>();
-                if (player)
+				//if it was a moveable object, apply a force
+				ServerMoveable moveable = directHit.GetComponentInParent<ServerMoveable>();
+				if (moveable)
                 {
                     directHitForce.Normalize();
-                    directHitForce *= explosionForce;
-                    player.movement.RpcAddForce(directHitForce, ForceMode.VelocityChange);
+                    directHitForce *= directForce;
+					moveable.RpcAddForce(directHitForce, ForceMode.VelocityChange);
                 }
             }
         }
 
+		//explosion force and damage:
+
+		//overlap a sphere at the hit position
         Collider[] colliders = Physics.OverlapSphere(mRigid.position,explosionRadius);
 
         //TODO: TEMP SOLUTION
@@ -150,27 +173,31 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 
         foreach(Collider c in colliders)
         {
-
             HealthScript health = c.GetComponentInParent<HealthScript>();
 
-            if(health && health == directHit)
-            {
-                //took already damage and got a force
-                continue;
-            }
+			//collider has a healthscript
+			if(health)
+			{
+				//if it already got directly hit, skip it
+	            if(health == directHit)
+	            {
+	                continue;
+	            }
 
-            if(health && !cachedHealth.Contains(health))
-            {
-                health.TakeDamage(explosionDamage, GetType());
-                cachedHealth.Add(health);
+				//only hurt each healtscript once, even if it has multiple collider
+	            if(!cachedHealth.Contains(health))
+	            {
+	                health.TakeDamage(explosionDamage, GetType());
+	                cachedHealth.Add(health);
+				}
             }
                 
+			//affect the rigidbody, but only once
             if(c.attachedRigidbody && !cachedRigidbodies.Contains(c.attachedRigidbody))
             {
                 cachedRigidbodies.Add(c.attachedRigidbody);
 
                 Vector3 force = c.attachedRigidbody.worldCenterOfMass - mRigid.position; 
-
                 force.Normalize();
                 force *= explosionForce;
 
@@ -186,10 +213,6 @@ public class FireballBehaviour : A_ServerMoveableSummoning
                 }
             }
         }
-
-        //var explosionObject = Instantiate(explosionPrefab, transform.position, transform.rotation);
-        //RFX4_ColorHelper.ChangeObjectColorByHUE(explosionObject, RFX4_ColorHelper.ColorToHSV(effectColor).H);
-        //OnCollisionDeactivateBehaviour(false);
     }
 
     void OnCollisionDeactivateBehaviour(bool active)

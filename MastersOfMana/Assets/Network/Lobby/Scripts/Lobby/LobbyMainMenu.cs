@@ -50,11 +50,6 @@ namespace Prototype.NetworkLobby
             GameManager.instance.numOfActiveMenus++;
         }
 
-        public void OnDisable()
-        {
-            GameManager.instance.numOfActiveMenus--;
-        }
-
         public void OnClickHost()
         {
             lobbyManager.StartHost();

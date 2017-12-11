@@ -109,7 +109,7 @@ namespace Prototype.NetworkLobby
                 ChangeTo(null);
 
                 Destroy(GameObject.Find("MainMenuUI(Clone)"));
-
+				GameManager.instance.numOfActiveMenus--;
                 //backDelegate = StopGameClbk;
                 isInGame = true;
             }

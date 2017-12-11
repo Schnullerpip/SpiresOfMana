@@ -178,6 +178,7 @@ public class GameManager : MonoBehaviour
     {
         foreach(PlayerScript player in mPlayers)
         {
+            player.movement.RpcSetVelocity(Vector3.zero);
             player.enabled = true;
         }
     }

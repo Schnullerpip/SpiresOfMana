@@ -25,7 +25,7 @@ public class TornadopocalypeBehaviour : A_SummoningBehaviour
 	{
 		GameManager.instance.isUltimateActive = true;
 
-        TornadopocalypeBehaviour tornadopocalypse = PoolRegistry.Instantiate(this.gameObject).GetComponent<TornadopocalypeBehaviour>();
+        TornadopocalypeBehaviour tornadopocalypse = PoolRegistry.GetInstance(this.gameObject,1,1).GetComponent<TornadopocalypeBehaviour>();
 
 		tornadopocalypse.mCaster = caster;
 		tornadopocalypse.transform.position = transform.position;
@@ -87,6 +87,7 @@ public class TornadopocalypeBehaviour : A_SummoningBehaviour
 			}
 
 			//instatiate the minion at the players position
+
 			//TODO: use our poolregistry
 			TornadoMinion tornado = Instantiate(tornadoMinionPrefab, initPos, target.transform.rotation);
 //			TornadoMinion tornado = PoolRegistry.Instantiate(tornadoMinionPrefab.gameObject, Pool.Activation.ReturnDeactivated).GetComponent<TornadoMinion>();

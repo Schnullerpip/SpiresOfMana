@@ -739,13 +739,39 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   serverMoveable: {fileID: 0}
   speed: 50
+  ballRadius: 0.25
   directDamage: 8
   directForce: 3
   effectColor: {r: 1, g: 0.5379311, b: 0, a: 0}
   explosionPrefab: {fileID: 167520, guid: bb6aac8f0034cde49a98a3a92aa8270d, type: 2}
+  explosionFalloff:
+    force: 3
+    damage: 4
+    falloff:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0
+        inSlope: 2
+        outSlope: 2
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 0.5
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
   explosionRadius: 2
-  explosionForce: 3
-  explosionDamage: 4
   disappearTimer: 10
   DeactivatedObjectsOnCollision:
   - {fileID: 1120015493409102}

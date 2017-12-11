@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine.Networking;
 using UnityEngine;
+using System.Collections.Generic;
 
 /// <summary>
 /// SpellBehaviours describe the procedure of a single step, included in a Spell
@@ -140,4 +141,119 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
         }
     }
 
+	[System.Serializable]
+	public struct ExplosionFalloff
+	{
+		public float force;
+		public int damage;
+		public AnimationCurve falloff;
+
+		public float EvaluateForce(float t)
+		{
+			return falloff.Evaluate(t) * force;
+		}
+
+		public int EvaluateDamage(float t)
+		{
+			return Mathf.RoundToInt(falloff.Evaluate(t) * damage);
+		}
+	}
+
+	/// <summary>
+	/// Applies an explosion with the provided parameters.
+	/// </summary>
+	/// <param name="explosionOrigin">Explosion origin.</param>
+	/// <param name="radius">Radius.</param>
+	/// <param name="explFalloff">Explosion falloff.</param>
+	/// <param name="excluded">A list of Healthscript that should be skipped. eg these already got hit.</param>
+	protected void ExplosionDamage(Vector3 explosionOrigin, float radius, ExplosionFalloff explFalloff, List<HealthScript> excluded = null)
+	{
+		//overlap a sphere at the hit position
+		Collider[] colliders = Physics.OverlapSphere(explosionOrigin, radius);
+
+		List<float> affectFactors = new List<float>();
+
+		//TODO: TEMP SOLUTION
+		List<Rigidbody> cachedRigidbodies = new List<Rigidbody>();
+		List<HealthScript> cachedHealth = new List<HealthScript>();
+
+		float radiusSqr = radius * radius;
+
+		foreach(Collider c in colliders)
+		{
+			float affect;
+
+			//affect non static rigidbodys, but only once
+			if(!c.gameObject.isStatic && c.attachedRigidbody && !cachedRigidbodies.Contains(c.attachedRigidbody))
+			{
+				//raycast from the center of the explosion to every collider withing the radius
+				RaycastHit hit;
+				if(Physics.Raycast(explosionOrigin, c.attachedRigidbody.worldCenterOfMass - explosionOrigin, out hit, radius))
+				{
+					//if the hit collider doesnt share the same rigidbody
+					if(hit.collider.attachedRigidbody != c.attachedRigidbody)
+					{
+						//skip it since there is something in between the 2
+						Debug.Log(hit.collider.name+" was in the way of an "+GetType().ToString()+" explosion trying to hit "+ c.attachedRigidbody +". " +
+							"This message is temporarily here to test if this explosionblocking works properly. Delete it when the time comes. dunno when ¯\\_(ツ)_/¯");
+						continue;
+					}
+				}
+				//if we somehow didnt hit anything
+				else
+				{
+					continue;
+				}
+
+				cachedRigidbodies.Add(c.attachedRigidbody);
+
+				Vector3 forceVector = c.attachedRigidbody.worldCenterOfMass - explosionOrigin; 
+
+				affect = 1 - forceVector.sqrMagnitude / radiusSqr;
+				
+				forceVector.Normalize();
+				forceVector *= explFalloff.EvaluateForce(affect);
+
+				//check wheather or not we are handling a player or just some random rigidbody
+				if (c.attachedRigidbody.CompareTag("Player"))
+				{
+					PlayerScript ps = c.attachedRigidbody.GetComponent<PlayerScript>();
+					ps.movement.RpcAddForce(forceVector, ForceMode.VelocityChange);
+				}
+				else
+				{
+					c.attachedRigidbody.AddForce(forceVector, ForceMode.VelocityChange);
+				}
+			}
+			else
+			{
+				affect = 1 - (c.transform.position - explosionOrigin).sqrMagnitude / radiusSqr;
+			}
+
+			HealthScript health = c.GetComponentInParent<HealthScript>();
+
+			//collider has a healthscript
+			if(health)
+			{
+				//if its in the exclude list
+				if(excluded != null && excluded.Contains(health))
+				{
+					continue;
+				}
+					
+				//only hurt each healtscript once, even if it has multiple collider
+				if(!cachedHealth.Contains(health))
+				{
+					cachedHealth.Add(health);
+					affectFactors.Add(affect);
+				}
+			}
+		}
+	
+		//this is done after the overlapshere loop, that way, walls and other obstacles where able to block the explosion before dying
+		for (int i = 0; i < cachedHealth.Count; i++) 
+		{
+			cachedHealth[i].TakeDamage(explFalloff.EvaluateDamage(affectFactors[i]), GetType());
+		}
+	}
 }

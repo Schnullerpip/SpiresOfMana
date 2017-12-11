@@ -7,16 +7,18 @@ public class TornadopocalypeBehaviour : A_SummoningBehaviour
 {
 	public Bounds bounds;
 
-    public int amount = 8;
+	public FloatRange interval = new FloatRange(0.3f,1.0f);
 
 	public float duration = 15;
+	public float maxHeightCheck = 20;
+	public FloatRange initalOffsetToPlayer = new FloatRange(3, 10);
 
-    public Tornado tornadoPrefab;
+	public TornadoMinion tornadoMinionPrefab;
 
 	private PlayerScript[] mOpponents;
 	private PlayerScript mCaster;
 
-    private Tornado[] tornados;
+	private TornadoMinion[] tornadoMinions;
 
 	#region implemented abstract members of A_SpellBehaviour
 	public override void Execute (PlayerScript caster)
@@ -35,53 +37,90 @@ public class TornadopocalypeBehaviour : A_SummoningBehaviour
 	}
 	#endregion
 
-	private void Init()
+	PlayerScript[] GetOpponents ()
 	{
-		PlayerScript[] allPlayers = GameObject.FindObjectsOfType<PlayerScript>();
+		PlayerScript[] allPlayers = GetAllPlayers();
 		int j = 0;
-
-		mOpponents = new PlayerScript[allPlayers.Length - 1];
-
+		PlayerScript[] opponents = new PlayerScript[allPlayers.Length - 1];
 		for (int i = 0; i < allPlayers.Length; ++i) 
 		{
-			if(allPlayers[i] == mCaster)
-			{
+			if (allPlayers [i] == mCaster) {
 				continue;
 			}
-
-			mOpponents[j] = allPlayers[i];
+			opponents [j] = allPlayers [i];
 			++j;
 		}
 
-        tornados = new Tornado[amount];
+		return opponents;
+	}
 
-        Vector3 pos = Vector3.zero;
+	//TODO: extract this to the gamemanager
+	PlayerScript[] GetAllPlayers()
+	{
+		return FindObjectsOfType<PlayerScript>();
+	}
 
-        for (int i = 0; i < amount; ++i)
-        {
-            tornados[i] = PoolRegistry.Instantiate(tornadoPrefab.gameObject).GetComponent<Tornado>();
+	private void Init()
+	{
+		mOpponents = GetOpponents();
+//		mOpponents = GetAllPlayers();
 
-            pos.x = Random.Range(-bounds.extents.x, bounds.extents.x);
-            pos.z = Random.Range(-bounds.extents.z, bounds.extents.z);
-
-            tornados[i].transform.position = pos;
-
-            NetworkServer.Spawn(tornados[i].gameObject, tornados[i].GetComponent<NetworkIdentity>().assetId);
-            tornados[i].gameObject.SetActive(true);
-        }
-
+		for (int i = 0; i < mOpponents.Length; i++) 
+		{
+			StartCoroutine(Spawn(mOpponents[i]));
+		}
+			
         StartCoroutine(DelayedStop(duration));
+	}
+
+	private IEnumerator Spawn(PlayerScript target)
+	{
+		while(gameObject.activeSelf)
+		{
+			Vector3 initPos;
+			//check if the current position of the player is a valid navmesh position
+			if(!TornadoMinion.GetPositionOnMesh(target.transform.position, maxHeightCheck, out initPos))
+			{
+				//if not, skip this iteration
+				yield return new WaitForSeconds(interval.Random());
+				continue;
+			}
+
+			//instatiate the minion at the players position
+			//TODO: use our poolregistry
+			TornadoMinion tornado = Instantiate(tornadoMinionPrefab, initPos, target.transform.rotation);
+//			TornadoMinion tornado = PoolRegistry.Instantiate(tornadoMinionPrefab.gameObject, Pool.Activation.ReturnDeactivated).GetComponent<TornadoMinion>();
+
+			Vector3 pos = target.transform.position 
+				+ target.movement.GetDeltaMovement() / Time.deltaTime //take movement into account			
+				+ Random.insideUnitCircle.normalized.ToVector3xz() * initalOffsetToPlayer.Random(); //random around the players position
+
+			//move afterwards to make sure the validation of the position is calculated from the targets position. 
+			//this is especially important for the brigdes, so that the tornados dont spawn below
+			tornado.transform.position = pos;
+
+			Vector3 clientAdjustment;
+
+			//since the client didnt yet initialized the navmeshagents, we have to adjust again
+			if(TornadoMinion.GetPositionOnMesh(pos, maxHeightCheck, out clientAdjustment))
+			{
+				tornado.transform.position = clientAdjustment;
+				tornado.SetTarget(target);
+				tornado.gameObject.SetActive(true);
+				NetworkServer.Spawn(tornado.gameObject);
+			}
+			else
+			{
+				tornado.gameObject.SetActive(false);
+			}
+
+			yield return new WaitForSeconds(interval.Random());
+		}
 	}
 
 	private IEnumerator DelayedStop(float time)
 	{
         yield return new WaitForSeconds(time);
-
-        for (int i = 0; i < amount; ++i)
-        {
-            NetworkServer.UnSpawn(tornados[i].gameObject);
-            tornados[i].gameObject.SetActive(false);
-        }
 
 		//reset the flag so a new ultimate can be started
 		GameManager.instance.isUltimateActive = false;

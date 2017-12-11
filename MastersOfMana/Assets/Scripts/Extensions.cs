@@ -4,12 +4,22 @@ using System.Collections.Generic;
 
 public static class Extensions
 {
-	/// <summary>
-	/// Returns a Vector2 with the x and z Component of the 
-	/// original Vector3 as x and y respectively.
-	/// </summary>
-	/// <param name="vec3">Vec3.</param>
-	public static Vector2 xz(this Vector3 vec3)
+	#region Helper
+	#if UNITY_EDITOR
+	public static void EditorPause(bool value)
+	{
+		UnityEditor.EditorApplication.isPaused = value;
+	}
+	#endif
+	#endregion
+
+    #region Vector
+    /// <summary>
+    /// Returns a Vector2 with the x and z Component of the 
+    /// original Vector3 as x and y respectively.
+    /// </summary>
+    /// <param name="vec3">Vec3.</param>
+    public static Vector2 xz(this Vector3 vec3)
 	{
 		return new Vector2(vec3.x,vec3.z);
 	}
@@ -23,15 +33,28 @@ public static class Extensions
     {
         return new Vector3(vec2.x, 0, vec2.y);
     }
+    #endregion
 
-	#region Transform
 
-	/// <summary>
-	/// Resets the transformation, including position, 
-	/// localRotaion and localScale.
-	/// </summary>
-	/// <param name="trans">Trans.</param>
-	public static void ResetTransformation(this Transform trans)
+    #region Bounds
+    public static Vector3 RandomInside(this Bounds bounds)
+    {
+        Vector3 returnVec;
+        returnVec.x = Random.Range(bounds.min.x, bounds.max.x);
+        returnVec.y = Random.Range(bounds.min.y, bounds.max.y);
+        returnVec.z = Random.Range(bounds.min.z, bounds.max.z);
+        return returnVec;
+    }
+    #endregion
+
+    #region Transform
+
+    /// <summary>
+    /// Resets the transformation, including position, 
+    /// localRotaion and localScale.
+    /// </summary>
+    /// <param name="trans">Trans.</param>
+    public static void ResetTransformation(this Transform trans)
 	{
 		trans.position = Vector3.zero;
 		trans.localRotation = Quaternion.identity;

@@ -26,6 +26,16 @@ public class PlayerScript : NetworkBehaviour
         return mPlayerSpells;
     }
 
+	private PlayerAnimation mPlayerAnimation;
+	public PlayerAnimation GetPlayerAnimation()
+	{
+		if(!mPlayerAnimation)
+		{
+			mPlayerAnimation = GetComponent<PlayerAnimation>();
+		}
+		return mPlayerAnimation;
+	}
+
     /// <summary>
     /// holds references to all the coroutines a spell is running, so they can bes stopped/interrupted w4hen a player is for example hit
     /// and can therefore not continue to cast the spell

@@ -62,12 +62,10 @@ public class PlayerAnimation : NetworkBehaviour {
 
 	public void Cast()
 	{
-		if(isLocalPlayer)
-		{
-			mNetAnimator.SetTrigger("resolve");
-			//FIXME: i have no idea why i have to manually reset this, but if i dont, 
-			//the trigger will be set a second time immediatly, triggering the animtion twice
-			animator.ResetTrigger("resolve");
-		}
+		animator.SetBool("isResolving",true);
+		//the bool is reset inside the animation state. a trigger is not used, since it is buggy with the network animation component
+
+		//force an update to avoid a 1 to 2 frame delay
+		animator.Update(0);
 	}
 }

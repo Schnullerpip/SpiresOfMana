@@ -38,7 +38,7 @@ public class SoloGameSetup : MonoBehaviour {
         NetworkManagerObject.AddComponent<NetManager>();
 
         Instantiate(ingameMenu);
-        Instantiate(hurtIndicator);
+        //Instantiate(hurtIndicator);
 
 		StartCoroutine(PullingGameStart());
     }

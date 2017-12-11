@@ -12,11 +12,13 @@ public class LavaFloor : NetworkBehaviour
     public AnimationCurve lavaFlow;
     private float startHeight;
     private float runTime = 0;
+    private bool mLavaActive = false;
 
     public void Start()
     {
         startHeight = transform.position.y;
-        //inward.Play();
+        GameManager.OnRoundStarted += RoundStarted;
+        GameManager.OnRoundEnded += RoundEnded;
         Debug.LogWarning("Remove code for stopping lava for release build!");
     }
 
@@ -41,6 +43,20 @@ public class LavaFloor : NetworkBehaviour
                 playerHealth.GetComponent<PlayerMovement>().RpcSetVelocityY(10);
             }
         }
+    }
+
+    void RoundStarted()
+    {
+        mLavaActive = true;
+        runTime = 0;
+    }
+
+    void RoundEnded()
+    {
+        mLavaActive = false;
+        Vector3 newTrans = transform.position;
+        newTrans.y = startHeight;
+        transform.position = newTrans;
     }
 
     public void OnTriggerExit(Collider other)
@@ -73,15 +89,11 @@ public class LavaFloor : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        if (isServer)
+        if (isServer && mLavaActive)
         {
             if(Input.GetKeyDown(KeyCode.L))
             {
-                amplitude = 0;
-                Vector3 newTrans = transform.position;
-                newTrans.y = startHeight;
-                transform.position = newTrans;
-
+                RoundEnded();
             }
             runTime += Time.deltaTime;
             Vector3 newTransformPosition = transform.position;

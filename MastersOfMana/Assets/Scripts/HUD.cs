@@ -9,7 +9,7 @@ public class HUD : MonoBehaviour {
     private PostGameMenu mPostGameScreen;
     private IngameLobby mLobby;
     private HealthHUD mHealthHUD;
-    //private Prototype.NetworkLobby.SpellSelectionPanel mSpellSelection;
+    private HurtIndicator mHurtIndicator;
 
     void OnEnable()
     {
@@ -25,12 +25,17 @@ public class HUD : MonoBehaviour {
             Instantiate(obj, transform);
         }
         mSpellHUD = GetComponentInChildren<SpellHUD>();
+
         mPostGameScreen = GetComponentInChildren<PostGameMenu>();
         mPostGameScreen.gameObject.SetActive(false);
+
         mLobby = GetComponentInChildren<IngameLobby>();
+
         mHealthHUD = GetComponentInChildren<HealthHUD>();
         mHealthHUD.gameObject.SetActive(false);
 
+        mHurtIndicator = GetComponentInChildren<HurtIndicator>();
+        mHurtIndicator.gameObject.SetActive(false);
     }
 
     public SpellHUD GetSpellHUD()
@@ -51,6 +56,7 @@ public class HUD : MonoBehaviour {
     void RoundStarted()
     {
         mHealthHUD.gameObject.SetActive(true);
+        //mHurtIndicator.gameObject.SetActive(true);
     }
 
     public void ExitPostGameScreen()

@@ -27,10 +27,10 @@ public class SpellHUD : MonoBehaviour
     {
         //GameManager.OnGameStarted += Init;
         GameManager.OnLocalPlayerDead += LocalPlayerDead;
-        Init();
+        //Init();
     }
 
-    public void Init()
+    public void Start()
     {
         localPlayerSpells = GameManager.instance.localPlayer.GetPlayerSpells();
 
@@ -127,15 +127,12 @@ public class SpellHUD : MonoBehaviour
 
     void OnDisable()
     {
-        GameManager.OnGameStarted -= Init;
+        //GameManager.OnGameStarted -= Init;
         GameManager.OnLocalPlayerDead -= LocalPlayerDead;
     }
 
     private void LocalPlayerDead()
     {
-        foreach (SpellSlotHUD spellslot in spellSlots)
-        {
-            spellslot.setActive(false);
-        }
+        gameObject.SetActive(false);
     }
 }

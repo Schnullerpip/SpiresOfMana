@@ -121,15 +121,7 @@ public class Check_DamageDistribution : ICheck
 	    }
 
         //register at gamemanager to get OnGameEnded events
-        GameManager gm;
-        if ((gm = GameManager.instance) != null)
-        {
-            gm.OnGameEnded += GameEndRoutine;
-        }
-        else
-        {
-            Debug.Log("[Check_DamageDistribution]::[Init]:: Could not find a GameManager instance!");
-        }
+        GameManager.OnRoundEnded += GameEndRoutine;
     }
 
 	// Use this for initialization

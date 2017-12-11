@@ -31,8 +31,8 @@ public class GameManager : MonoBehaviour
     public delegate void LocalPlayerDead();
     public static event LocalPlayerDead OnLocalPlayerDead;
 
-    public delegate void GameEnded();
-    public event GameEnded OnGameEnded;
+    public delegate void RoundEnded();
+    public static event RoundEnded OnRoundEnded;
 
     private int mNumOfReadyPlayers = 0;
     private StartPoints mStartPoints;
@@ -132,16 +132,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void TriggerGameEnded()
+    public void TriggerRoundEnded()
     {
-        if (OnGameEnded != null)
+        if (OnRoundEnded != null)
         {
-            OnGameEnded();
+            OnRoundEnded();
         }
     }
 
     public void PostGameLobby(uint winner) {
-        NetManager.instance.RpcGameEnded(winner);
+        NetManager.instance.RpcRoundEnded(winner);
     }
 
     public void localPlayerDead()

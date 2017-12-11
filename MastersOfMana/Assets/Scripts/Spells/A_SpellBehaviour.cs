@@ -104,16 +104,22 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
     /// </summary>
     /// <param name="point"> point to be projected </param>
     /// <param name="caster"> provides information about it's whereabouts, as well as it's camera's </param>
-    /// <param name="hitRange"> tolerance to hit or no hit </param>
+    /// <param name="hitRadius"> tolerance to hit or no hit </param>
     /// <returns>whether or not point should be hit or not</returns>
-    protected static bool ConfirmedHit(Vector3 point, PlayerScript caster, float hitRange)
+    protected static bool ConfirmedHit(Vector3 point, PlayerScript caster, float hitRadius, float hitRange)
     {
         RaycastHit hit;
+        Vector3 onPlane = Vector3.ProjectOnPlane((point - caster.GetCameraPosition()), caster.GetCameraLookDirection());
+        float dotProduct = Vector3.Dot((point - onPlane), caster.GetCameraLookDirection());
+        Debug.Log("dotproduct: " + dotProduct);
         return
             /*hit by raw aim?*/
-            Vector3.ProjectOnPlane((point - caster.GetCameraPosition()), -caster.GetCameraLookDirection()).sqrMagnitude <= hitRange*hitRange &&
+            onPlane.sqrMagnitude <= hitRadius*hitRadius &&
+            //hit object is infront of me?
+            dotProduct > 0 &&
             /*direct sight? - avoid hit when an obstacle is inbetween*/
             Physics.Raycast(new Ray(point, (caster.movement.mRigidbody.worldCenterOfMass - point).normalized), out hit) &&
+            hit.distance <= hitRange &&
             hit.transform.gameObject == caster.gameObject;
     }
 

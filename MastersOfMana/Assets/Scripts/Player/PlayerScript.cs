@@ -269,6 +269,11 @@ public class PlayerScript : NetworkBehaviour
 		headJoint.localRotation = Quaternion.AngleAxis(aim.GetYAngle(), Vector3.right); 
 	}
 
+	public bool HandTransformIsObscured(out RaycastHit hit)
+	{
+		return Physics.Linecast(handTransform.parent.position, handTransform.position, out hit);
+	}
+
 	public bool HandTransformIsObscured()
 	{
 		return Physics.Linecast(handTransform.parent.position, handTransform.position);

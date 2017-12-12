@@ -31,10 +31,18 @@ public static class Extensions
 	/// Returns a random element of the array.
 	/// </summary>
 	/// <returns>The element.</returns>
-	/// <param name="array">Array.</param>
 	public static T RandomElement<T>(this T[] array)
 	{
-		return array[Random.Range(0, array.Length)];
+		return array[array.RandomIndex()];
+	}
+
+	/// <summary>
+	/// Returns a random index of the array.
+	/// </summary>
+	/// <returns>The index.</returns>
+	public static int RandomIndex<T>(this T[] array)
+	{
+		return Random.Range(0,array.Length);
 	}
 	#endregion
 

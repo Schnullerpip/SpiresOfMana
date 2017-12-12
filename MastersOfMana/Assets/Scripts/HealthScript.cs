@@ -15,6 +15,19 @@ public class HealthScript : NetworkBehaviour
     [SerializeField][SyncVar(hook = "HealthHook")]
     private int mCurrentHealth;
 
+	public PitchingAudioClip[] damageSFXs;
+	public AudioSource SFXaudioSource;
+
+	public delegate void DamageTaken(int damage);
+	public event DamageTaken OnDamageTaken;
+
+	public delegate void HealTaken(int damage);
+	public event HealTaken OnHealTaken;
+
+	public delegate void HealthChanged(int damage);
+	public event HealthChanged OnHealthChanged;
+
+
     //states whether the GameObject is alive or not
     [SyncVar]
     private bool isAlive = true;
@@ -25,7 +38,7 @@ public class HealthScript : NetworkBehaviour
     // Use this for initialization
     public virtual void Start()
     {
-        Reset();
+        ResetObject();
     }
 
     //public interface
@@ -42,7 +55,31 @@ public class HealthScript : NetworkBehaviour
         // we need to set this value manually, because we have a hook attached 
         mCurrentHealth = newHealth;
     }
-    public virtual void HealthChangedHook(int newHealth) {}
+    public virtual void HealthChangedHook(int newHealth) 
+	{
+		if (OnHealthChanged != null)
+		{
+			OnHealthChanged(newHealth);
+		}
+
+		// If newHealth is smaller than current Health we have taken damage!
+		int damage = GetCurrentHealth() - newHealth;
+		if (damage > 0)
+		{
+			PlayRandomHurtSFX();
+			if (OnDamageTaken != null)
+			{
+				OnDamageTaken(damage);
+			}
+		}
+		else if(damage < 0)
+		{
+			if(OnHealTaken != null)
+			{
+				OnHealTaken(Mathf.Abs(damage));
+			}
+		}
+	}
 
     /// <summary>
     /// the only thing, that should be adressed, to actually hurt a GameObject, this should only ever be run on the server!!!
@@ -61,7 +98,7 @@ public class HealthScript : NetworkBehaviour
     }
     
     //bring a GameObject to life
-    public void Reset()
+    public void ResetObject()
     {
         mCurrentHealth = mMaxHealth;
         isAlive = true;
@@ -98,4 +135,33 @@ public class HealthScript : NetworkBehaviour
             mCurrentHealth = tempHealth;
         }
     }
+
+	[ContextMenu("Play Random Sound")]
+	public void PlayRandomHurtSFX()
+	{
+		if(damageSFXs.Length == 0)
+		{
+			//no sounds
+			return;
+		}
+		PitchingAudioClip clip = damageSFXs.RandomElement();
+		SFXaudioSource.pitch = clip.GetRandomPitch();
+		SFXaudioSource.PlayOneShot(clip.audioClip);
+	}
+
+	void OnValidate()
+	{
+		if(damageSFXs.Length != 0)
+		{
+			if(SFXaudioSource == null)
+			{
+				SFXaudioSource = GetComponent<AudioSource>();
+				if(SFXaudioSource == null)
+				{
+					Debug.LogWarningFormat("If you want to play sounds on %s, please add an AudioSource Component.",gameObject.name);
+				}
+			}
+		}
+	}
+
 }

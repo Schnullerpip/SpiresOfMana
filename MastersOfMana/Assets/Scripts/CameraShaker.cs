@@ -19,11 +19,28 @@ public class CameraShaker : MonoBehaviour
 //		}
 //	}
 
+	/// <summary>
+	/// Shakes the camera with a scaling amount and the default duration.
+	/// </summary>
+	/// <param name="dmg">Dmg.</param>
+	public void ShakeByDamage(int dmg)
+	{
+		Shake(dmg * 1.0f, defaultDuration);
+	}
+
+	/// <summary>
+	/// Shake the camera with the default amount and duration.
+	/// </summary>
 	public void Shake()
 	{
 		Shake(defaultAmount, defaultDuration);
 	}
-
+		
+	/// <summary>
+	/// Shake the camera with specified amount and duration.
+	/// </summary>
+	/// <param name="amount">Amount.</param>
+	/// <param name="duration">Duration.</param>
 	public void Shake(float amount, float duration)
 	{
 		StopAllCoroutines();

@@ -126,7 +126,7 @@ public class WhipBehaviour : A_SummoningBehaviour
             hitPlayer.movement.RpcAddForce(force, ForceMode.VelocityChange);
             hitPlayer.healthScript.TakeDamage(0, GetType());
         }
-        else if (RayCast(caster, caster.aim.GetCameraRig().GetCenterRay(), out hit) && hit.distance <= maxDistance)
+        else if (RayCast(caster, new Ray(caster.GetCameraPosition(), caster.GetCameraLookDirection()), out hit) && hit.distance <= maxDistance)
         {
             whipBehaviour.linePoint1 = hit.point;
             Vector3 aimDirection = Vector3.Normalize(whipBehaviour.linePoint1 - caster.handTransform.position);

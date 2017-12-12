@@ -173,10 +173,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mOffsetToCaster: 2
-  mUpForce: 1000
-  mLifeTime: 9
-  mGravityreduction: 8
-  mMinimalHeightFactor: 0.3
+  mUpForce: 4
+  mLifeTime: 6
+  mGravityreduction: 2
+  mMinimalHeightFactor: 1
   trigger: {fileID: 136843206926783506}
 --- !u!136 &136843206926783506
 CapsuleCollider:
@@ -190,7 +190,7 @@ CapsuleCollider:
   m_Radius: 4
   m_Height: 16.13
   m_Direction: 1
-  m_Center: {x: 0, y: 7.82, z: 0}
+  m_Center: {x: 0, y: 4.55, z: 0}
 --- !u!198 &198012508399574986
 ParticleSystem:
   m_ObjectHideFlags: 1
@@ -250,7 +250,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 1585977994
+  randomSeed: 1906359336
   InitialModule:
     serializedVersion: 3
     enabled: 1

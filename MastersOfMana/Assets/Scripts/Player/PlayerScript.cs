@@ -67,7 +67,10 @@ public class PlayerScript : NetworkBehaviour
         return rewiredPlayer;
     }
 
-    [SyncVar] public string playerName;
+	[SyncVar] public string playerName;
+    [SyncVar] public Color playerColor;
+
+	public Renderer rendererToColor;
 
     public PlayerHealthScript healthScript;
 
@@ -160,6 +163,7 @@ public class PlayerScript : NetworkBehaviour
 		cam.followTarget = this;
 //		cam.gameObject.SetActive(true);
 		aim.SetCameraRig(cam);
+		rendererToColor.material.color = playerColor;
     }
 
     //Statechanging ----------------------------------------
@@ -334,6 +338,6 @@ public class PlayerScript : NetworkBehaviour
         mCameraPosition = CameraPostion;
         mCameraLookdirection = CameraLookDirection;
 		mCurrentLookDirection = currentLookDirection;
-        mPlayerSpells.spellslot[mPlayerSpells.currentSpell].Cast(this);
+		mPlayerSpells.spellslot[mPlayerSpells.currentSpell].Cast(this);
     }
 }

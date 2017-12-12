@@ -15,7 +15,9 @@ public class HealthScript : NetworkBehaviour
     [SerializeField][SyncVar(hook = "HealthHook")]
     private int mCurrentHealth;
 
+	[Header("SFX")]
 	public PitchingAudioClip[] damageSFXs;
+	public AudioClip deathSFX;
 	public AudioSource SFXaudioSource;
 
 	public delegate void DamageTaken(int damage);
@@ -26,7 +28,6 @@ public class HealthScript : NetworkBehaviour
 
 	public delegate void HealthChanged(int damage);
 	public event HealthChanged OnHealthChanged;
-
 
     //states whether the GameObject is alive or not
     [SyncVar]
@@ -50,6 +51,7 @@ public class HealthScript : NetworkBehaviour
         if(newHealth == 0)
         {
             isAlive = false;
+			PlayDeathSFX();
         }
         HealthChangedHook(newHealth);
         // we need to set this value manually, because we have a hook attached 
@@ -66,7 +68,11 @@ public class HealthScript : NetworkBehaviour
 		int damage = GetCurrentHealth() - newHealth;
 		if (damage > 0)
 		{
-			PlayRandomHurtSFX();
+			if(newHealth != 0)
+			{
+				PlayRandomHurtSFX();
+			}
+				
 			if (OnDamageTaken != null)
 			{
 				OnDamageTaken(damage);
@@ -136,7 +142,6 @@ public class HealthScript : NetworkBehaviour
         }
     }
 
-	[ContextMenu("Play Random Sound")]
 	public void PlayRandomHurtSFX()
 	{
 		if(damageSFXs.Length == 0)
@@ -149,19 +154,14 @@ public class HealthScript : NetworkBehaviour
 		SFXaudioSource.PlayOneShot(clip.audioClip);
 	}
 
-	void OnValidate()
+	public void PlayDeathSFX()
 	{
-		if(damageSFXs.Length != 0)
+		if(deathSFX == null)
 		{
-			if(SFXaudioSource == null)
-			{
-				SFXaudioSource = GetComponent<AudioSource>();
-				if(SFXaudioSource == null)
-				{
-					Debug.LogWarningFormat("If you want to play sounds on %s, please add an AudioSource Component.",gameObject.name);
-				}
-			}
+			return;
 		}
-	}
 
+		SFXaudioSource.pitch = 1;
+		SFXaudioSource.PlayOneShot(deathSFX);
+	}
 }

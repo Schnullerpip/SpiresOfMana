@@ -193,6 +193,7 @@ public abstract class A_InputState : A_State{
 		if(player.GetPlayerSpells().GetCurrentspell().cooldown > 0)
 		{
 			player.GetPlayerAnimation().HoldingSpell(false);
+			player.GetPlayerSpells().PlayFailSFX();
 		}
     }
 

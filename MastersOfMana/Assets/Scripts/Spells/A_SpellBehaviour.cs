@@ -112,7 +112,6 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
         RaycastHit hit;
         Vector3 onPlane = Vector3.ProjectOnPlane((point - caster.GetCameraPosition()), -caster.GetCameraLookDirection());
         float dotProduct = Vector3.Dot((point - caster.handTransform.position), caster.GetCameraLookDirection());
-        Debug.Log("dotproduct: " + dotProduct);
         return
             /*hit by raw aim?*/
             onPlane.sqrMagnitude <= hitRadius*hitRadius &&

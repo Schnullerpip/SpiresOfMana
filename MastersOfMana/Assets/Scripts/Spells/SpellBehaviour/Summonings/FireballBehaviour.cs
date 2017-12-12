@@ -47,12 +47,22 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 	{
 		base.Preview(caster);
 
-//		if(!sPreview)
-//		{
-//			sPreview = GameObject.Instantiate(previewPrefab) as PreviewSpell;
-//		}
-
 		RaycastHit hit;
+		if(caster.HandTransformIsObscured(out hit))
+		{
+			preview.instance.MoveAndRotate(hit.point, caster.aim.currentLookRotation);
+			return;
+		}
+	
+		caster.SetColliderIgnoreRaycast(true);
+		if(Physics.CheckSphere(caster.handTransform.position, ballRadius))
+		{
+			//this is only reset here, because the aimdirection will also set the ignore layer
+			caster.SetColliderIgnoreRaycast(false);
+			preview.instance.MoveAndRotate(caster.handTransform.position, caster.aim.currentLookRotation);
+			return;
+		}
+
 		Vector3 aimDirection = GetAimLocal(caster, out hit);
 	
 		if(Physics.SphereCast(caster.handTransform.position, ballRadius, aimDirection, out hit))
@@ -61,7 +71,14 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 		}
 		else
 		{
-			preview.instance.Deactivate();
+			if(Physics.CheckSphere(caster.handTransform.position, ballRadius))
+			{
+				preview.instance.MoveAndRotate(caster.handTransform.position, caster.aim.currentLookRotation);
+			}
+			else
+			{
+				preview.instance.Deactivate();
+			}
 		}
 	}
 
@@ -73,17 +90,34 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 
     public override void Execute(PlayerScript caster)
     {
+		Vector3 aimDirection = GetAim(caster); 
+
+		Vector3 initPos;
+		RaycastHit hit;
+
+		if(caster.HandTransformIsObscured(out hit))
+		{
+			Vector3 back = caster.handTransform.parent.position - caster.handTransform.position;
+			back.Normalize();
+			initPos = hit.point + back * ballRadius;
+			aimDirection = caster.aim.currentLookRotation * Vector3.forward;
+		}
+		else
+		{
+			initPos = caster.handTransform.position;
+		}
+			
         //Get a fireballinstance out of the pool
-		FireballBehaviour fireballBehaviour = PoolRegistry.GetInstance(gameObject, caster.handTransform.position, caster.transform.rotation, 5, 5).GetComponent<FireballBehaviour>();
+		FireballBehaviour fireballBehaviour = PoolRegistry.GetInstance(gameObject, initPos, caster.transform.rotation, 5, 5).GetComponent<FireballBehaviour>();
 		fireballBehaviour.caster = caster;
+		fireballBehaviour.mLastPosition = initPos;
 
         //now activate it, so no weird interpolation errors occcure
         fireballBehaviour.gameObject.SetActive(true);
 
-		Vector3 aimDirection = GetAim(caster); 
 
 		//position the fireball to 'spawn' at the casters hand
-		fireballBehaviour.Reset(caster.handTransform.position, caster.transform.rotation);
+		fireballBehaviour.Reset();
 		//speed up the fireball to fly into the lookdirection of the player
 		fireballBehaviour.mRigid.velocity = aimDirection * speed;
 
@@ -97,21 +131,16 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 
 	private Vector3 mLastPosition;
 
-	void FixedUpdate()
+	void LateUpdate()
 	{
 		mLastPosition = mRigid.position;
 	}
 
-	void Reset (Vector3 pos, Quaternion rot)
+	void Reset ()
 	{
-		//transform.position = pos;
-		//transform.rotation = rot;
-
 		mRigid.Reset();
 		mRigid.isKinematic = false;
-
-		mLastPosition = caster.GetCameraPosition();
-
+		
 		mTriggerEnabled = true;
 	}
 
@@ -138,7 +167,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 		if(Physics.Linecast(mLastPosition, mRigid.position, out adjustmentHit))
 		{
 			//technically the normal is not correct, but it looks fine and is only really wrong when the angle is super flat
-			mRigid.position = adjustmentHit.point + adjustmentHit.normal * ballRadius;
+			mRigid.position = adjustmentHit.point - (mRigid.position - mLastPosition) * ballRadius;
 		}
 		
 		RpcExplosion(mRigid.position, mRigid.rotation);
@@ -197,14 +226,5 @@ public class FireballBehaviour : A_ServerMoveableSummoning
         OnCollisionDeactivateBehaviour(true);
         gameObject.SetActive(false);
 		NetworkServer.UnSpawn(gameObject);
-	}
-
-
-	void OnValidate()
-	{
-		if(explosionPrefab != null)
-		{
-			explosionPrefab.transform.localScale = Vector3.one * explosionRadius * 2;
-		}
 	}
 }

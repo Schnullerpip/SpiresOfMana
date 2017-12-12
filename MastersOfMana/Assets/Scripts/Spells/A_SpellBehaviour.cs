@@ -188,21 +188,27 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 			{
 				//raycast from the center of the explosion to every collider withing the radius
 				RaycastHit hit;
-				if(Physics.Raycast(explosionOrigin, c.attachedRigidbody.worldCenterOfMass - explosionOrigin, out hit, radius))
+
+				//early check if the startposition is inside the collider, this usally happens when the player fires a fireball directly into a wall
+				if(!c.bounds.Contains(explosionOrigin))
 				{
-					//if the hit collider doesnt share the same rigidbody
-					if(hit.collider.attachedRigidbody != c.attachedRigidbody)
+					Ray ray = new Ray(explosionOrigin, c.attachedRigidbody.worldCenterOfMass - explosionOrigin);
+					if(Physics.Raycast(ray, out hit, radius))
 					{
-						//skip it since there is something in between the 2
-						Debug.Log(hit.collider.name+" was in the way of an "+GetType().ToString()+" explosion trying to hit "+ c.attachedRigidbody +". " +
-							"This message is temporarily here to test if this explosionblocking works properly. Delete it when the time comes. dunno when ¯\\_(ツ)_/¯");
-						continue;
+						//if the hit collider doesnt share the same rigidbody
+						if(hit.collider.attachedRigidbody != c.attachedRigidbody)
+						{
+							//skip it since there is something in between the 2
+							Debug.Log(hit.collider.name+" was in the way of an "+GetType().ToString()+" explosion trying to hit "+ c.attachedRigidbody +". " +
+								"This message is temporarily here to test if this explosionblocking works properly. Delete it when the time comes. dunno when ¯\\_(ツ)_/¯");
+							continue;
+						}
 					}
-				}
-				//if we somehow didnt hit anything
-				else
-				{
-					continue;
+					//if we somehow didnt hit anything
+					else
+					{
+						continue;
+					}	
 				}
 
 				cachedRigidbodies.Add(c.attachedRigidbody);

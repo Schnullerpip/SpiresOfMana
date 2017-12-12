@@ -6,6 +6,9 @@ using UnityEngine.Networking;
 
 public class PlayerHealthScript : HealthScript {
 
+	public PitchingAudioClip[] damageSFXs;
+	private AudioSource mSFXaudioSource;
+
     private PlayerScript mPlayer;
 
     public delegate void DamageTaken(int damage);
@@ -21,6 +24,7 @@ public class PlayerHealthScript : HealthScript {
     {
         mPlayer = GetComponent<PlayerScript>();
         base.Start();
+		mSFXaudioSource = GetComponent<AudioSource>();
     }
 
     public delegate void StatsRelevant(int damage, System.Type typeOfDamageDealer);
@@ -68,6 +72,8 @@ public class PlayerHealthScript : HealthScript {
 
     public override void HealthChangedHook(int newHealth)
     {
+		base.HealthChangedHook(newHealth);
+
         if (OnHealthChanged != null)
         {
             OnHealthChanged(newHealth);
@@ -77,6 +83,7 @@ public class PlayerHealthScript : HealthScript {
         int damage = GetCurrentHealth() - newHealth;
         if (damage > 0)
         {
+			PlayRandomHurtSFX();
             if (OnDamageTaken != null)
             {
                 OnDamageTaken(damage);
@@ -90,4 +97,11 @@ public class PlayerHealthScript : HealthScript {
             }
         }
     }
+
+	public void PlayRandomHurtSFX()
+	{
+		PitchingAudioClip clip = damageSFXs.RandomElement();
+		mSFXaudioSource.pitch = clip.GetRandomPitch();
+		mSFXaudioSource.PlayOneShot(clip.audioClip);
+	}
 }

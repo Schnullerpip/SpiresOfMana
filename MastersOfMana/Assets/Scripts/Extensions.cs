@@ -26,6 +26,17 @@ public static class Extensions
     }
     #endregion
 
+	#region
+	/// <summary>
+	/// Returns a random element of the array.
+	/// </summary>
+	/// <returns>The element.</returns>
+	/// <param name="array">Array.</param>
+	public static T RandomElement<T>(this T[] array)
+	{
+		return array[Random.Range(0, array.Length)];
+	}
+	#endregion
 
     #region Bounds
     public static Vector3 RandomInside(this Bounds bounds)

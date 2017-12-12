@@ -163,8 +163,13 @@ public class PlayerScript : NetworkBehaviour
 		cam.followTarget = this;
 //		cam.gameObject.SetActive(true);
 		aim.SetCameraRig(cam);
-		rendererToColor.material.color = playerColor;
     }
+
+	public override void OnStartClient ()
+	{
+		base.OnStartClient ();
+		rendererToColor.material.color = playerColor;
+	}
 
     //Statechanging ----------------------------------------
     public void SetInputState(InputStateSystem.InputStateID id)

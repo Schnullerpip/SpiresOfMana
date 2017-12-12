@@ -28,17 +28,17 @@ public abstract class A_InputState : A_State{
 		#region Spell Selection
 		if (playerInput.GetButtonDown("SpellSelection1")) 
 		{
-			mPreviewActive = false;
+			SetPreview(false);
         	ChooseSpell(0);
         }
 		if (playerInput.GetButtonDown("SpellSelection2")) 
 		{
-			mPreviewActive = false;
+			SetPreview(false);
 			ChooseSpell(1);
         }
 		if (playerInput.GetButtonDown("SpellSelection3")) 
 		{
-			mPreviewActive = false;
+			SetPreview(false);
 			ChooseSpell(2);
         }
         #endregion
@@ -46,7 +46,7 @@ public abstract class A_InputState : A_State{
 		#region Quickcast
 		if(playerInput.GetButtonDown("QuickCast1"))
 		{
-			mPreviewActive = !mPreviewActive;
+			TogglePreview();
 			ChooseSpell(0);
 		}
 		else if(playerInput.GetButtonUp("QuickCast1") && mPreviewActive)
@@ -56,7 +56,7 @@ public abstract class A_InputState : A_State{
 
 		if(playerInput.GetButtonDown("QuickCast2"))
 		{
-			mPreviewActive = !mPreviewActive;
+			TogglePreview();
 			ChooseSpell(1);
 		}
 		else if(playerInput.GetButtonUp("QuickCast2") && mPreviewActive)
@@ -66,7 +66,7 @@ public abstract class A_InputState : A_State{
 
 		if(playerInput.GetButtonDown("QuickCast3"))
 		{
-			mPreviewActive = !mPreviewActive;
+			TogglePreview();
 			ChooseSpell(2);
 		}
 		else if(playerInput.GetButtonUp("QuickCast3") && mPreviewActive)
@@ -78,7 +78,7 @@ public abstract class A_InputState : A_State{
 		{
 			if(player.GetPlayerSpells().ultimateEnergy >= player.GetPlayerSpells().ultimateEnergyThreshold)
 			{
-				mPreviewActive = !mPreviewActive;
+				TogglePreview();
 				ChooseSpell(3);
 			}
 		}
@@ -86,12 +86,12 @@ public abstract class A_InputState : A_State{
 		{
 			CastSpell();
 		}
-
+			
 		#endregion
 
 		if(playerInput.GetButtonDown("CastSpell"))
 		{
-			mPreviewActive = true;
+			SetPreview(true);
 		}
 		if(mPreviewActive && playerInput.GetButtonUp("CastSpell"))
 		{
@@ -145,6 +145,18 @@ public abstract class A_InputState : A_State{
 
     }
 
+	void TogglePreview()
+	{
+		mPreviewActive = !mPreviewActive;
+		player.GetPlayerAnimation().HoldingSpell(mPreviewActive);
+	}
+
+	void SetPreview(bool value)
+	{
+		mPreviewActive = value;
+		player.GetPlayerAnimation().HoldingSpell(mPreviewActive);
+	}
+
 	public virtual void Move(Vector2 input) { }
 
 	public virtual void Aim(Vector2 aimInput) 
@@ -178,6 +190,10 @@ public abstract class A_InputState : A_State{
 		mPreviewActive = false;
 		player.GetPlayerSpells().StopPreview();
         player.castStateSystem.current.CastCmdSpell();
+		if(player.GetPlayerSpells().GetCurrentspell().cooldown > 0)
+		{
+			player.GetPlayerAnimation().HoldingSpell(false);
+		}
     }
 
 	protected Vector3 World2DToLocal3D (Vector2 world2D, Transform transform)

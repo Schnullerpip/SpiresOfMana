@@ -45,6 +45,11 @@ public class PlayerAnimation : NetworkBehaviour {
 		}
 	}
 
+	public void HoldingSpell(bool value)
+	{
+		animator.SetBool("isCasting",value);
+	}
+
 	public void Cast()
 	{
 		animator.SetBool("isResolving",true);

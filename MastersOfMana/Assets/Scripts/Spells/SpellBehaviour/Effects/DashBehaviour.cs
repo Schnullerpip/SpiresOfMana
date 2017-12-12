@@ -165,12 +165,6 @@ public class DashBehaviour : A_EffectBehaviour
         {
             if (sm != caster.movement)
             {
-                //Vector3 pushVector = sm.transform.position - newPosition;
-                //Vector3 pushDirection = pushVector.normalized;
-                //Vector3 pushVector = sm.mRigidbody.worldCenterOfMass - newPosition;
-                //Vector3 pushDirection = Vector3.Normalize(pushVector);
-                //sm.RpcSetVelocityAndMovePosition(pushDirection * pushForce, newPosition + pushVector - sm.mRigidbody.worldCenterOfMass);
-
                 Vector3 pushVector = sm.mRigidbody.worldCenterOfMass - newPosition;
                 Vector3 pushDirection = Vector3.Normalize(pushVector);
                 sm.RpcSetVelocityAndMovePosition(pushDirection * pushForce, newPosition + pushVector - sm.mRigidbody.centerOfMass);

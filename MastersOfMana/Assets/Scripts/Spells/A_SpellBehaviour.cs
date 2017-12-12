@@ -109,8 +109,8 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
     protected static bool ConfirmedHit(Vector3 point, PlayerScript caster, float hitRadius, float hitRange)
     {
         RaycastHit hit;
-        Vector3 onPlane = Vector3.ProjectOnPlane((point - caster.GetCameraPosition()), caster.GetCameraLookDirection());
-        float dotProduct = Vector3.Dot((point - onPlane), caster.GetCameraLookDirection());
+        Vector3 onPlane = Vector3.ProjectOnPlane((point - caster.GetCameraPosition()), -caster.GetCameraLookDirection());
+        float dotProduct = Vector3.Dot((point - caster.handTransform.position), caster.GetCameraLookDirection());
         Debug.Log("dotproduct: " + dotProduct);
         return
             /*hit by raw aim?*/

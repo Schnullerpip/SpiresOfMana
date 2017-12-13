@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityStandardAssets.Utility;
 
 public class ParalysisBehaviour : A_EffectBehaviour
 {
     [SerializeField] private float mLifetime;
-    [SerializeField] private ParticleSystem mParticleSystem;
     [SerializeField] private float mHitRadius;
     [SerializeField] private float mHitRange;
 
+    //tracks the lifetime of the paralysis
     private float mTimeCount;
+    //indicates whether or not to follow the affected Player
+    private bool mFollowTarget;
 
     [SyncVar] private GameObject mAffectedPlayerObject;
     private PlayerScript mAffectedPlayer;
@@ -27,23 +30,40 @@ public class ParalysisBehaviour : A_EffectBehaviour
                 ConfirmedHit(p.transform.position, caster, mHitRadius, mHitRange) ||
                 ConfirmedHit(p.movement.mRigidbody.worldCenterOfMass, caster, mHitRadius, mHitRange))
             {
-                //create a Paralysis behaviour, that sticks to the hitPlayer
-                ParalysisBehaviour pb = PoolRegistry.GetInstance(this.gameObject, 4, 4).GetComponent<ParalysisBehaviour>();
+                //create an icecrystal
+                ParalysisBehaviour pb = PoolRegistry.GetInstance(gameObject, p.transform.position, caster.transform.rotation, 4, 4).GetComponent<ParalysisBehaviour>();
                 pb.mAffectedPlayerObject = p.gameObject;
                 pb.gameObject.SetActive(true);
                 pb.mTimeCount = 0;
                 NetworkServer.Spawn(pb.gameObject);
                 //apply damage just so the system registeres it as an affect
                 p.healthScript.TakeDamage(0, GetType());
+
                 return;
             }
         }
     }
 
-    void Start()
+    public void OnEnable()
     {
-        mTimeCount = 0;
-        mParticleSystem.Play();
+        mFollowTarget = true;
+    }
+
+    public void Update()
+    {
+        if ((mTimeCount += Time.deltaTime) >= mLifetime-1)
+        {
+            mTimeCount = 0;
+            mFollowTarget = false;
+        }
+    }
+
+    public void FixedUpdate()
+    {
+        if (mFollowTarget)
+        {
+            transform.position = mAffectedPlayer.transform.position;
+        }
     }
 
     public override void OnStartClient()
@@ -57,38 +77,14 @@ public class ParalysisBehaviour : A_EffectBehaviour
     {
         //clear movement input with player
         mAffectedPlayer.movement.ClearMovementInput();
+        mAffectedPlayer.movement.SetMovementAllowed(false);
         //slow down/stop the affected player
         //mAffectedPlayer.movement.speed = mAffectedPlayer.movement.originalSpeed*mSlowFactor;
         mAffectedPlayer.inputStateSystem.SetState(InputStateSystem.InputStateID.Paralyzed);
         yield return new WaitForSeconds(mLifetime);
         //revert back to normal status
+        mAffectedPlayer.movement.SetMovementAllowed(true);
         mAffectedPlayer.inputStateSystem.SetState(InputStateSystem.InputStateID.Normal);
         //mAffectedPlayer.movement.speed = mAffectedPlayer.movement.originalSpeed;
     }
-
-
-
-    void Update()
-    {
-        //Unspawn after mLifetime - on server!
-        if ((mTimeCount += Time.deltaTime) > mLifetime)
-        {
-            if (isServer)
-            {
-                //let the effect disappear
-                gameObject.SetActive(false);
-                mParticleSystem.Stop();
-                NetworkServer.UnSpawn(this.gameObject);
-            }
-        }
-    }
-
-    void LateUpdate()
-    {
-        //this should both happen on client and server
-
-        //reposition
-        transform.position = mAffectedPlayerObject.transform.position;
-    }
-
 }

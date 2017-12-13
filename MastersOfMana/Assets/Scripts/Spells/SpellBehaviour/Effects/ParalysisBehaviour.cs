@@ -10,6 +10,10 @@ public class ParalysisBehaviour : A_EffectBehaviour
     [SerializeField] private float mHitRadius;
     [SerializeField] private float mHitRange;
     [SerializeField] private CapsuleCollider iceCollider;
+    [SerializeField] private HealthScript healthscript;
+
+    //just a part of the effect that needs to be reset manually or it wont work with pooling
+    [SerializeField] private GameObject ActivateOnDeactivation;
 
     //tracks the lifetime of the paralysis
     private float mTimeCount;
@@ -36,9 +40,18 @@ public class ParalysisBehaviour : A_EffectBehaviour
                 pb.mAffectedPlayerObject = p.gameObject;
                 pb.gameObject.SetActive(true);
                 pb.mTimeCount = 0;
+                pb.ActivateOnDeactivation.SetActive(true);
                 NetworkServer.Spawn(pb.gameObject);
                 //apply damage just so the system registeres it as an affect
                 p.healthScript.TakeDamage(0, GetType());
+
+                pb.healthscript.OnDamageTaken += damage =>
+                {
+                    if (!pb.healthscript.IsAlive())
+                    {
+                        pb.RpcDisappear();
+                    }
+                };
 
                 return;
             }
@@ -48,24 +61,28 @@ public class ParalysisBehaviour : A_EffectBehaviour
     public void OnEnable()
     {
         mFollowTarget = true;
+        healthscript.ResetObject();
     }
 
     public void Update()
     {
         mTimeCount += Time.deltaTime;
-        if (mFollowTarget && (mTimeCount >= mLifetime-1))
+        if (mFollowTarget && (mTimeCount >= mLifetime-0.5f))
         {
             mFollowTarget = false;
         }else if (mTimeCount >= mLifetime)
         {
             mTimeCount = 0;
-            RestoreNormalState();
+            if (isServer)
+            {
+                RpcDisappear();
+            }
         }
     }
 
     public void FixedUpdate()
     {
-        if (mFollowTarget)
+        if (mAffectedPlayer && mFollowTarget)
         {
             transform.position = mAffectedPlayer.transform.position;
         }
@@ -76,17 +93,10 @@ public class ParalysisBehaviour : A_EffectBehaviour
         //slow down the affected Player
         mAffectedPlayer = mAffectedPlayerObject.GetComponent<PlayerScript>();
         //mAffectedPlayer.StartCoroutine(AffectPlayer());
-        ApplyBadEffect();
+        ApplyMaliciousEffect();
     }
 
-    private IEnumerator AffectPlayer()
-    {
-        ApplyBadEffect();
-        yield return new WaitForSeconds(mLifetime);
-        RestoreNormalState();
-    }
-
-    private void ApplyBadEffect()
+    private void ApplyMaliciousEffect()
     {
         //clear movement input with player
         mAffectedPlayer.movement.ClearMovementInput();
@@ -101,6 +111,20 @@ public class ParalysisBehaviour : A_EffectBehaviour
         //revert back to normal status
         mAffectedPlayer.movement.SetMovementAllowed(true);
         mAffectedPlayer.inputStateSystem.SetState(InputStateSystem.InputStateID.Normal);
-        //mAffectedPlayer.movement.speed = mAffectedPlayer.movement.originalSpeed;
+    }
+
+    //implements the handshake between server and client - bcs we MUST guarantee, that normal state is restored before unspawning!!
+    [ClientRpc]
+    private void RpcDisappear()
+    {
+        RestoreNormalState();
+        gameObject.SetActive(false);
+        CmdUnspawnObject();
+    }
+
+    [Command]
+    private void CmdUnspawnObject()
+    {
+        NetworkServer.UnSpawn(gameObject);
     }
 }

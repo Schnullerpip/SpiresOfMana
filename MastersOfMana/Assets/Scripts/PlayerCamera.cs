@@ -48,6 +48,7 @@ public class PlayerCamera : MonoBehaviour {
 		else
 		{
 			mSlider.SetPlayer(followTarget);
+			followTarget.healthScript.OnDamageTaken += GetComponentInChildren<CameraShaker>().ShakeByDamage;
 		}
 	}
 

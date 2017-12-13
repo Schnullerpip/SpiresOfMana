@@ -7,18 +7,18 @@ public class CastStateNormal : A_CastState{
 
     public override void ReduceCooldowns()
     {
-        if ((player.GetPlayerSpells().spellslot[0].cooldown -= Time.deltaTime) < 0)
-        {
-            player.GetPlayerSpells().spellslot[0].cooldown = 0;
-        }
-        if ((player.GetPlayerSpells().spellslot[1].cooldown -= Time.deltaTime) < 0)
-        {
-            player.GetPlayerSpells().spellslot[1].cooldown = 0;
-        }
-        if ((player.GetPlayerSpells().spellslot[2].cooldown -= Time.deltaTime) < 0)
-        {
-            player.GetPlayerSpells().spellslot[2].cooldown = 0;
-        }
+		PlayerSpells playerSpells = player.GetPlayerSpells();
+
+		for (int i = 0; i < 3; i++) 
+		{
+			if(playerSpells.spellslot[i].ReduceCooldown(Time.deltaTime))
+			{
+				if(player.isLocalPlayer)
+				{
+					playerSpells.PlayCooldownDoneSFX();
+				}
+			}
+		}
     }
 
     public override void UpdateSynchronized()

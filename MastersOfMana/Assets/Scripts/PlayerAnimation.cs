@@ -6,8 +6,6 @@ using UnityEngine.Networking;
 public class PlayerAnimation : NetworkBehaviour {
 
 	public Animator animator;
-	private UnityEngine.Networking.NetworkAnimator mNetAnimator;
-
 	private PlayerScript mPlayer;
 
 	void Start()
@@ -22,8 +20,6 @@ public class PlayerAnimation : NetworkBehaviour {
 		mPlayer.movement.onMovement += UpdateMovement;
 		mPlayer.movement.onJumping += Jump;
 		mPlayer.healthScript.OnDamageTaken += TookDamage;
-
-		mNetAnimator = GetComponent<UnityEngine.Networking.NetworkAnimator>();
 	}
 
 	void UpdateMovement(float movementSpeed, Vector2 direction, bool isGrounded)
@@ -47,6 +43,11 @@ public class PlayerAnimation : NetworkBehaviour {
 		{
 			animator.SetBool("isDead", true);
 		}
+	}
+
+	public void HoldingSpell(bool value)
+	{
+		animator.SetBool("isCasting",value);
 	}
 
 	public void Cast()

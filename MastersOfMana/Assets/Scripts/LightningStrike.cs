@@ -8,13 +8,34 @@ public class LightningStrike : NetworkBehaviour
 	public GameObject blobShadow;
 	public GameObject line;
 	public float lifetime = 0.5f;
+    private float mCurrentLifetime;
 
 	public float anticipationTime = 1;
 
+    public PlayerScript target;
+
 	void OnEnable()
 	{
+        if(target)
+        {
+            transform.position = target.movement.GetAnticipationPosition(1);
+        }
+        mCurrentLifetime = lifetime;
 		StartCoroutine(Flash());
 	}
+
+    private void Update()
+    {
+        if(isServer)
+        {
+            if(mCurrentLifetime > lifetime * 0.5f)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, target.transform.position, 2 * Time.deltaTime);
+            }
+
+            mCurrentLifetime -= Time.deltaTime;
+		}
+    }
 
 	IEnumerator Flash()
 	{

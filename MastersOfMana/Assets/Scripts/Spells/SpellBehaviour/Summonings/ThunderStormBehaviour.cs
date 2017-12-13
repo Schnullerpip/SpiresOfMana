@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -32,7 +33,7 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
 	{
 		GameManager.instance.isUltimateActive = true;
 
-		ThunderStormBehaviour thunderStormBehaviour = PoolRegistry.GetInstance(this.gameObject, 1, 1).GetComponent<ThunderStormBehaviour>();
+		ThunderStormBehaviour thunderStormBehaviour = PoolRegistry.GetInstance(gameObject, 1, 1).GetComponent<ThunderStormBehaviour>();
 
 		thunderStormBehaviour.mCaster = caster;
 		thunderStormBehaviour.transform.position = transform.position;
@@ -46,7 +47,7 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
 
 	private void Init()
 	{
-		PlayerScript[] allPlayers = GameObject.FindObjectsOfType<PlayerScript>();
+		PlayerScript[] allPlayers = FindObjectsOfType<PlayerScript>();
 		int j = 0;
 
 		mOpponents = new PlayerScript[allPlayers.Length - 1];
@@ -62,9 +63,38 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
 			++j;
 		}
 
+        mOpponents = allPlayers;
+
 		StartCoroutine(Attack());
 	}
 
+    private IEnumerator Attack()
+    {
+        for (int i = 0; i < mOpponents.Length; ++i)
+        {
+            StartCoroutine(RepeatedStrike(mOpponents[i]));
+        }
+
+        yield return new WaitForSeconds(duration);
+    }
+
+    private IEnumerator RepeatedStrike(PlayerScript playerScript)
+    {
+        while (true)
+        {
+            LightningStrike strike = PoolRegistry.GetInstance(strikePrefab.gameObject, 10, 4).GetComponent<LightningStrike>();
+
+            strike.target = playerScript;
+            NetworkServer.Spawn(strike.gameObject, strike.GetComponent<NetworkIdentity>().assetId);
+            strike.gameObject.SetActive(true);
+
+            yield return new WaitForSeconds(playerInterval.Random());
+        }
+    }
+
+
+
+    /*
 	private IEnumerator Attack()
 	{
 		//start a seperate strike for each opponent
@@ -153,4 +183,5 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
 			}
 		}
 	}
+    */
 }

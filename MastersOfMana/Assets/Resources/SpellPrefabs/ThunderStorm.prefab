@@ -504,10 +504,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fda4d91033f84eeeaf2dfd05bde9dcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  caster: {fileID: 0}
   playerInterval:
-    min: 0.3
-    max: 2
+    min: 1
+    max: 1
   worldInterval:
     min: 0.1
     max: 0.5
@@ -516,7 +515,7 @@ MonoBehaviour:
     m_Extent: {x: 50, y: 0, z: 50}
   randomOffset: 0.5
   strikeRadius: 1
-  damagePerStrike: 10
+  damagePerStrike: 1
   duration: 20
   hittingMasks:
     serializedVersion: 2

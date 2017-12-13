@@ -220,4 +220,16 @@ public class PlayerMovement : ServerMoveable
 			}
 		}
 	}
+
+    /// <summary>
+    /// Gets the anticipated position in n-seconds if the player keeps his current speed and direction.
+    /// </summary>
+    /// <returns>The anticipation position.</returns>
+    /// <param name="seconds">Seconds.</param>
+    public Vector3 GetAnticipationPosition(float seconds)
+    {
+        Vector3 prediction = mRigidbody.position;
+        prediction += GetDeltaMovement() / Time.fixedDeltaTime * seconds;
+        return prediction;
+    }
 }

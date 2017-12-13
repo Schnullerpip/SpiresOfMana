@@ -9,6 +9,7 @@ public class ParalysisBehaviour : A_EffectBehaviour
     [SerializeField] private float mLifetime;
     [SerializeField] private float mHitRadius;
     [SerializeField] private float mHitRange;
+    [SerializeField] private CapsuleCollider iceCollider;
 
     //tracks the lifetime of the paralysis
     private float mTimeCount;

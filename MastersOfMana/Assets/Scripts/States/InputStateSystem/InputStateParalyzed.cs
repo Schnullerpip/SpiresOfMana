@@ -6,17 +6,6 @@ public class InputStateParalyzed : A_InputState {
 
     public InputStateParalyzed(PlayerScript player) : base(player) { }
 
-	public override void Move (Vector2 input)
-	{
-		base.Move (input);
-
-		player.movement.SetFocusActive(player.aim.IsFocused());
-
-		//Vector3 moveForce = World2DToLocal3D(input, player.transform);
-
-		////override moveForce in player script
-		//player.movement.SetMoveInput(moveForce);
-	}
 
     public override void UpdateLocal()
     {
@@ -55,6 +44,6 @@ public class InputStateParalyzed : A_InputState {
             player.GetPlayerSpells().StopPreview();
         }
 
-		Aim(playerInput.GetAxis2D("AimHorizontal", "AimVertical"));
+		//Aim(playerInput.GetAxis2D("AimHorizontal", "AimVertical"));
     }
 }

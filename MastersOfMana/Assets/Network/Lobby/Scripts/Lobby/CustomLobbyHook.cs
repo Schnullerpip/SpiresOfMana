@@ -12,5 +12,6 @@ public class CustomLobbyHook : Prototype.NetworkLobby.LobbyHook
 
         gamePlayerScript.UpdateSpells(lobbyPlayerScript.spells[0].spellID, lobbyPlayerScript.spells[1].spellID, lobbyPlayerScript.spells[2].spellID, lobbyPlayerScript.spells[3].spellID);
         gamePlayerScript.playerName = lobbyPlayerScript.playerName;
+		gamePlayerScript.playerColor = lobbyPlayerScript.playerColor;
     }
 }

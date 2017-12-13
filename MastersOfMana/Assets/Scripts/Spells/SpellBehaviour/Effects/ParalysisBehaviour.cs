@@ -52,10 +52,14 @@ public class ParalysisBehaviour : A_EffectBehaviour
 
     public void Update()
     {
-        if ((mTimeCount += Time.deltaTime) >= mLifetime-1)
+        mTimeCount += Time.deltaTime;
+        if (mFollowTarget && (mTimeCount >= mLifetime-1))
+        {
+            mFollowTarget = false;
+        }else if (mTimeCount >= mLifetime)
         {
             mTimeCount = 0;
-            mFollowTarget = false;
+            RestoreNormalState();
         }
     }
 
@@ -71,10 +75,18 @@ public class ParalysisBehaviour : A_EffectBehaviour
     {
         //slow down the affected Player
         mAffectedPlayer = mAffectedPlayerObject.GetComponent<PlayerScript>();
-        mAffectedPlayer.StartCoroutine(AffectPlayer());
+        //mAffectedPlayer.StartCoroutine(AffectPlayer());
+        ApplyBadEffect();
     }
 
     private IEnumerator AffectPlayer()
+    {
+        ApplyBadEffect();
+        yield return new WaitForSeconds(mLifetime);
+        RestoreNormalState();
+    }
+
+    private void ApplyBadEffect()
     {
         //clear movement input with player
         mAffectedPlayer.movement.ClearMovementInput();
@@ -82,7 +94,10 @@ public class ParalysisBehaviour : A_EffectBehaviour
         //slow down/stop the affected player
         //mAffectedPlayer.movement.speed = mAffectedPlayer.movement.originalSpeed*mSlowFactor;
         mAffectedPlayer.inputStateSystem.SetState(InputStateSystem.InputStateID.Paralyzed);
-        yield return new WaitForSeconds(mLifetime);
+    }
+
+    private void RestoreNormalState()
+    {
         //revert back to normal status
         mAffectedPlayer.movement.SetMovementAllowed(true);
         mAffectedPlayer.inputStateSystem.SetState(InputStateSystem.InputStateID.Normal);

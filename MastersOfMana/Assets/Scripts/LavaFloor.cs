@@ -5,7 +5,6 @@ using UnityEngine.Networking;
 
 public class LavaFloor : NetworkBehaviour
 {
-
     public int damagePerSecond;
     public float cycleTime = 40;
     public float amplitude = 4;
@@ -42,7 +41,7 @@ public class LavaFloor : NetworkBehaviour
         if (sm)
         {
             //shoot the moveable into the sky to make it jump mario-ayayayayay-style
-            health.GetComponent<PlayerMovement>().RpcSetVelocityY(10);
+            sm.RpcSetVelocityY(10);
         }
     }
 

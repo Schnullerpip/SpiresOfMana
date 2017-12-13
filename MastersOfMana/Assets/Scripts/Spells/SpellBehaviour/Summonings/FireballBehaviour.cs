@@ -71,7 +71,8 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 		}
 		else
 		{
-			if(Physics.CheckSphere(caster.handTransform.position, ballRadius))
+			caster.SetColliderIgnoreRaycast(true);
+            if(Physics.CheckSphere(caster.handTransform.position, ballRadius))
 			{
 				preview.instance.MoveAndRotate(caster.handTransform.position, caster.aim.currentLookRotation);
 			}
@@ -79,6 +80,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 			{
 				preview.instance.Deactivate();
 			}
+            caster.SetColliderIgnoreRaycast(false);
 		}
 	}
 

@@ -5,17 +5,8 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public class PlayerHealthScript : HealthScript {
-
+	
     private PlayerScript mPlayer;
-
-    public delegate void DamageTaken(int damage);
-    public event DamageTaken OnDamageTaken;
-
-    public delegate void HealTaken(int damage);
-    public event HealTaken OnHealTaken;
-
-    public delegate void HealthChanged(int damage);
-    public event HealthChanged OnHealthChanged;
 
     public override void Start()
     {
@@ -68,26 +59,8 @@ public class PlayerHealthScript : HealthScript {
 
     public override void HealthChangedHook(int newHealth)
     {
-        if (OnHealthChanged != null)
-        {
-            OnHealthChanged(newHealth);
-        }
+		base.HealthChangedHook(newHealth);
 
-        // If newHealth is smaller than current Health we have taken damage!
-        int damage = GetCurrentHealth() - newHealth;
-        if (damage > 0)
-        {
-            if (OnDamageTaken != null)
-            {
-                OnDamageTaken(damage);
-            }
-        }
-        else if(damage < 0)
-        {
-            if(OnHealTaken != null)
-            {
-                OnHealTaken(Mathf.Abs(damage));
-            }
-        }
+ 
     }
 }

@@ -15,6 +15,20 @@ public class HealthScript : NetworkBehaviour
     [SerializeField][SyncVar(hook = "HealthHook")]
     private int mCurrentHealth;
 
+	[Header("SFX")]
+	public PitchingAudioClip[] damageSFXs;
+	public AudioClip deathSFX;
+	public AudioSource SFXaudioSource;
+
+	public delegate void DamageTaken(int damage);
+	public event DamageTaken OnDamageTaken;
+
+	public delegate void HealTaken(int damage);
+	public event HealTaken OnHealTaken;
+
+	public delegate void HealthChanged(int damage);
+	public event HealthChanged OnHealthChanged;
+
     //states whether the GameObject is alive or not
     [SyncVar]
     private bool isAlive = true;
@@ -25,8 +39,7 @@ public class HealthScript : NetworkBehaviour
     // Use this for initialization
     public virtual void Start()
     {
-        ResetState();
-        GameManager.OnRoundStarted += ResetState;
+        ResetObject();
     }
 
     //public interface
@@ -38,12 +51,41 @@ public class HealthScript : NetworkBehaviour
         if(newHealth == 0)
         {
             isAlive = false;
+			PlayDeathSFX();
         }
         HealthChangedHook(newHealth);
         // we need to set this value manually, because we have a hook attached 
         mCurrentHealth = newHealth;
     }
-    public virtual void HealthChangedHook(int newHealth) {}
+    public virtual void HealthChangedHook(int newHealth) 
+	{
+		if (OnHealthChanged != null)
+		{
+			OnHealthChanged(newHealth);
+		}
+
+		// If newHealth is smaller than current Health we have taken damage!
+		int damage = GetCurrentHealth() - newHealth;
+		if (damage > 0)
+		{
+			if(newHealth != 0)
+			{
+				PlayRandomHurtSFX();
+			}
+				
+			if (OnDamageTaken != null)
+			{
+				OnDamageTaken(damage);
+			}
+		}
+		else if(damage < 0)
+		{
+			if(OnHealTaken != null)
+			{
+				OnHealTaken(Mathf.Abs(damage));
+			}
+		}
+	}
 
     /// <summary>
     /// the only thing, that should be adressed, to actually hurt a GameObject, this should only ever be run on the server!!!
@@ -62,7 +104,7 @@ public class HealthScript : NetworkBehaviour
     }
     
     //bring a GameObject to life
-    public void ResetState()
+    public void ResetObject()
     {
         mCurrentHealth = mMaxHealth;
         isAlive = true;
@@ -99,4 +141,27 @@ public class HealthScript : NetworkBehaviour
             mCurrentHealth = tempHealth;
         }
     }
+
+	public void PlayRandomHurtSFX()
+	{
+		if(damageSFXs.Length == 0)
+		{
+			//no sounds
+			return;
+		}
+		PitchingAudioClip clip = damageSFXs.RandomElement();
+		SFXaudioSource.pitch = clip.GetRandomPitch();
+		SFXaudioSource.PlayOneShot(clip.audioClip);
+	}
+
+	public void PlayDeathSFX()
+	{
+		if(deathSFX == null)
+		{
+			return;
+		}
+
+		SFXaudioSource.pitch = 1;
+		SFXaudioSource.PlayOneShot(deathSFX);
+	}
 }

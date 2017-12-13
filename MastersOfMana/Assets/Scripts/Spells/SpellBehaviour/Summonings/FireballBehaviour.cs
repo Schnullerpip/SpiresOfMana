@@ -10,15 +10,20 @@ using System.Collections.Generic;
 public class FireballBehaviour : A_ServerMoveableSummoning
 {
     public float speed = 50.0f;
+	[Tooltip("This value should be the same as the colliders radius. kkthxbye")]
+	public float ballRadius = 0.25f;
+
+	[Header("Direct Hits")]
     public int directDamage = 8;
+	public float directForce = 4;
 
-    public Color effectColor;
-	//public GameObject ballPrefab;
+	[Header("Explosion")]
+	public Color effectColor;
 	public GameObject explosionPrefab;
+	public ExplosionFalloff explosionFalloff;
 	public float explosionRadius = 4;
-	public float explosionForce = 5;
-	public int explosionDamage = 4;
 
+	[Space()]
 	public float disappearTimer = 3;
 
     public GameObject[] DeactivatedObjectsOnCollision;
@@ -42,21 +47,38 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 	{
 		base.Preview(caster);
 
-//		if(!sPreview)
-//		{
-//			sPreview = GameObject.Instantiate(previewPrefab) as PreviewSpell;
-//		}
-
 		RaycastHit hit;
+		if(caster.HandTransformIsObscured(out hit))
+		{
+			preview.instance.MoveAndRotate(hit.point, caster.aim.currentLookRotation);
+			return;
+		}
+	
+		caster.SetColliderIgnoreRaycast(true);
+		if(Physics.CheckSphere(caster.handTransform.position, ballRadius))
+		{
+			//this is only reset here, because the aimdirection will also set the ignore layer
+			caster.SetColliderIgnoreRaycast(false);
+			preview.instance.MoveAndRotate(caster.handTransform.position, caster.aim.currentLookRotation);
+			return;
+		}
+
 		Vector3 aimDirection = GetAimLocal(caster, out hit);
 	
-		if(Physics.SphereCast(caster.handTransform.position, 0.25f, aimDirection, out hit))
+		if(Physics.SphereCast(caster.handTransform.position, ballRadius, aimDirection, out hit))
 		{
-			preview.instance.MoveAndRotate(hit.point + hit.normal * 0.25f, Quaternion.LookRotation(hit.normal));
+			preview.instance.MoveAndRotate(hit.point + hit.normal * ballRadius, Quaternion.LookRotation(hit.normal));
 		}
 		else
 		{
-			preview.instance.Deactivate();
+			if(Physics.CheckSphere(caster.handTransform.position, ballRadius))
+			{
+				preview.instance.MoveAndRotate(caster.handTransform.position, caster.aim.currentLookRotation);
+			}
+			else
+			{
+				preview.instance.Deactivate();
+			}
 		}
 	}
 
@@ -68,44 +90,70 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 
     public override void Execute(PlayerScript caster)
     {
+		Vector3 aimDirection = GetAim(caster); 
+
+		Vector3 initPos;
+		RaycastHit hit;
+
+		if(caster.HandTransformIsObscured(out hit))
+		{
+			Vector3 back = caster.handTransform.parent.position - caster.handTransform.position;
+			back.Normalize();
+			initPos = hit.point + back * ballRadius;
+			aimDirection = caster.aim.currentLookRotation * Vector3.forward;
+		}
+		else
+		{
+			initPos = caster.handTransform.position;
+		}
+			
         //Get a fireballinstance out of the pool
-		FireballBehaviour fireballBehaviour = PoolRegistry.GetInstance(gameObject, caster.handTransform.position, caster.transform.rotation, 5, 5).GetComponent<FireballBehaviour>();
+		FireballBehaviour fireballBehaviour = PoolRegistry.GetInstance(gameObject, initPos, caster.transform.rotation, 5, 5).GetComponent<FireballBehaviour>();
+		fireballBehaviour.caster = caster;
+		fireballBehaviour.mLastPosition = initPos;
 
         //now activate it, so no weird interpolation errors occcure
         fireballBehaviour.gameObject.SetActive(true);
 
-		Vector3 aimDirection = GetAim(caster); 
 
 		//position the fireball to 'spawn' at the casters hand
-		fireballBehaviour.Reset(caster.handTransform.position, caster.transform.rotation);
+		fireballBehaviour.Reset();
 		//speed up the fireball to fly into the lookdirection of the player
 		fireballBehaviour.mRigid.velocity = aimDirection * speed;
-        fireballBehaviour.caster = caster;
 
         OnCollisionDeactivateBehaviour(true);
 
         //create an instance of this fireball on the client's machine
         NetworkServer.Spawn(fireballBehaviour.gameObject, fireballBehaviour.GetComponent<NetworkIdentity>().assetId);
 
-		fireballBehaviour.Disappear();
-        //fireballBehaviour.StartCoroutine(Done()); <- this doesn't work, not sure why...
+		fireballBehaviour.StartCoroutine(fireballBehaviour.Done());
     }
 
-	void Reset (Vector3 pos, Quaternion rot)
+	private Vector3 mLastPosition;
+
+	void LateUpdate()
 	{
-		//transform.position = pos;
-		//transform.rotation = rot;
-
-		mRigid.Reset();
-		mRigid.isKinematic = false;
-
-        cachedHealth = new List<HealthScript>();
+		mLastPosition = mRigid.position;
 	}
 
-    private List<HealthScript> cachedHealth;
+	void Reset ()
+	{
+		mRigid.Reset();
+		mRigid.isKinematic = false;
+		
+		mTriggerEnabled = true;
+	}
+
+	private bool mTriggerEnabled = true;
 
     protected override void ExecuteTriggerEnter_Host(Collider collider)
     {
+		if(!mTriggerEnabled)
+		{
+			return;
+		}
+
+		//skip trigger and the casters collision boxes
         if (collider.isTrigger || caster.IsColliderPartOf(collider))
         {
             return;
@@ -114,82 +162,43 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 		Vector3 directHitForce = mRigid.velocity;
 		mRigid.isKinematic = true;
 
-        if (!isServer)
+		//since the fireball is very fast, the hit detection tend to be too slow
+		RaycastHit adjustmentHit;
+		if(Physics.Linecast(mLastPosition, mRigid.position, out adjustmentHit))
 		{
-			return;
-        }
+			//technically the normal is not correct, but it looks fine and is only really wrong when the angle is super flat
+			mRigid.position = adjustmentHit.point - (mRigid.position - mLastPosition) * ballRadius;
+		}
 		
-        RpcExplosion(transform.position, transform.rotation);
+		RpcExplosion(mRigid.position, mRigid.rotation);
+
+		//disallow a double trigger when touching multiple collider
+		mTriggerEnabled = false;
 
         HealthScript directHit = null;
 
+		//only hurt non static objects
         if(!collider.gameObject.isStatic)
         {
             directHit = collider.gameObject.GetComponentInParent<HealthScript>();
-            if (directHit && !cachedHealth.Contains(directHit))
+            if (directHit)
             {
-                cachedHealth.Add(directHit);
+				//apply direct hit damage
+				directHit.TakeDamage(directDamage, GetType());
 
-                Debug.Log("direct damage: " + directDamage);
-                directHit.TakeDamage(directDamage, GetType());
-
-                PlayerScript player = directHit.GetComponent<PlayerScript>();
-                if (player)
+				//if it was a moveable object, apply a force
+				ServerMoveable moveable = directHit.GetComponentInParent<ServerMoveable>();
+				if (moveable)
                 {
                     directHitForce.Normalize();
-                    directHitForce *= explosionForce;
-                    player.movement.RpcAddForce(directHitForce, ForceMode.VelocityChange);
+                    directHitForce *= directForce;
+					moveable.RpcAddForce(directHitForce, ForceMode.VelocityChange);
                 }
             }
         }
 
-        Collider[] colliders = Physics.OverlapSphere(mRigid.position,explosionRadius);
-
-        //TODO: TEMP SOLUTION
-        List<Rigidbody> cachedRigidbodies = new List<Rigidbody>(colliders.Length);
-
-        foreach(Collider c in colliders)
-        {
-
-            HealthScript health = c.GetComponentInParent<HealthScript>();
-
-            if(health && health == directHit)
-            {
-                //took already damage and got a force
-                continue;
-            }
-
-            if(health && !cachedHealth.Contains(health))
-            {
-                health.TakeDamage(explosionDamage, GetType());
-                cachedHealth.Add(health);
-            }
-                
-            if(c.attachedRigidbody && !cachedRigidbodies.Contains(c.attachedRigidbody))
-            {
-                cachedRigidbodies.Add(c.attachedRigidbody);
-
-                Vector3 force = c.attachedRigidbody.worldCenterOfMass - mRigid.position; 
-
-                force.Normalize();
-                force *= explosionForce;
-
-                //check wheather or not we are handling a player or just some random rigidbody
-                if (c.attachedRigidbody.CompareTag("Player"))
-                {
-                    PlayerScript ps = c.attachedRigidbody.GetComponent<PlayerScript>();
-                    ps.movement.RpcAddForce(force, ForceMode.VelocityChange);
-                }
-                else
-                {
-                    c.attachedRigidbody.AddForce(force, ForceMode.VelocityChange);
-                }
-            }
-        }
-
-        //var explosionObject = Instantiate(explosionPrefab, transform.position, transform.rotation);
-        //RFX4_ColorHelper.ChangeObjectColorByHUE(explosionObject, RFX4_ColorHelper.ColorToHSV(effectColor).H);
-        //OnCollisionDeactivateBehaviour(false);
+		//explosion force and damage:
+		ExplosionDamage(mRigid.position, explosionRadius, explosionFalloff, new List<HealthScript>{directHit} );
     }
 
     void OnCollisionDeactivateBehaviour(bool active)
@@ -210,11 +219,6 @@ public class FireballBehaviour : A_ServerMoveableSummoning
         OnCollisionDeactivateBehaviour(false);
     }
 
-    public void Disappear()
-    {
-        StartCoroutine(Done());
-    }
-
     public IEnumerator Done()
 	{
 		yield return new WaitForSeconds(disappearTimer);
@@ -222,14 +226,5 @@ public class FireballBehaviour : A_ServerMoveableSummoning
         OnCollisionDeactivateBehaviour(true);
         gameObject.SetActive(false);
 		NetworkServer.UnSpawn(gameObject);
-	}
-
-
-	void OnValidate()
-	{
-		if(explosionPrefab != null)
-		{
-			explosionPrefab.transform.localScale = Vector3.one * explosionRadius * 2;
-		}
 	}
 }

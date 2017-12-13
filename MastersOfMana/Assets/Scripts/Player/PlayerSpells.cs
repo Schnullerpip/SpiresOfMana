@@ -7,7 +7,14 @@ public class PlayerSpells : NetworkBehaviour {
 
     //cached instance of the playerscript
     private PlayerScript mPlayer;
-    public SpellRegistry spellregistry;
+
+	[Header("SFX")]
+	public AudioSource audioSource;
+
+	public AudioClip castFailedSFX;
+	public AudioClip cooldownDoneSFX;
+
+	[Header("Energy")]
 
     [SyncVar]
     public float ultimateEnergy = 0;
@@ -61,7 +68,7 @@ public class PlayerSpells : NetworkBehaviour {
     public void SetCurrentSpellslotID(int idx)
     {
         currentSpell = idx;
-        if (currentSpell > 3 || currentSpell < 0)
+        if (currentSpell > 2 || currentSpell < 0)
         {
             currentSpell = 0;
         }
@@ -95,14 +102,17 @@ public class PlayerSpells : NetworkBehaviour {
         mPlayer.RpcSetCastState(CastStateSystem.CastStateID.Normal);
     }
 
-    [Command]
-    public void CmdSpellsChanged(int Spell1, int Spell2, int Spell3, int Spell4)
-    {
-        spellslot[0].spell = spellregistry.GetSpellByID(Spell1);
-        spellslot[1].spell = spellregistry.GetSpellByID(Spell2);
-        spellslot[2].spell = spellregistry.GetSpellByID(Spell3);
-        spellslot[3].spell = spellregistry.GetSpellByID(Spell4);
-    }
+	public void PlayFailSFX()
+	{
+		audioSource.pitch = 1;
+		audioSource.PlayOneShot(castFailedSFX);
+	}
+
+	public void PlayCooldownDoneSFX()
+	{
+		audioSource.pitch = 1;
+		audioSource.PlayOneShot(cooldownDoneSFX);
+	}
 
     /// <summary>
     /// Simple Datacontainer (inner class) for a Pair of Spell and cooldown
@@ -113,12 +123,30 @@ public class PlayerSpells : NetworkBehaviour {
 		public float cooldown;
         public bool isUltimateSpellSlot = false;
 
+		/// <summary>
+		/// Reduces the cooldown by delta. Returns true when the cooldown reached 0 in this iteration (Fires only once)
+		/// </summary>
+		/// <returns><c>true</c>, if cooldown has reached 0 in this iteration, <c>false</c> otherwise.</returns>
+		/// <param name="delta">Delta.</param>
+		public bool ReduceCooldown(float delta)
+		{
+			if(cooldown > 0)
+			{
+				if((cooldown -= delta) <= 0)
+				{
+					cooldown = 0;
+					return true;
+				}
+			}
+			return false;
+		}
+
         /// <summary>
         /// casts the spell inside the slot and also adjusts the cooldown accordingly
         /// This automatically assumes, that the overlaying PlayerScript's update routine decreases the spellslot's cooldown continuously
         /// This should only be called on the server!!
         /// </summary>
-	    public void Cast(PlayerScript caster)
+	    public bool Cast(PlayerScript caster)
 	    {
             if (cooldown <= 0)
             {
@@ -127,7 +155,7 @@ public class PlayerSpells : NetworkBehaviour {
                     //Only one ultimate can be active at the same time
                     if(GameManager.instance.isUltimateActive)
                     {
-                        return;
+                        return false;
                     }
                     caster.GetPlayerSpells().ultimateEnergy = 0;
                 }
@@ -137,7 +165,10 @@ public class PlayerSpells : NetworkBehaviour {
                 spell.Resolve(caster);
                 //set caster in 'normal mode'
                 caster.RpcSetCastState(CastStateSystem.CastStateID.Normal);
+
+				return true;
             }
+			return false;
         }
 	}
 }

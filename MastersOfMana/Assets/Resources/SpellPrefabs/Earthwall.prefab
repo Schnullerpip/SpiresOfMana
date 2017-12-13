@@ -59,6 +59,7 @@ GameObject:
   - component: {fileID: 114631043972339548}
   - component: {fileID: 114179715974819776}
   - component: {fileID: 114234235662744406}
+  - component: {fileID: 82297438318485464}
   m_Layer: 0
   m_Name: Earthwall
   m_TagString: Untagged
@@ -160,6 +161,86 @@ MeshCollider:
   m_InflateMesh: 1
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300000, guid: a6ae69a65de22244db6ab75739a1b45a, type: 3}
+--- !u!82 &82297438318485464
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1559168603325644}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!114 &114179715974819776
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -194,6 +275,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mMaxHealth: 20
   mCurrentHealth: 20
+  damageSFXs:
+  - audioClip: {fileID: 8300000, guid: 016ee34c47b629342bad1bdda8628cd1, type: 3}
+    pitchtingRange:
+      min: 0.8
+      max: 1.2
+  SFXaudioSource: {fileID: 82297438318485464}
   damagePerSecond: 5
 --- !u!114 &114267851956015830
 MonoBehaviour:
@@ -255,7 +342,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: daa47e1ff651a9148b69c9e4f73a0c46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distance: 2
+  initialDistanceToCaster: 2
 --- !u!198 &198387531588014016
 ParticleSystem:
   m_ObjectHideFlags: 1

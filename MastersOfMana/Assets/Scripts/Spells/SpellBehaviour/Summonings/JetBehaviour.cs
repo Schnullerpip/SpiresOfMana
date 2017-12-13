@@ -51,6 +51,11 @@ public class JetBehaviour : A_SummoningBehaviour
         }
     }
 
+    void OnEnable()
+    {
+        mAffecting = new List<ServerMoveable>();
+    }
+
     protected override void ExecuteTriggerEnter_Host(Collider other)
     {
         Rigidbody rigid = other.attachedRigidbody;
@@ -64,7 +69,8 @@ public class JetBehaviour : A_SummoningBehaviour
             }
 
             ServerMoveable sm = other.attachedRigidbody.GetComponent<ServerMoveable>();
-            if (sm && !mAffecting.Contains(sm))
+            //Affecting the caster should happen locally, or stutters will occure
+            if (sm  && !mAffecting.Contains(sm))
             {
                 mAffecting.Add(sm);
             }
@@ -90,15 +96,14 @@ public class JetBehaviour : A_SummoningBehaviour
 
     }
 
-    public void Update()
+    public void FixedUpdate()
     {
         if (!isServer || !caster)
         {
             return;
         }
 
-
-        Vector3 upforce = Vector3.up*mUpForce*Time.deltaTime;
+        Vector3 upforce = Vector3.up * mUpForce;
 
         foreach (var sm in mAffecting)
         {
@@ -108,13 +113,13 @@ public class JetBehaviour : A_SummoningBehaviour
             smPos.x = 0;
             smPos.z = 0;
 
-            float factor = mMinimalHeightFactor + 1-(triggerPos - smPos).sqrMagnitude/(trigger.height*trigger.height);
+            float factor = mMinimalHeightFactor + 1 - (triggerPos - smPos).sqrMagnitude / (trigger.height * trigger.height);
             factor *= factor;
             upforceIndividual *= factor;
 
             if (sm.mRigidbody.velocity.y < 0)
             {
-                Vector3 damping = -1*sm.mRigidbody.velocity;
+                Vector3 damping = -1 * sm.mRigidbody.velocity;
                 damping.x = 0;
                 damping.z = 0;
                 damping *= mGravityreduction;

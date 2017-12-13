@@ -69,7 +69,10 @@ public class PlayerScript : NetworkBehaviour
         return rewiredPlayer;
     }
 
-    [SyncVar] public string playerName;
+	[SyncVar] public string playerName;
+    [SyncVar] public Color playerColor;
+
+	public Renderer rendererToColor;
 
     public PlayerHealthScript healthScript;
 
@@ -168,6 +171,12 @@ public class PlayerScript : NetworkBehaviour
     {
         mPlayerCamera.gameObject.SetActive(active);
     }
+
+	public override void OnStartClient ()
+	{
+		base.OnStartClient ();
+		rendererToColor.material.color = playerColor;
+	}
 
     //Statechanging ----------------------------------------
     public void SetInputState(InputStateSystem.InputStateID id)
@@ -276,6 +285,11 @@ public class PlayerScript : NetworkBehaviour
 		headJoint.localRotation = Quaternion.AngleAxis(aim.GetYAngle(), Vector3.right); 
 	}
 
+	public bool HandTransformIsObscured(out RaycastHit hit)
+	{
+		return Physics.Linecast(handTransform.parent.position, handTransform.position, out hit);
+	}
+
 	public bool HandTransformIsObscured()
 	{
 		return Physics.Linecast(handTransform.parent.position, handTransform.position);
@@ -336,6 +350,6 @@ public class PlayerScript : NetworkBehaviour
         mCameraPosition = CameraPostion;
         mCameraLookdirection = CameraLookDirection;
 		mCurrentLookDirection = currentLookDirection;
-        mPlayerSpells.spellslot[mPlayerSpells.currentSpell].Cast(this);
+		mPlayerSpells.spellslot[mPlayerSpells.currentSpell].Cast(this);
     }
 }

@@ -134,4 +134,22 @@ public class GameManager : MonoBehaviour
             OnLocalPlayerDead();
         }
     }
+
+    /// <summary>
+    /// Gets a list of all opponents of the given player script.
+    /// </summary>
+    /// <returns>The opponent.</returns>
+    /// <param name="self">Self.</param>
+    public List<PlayerScript> GetOpponent(PlayerScript self)
+    {
+        List<PlayerScript> opponents = new List<PlayerScript>(mPlayers.Count - 1);
+        for (int i = 0; i < mPlayers.Count; ++i)
+        {
+            if(mPlayers[i] != self)
+            {
+                opponents.Add(mPlayers[i]);
+            }
+        }
+        return opponents;
+    }
 }

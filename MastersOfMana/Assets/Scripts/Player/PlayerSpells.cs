@@ -7,8 +7,9 @@ public class PlayerSpells : NetworkBehaviour {
 
     //cached instance of the playerscript
     private PlayerScript mPlayer;
+    public SpellRegistry spellregistry;
 
-	[Header("SFX")]
+    [Header("SFX")]
 	public AudioSource audioSource;
 
 	public AudioClip castFailedSFX;
@@ -68,7 +69,7 @@ public class PlayerSpells : NetworkBehaviour {
     public void SetCurrentSpellslotID(int idx)
     {
         currentSpell = idx;
-        if (currentSpell > 2 || currentSpell < 0)
+        if (currentSpell > 3 || currentSpell < 0)
         {
             currentSpell = 0;
         }
@@ -113,6 +114,39 @@ public class PlayerSpells : NetworkBehaviour {
 		audioSource.pitch = 1;
 		audioSource.PlayOneShot(cooldownDoneSFX);
 	}
+
+    /// <summary>
+    /// This method actually updates the spells
+    /// </summary>
+    /// <param name="spell1"></param>
+    /// <param name="spell2"></param>
+    /// <param name="spell3"></param>
+    public void UpdateSpells(int spell1, int spell2, int spell3, int spell4)
+    {
+        Prototype.NetworkLobby.LobbyManager NetworkManager = Prototype.NetworkLobby.LobbyManager.s_Singleton;
+        if (NetworkManager)
+        {
+            if (spellregistry)
+            {
+                spellslot[0].spell = spellregistry.GetSpellByID(spell1);
+                spellslot[1].spell = spellregistry.GetSpellByID(spell2);
+                spellslot[2].spell = spellregistry.GetSpellByID(spell3);
+                spellslot[3].spell = spellregistry.GetSpellByID(spell4);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Update spells on client side
+    /// </summary>
+    /// <param name="spell1"></param>
+    /// <param name="spell2"></param>
+    /// <param name="spell3"></param>
+    [ClientRpc]
+    public void RpcUpdateSpells(int spell1, int spell2, int spell3, int spell4)
+    {
+        UpdateSpells(spell1, spell2, spell3, spell4);
+    }
 
     /// <summary>
     /// Simple Datacontainer (inner class) for a Pair of Spell and cooldown

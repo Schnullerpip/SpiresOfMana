@@ -36,7 +36,7 @@ public class HurtIndicator : MonoBehaviour {
         Color col = sprite.color;
         col.a = 0;
         sprite.color = col;
-        //sprite.SetAllDirty();
+        mRising = false;
         gameObject.SetActive(true);
     }
 

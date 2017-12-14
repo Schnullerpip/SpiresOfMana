@@ -40,6 +40,7 @@ public class HealthScript : NetworkBehaviour
     public virtual void Start()
     {
         ResetObject();
+        GameManager.OnRoundStarted += ResetObject;
     }
 
     //public interface
@@ -164,4 +165,9 @@ public class HealthScript : NetworkBehaviour
 		SFXaudioSource.pitch = 1;
 		SFXaudioSource.PlayOneShot(deathSFX);
 	}
+
+    void OnDisable()
+    {
+        GameManager.OnRoundStarted -= ResetObject;
+    }
 }

@@ -302,40 +302,6 @@ public class PlayerScript : NetworkBehaviour
     //    inputStateSystem.SetState(newStateID);
     //}
 
-    /// <summary>
-    /// This method actually updates the spells
-    /// </summary>
-    /// <param name="spell1"></param>
-    /// <param name="spell2"></param>
-    /// <param name="spell3"></param>
-    public void UpdateSpells(int spell1, int spell2, int spell3, int spell4)
-    {
-        Prototype.NetworkLobby.LobbyManager NetworkManager = Prototype.NetworkLobby.LobbyManager.s_Singleton;
-        if (NetworkManager)
-        { 
-            SpellRegistry spellregistry = NetworkManager.mainMenu.spellSelectionPanel.GetComponent<Prototype.NetworkLobby.SpellSelectionPanel>().spellregistry;
-            if (spellregistry)
-            {
-                mPlayerSpells.spellslot[0].spell = spellregistry.GetSpellByID(spell1);
-                mPlayerSpells.spellslot[1].spell = spellregistry.GetSpellByID(spell2);
-                mPlayerSpells.spellslot[2].spell = spellregistry.GetSpellByID(spell3);
-                mPlayerSpells.spellslot[3].spell = spellregistry.GetSpellByID(spell4);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Update spells on client side
-    /// </summary>
-    /// <param name="spell1"></param>
-    /// <param name="spell2"></param>
-    /// <param name="spell3"></param>
-    [ClientRpc]
-    public void RpcUpdateSpells(int spell1, int spell2, int spell3, int spell4)
-    {
-        UpdateSpells(spell1, spell2, spell3, spell4);
-    }
-
     //casting the chosen spell
     [Command]
     public void CmdCastSpell()

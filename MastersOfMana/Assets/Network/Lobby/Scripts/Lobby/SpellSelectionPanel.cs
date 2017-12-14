@@ -21,9 +21,6 @@ namespace Prototype.NetworkLobby {
 
         private void OnEnable()
         {
-            //player.SetUiInteractive(false);
-            //LobbyManager.s_Singleton.SetCancelDelegate(GoBack);
-
             Init();
             spellButtons[0].OnSelect(null);
         }
@@ -226,7 +223,7 @@ namespace Prototype.NetworkLobby {
             PlayerPrefs.SetInt("SpellSlot2", mPlayerSpellList[2].spellID);
             PlayerPrefs.SetInt("SpellSlot3", mPlayerSpellList[3].spellID);
             PlayerPrefs.Save();
-            mPlayerSpells.CmdSpellsChanged(mPlayerSpellList[0].spellID, mPlayerSpellList[1].spellID, mPlayerSpellList[2].spellID, mPlayerSpellList[3].spellID);
+            //mPlayerSpells.CmdSpellsChanged(mPlayerSpellList[0].spellID, mPlayerSpellList[1].spellID, mPlayerSpellList[2].spellID, mPlayerSpellList[3].spellID);
         }
 
         public void GoBack()

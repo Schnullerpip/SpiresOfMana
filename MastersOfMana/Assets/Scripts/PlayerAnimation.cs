@@ -20,9 +20,10 @@ public class PlayerAnimation : NetworkBehaviour {
 		mPlayer.movement.onMovement += UpdateMovement;
 		mPlayer.movement.onJumping += Jump;
 		mPlayer.healthScript.OnDamageTaken += TookDamage;
-	}
+        GameManager.OnRoundStarted += ResetState;
+    }
 
-	void UpdateMovement(float movementSpeed, Vector2 direction, bool isGrounded)
+    void UpdateMovement(float movementSpeed, Vector2 direction, bool isGrounded)
 	{
 		animator.SetFloat("movementSpeed",movementSpeed / mPlayer.movement.speed );
 
@@ -58,4 +59,15 @@ public class PlayerAnimation : NetworkBehaviour {
 		//force an update to avoid a 1 to 2 frame delay
 		animator.Update(0);
 	}
+
+    public void OnDisable()
+    {
+        GameManager.OnRoundStarted -= ResetState;
+    }
+
+    void ResetState()
+    {
+        animator.SetBool("isDead", false);
+    }
+
 }

@@ -68,6 +68,7 @@ public class StormBlastBehaviour : A_EffectBehaviour
         sbb.gameObject.SetActive(true);
         NetworkServer.Spawn(sbb.gameObject);
 
+        GameManager.instance.isUltimateActive = true;
         sbb.StartCoroutine(UnspawnStormblastAfterSeconds(sbb.gameObject, mLifeTime));
     }
 
@@ -76,6 +77,7 @@ public class StormBlastBehaviour : A_EffectBehaviour
         yield return new WaitForSeconds(seconds);
 
         go.SetActive(false);
+        GameManager.instance.isUltimateActive = false;
         NetworkServer.UnSpawn(go);
     }
 }

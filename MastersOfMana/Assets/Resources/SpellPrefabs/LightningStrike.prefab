@@ -231,7 +231,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1754849064870812}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.7523575, y: 6.999634, z: 3.330761}
+  m_LocalPosition: {x: 35.707016, y: 2.093078, z: 32.005737}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4658152131195678}
@@ -262,8 +262,8 @@ Light:
   serializedVersion: 8
   m_Type: 2
   m_Color: {r: 1, g: 0.96272415, b: 0.18965518, a: 1}
-  m_Intensity: 3.33
-  m_Range: 21.3
+  m_Intensity: 2
+  m_Range: 5
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
@@ -298,8 +298,8 @@ Light:
   serializedVersion: 8
   m_Type: 2
   m_Color: {r: 1, g: 0.96272415, b: 0.18965518, a: 1}
-  m_Intensity: 3.33
-  m_Range: 21.3
+  m_Intensity: 2
+  m_Range: 5
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
@@ -334,8 +334,8 @@ Light:
   serializedVersion: 8
   m_Type: 2
   m_Color: {r: 1, g: 0.96272415, b: 0.18965518, a: 1}
-  m_Intensity: 3.33
-  m_Range: 21.3
+  m_Intensity: 2
+  m_Range: 5
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
@@ -370,8 +370,8 @@ Light:
   serializedVersion: 8
   m_Type: 2
   m_Color: {r: 1, g: 0.96272415, b: 0.18965518, a: 1}
-  m_Intensity: 3.33
-  m_Range: 21.3
+  m_Intensity: 2
+  m_Range: 5
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
@@ -406,8 +406,8 @@ Light:
   serializedVersion: 8
   m_Type: 2
   m_Color: {r: 1, g: 0.96272415, b: 0.18965518, a: 1}
-  m_Intensity: 3.33
-  m_Range: 21.3
+  m_Intensity: 2
+  m_Range: 5
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
@@ -444,8 +444,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_TransformSyncMode: 1
-  m_SendInterval: 0
-  m_SyncRotationAxis: 7
+  m_SendInterval: 0.033333335
+  m_SyncRotationAxis: 0
   m_RotationSyncCompression: 0
   m_SyncSpin: 0
   m_MovementTheshold: 0.001
@@ -496,10 +496,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2b036fa03fcc4555adb308cfce60e52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blobShadow: {fileID: 1368846944776266}
-  line: {fileID: 1190423208795252}
+  smoothTime: 0.3
   lifetime: 0.5
-  anticipationTime: 0.4
+  blobShadow: {fileID: 119410562259076054}
+  line: {fileID: 1190423208795252}
+  speed: 3
+  randomOffset: 2
+  anticipationTime: 1.4
+  followPercentage: 0.9
+  strikeRadius: 1
+  damage: 10
+  hittingMasks:
+    serializedVersion: 2
+    m_Bits: 1024
+  curve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0.7
+      inSlope: 2.077399
+      outSlope: 2.077399
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  target: {fileID: 0}
 --- !u!119 &119410562259076054
 Projector:
   m_ObjectHideFlags: 1
@@ -513,7 +541,7 @@ Projector:
   m_FieldOfView: 30
   m_AspectRatio: 1
   m_Orthographic: 1
-  m_OrthographicSize: 1.3
+  m_OrthographicSize: 1
   m_Material: {fileID: 2100000, guid: e30ff3588e719f34bbf0c66f22d97487, type: 2}
   m_IgnoreLayers:
     serializedVersion: 2

@@ -504,23 +504,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fda4d91033f84eeeaf2dfd05bde9dcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  caster: {fileID: 0}
   playerInterval:
-    min: 0.3
-    max: 2
+    min: 0.2
+    max: 0.4
   worldInterval:
-    min: 0.1
+    min: 0
     max: 0.5
+  worldRandomAmount: 10
   bounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 50, y: 0, z: 50}
-  randomOffset: 0.5
-  strikeRadius: 1
-  damagePerStrike: 10
-  duration: 20
-  hittingMasks:
-    serializedVersion: 2
-    m_Bits: 1024
-  preditionAccuracy: 1
+  duration: 15
   strikePrefab: {fileID: 114761499820415296, guid: 85c466ce9e9d247d4b14e85024d481f0,
     type: 2}

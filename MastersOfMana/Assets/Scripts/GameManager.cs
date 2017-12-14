@@ -153,7 +153,7 @@ public class GameManager : MonoBehaviour
             OnLocalPlayerDead();
         }
     }
-
+		
     public void OnApplicationFocus(bool focus)
     {
 		if (focus && mRewiredPlayer != null)
@@ -197,5 +197,23 @@ public class GameManager : MonoBehaviour
         {
             OnRoundStarted();
         }
+	}
+
+    /// <summary>
+    /// Gets a list of all opponents of the given player script.
+    /// </summary>
+    /// <returns>The opponent.</returns>
+    /// <param name="self">Self.</param>
+    public List<PlayerScript> GetOpponent(PlayerScript self)
+    {
+        List<PlayerScript> opponents = new List<PlayerScript>(players.Count - 1);
+		for (int i = 0; i < players.Count; ++i)
+        {
+			if(players[i] != self)
+            {
+				opponents.Add(players[i]);
+            }
+        }
+        return opponents;
     }
 }

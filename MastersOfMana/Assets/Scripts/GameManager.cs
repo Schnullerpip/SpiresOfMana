@@ -204,7 +204,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     /// <returns>The opponent.</returns>
     /// <param name="self">Self.</param>
-    public List<PlayerScript> GetOpponent(PlayerScript self)
+    public List<PlayerScript> GetOpponents(PlayerScript self)
     {
         List<PlayerScript> opponents = new List<PlayerScript>(players.Count - 1);
 		for (int i = 0; i < players.Count; ++i)

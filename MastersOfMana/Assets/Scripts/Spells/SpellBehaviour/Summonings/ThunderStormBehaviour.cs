@@ -46,7 +46,7 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
 
     private IEnumerator Init()
 	{
-        mOpponents = GameManager.instance.GetOpponent(caster).ToArray();
+        mOpponents = GameManager.instance.GetOpponents(mCaster).ToArray();
 
         //mOpponents = allPlayers;
 

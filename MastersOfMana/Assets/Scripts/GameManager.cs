@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 public class GameManager : MonoBehaviour
 {
-    public List<PlayerScript> mPlayers;
+    public List<PlayerScript> players;
 
     //private PoolRegistry mPoolRegistry;
 
@@ -55,7 +55,7 @@ public class GameManager : MonoBehaviour
     public void Start()
     {
         mRewiredPlayer = ReInput.players.GetPlayer(0);
-        mPlayers = new List<PlayerScript>();
+        players = new List<PlayerScript>();
     }
 
     public void ResetLocalGameState()
@@ -78,7 +78,7 @@ public class GameManager : MonoBehaviour
 
     public void SetPlayers(List<PlayerScript> allPlayers)
     {
-        mPlayers = allPlayers;
+        players = allPlayers;
     }
 
     public void AddPlayerMessageCounter()
@@ -91,7 +91,7 @@ public class GameManager : MonoBehaviour
         if (NetManager.instance.amIServer())
         {
             //enable the players to actually do stuff and update the chosen Spells
-            foreach (var p in mPlayers)
+            foreach (var p in players)
             {
                 p.RpcSetInputState(InputStateSystem.InputStateID.Normal);
                 PlayerSpells playerSpells = p.GetPlayerSpells();
@@ -117,10 +117,10 @@ public class GameManager : MonoBehaviour
         ++mNumberOfDeadPlayers;
 
         //TODO: What happens if both die simultaniously?
-        if (mNumberOfDeadPlayers >= (mPlayers.Count - 1)) { //only one player left -> he/she won the game!
+        if (mNumberOfDeadPlayers >= (players.Count - 1)) { //only one player left -> he/she won the game!
 
             //Find out who has won and call post game screen
-            foreach (var p in mPlayers)
+            foreach (var p in players)
             {
                 if(p.healthScript.IsAlive())
                 {
@@ -169,30 +169,30 @@ public class GameManager : MonoBehaviour
     public void playerReady()
     {
         mNumOfReadyPlayers++;
-        if(mNumOfReadyPlayers >= mPlayers.Count)
+        if(mNumOfReadyPlayers >= players.Count)
         {
             NetManager.instance.RpcTriggerRoundStarted();
         }
     }
-
+		
     void ResetGame()
     {
-        foreach(PlayerScript player in mPlayers)
-        {
-            player.movement.RpcSetVelocity(Vector3.zero);
-            player.enabled = true;
-        }
+		if (!(NetManager.instance.amIServer())) 
+		{
+			return;
+		}
+		List<Transform> startPositions = mStartPoints.GetRandomStartPositions();
+		for(int i = 0; i < players.Count; i++)
+		{
+			players[i].movement.RpcSetPosition(startPositions[i].position);
+			players[i].movement.RpcSetVelocity(Vector3.zero);
+			players[i].enabled = true;
+		}
     }
 
     public void TriggerOnRoundStarted()
     {
         ResetGame();
-        List<Transform> startPositions = mStartPoints.GetRandomStartPositions();
-        for(int i = 0; i < mPlayers.Count; i++)
-        {
-            mPlayers[i].movement.RpcSetPosition(startPositions[i].position);
-        }
-
         if (OnRoundStarted != null)
         {
             OnRoundStarted();

@@ -86,7 +86,7 @@ public class WhipBehaviour : A_SummoningBehaviour
         whipBehaviour.linePoint0 = caster.handTransform.position;
 
         //check for a hit
-        var opponents = GameManager.instance.mPlayers;
+        var opponents = GameManager.instance.players;
         PlayerScript hitPlayer = null;
         foreach (var p in opponents)
         {

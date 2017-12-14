@@ -7,6 +7,21 @@ public class PlayerLobby : NetworkBehaviour {
     [SyncVar]
     public bool isReady = false;
 
+	public void OnEnable()
+	{
+		GameManager.OnRoundEnded += RoundEnded;
+	}
+
+	public void OnDisable()
+	{
+		GameManager.OnRoundEnded -= RoundEnded;
+	}
+
+	void RoundEnded()
+	{
+		isReady = false;
+	}
+
     [Command]
     public void CmdSetReady(bool ready)
     {

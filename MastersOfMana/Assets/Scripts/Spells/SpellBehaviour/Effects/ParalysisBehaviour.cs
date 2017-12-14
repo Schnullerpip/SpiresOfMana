@@ -18,7 +18,7 @@ public class ParalysisBehaviour : A_EffectBehaviour
     public override void Execute(PlayerScript caster)
     {
         //check for a hit
-        var opponents = GameManager.instance.mPlayers;
+        var opponents = GameManager.instance.players;
         foreach (var p in opponents)
         {
             if (p == caster) continue;

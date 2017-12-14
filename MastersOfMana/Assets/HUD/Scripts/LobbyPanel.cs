@@ -4,14 +4,25 @@ using UnityEngine;
 
 public class LobbyPanel : MonoBehaviour {
 
-    //public Camera renderCamera;
-	// Use this for initialization
-	void OnEnable () {
-        //renderCamera.gameObject.SetActive(true);
-    }
+	public List<PlayerStatus> playerStatus;
 
-    public void OnDisable()
-    {
-        //renderCamera.gameObject.SetActive(false);
-    }
+	public void OnEnable()
+	{
+		List<PlayerScript> players = GameManager.instance.players;
+		for (int i = 0; i < players.Count; i++) 
+		{
+			playerStatus [i].gameObject.SetActive (true);
+			playerStatus[i].SetName(players[i].playerName);
+			playerStatus[i].SetStatus(players[i].playerLobby.isReady);
+		}
+	}
+
+	public void Update()
+	{
+		List<PlayerScript> players = GameManager.instance.players;
+		for (int i = 0; i < players.Count; i++) 
+		{
+			playerStatus[i].SetStatus(players[i].playerLobby.isReady);
+		}
+	}
 }

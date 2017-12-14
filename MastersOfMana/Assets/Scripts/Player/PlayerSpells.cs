@@ -29,6 +29,22 @@ public class PlayerSpells : NetworkBehaviour {
         //set the currently chosen spell to a default
 	    currentSpell = 0;
     }
+
+	public void OnEnable()
+	{
+		GameManager.OnRoundStarted += RoundStarted;
+	}
+
+	public void OnDisable()
+	{
+		GameManager.OnRoundStarted -= RoundStarted;
+	}
+
+	void RoundStarted()
+	{
+		ultimateEnergy = 0;
+	}
+
     /// <summary>
     /// holds references to all the coroutines a spell is running, so they can bes stopped/interrupted w4hen a player is for example hit
     /// and can therefore not continue to cast the spell

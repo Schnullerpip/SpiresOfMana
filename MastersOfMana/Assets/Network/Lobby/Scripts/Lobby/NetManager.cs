@@ -45,7 +45,7 @@ public class NetManager : NetworkBehaviour {
             var players = FindObjectsOfType<PlayerScript>();
             foreach (var p in players)
             {
-                GameManager.instance.mPlayers.Add(p);
+                GameManager.instance.players.Add(p);
             }
         }
 

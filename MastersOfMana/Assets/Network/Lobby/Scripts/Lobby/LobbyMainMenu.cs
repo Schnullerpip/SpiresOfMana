@@ -34,7 +34,8 @@ namespace Prototype.NetworkLobby
 
         public void OnEnable()
         {
-            Cursor.lockState = CursorLockMode.None;
+			GameManager.instance.numOfActiveMenus++;
+			GameManager.instance.OnApplicationFocus (true);
 
             matchNameInput.onEndEdit.RemoveAllListeners();
             matchNameInput.onEndEdit.AddListener(onEndEditGameName);
@@ -43,11 +44,8 @@ namespace Prototype.NetworkLobby
             backButton.onClick.RemoveAllListeners();
             backButton.onClick.AddListener(lobbyManager.GoBackButton);
 
-			rewiredPlayer = ReInput.players.GetPlayer(0);
-			rewiredPlayer.controllers.maps.SetMapsEnabled(true,"UI");
-            rewiredPlayer.controllers.maps.SetMapsEnabled(false, "Default");
+			rewiredPlayer = ReInput.players.GetPlayer (0);
 			matchNameInput.text = PlayerPrefs.GetString ("Playername", "DefaultName") + "'s Gameroom";
-            GameManager.instance.numOfActiveMenus++;
         }
 
         public void OnClickHost()

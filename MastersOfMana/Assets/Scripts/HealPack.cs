@@ -121,6 +121,10 @@ public class HealPack : NetworkBehaviour
 
     private void deactivate()
     {
+		if (!isServer) 
+		{
+			return;
+		}
         StopAllCoroutines();
 		healSpawnCallback(spawnPosition);
         gameObject.SetActive(false);

@@ -23,7 +23,6 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
 	public LightningStrike strikePrefab;
 
 	private PlayerScript[] mOpponents;
-	private PlayerScript mCaster;
 
     private bool mIsActive;
 
@@ -34,7 +33,7 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
 
 		ThunderStormBehaviour thunderStormBehaviour = PoolRegistry.GetInstance(gameObject, 1, 1).GetComponent<ThunderStormBehaviour>();
 
-		thunderStormBehaviour.mCaster = caster;
+		thunderStormBehaviour.caster = caster;
 		thunderStormBehaviour.transform.position = transform.position;
 
 		NetworkServer.Spawn(thunderStormBehaviour.gameObject, thunderStormBehaviour.GetComponent<NetworkIdentity>().assetId);
@@ -46,9 +45,9 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
 
     private IEnumerator Init()
 	{
-        mOpponents = GameManager.instance.GetOpponents(mCaster).ToArray();
+        mOpponents = GameManager.instance.GetOpponents(caster).ToArray();
 
-        //mOpponents = allPlayers;
+        //mOpponents = GameManager.instance.players.ToArray(); //for testing TODO delete
 
         mIsActive = true;
 

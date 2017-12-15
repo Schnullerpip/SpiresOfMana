@@ -2204,9 +2204,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mMaxHealth: 100
   mCurrentHealth: 0
-  damageSFXs: []
-  deathSFX: {fileID: 0}
-  SFXaudioSource: {fileID: 0}
+  damageSFXs:
+  - audioClip: {fileID: 8300000, guid: 6de2f1403a27740a9bf72611f9d0b6d3, type: 3}
+    pitchtingRange:
+      min: 0.8
+      max: 1.2
+  deathSFX: {fileID: 8300000, guid: 84e1cf0e5dff35745b6881671cec1a7e, type: 3}
+  SFXaudioSource: {fileID: 82406275544267284}
 --- !u!114 &114612807110646480
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2290,9 +2294,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spellregistry: {fileID: 114448282116005220, guid: c6e96029e521cc24b85c56b8937c90ce,
     type: 2}
-  audioSource: {fileID: 0}
-  castFailedSFX: {fileID: 0}
-  cooldownDoneSFX: {fileID: 0}
+  audioSource: {fileID: 82777463225774896}
+  castFailedSFX: {fileID: 8300000, guid: 0cd3e72bb97d646739f183f1ff525a2a, type: 3}
+  cooldownDoneSFX: {fileID: 8300000, guid: bcbe3b2023fc348609f579b4cc475e9b, type: 3}
   ultimateEnergy: 0
   ultimateEnergyThreshold: 45
   spellslot:

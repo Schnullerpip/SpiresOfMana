@@ -47,8 +47,6 @@ public class ICheck : NetworkBehaviour
             preferedFileLocation = preferedFileLocation + "/";
         }
 
-        Debug.Log("dataPath: "+preferedFileLocation);
-
         //initialize unique identifier
 	    mUniqueIdentifier = System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
         //make the dateformate filesystemcompliant

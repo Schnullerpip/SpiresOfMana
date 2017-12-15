@@ -165,10 +165,14 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 	/// <param name="radius">Radius.</param>
 	/// <param name="explFalloff">Explosion falloff.</param>
 	/// <param name="excluded">A list of Healthscript that should be skipped. eg these already got hit.</param>
-	protected void ExplosionDamage(Vector3 explosionOrigin, float radius, ExplosionFalloff explFalloff, List<HealthScript> excluded = null)
+	protected void ExplosionDamage(Vector3 explosionOrigin, float radius, ExplosionFalloff explFalloff, List<HealthScript> excluded = null, float externalDamageFactor = 1.0f)
 	{
+
 		//overlap a sphere at the hit position
-		Collider[] colliders = Physics.OverlapSphere(explosionOrigin, radius);
+	    int layerId = 2; //ignore raycast layer
+	    int mask = 1 << layerId;
+	    mask = ~mask;
+		Collider[] colliders = Physics.OverlapSphere(explosionOrigin, radius, mask);
 
 		List<float> affectFactors = new List<float>();
 
@@ -258,7 +262,7 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 		//this is done after the overlapshere loop, that way, walls and other obstacles where able to block the explosion before dying
 		for (int i = 0; i < cachedHealth.Count; i++) 
 		{
-			cachedHealth[i].TakeDamage(explFalloff.EvaluateDamage(affectFactors[i]), GetType());
+			cachedHealth[i].TakeDamage(Mathf.RoundToInt(explFalloff.EvaluateDamage(affectFactors[i]) * externalDamageFactor), GetType());
 		}
 	}
 }

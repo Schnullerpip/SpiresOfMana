@@ -6,17 +6,16 @@ using UnityEngine.Networking;
 [RequireComponent(typeof(Collider))]
 public class FistOfFuryBehaviour : A_SummoningBehaviour
 {
-    [SerializeField] private float explosionAmplitude;
     [SerializeField] private float mExplosionForce;
     [SerializeField] private float mPushDownForce;
-    [SerializeField] private int mMinimumDamage;
-    [SerializeField] private int mMaximumDamage;
-    [SerializeField] [Range(0.0f, 1.0f)] private float mDamageFactor;
     [SerializeField] private GameObject explosionPrefab;
+
+    [SerializeField] private ExplosionFalloff mExplosionFalloff;
+    [SerializeField] private float mExplosionRadius;
+    [SerializeField] private float mMaxDistance;
 
 	public PreviewSpell previewPrefab;
 
-    private List<GameObject> mAlreadyHit;
     //will store the transform.position of the caster when he casted - the difference between that and he collisionpoint will be a factor to the resulting damage
     private Vector3 castPosition;
 
@@ -46,7 +45,6 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         fof.casterObject = caster.gameObject;
         fof.transform.position = fof.castPosition = caster.transform.position;
         fof.transform.parent = caster.transform;
-        fof.mAlreadyHit = new List<GameObject>();
         fof.GetComponent<Collider>().enabled = true;
         fof.gameObject.SetActive(true);
         //spawn it on all clients
@@ -72,61 +70,27 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     {
         if (collider.isTrigger) return;
 
-        this.GetComponent<Collider>().enabled = false;
-        RpcExplosion(caster.transform.position);
+        GetComponent<Collider>().enabled = false;
+
         //spawn an explosion
-        //GameObject explosion = PoolRegistry.Instantiate(explosionPrefab);
-        //explosion.transform.position = caster.transform.position;
-        //explosion.SetActive(true);
-        //Explosion ex = explosion.GetComponent<Explosion>();
-        //if (ex)
-        //{
-        //    ex.amplitude = explosionAmplitude;
-        //}
-        //NetworkServer.Spawn(explosion);
+        RpcExplosion(caster.transform.position);
 
         //unparent it
         transform.parent = null;
 
-        //apply explosiondamage to all healthscripts that were found
-        Collider[] colliders = Physics.OverlapSphere(caster.transform.position, explosionAmplitude);
-        for (int i = 0; i < colliders.Length; ++i)
-        {
-            Rigidbody rigid = colliders[i].attachedRigidbody;
-            if (rigid && !mAlreadyHit.Contains(rigid.gameObject))
-            {
-                mAlreadyHit.Add(rigid.gameObject);
-                Vector3 direction = rigid.position - caster.movement.mRigidbody.position;
-                direction.Normalize();
+        Vector3 distanceVector = caster.transform.position - castPosition;
+        float distance = Mathf.Clamp(Vector3.Magnitude(distanceVector), 3.0f, mMaxDistance); //so there will ALWAYS be a little damage at least
+        float resultingHeightFactor = distance/mMaxDistance;
+        resultingHeightFactor = Mathf.Clamp(resultingHeightFactor, 0.0f, 1.0f); // if the maxDistance was topped, dont let the damage escalate
 
-                //if the hit object is hurtable - hurt it
-                float distance = Vector3.Magnitude(caster.transform.position - castPosition);
-                int resultingDamage = Mathf.RoundToInt(mMinimumDamage + distance*mDamageFactor);
-                HealthScript hs = rigid.GetComponentInParent<HealthScript>();//searches in the gameobject AND in its parents
-                if (hs && hs != caster.healthScript)
-                {
-                    //calculate damage
-                    resultingDamage = Mathf.Clamp(resultingDamage, mMinimumDamage, mMaximumDamage);
-                    Debug.Log("damage by fist: " + resultingDamage);
-                    hs.TakeDamage(resultingDamage, this.GetType());
-                }
+        Debug.Log("resultingHeightFactor: " + resultingHeightFactor);
 
-                //if the hit object is moveable - move it
-                ServerMoveable sm = rigid.gameObject.GetComponent<ServerMoveable>();
-                if (sm)
-                {
-                    if (sm.gameObject != caster.gameObject)
-                    {
-                        sm.RpcAddForce(mExplosionForce*direction, ForceMode.VelocityChange);
-                    }
-                }
-                else
-                {
-                    rigid.AddForce(mExplosionForce*direction, ForceMode.VelocityChange);
-                }
+        caster.SetColliderIgnoreRaycast(true);
 
-            }
-        }
+        //apply Explosion force and damage
+		ExplosionDamage(caster.transform.position + Vector3.up * 0.8f/*so the terrain is not hit*/, mExplosionRadius, mExplosionFalloff, new List<HealthScript>(), resultingHeightFactor);
+
+        caster.SetColliderIgnoreRaycast(false);
 
         //remove the fistoffury object on all clients
         StartCoroutine(DestroyNextFrame());

@@ -5,8 +5,10 @@ using UnityEngine.Networking;
 
 public class HealPackSystem : NetworkBehaviour {
 
-    public GameObject healPack;
+    //public GameObject healPack;
+	public float duration = 7;
     public List<float> spawnTimes = new List<float>();
+	public List<GameObject> spawnObjects = new List<GameObject>();
 
     private List<Transform> mHealSpawns = new List<Transform>();
     private int currentIndex = 0;
@@ -50,24 +52,26 @@ public class HealPackSystem : NetworkBehaviour {
         while(currentIndex < spawnTimes.Count)
         {
             yield return new WaitForSeconds(spawnTimes[currentIndex]);
-            currentIndex++;
 
             //Get a random spawn position
 			Transform healSpawnPosition = mHealSpawns[Mathf.FloorToInt(Random.Range(0, mHealSpawns.Count - 0.00001f))];
 			Vector3 position = healSpawnPosition.position;
 			Quaternion rotation = healSpawnPosition.rotation;
             mHealSpawns.Remove(healSpawnPosition);
-			position.y += healPack.transform.localScale.y * 0.5f;
+			position.y += spawnObjects[currentIndex].transform.localScale.y * 0.5f;
             //Instantiate and spawn
-			HealPack obj = Instantiate(healPack, position, rotation).GetComponent<HealPack>();
-			obj.spawnPosition = healSpawnPosition;
-            obj.GetComponent<HealPack>().healSpawnCallback = AddHealSpawn;
+			GameObject obj = Instantiate(spawnObjects[currentIndex], position, rotation);
+			StartCoroutine(Despawn(healSpawnPosition, obj));
             NetworkServer.Spawn(obj.gameObject);
+			currentIndex++;
         }
     }
 
-    public void AddHealSpawn(Transform trans)
+    private IEnumerator Despawn(Transform trans, GameObject obj)
     {
+		yield return new WaitForSeconds(duration);
+		NetworkServer.UnSpawn (obj);
+		Destroy (obj);
         mHealSpawns.Add(trans);
     }
 }

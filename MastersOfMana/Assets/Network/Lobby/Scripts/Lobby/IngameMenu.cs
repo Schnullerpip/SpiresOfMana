@@ -11,7 +11,17 @@ public class IngameMenu : MonoBehaviour {
 
     public void ToggleVisibility()
     {
+        if(canvas.enabled)
+        {
+            GameManager.instance.numOfActiveMenus--;
+        }
+        else
+        {
+            GameManager.instance.numOfActiveMenus++;
+        }
 		canvas.enabled = !canvas.enabled;
+
+        GameManager.instance.OnApplicationFocus(true);
 
 		if(GameManager.instance.numOfActiveMenus > 0 && lobbyManager)
 		{
@@ -60,5 +70,8 @@ public class IngameMenu : MonoBehaviour {
     {
         lobbyManager.GoBackButton();
         Resume();
+        Cursor.lockState = CursorLockMode.None;
+        mRewiredPlayer.controllers.maps.SetMapsEnabled(true, "UI");
+        mRewiredPlayer.controllers.maps.SetMapsEnabled(false, "Default");
     }
 }

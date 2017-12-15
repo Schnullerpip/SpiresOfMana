@@ -43,20 +43,17 @@ public class OpponentHUD : MonoBehaviour {
 
     public void Update()
     {
-		if (mCamera) {
-			//Billboard to player
-			Vector3 v = mCamera.transform.position - transform.position;
-			float scaleFactor = Mathf.Clamp01 (v.sqrMagnitude / mMaxDistanceSqrt) * maxAdditionalScale + 1;
-			transform.localScale = mInitialScale * scaleFactor;
+        if (mCamera)
+        {
+            //Billboard to player
+            Vector3 v = mCamera.transform.position - transform.position;
+            float scaleFactor = Mathf.Clamp01(v.sqrMagnitude / mMaxDistanceSqrt) * maxAdditionalScale + 1;
+            transform.localScale = mInitialScale * scaleFactor;
 
-			v.x = v.z = 0.0f;
-			transform.LookAt (mCamera.transform.position - v);
-			transform.Rotate (0, 180, 0);
-		} 
-		else 
-		{
-			mCamera = Camera.main;
-		}
+            v.x = v.z = 0.0f;
+            transform.LookAt(mCamera.transform.position - v);
+            transform.Rotate(0, 180, 0);
+        }
     }
 
     private void localPlayerDead()

@@ -56,6 +56,7 @@ public class HUD : MonoBehaviour {
     void RoundStarted()
     {
         mHealthHUD.gameObject.SetActive(true);
+        //mHurtIndicator.gameObject.SetActive(true);
     }
 
     public void ExitPostGameScreen()
@@ -64,12 +65,6 @@ public class HUD : MonoBehaviour {
         mLobby.gameObject.SetActive(true);
         mSpellHUD.gameObject.SetActive(true);
         SpectatorCamera cam = FindObjectOfType<SpectatorCamera>();
-		if (cam) {
-			Destroy (cam.gameObject);
-		} 
-		else 
-		{
-			GameManager.instance.localPlayer.aim.GetCameraRig().gameObject.SetActive(false);
-		}
+        Destroy(cam.gameObject);
     }
 }

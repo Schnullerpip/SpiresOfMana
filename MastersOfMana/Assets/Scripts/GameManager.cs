@@ -46,7 +46,6 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-			mRewiredPlayer = ReInput.players.GetPlayer(0);
             instance = this;
             eventSystem.SetActive(true);
             DontDestroyOnLoad(this);
@@ -55,6 +54,7 @@ public class GameManager : MonoBehaviour
 
     public void Start()
     {
+        mRewiredPlayer = ReInput.players.GetPlayer(0);
         players = new List<PlayerScript>();
     }
 

@@ -15,6 +15,8 @@ public class SoloGameSetup : MonoBehaviour {
     // Use this for initialization
     void Awake () 
 	{
+        Cursor.lockState = CursorLockMode.Locked;
+
 		GameObject GameManagerObj = Instantiate(gameManagerPrefab);
         GameManagerObj.transform.SetParent(this.transform);
         GameManager.instance.AddPlayerMessageCounter();

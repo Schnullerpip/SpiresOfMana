@@ -185,7 +185,6 @@ public class SpellSelectionPanel : MonoBehaviour {
         left,
         right
     }
-
     public void AssignCustomNavigation(Button sourceButton, Button targetButton, OnSelectDirection direction)
     {
         Navigation navigation = sourceButton.navigation;
@@ -208,6 +207,11 @@ public class SpellSelectionPanel : MonoBehaviour {
         sourceButton.navigation = navigation;
     }
 
+    //public void Cancel()
+    //{
+    //    LobbyManager.s_Singleton.Cancel();
+    //}
+
     public void OnReady()
     {
         ValidateSpellSelection();
@@ -217,6 +221,7 @@ public class SpellSelectionPanel : MonoBehaviour {
         PlayerPrefs.SetInt("SpellSlot2", mPlayerSpellList[2].spellID);
         PlayerPrefs.SetInt("SpellSlot3", mPlayerSpellList[3].spellID);
         PlayerPrefs.Save();
+        //mPlayerSpells.CmdSpellsChanged(mPlayerSpellList[0].spellID, mPlayerSpellList[1].spellID, mPlayerSpellList[2].spellID, mPlayerSpellList[3].spellID);
     }
 
     public void OnDisable()

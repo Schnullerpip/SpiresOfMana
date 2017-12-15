@@ -83,11 +83,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9928495bbd779b44ba1febe3f94ebe7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mLifetime: 5.38
-  mParticleSystem: {fileID: 198483498619966972}
+  mLifetime: 5
   mHitRadius: 2
   mHitRange: 100
-  mIceEffect: {fileID: 1641219291602184, guid: b493e599ddc000b46b94c66170891884, type: 2}
+  iceCollider: {fileID: 0}
+  healthscript: {fileID: 0}
+  ActivateOnDeactivation: {fileID: 0}
 --- !u!114 &114333617069955034
 MonoBehaviour:
   m_ObjectHideFlags: 1

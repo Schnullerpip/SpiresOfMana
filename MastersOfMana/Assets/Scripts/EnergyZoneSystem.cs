@@ -3,12 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class HealPackSystem : NetworkBehaviour {
+public class EnergyZoneSystem : NetworkBehaviour {
 
-    //public GameObject healPack;
-	public float duration = 7;
-    public List<float> spawnTimes = new List<float>();
-	public List<GameObject> spawnObjects = new List<GameObject>();
+	public float duration = 20;
+
+	[System.Serializable]
+	public struct spawnZone{
+		public float spawnDelay;
+		public GameObject spanwObject;
+	}
+
+	public List<spawnZone> spawnZones;
+	public Transform EnergyZones;
 
     private List<Transform> mHealSpawns = new List<Transform>();
     private int currentIndex = 0;
@@ -16,9 +22,9 @@ public class HealPackSystem : NetworkBehaviour {
     public void Start()
     {
         //find all possible spawnPositions
-        foreach(GameObject obj in GameObject.FindGameObjectsWithTag("HealPackSpawn"))
+		for(int i = 0; i < EnergyZones.childCount; i++)
         {
-            mHealSpawns.Add(obj.transform);
+			mHealSpawns.Add(EnergyZones.GetChild(i));
         }
     }
 
@@ -49,18 +55,18 @@ public class HealPackSystem : NetworkBehaviour {
     private IEnumerator SpawnHeals()
     {
         //Spawns the healthpackets one after the other
-        while(currentIndex < spawnTimes.Count)
+		while(currentIndex < spawnZones.Count)
         {
-            yield return new WaitForSeconds(spawnTimes[currentIndex]);
+			yield return new WaitForSeconds(spawnZones[currentIndex].spawnDelay);
 
             //Get a random spawn position
 			Transform healSpawnPosition = mHealSpawns[Mathf.FloorToInt(Random.Range(0, mHealSpawns.Count - 0.00001f))];
 			Vector3 position = healSpawnPosition.position;
 			Quaternion rotation = healSpawnPosition.rotation;
             mHealSpawns.Remove(healSpawnPosition);
-			position.y += spawnObjects[currentIndex].transform.localScale.y * 0.5f;
+			position.y += spawnZones[currentIndex].spanwObject.transform.localScale.y * 0.5f;
             //Instantiate and spawn
-			GameObject obj = Instantiate(spawnObjects[currentIndex], position, rotation);
+			GameObject obj = Instantiate(spawnZones[currentIndex].spanwObject, position, rotation);
 			StartCoroutine(Despawn(healSpawnPosition, obj));
             NetworkServer.Spawn(obj.gameObject);
 			currentIndex++;

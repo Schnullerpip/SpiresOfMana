@@ -12,6 +12,12 @@ public class PostGameMenu : MonoBehaviour
         Prototype.NetworkLobby.LobbyManager.s_Singleton.GoBackButton();
     }
 
+    public void Start()
+    {
+        HUD hud = GetComponentInParent<HUD>();
+        resumeButton.onClick.AddListener(hud.ExitPostGameScreen);
+    }
+
     public void OnEnable()
     {
         if(GameManager.instance.winnerID == GameManager.instance.localPlayer.netId.Value)
@@ -22,10 +28,14 @@ public class PostGameMenu : MonoBehaviour
         {
             text.text = "You Lost!";
         }
-        GameObject.FindObjectsOfType<IngameMenu>()[0].mIsMenuActive = true;
-        Rewired.ReInput.players.GetPlayer(0).controllers.maps.SetMapsEnabled(false, "Default");
-        Rewired.ReInput.players.GetPlayer(0).controllers.maps.SetMapsEnabled(true, "UI");
-        Cursor.lockState =  CursorLockMode.None;
+        GameManager.instance.numOfActiveMenus++;
+        GameManager.instance.OnApplicationFocus(true);
         resumeButton.OnSelect(null);
+    }
+
+    public void OnDisable()
+    {
+        GameManager.instance.OnApplicationFocus(true);
+        GameManager.instance.numOfActiveMenus--;
     }
 }

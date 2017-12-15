@@ -68,12 +68,12 @@ public class Check_DamageDistribution : ICheck
 
         source_damage = new Dictionary<Type, List<damage_time>>();
         player_source_damage = new List<Dictionary<Type, List<damage_time>>>();
-        player_lastDealer = new damageInstance[GameManager.instance.mPlayers.Count];
+        player_lastDealer = new damageInstance[GameManager.instance.players.Count];
 
         //get the selected spells
-	    for (int i = 0; i < GameManager.instance.mPlayers.Count; ++i)
+	    for (int i = 0; i < GameManager.instance.players.Count; ++i)
 	    {
-	        var p = GameManager.instance.mPlayers[i];
+	        var p = GameManager.instance.players[i];
 
             //initialize player's source_damage
             player_source_damage.Add(new Dictionary<Type, List<damage_time>>());
@@ -121,15 +121,7 @@ public class Check_DamageDistribution : ICheck
 	    }
 
         //register at gamemanager to get OnGameEnded events
-        GameManager gm;
-        if ((gm = GameManager.instance) != null)
-        {
-            gm.OnGameEnded += GameEndRoutine;
-        }
-        else
-        {
-            Debug.Log("[Check_DamageDistribution]::[Init]:: Could not find a GameManager instance!");
-        }
+        GameManager.OnRoundEnded += GameEndRoutine;
     }
 
 	// Use this for initialization
@@ -352,7 +344,7 @@ public class Check_DamageDistribution : ICheck
         var o = 0;
         foreach (var psd in player_source_damage)
         {
-            var player = GameManager.instance.mPlayers[o++];
+            var player = GameManager.instance.players[o++];
             WriteString("-----" + player.name + " -> (netId: " + player.netId + ") -----", fileName[PER_PLAYER_DELT_DAMAGE]);
             foreach (var i in psd)
             {

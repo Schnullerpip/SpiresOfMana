@@ -15,20 +15,35 @@ public class HurtIndicator : MonoBehaviour {
     private float mMinAlpha = 0.0f;
 
     private float mPlayerMaxHealth;
+    private bool mIsInitialized = false;
 
-    // Use this for initialization
+    //// Use this for initialization
     void OnEnable()
     {
-        GameManager.OnGameStarted += Init;
+        if(!mIsInitialized)
+        {
+            Init();
+        }
+        localPlayerHealthScript.OnHealthChanged += HealthChanged;
+        localPlayerHealthScript.OnDamageTaken += DamageTaken;
+        GameManager.OnLocalPlayerDead += localPlayerDead;
+        GameManager.OnRoundStarted += RoundStarted;
+    }
+
+    public void RoundStarted()
+    {
+        mMinAlpha = 0;
+        Color col = sprite.color;
+        col.a = 0;
+        sprite.color = col;
+        mRising = false;
+        gameObject.SetActive(true);
     }
 
     public void Init()
     {
         localPlayerHealthScript = GameManager.instance.localPlayer.healthScript;
-        localPlayerHealthScript.OnHealthChanged += HealthChanged;
-        localPlayerHealthScript.OnDamageTaken += DamageTaken;
         mPlayerMaxHealth = localPlayerHealthScript.GetMaxHealth();
-        GameManager.OnLocalPlayerDead += localPlayerDead;
     }
 
 
@@ -81,6 +96,6 @@ public class HurtIndicator : MonoBehaviour {
 
     private void localPlayerDead()
     {
-        sprite.enabled = false;
+        gameObject.SetActive(false);
     }
 }

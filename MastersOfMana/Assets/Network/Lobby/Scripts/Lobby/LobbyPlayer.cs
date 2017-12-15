@@ -26,7 +26,6 @@ namespace Prototype.NetworkLobby
         public Button readyButton;
         public Button waitingPlayerButton;
         public Button removePlayerButton;
-		public Button RandomizeButton;
 
         public GameObject localIcone;
         public GameObject remoteIcone;
@@ -48,18 +47,6 @@ namespace Prototype.NetworkLobby
 
 		[SyncVar]
 		private bool isReady = false;
-
-        public Button
-            spellButton1,
-            spellButton2,
-            spellButton3,
-            spellButton4;
-
-        //spellslots
-        public List<A_Spell> spells;
-        private SpellRegistry spellregistry;
-
-        private int mSpellToChange;
 
         //static Color OddRowColor = new Color(250.0f / 255.0f, 250.0f / 255.0f, 250.0f / 255.0f, 1.0f);
         //static Color EvenRowColor = new Color(180.0f / 255.0f, 180.0f / 255.0f, 180.0f / 255.0f, 1.0f);
@@ -161,97 +148,14 @@ namespace Prototype.NetworkLobby
             readyButton.onClick.RemoveAllListeners();
             readyButton.onClick.AddListener(OnReadyClicked);
 
-            spellregistry = Prototype.NetworkLobby.LobbyManager.s_Singleton.mainMenu.spellSelectionPanel.GetComponent<SpellSelectionPanel>().spellregistry;
-            spells[0] = spellregistry.GetSpellByID(PlayerPrefs.GetInt("SpellSlot0",0));
-            spells[1] = spellregistry.GetSpellByID(PlayerPrefs.GetInt("SpellSlot1",1));
-            spells[2] = spellregistry.GetSpellByID(PlayerPrefs.GetInt("SpellSlot2",2));
-            spells[3] = spellregistry.GetSpellByID(PlayerPrefs.GetInt("SpellSlot3", 11));
-
-            spellButton1.gameObject.SetActive(true);
-            spellButton2.gameObject.SetActive(true);
-            spellButton3.gameObject.SetActive(true);
-            spellButton4.transform.parent.gameObject.SetActive(true);
-			RandomizeButton.transform.parent.gameObject.SetActive (true);
-            spellButton1.interactable = true;
-            spellButton2.interactable = true;
-            spellButton3.interactable = true;
-            spellButton4.interactable = true;
-			RandomizeButton.interactable = true;
-            ValidateSpellSelection();
-
             //We need to assign the navigation for down directly, it seems to lose the explicit reference because the back button is on a different UI
             backButton = GetComponentInParent<LobbyPlayerList>().backButton;
             AssignCustomNavigation(readyButton, backButton, OnSelectDirection.down);
-            AssignCustomNavigation(spellButton1, backButton, OnSelectDirection.down);
-            AssignCustomNavigation(spellButton2, backButton, OnSelectDirection.down);
-            AssignCustomNavigation(spellButton3, backButton, OnSelectDirection.down);
-            AssignCustomNavigation(spellButton4, backButton, OnSelectDirection.down);
             AssignCustomNavigation(removePlayerButton, backButton, OnSelectDirection.down);
-            AssignCustomNavigation(backButton, spellButton1, OnSelectDirection.up);
 
             //when OnClientEnterLobby is called, the loval PlayerController is not yet created, so we need to redo that here to disable
             //the add button if we reach maxLocalPlayer. We pass 0, as it was already counted on OnClientEnterLobby
             if (LobbyManager.s_Singleton != null) LobbyManager.s_Singleton.OnPlayersNumberModified(0);
-        }
-
-        private void ValidateSpellSelection()
-        {
-            //seperate illegal and legal spells
-            List<int> illegalSpellSlots = new List<int>();
-            List<A_Spell> legalSpells = new List<A_Spell>();
-            for(int i = 0; i < spells.Count - 1; i++)
-            {
-                if (!spellregistry.ValidateNormal(spells[i]))
-                {
-                    illegalSpellSlots.Add(i);
-                }
-                else
-                {
-                    legalSpells.Add(spells[i]);
-                }
-            }
-
-            if (illegalSpellSlots.Count > 0)
-            {
-                //Replace illegal spells by legal spells that have not been chosen yet
-                int currentSpellSlot = 0;
-                //Search for first spell that has not already been taken
-                for (int i = 0; i < spellregistry.spellList.Count; i++)
-                {
-                    bool isSpellLegal = true;
-                    //Check against already taken spells
-                    foreach (A_Spell takenSpell in legalSpells)
-                    {
-                        //if the registry spell has already been taken, flag as illegal an move to next spell in registry
-                        if (spellregistry.spellList[i].spellID == takenSpell.spellID)
-                        {
-                            isSpellLegal = false;
-                            break;
-                        }
-                    }
-
-                    // Only if the spell is legal, move it into our spellslot
-                    if (isSpellLegal)
-                    {
-                        //Otherwise, put it into the spellslot
-                        spells[illegalSpellSlots[currentSpellSlot]] = spellregistry.spellList[i];
-
-                        //And move to next illegal spell
-                        currentSpellSlot++;
-                        if (currentSpellSlot == illegalSpellSlots.Count)
-                        {
-                            break;
-                        }
-                    }
-                }
-            }
-            
-            if (!spellregistry.ValidateUltimate(spells[3]))
-            {
-                spells[3] = spellregistry.ultimateSpellList[0];
-            }
-
-            UpdateSpellButtons();
         }
 
         public enum OnSelectDirection
@@ -283,57 +187,6 @@ namespace Prototype.NetworkLobby
             sourceButton.navigation = navigation;
         }
 
-        public void SetUiInteractive(bool setActive)
-        {
-            Selectable[] selectables = transform.parent.GetComponentsInChildren<Selectable>();
-            foreach(Selectable selectable in selectables)
-            {
-                selectable.interactable = setActive;
-            }
-            backButton.interactable = setActive;
-        }
-
-        public void UpdateSpellButtons()
-        {
-            spellButton1.transform.GetChild(0).GetComponent<Image>().sprite = spells[0].icon;
-            spellButton2.transform.GetChild(0).GetComponent<Image>().sprite = spells[1].icon;
-            spellButton3.transform.GetChild(0).GetComponent<Image>().sprite = spells[2].icon;
-            spellButton4.transform.GetChild(0).GetComponent<Image>().sprite = spells[3].icon;
-        }
-
-        public void OnSpellButtonClicked(int spellButton)
-        {
-            mSpellToChange = spellButton;
-            RectTransform spellSelectionPanel;
-            spellSelectionPanel = LobbyManager.s_Singleton.mainMenu.spellSelectionPanel;
-            spellSelectionPanel.GetComponent<SpellSelectionPanel>().player = this;
-            //If spellslot 4 is selected, show ultimates
-            spellSelectionPanel.GetComponent<SpellSelectionPanel>().showUltimates = spellButton == 3;
-            spellSelectionPanel.gameObject.SetActive(true);
-        }
-
-        public void tradeSpells(A_Spell spell)
-        {
-           for(int i = 0; i < spells.Count; i++)
-            {
-                //Check if the chosen spell is already used
-                if (spells[i] == spell && i != mSpellToChange)
-                {
-                    //If the spell is already used, just swap the spell to change with the old position of the new spell
-                    spells[i] = spells[mSpellToChange];
-                    break;
-                }
-            }
-            spells[mSpellToChange] = spell;
-            ValidateSpellSelection();
-        }
-
-        public void RandomizeSpells()
-        {
-            spells = spellregistry.generateRandomSpells();
-            UpdateSpellButtons();
-        }
-
         //This enable/disable the remove button depending on if that is the only local player or not
         public void CheckRemoveButton()
         {
@@ -360,23 +213,11 @@ namespace Prototype.NetworkLobby
                 readyButton.interactable = false;
                 colorButton.interactable = false;
                 nameInput.interactable = false;
-                spellButton1.interactable = false;
-                spellButton2.interactable = false;
-                spellButton3.interactable = false;
-                spellButton4.interactable = false;
-				RandomizeButton.interactable = false;
                 // Push chosen spells to server
                 if (isLocalPlayer)
                 {
-                    ValidateSpellSelection();
-                    //Save Spells to PlayerPrefs
-                    PlayerPrefs.SetInt("SpellSlot0",spells[0].spellID);
-                    PlayerPrefs.SetInt("SpellSlot1", spells[1].spellID);
-                    PlayerPrefs.SetInt("SpellSlot2", spells[2].spellID);
-                    PlayerPrefs.SetInt("SpellSlot3", spells[3].spellID);
                     PlayerPrefs.SetString("Playername", playerName);
                     PlayerPrefs.Save();
-                    CmdSpellsChanged(spells[0].spellID, spells[1].spellID, spells[2].spellID, spells[3].spellID);
                 }
             }
             else
@@ -389,21 +230,7 @@ namespace Prototype.NetworkLobby
                 readyButton.interactable = isLocalPlayer;
                 colorButton.interactable = isLocalPlayer;
                 nameInput.interactable = isLocalPlayer;
-                spellButton1.interactable = isLocalPlayer;
-                spellButton2.interactable = isLocalPlayer;
-                spellButton3.interactable = isLocalPlayer;
-                spellButton4.interactable = isLocalPlayer;
             }
-        }
-
-        [Command]
-        public void CmdSpellsChanged(int Spell1, int Spell2, int Spell3, int Spell4)
-        {
-            SpellRegistry spellregistry = Prototype.NetworkLobby.LobbyManager.s_Singleton.mainMenu.spellSelectionPanel.GetComponent<SpellSelectionPanel>().spellregistry;
-            spells[0] = spellregistry.GetSpellByID(Spell1);
-            spells[1] = spellregistry.GetSpellByID(Spell2);
-            spells[2] = spellregistry.GetSpellByID(Spell3);
-            spells[3] = spellregistry.GetSpellByID(Spell4);
         }
 
         public void OnPlayerListChanged(int idx)

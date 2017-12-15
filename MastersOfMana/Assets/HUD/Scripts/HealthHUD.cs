@@ -7,30 +7,30 @@ public class HealthHUD : MonoBehaviour
     public OpponentHUD opponentHUDPrefab;
 
     private PlayerHealthScript localPlayerHealthScript;
-    private Canvas canvas;
+    private bool isInitialized = false;
 
     // Use this for initialization
     void OnEnable()
     {
-        GameManager.OnGameStarted += Init;
 		GameManager.OnLocalPlayerDead += LocalPlayerDead;
+        if(!isInitialized)
+        {
+            Init();
+        }
+        // Get notified whenever health is changed
+        localPlayerHealthScript.OnHealthChanged += SetHealth;
+        SetHealth(localPlayerHealthScript.GetCurrentHealth());
     }
 
     public void Init()
     {
-        GameManager gameManager = GameManager.instance;
-        localPlayerHealthScript = gameManager.localPlayer.healthScript;
-        // Get notified whenever health is changed
-        localPlayerHealthScript.OnHealthChanged += SetHealth;
-        SetHealth(localPlayerHealthScript.GetCurrentHealth());
-        canvas = GetComponentInParent<Canvas>();
-        canvas.enabled = true;
-
+        isInitialized = true;
+        localPlayerHealthScript = GameManager.instance.localPlayer.healthScript;
         //Create one floating damge text system per non-local player so we can cache the transform
-        foreach(PlayerScript player in FindObjectsOfType<PlayerScript>())
+        foreach (PlayerScript player in FindObjectsOfType<PlayerScript>())
         {
             //Don't create a system for the local player
-            if (player.netId == gameManager.localPlayer.netId)
+            if (player.netId == GameManager.instance.localPlayer.netId)
             {
                 continue;
             }
@@ -43,8 +43,11 @@ public class HealthHUD : MonoBehaviour
 
     void OnDisable()
     {
-        GameManager.OnGameStarted -= Init;
         GameManager.OnLocalPlayerDead -= LocalPlayerDead;
+        if (localPlayerHealthScript)
+        {
+            localPlayerHealthScript.OnHealthChanged -= SetHealth;
+        }
     }
 
     public void SetHealth(int health)
@@ -54,11 +57,6 @@ public class HealthHUD : MonoBehaviour
 
 	private void LocalPlayerDead()
 	{
-        Debug.Log(canvas);
-        if(!canvas)
-        {
-            canvas = GetComponentInParent<Canvas>();
-        }
-        canvas.enabled = false;
-	}
+        gameObject.SetActive(false);
+    }
 }

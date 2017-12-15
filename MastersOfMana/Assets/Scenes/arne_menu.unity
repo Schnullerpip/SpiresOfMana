@@ -108,27 +108,21 @@ NavMeshSettings:
     tileSize: 256
     accuratePlacement: 0
   m_NavMeshData: {fileID: 0}
---- !u!114 &69644341 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114029537620435312, guid: c0978251ff7b10d4fb954a4b56acd9f0,
-    type: 2}
-  m_PrefabInternal: {fileID: 1203926414}
-  m_Script: {fileID: 853051423, guid: f70555f144d8491a825f0804e09c671c, type: 3}
 --- !u!114 &560370118 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 114402217130636838, guid: c0978251ff7b10d4fb954a4b56acd9f0,
     type: 2}
-  m_PrefabInternal: {fileID: 1203926414}
+  m_PrefabInternal: {fileID: 896529387}
   m_Script: {fileID: 11500000, guid: 9a0312403f252434c912587ebde8fb96, type: 3}
 --- !u!224 &560370123 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 22459552, guid: c0978251ff7b10d4fb954a4b56acd9f0,
     type: 2}
-  m_PrefabInternal: {fileID: 1203926414}
+  m_PrefabInternal: {fileID: 896529387}
 --- !u!1 &570293380 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 115900, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
-  m_PrefabInternal: {fileID: 1203926414}
+  m_PrefabInternal: {fileID: 896529387}
 --- !u!1001 &665017916
 Prefab:
   m_ObjectHideFlags: 0
@@ -176,7 +170,7 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 604641c1903da144a9f184e32d2b2fd7, type: 2}
   m_IsPrefabParent: 0
---- !u!1001 &1203926414
+--- !u!1001 &896529387
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -268,26 +262,10 @@ Prefab:
       propertyPath: lobbyManager
       value: 
       objectReference: {fileID: 1321811817}
-    - target: {fileID: 1613109371814600, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
-      propertyPath: m_Name
-      value: ControlSchemeDropdown
-      objectReference: {fileID: 0}
-    - target: {fileID: 114368609507812750, guid: c0978251ff7b10d4fb954a4b56acd9f0,
+    - target: {fileID: 114402217130636838, guid: c0978251ff7b10d4fb954a4b56acd9f0,
         type: 2}
-      propertyPath: controlScheme
+      propertyPath: spellSelectionPanel
       value: 
-      objectReference: {fileID: 69644341}
-    - target: {fileID: 11484364, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
-      propertyPath: m_CharacterLimit
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 11484364, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
-      propertyPath: m_ContentType
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11484364, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
-      propertyPath: m_CharacterValidation
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}

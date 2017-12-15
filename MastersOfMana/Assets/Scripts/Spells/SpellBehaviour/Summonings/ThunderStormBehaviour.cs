@@ -1,156 +1,106 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
 public class ThunderStormBehaviour : A_SummoningBehaviour 
 {	
-	public FloatRange playerInterval = new FloatRange(1.0f, 3.0f);
-	public FloatRange worldInterval = new FloatRange(0.2f, 1.0f);
-
+    [Tooltip("The area inwhich a random strike could happen")]
 	public Bounds bounds;
 
-	public float randomOffset = 1f;
-	public float strikeRadius = 1;
+    [Tooltip("Minimum and maximum between two strikes for each opponent")]
+    public FloatRange playerInterval = new FloatRange(1.0f, 3.0f);
+    [Tooltip("Minimum and maximum between two strikes for each repeated world strike")]
+    public FloatRange worldInterval = new FloatRange(0.2f, 1.0f);
 
-	public int damagePerStrike = 5;
-	public float duration = 15;
+    [Tooltip("How many indiviual repeated world strikes should be started?")]
+    public int worldRandomAmount = 20;
 
-	public LayerMask hittingMasks;
-
-	[Tooltip("How accurate should the movement prediction be?")]
-	[Range(0.0f,1.0f)]
-	public float preditionAccuracy = 1.0f;
+    [Tooltip("Duration of the effect inwhich new strikes start. Does not stop already spawned strikes. Visuals will stay for a bit longer than that.")]
+    public float duration = 15;
 
 	public LightningStrike strikePrefab;
 
 	private PlayerScript[] mOpponents;
-	private PlayerScript mCaster;
+
+    private bool mIsActive;
 
 	#region implemented abstract members of A_SpellBehaviour
 	public override void Execute (PlayerScript caster)
 	{
 		GameManager.instance.isUltimateActive = true;
 
-		ThunderStormBehaviour thunderStormBehaviour = PoolRegistry.GetInstance(this.gameObject, 1, 1).GetComponent<ThunderStormBehaviour>();
+		ThunderStormBehaviour thunderStormBehaviour = PoolRegistry.GetInstance(gameObject, 1, 1).GetComponent<ThunderStormBehaviour>();
 
-		thunderStormBehaviour.mCaster = caster;
+		thunderStormBehaviour.caster = caster;
 		thunderStormBehaviour.transform.position = transform.position;
 
 		NetworkServer.Spawn(thunderStormBehaviour.gameObject, thunderStormBehaviour.GetComponent<NetworkIdentity>().assetId);
 		thunderStormBehaviour.gameObject.SetActive(true);
 
-		thunderStormBehaviour.Init();
+        thunderStormBehaviour.StartCoroutine(thunderStormBehaviour.Init());
 	}
 	#endregion
 
-	private void Init()
+    private IEnumerator Init()
 	{
-		PlayerScript[] allPlayers = GameObject.FindObjectsOfType<PlayerScript>();
-		int j = 0;
+        mOpponents = GameManager.instance.GetOpponents(caster).ToArray();
 
-		mOpponents = new PlayerScript[allPlayers.Length - 1];
+        //mOpponents = GameManager.instance.players.ToArray(); //for testing TODO delete
 
-		for (int i = 0; i < allPlayers.Length; ++i) 
-		{
-			if(allPlayers[i] == mCaster)
-			{
-				continue;
-			}
+        mIsActive = true;
 
-			mOpponents[j] = allPlayers[i];
-			++j;
-		}
+        for (int i = 0; i < mOpponents.Length; ++i)
+        {
+            StartCoroutine(RepeatedStrike(mOpponents[i]));
+        }
 
-		StartCoroutine(Attack());
-	}
+        for (int i = 0; i < worldRandomAmount; ++i)
+        {
+            StartCoroutine(RepeatedWorldStrike());
+        }
 
-	private IEnumerator Attack()
-	{
-		//start a seperate strike for each opponent
-		for (int i = 0; i < mOpponents.Length; ++i) 
-		{
-			StartCoroutine(RepeatedStrike(mOpponents[i]));
-		}
+        yield return new WaitForSeconds(duration);
 
-		//world strikes, these are primarily for ambience, but also cause damage when hitting a player
-		StartCoroutine(RepeatedStrike());
-			
-		//wait for the whole thunderstorm duration before stopping all repeating strikes
-		yield return new WaitForSeconds(duration);
-		StopAllCoroutines();
+        mIsActive = false;
 
-		//reset the flag so a new ultimate can be started
-		GameManager.instance.isUltimateActive = false;
+        //wait additional time to make the effect not look so abrupt
+        yield return new WaitForSeconds(strikePrefab.anticipationTime * 2 + strikePrefab.lifetime);
 
-		NetworkServer.UnSpawn(this.gameObject);
-		this.gameObject.SetActive(false);
-	}
+        //reset the flag so a new ultimate can be started
+        GameManager.instance.isUltimateActive = false;
 
-	/// <summary>
-	/// Spawns Lighting Strikes at random within the bounds, at a random interval (within a range)
-	/// </summary>
-	private IEnumerator RepeatedStrike()
-	{
-		while(true)
-		{
-			Vector3 pos = Vector3.zero;
+        NetworkServer.UnSpawn(this.gameObject);
+        this.gameObject.SetActive(false);
+    }
 
-			pos.x = Random.Range(-bounds.extents.x, bounds.extents.x);
-			pos.z = Random.Range(-bounds.extents.z, bounds.extents.z);
+    private IEnumerator RepeatedStrike(PlayerScript playerScript)
+    {
+        while (mIsActive)
+        {
+            LightningStrike strike = PoolRegistry.GetInstance(strikePrefab.gameObject, 10, 4).GetComponent<LightningStrike>();
 
-			StartCoroutine(Strike(pos));
+            strike.target = playerScript;
+            NetworkServer.Spawn(strike.gameObject, strike.GetComponent<NetworkIdentity>().assetId);
+            strike.gameObject.SetActive(true);
 
-			yield return new WaitForSeconds(worldInterval.Random());
-		}
-	}
+            yield return new WaitForSeconds(playerInterval.Random());
+        }
+    }
 
-	/// <summary>
-	/// Spawns Lighting Strikes at the position of the player (including some prediciton) with a random offset
-	/// </summary>
-	/// <param name="player">Player.</param>
-	private IEnumerator RepeatedStrike(PlayerScript player)
-	{
-		while(true)
-		{
-			//get the movement since the last frame and extrapolate to a movement per second
-			Vector3 prediction = player.movement.GetDeltaMovement() / Time.deltaTime;
-			//add some random offset to introduce some variance
-			Vector2 randomizer = Random.insideUnitCircle * randomOffset;
-			Vector3 pos = player.transform.position + new Vector3(randomizer.x, 0, randomizer.y) + prediction * preditionAccuracy;
+    private IEnumerator RepeatedWorldStrike()
+    {
+        while (mIsActive)
+        {
+            LightningStrike strike = PoolRegistry.GetInstance(strikePrefab.gameObject, 10, 4).GetComponent<LightningStrike>();
 
-			StartCoroutine(Strike(pos));
+            strike.transform.position = bounds.RandomInside();
 
-			yield return new WaitForSeconds(playerInterval.Random());
-		}
-	}
+            NetworkServer.Spawn(strike.gameObject, strike.GetComponent<NetworkIdentity>().assetId);
+            strike.gameObject.SetActive(true);
 
-	/// <summary>
-	/// Strikes at the specified position.
-	/// </summary>
-	/// <param name="pos">Position.</param>
-	private IEnumerator Strike (Vector3 pos)
-	{
-		LightningStrike strike = PoolRegistry.GetInstance(strikePrefab.gameObject, 10, 4).GetComponent<LightningStrike> ();
-		strike.transform.position = pos;
-
-		NetworkServer.Spawn (strike.gameObject, strike.GetComponent<NetworkIdentity>().assetId);
-		strike.gameObject.SetActive (true);
-
-		yield return new WaitForSeconds(strike.anticipationTime);
-
-		Collider[] colls = Physics.OverlapCapsule(pos, pos + Vector3.up * 40, strikeRadius, hittingMasks);
-
-		//caching to avoid hitting the player multiple times. this is due to the fact the player has more than one collider
-		List<Rigidbody> cachedRigids = new List<Rigidbody>(mOpponents.Length);
-
-		foreach (var c in colls) 
-		{
-			if(!cachedRigids.Contains(c.attachedRigidbody))
-			{
-				cachedRigids.Add(c.attachedRigidbody);
-				c.GetComponentInParent<PlayerHealthScript>().TakeDamage(damagePerStrike, this.GetType());
-			}
-		}
-	}
+            yield return new WaitForSeconds(worldInterval.Random());
+        }
+    }
 }

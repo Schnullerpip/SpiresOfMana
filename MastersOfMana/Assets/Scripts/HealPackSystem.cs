@@ -18,8 +18,31 @@ public class HealPackSystem : NetworkBehaviour {
         {
             mHealSpawns.Add(obj.transform);
         }
-        StartCoroutine(SpawnHeals());
     }
+
+	public void OnEnable()
+	{
+		GameManager.OnRoundStarted += RoundStarted;
+		GameManager.OnRoundEnded += RoundEnded;
+	}
+
+	public void OnDisable()
+	{
+		StopAllCoroutines();
+		GameManager.OnRoundStarted -= RoundStarted;
+		GameManager.OnRoundEnded -= RoundEnded;
+	}
+
+	void RoundStarted()
+	{
+		currentIndex = 0;
+		StartCoroutine(SpawnHeals());
+	}
+
+	void RoundEnded()
+	{
+		StopAllCoroutines();
+	}
 
     private IEnumerator SpawnHeals()
     {
@@ -29,14 +52,17 @@ public class HealPackSystem : NetworkBehaviour {
             yield return new WaitForSeconds(spawnTimes[currentIndex]);
             currentIndex++;
 
-            //Get a randome spawn position
-            Transform healSpawnPosition = mHealSpawns[Mathf.FloorToInt(Random.Range(0, mHealSpawns.Count - 0.00001f))];
+            //Get a random spawn position
+			Transform healSpawnPosition = mHealSpawns[Mathf.FloorToInt(Random.Range(0, mHealSpawns.Count - 0.00001f))];
+			Vector3 position = healSpawnPosition.position;
+			Quaternion rotation = healSpawnPosition.rotation;
             mHealSpawns.Remove(healSpawnPosition);
-            healSpawnPosition.Translate(0,healPack.transform.localScale.y*0.5f,0);
+			position.y += healPack.transform.localScale.y * 0.5f;
             //Instantiate and spawn
-            GameObject obj = Instantiate(healPack, healSpawnPosition.position, healSpawnPosition.rotation);
+			HealPack obj = Instantiate(healPack, position, rotation).GetComponent<HealPack>();
+			obj.spawnPosition = healSpawnPosition;
             obj.GetComponent<HealPack>().healSpawnCallback = AddHealSpawn;
-            NetworkServer.Spawn(obj);
+            NetworkServer.Spawn(obj.gameObject);
         }
     }
 

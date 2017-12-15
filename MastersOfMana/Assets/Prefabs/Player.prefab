@@ -244,6 +244,7 @@ GameObject:
   - component: {fileID: 114651380410554418}
   - component: {fileID: 95559592168868734}
   - component: {fileID: 114808234077334614}
+  - component: {fileID: 114753484251476076}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -2226,8 +2227,9 @@ MonoBehaviour:
   cameraRigPrefab: {fileID: 114371251292269686, guid: 21611dcaa52d8441ba40cf1e83852a1e,
     type: 2}
   handTransform: {fileID: 4322715158737734}
+  playerLobby: {fileID: 114753484251476076}
   playerName: 
-  playerColor: {r: 1, g: 1, b: 1, a: 1}
+  playerColor: {r: 0, g: 0, b: 0, a: 0}
   rendererToColor: {fileID: 137346890001762576}
   healthScript: {fileID: 114581584314824656}
   headJoint: {fileID: 4496500260466464}
@@ -2248,6 +2250,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 95559592168868734}
+--- !u!114 &114753484251476076
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1285255658560174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f91ac45116ad4fa4fae4f26a068c9073, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isReady: 0
 --- !u!114 &114808234077334614
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2278,6 +2292,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ab377a874e87ce419291cc9c24e055b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spellregistry: {fileID: 114448282116005220, guid: c6e96029e521cc24b85c56b8937c90ce,
+    type: 2}
   audioSource: {fileID: 82777463225774896}
   castFailedSFX: {fileID: 8300000, guid: 0cd3e72bb97d646739f183f1ff525a2a, type: 3}
   cooldownDoneSFX: {fileID: 8300000, guid: bcbe3b2023fc348609f579b4cc475e9b, type: 3}
@@ -2293,7 +2309,7 @@ MonoBehaviour:
   - spell: {fileID: 11400000, guid: a5e75869edd974a7f889e1661e0ef689, type: 2}
     cooldown: 0
     isUltimateSpellSlot: 0
-  - spell: {fileID: 11400000, guid: 5e315aa3d4f76b146be106becf3c0f60, type: 2}
+  - spell: {fileID: 11400000, guid: 7ae306a51de35493d93d5048415f3986, type: 2}
     cooldown: 0
     isUltimateSpellSlot: 1
   currentSpell: 0

@@ -38,7 +38,7 @@ public class SoloGameSetup : MonoBehaviour {
         NetworkManagerObject.AddComponent<NetManager>();
 
         Instantiate(ingameMenu);
-        Instantiate(hurtIndicator);
+        //Instantiate(hurtIndicator);
 
 		StartCoroutine(PullingGameStart());
     }
@@ -50,7 +50,7 @@ public class SoloGameSetup : MonoBehaviour {
 		{
 			yield return null;
 		}
-
+        GameManager.instance.players.Add(GameManager.instance.localPlayer);
 		GameManager.instance.Go();
 		Init();
 	}
@@ -72,8 +72,8 @@ public class SoloGameSetup : MonoBehaviour {
         }
         else
         {
-            Instantiate(healthHUD);//.GetComponent<HealthHUD>().Init();
-            Instantiate(spellHUD);//.GetComponent<SpellHUD>().Init();
+            //Instantiate(healthHUD);//.GetComponent<HealthHUD>().Init();
+            //Instantiate(spellHUD);//.GetComponent<SpellHUD>().Init();
         }
         GameManager.instance.localPlayer.transform.position = transform.position;
     }

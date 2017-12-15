@@ -89,7 +89,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
 
         //gather all the enemies
         enemys = new List<PlayerScript>();
-        foreach (var p in GameManager.instance.mPlayers)
+        foreach (var p in GameManager.instance.players)
         {
             if (p != caster)
             {

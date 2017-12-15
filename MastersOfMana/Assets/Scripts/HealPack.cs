@@ -13,6 +13,7 @@ public class HealPack : NetworkBehaviour
     public ParticleSystem particles;
     public AnimationCurve alphaValue;
     public MeshRenderer healPackRenderer;
+	public Transform spawnPosition;
     private Material material;
     private int mInitialheal;
 
@@ -22,8 +23,19 @@ public class HealPack : NetworkBehaviour
     {
         material = healPackRenderer.material;
         mInitialheal = healAmount;
+		GameManager.OnRoundEnded += RoundEnded;
         updateAlpha();
     }
+
+	public void OnDisable()
+	{
+		GameManager.OnRoundEnded -= RoundEnded;
+	}
+
+	void RoundEnded()
+	{
+		deactivate();
+	}
 
     public void OnTriggerEnter(Collider other)
     {
@@ -109,8 +121,12 @@ public class HealPack : NetworkBehaviour
 
     private void deactivate()
     {
+		if (!isServer) 
+		{
+			return;
+		}
         StopAllCoroutines();
-        healSpawnCallback(transform);
+		healSpawnCallback(spawnPosition);
         gameObject.SetActive(false);
         NetworkServer.UnSpawn(gameObject);
         Destroy(gameObject);

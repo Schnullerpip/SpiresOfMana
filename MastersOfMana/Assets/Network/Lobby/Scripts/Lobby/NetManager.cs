@@ -24,13 +24,15 @@ public class NetManager : NetworkBehaviour {
     }
 
     [ClientRpc]
-    public void RpcLoadPostGameScreen(uint winner)
+    public void RpcRoundEnded(uint winner)
     {
         //If the player is dead, he already has the postGame loaded!
         //if (GameManager.instance.localPlayer.healthScript.IsAlive())
         //{
-            GameManager.instance.winnerID = winner;
-            SceneManager.LoadSceneAsync("Scenes/arne_postGame", LoadSceneMode.Additive);
+        GameManager.instance.winnerID = winner;
+        //SceneManager.LoadSceneAsync("Scenes/arne_postGame", LoadSceneMode.Additive);
+        FindObjectOfType<HUD>().ShowPostGameScreen(true);
+        GameManager.instance.TriggerRoundEnded();
         //}
     }
 
@@ -43,10 +45,16 @@ public class NetManager : NetworkBehaviour {
             var players = FindObjectsOfType<PlayerScript>();
             foreach (var p in players)
             {
-                GameManager.instance.mPlayers.Add(p);
+                GameManager.instance.players.Add(p);
             }
         }
 
         GameManager.instance.TriggerGameStarted();
+    }
+
+    [ClientRpc]
+    public void RpcTriggerRoundStarted()
+    {
+        GameManager.instance.TriggerOnRoundStarted();
     }
 }

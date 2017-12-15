@@ -1,12 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using Rewired;
 using UnityEngine.EventSystems;
 
 public class GameManager : MonoBehaviour
 {
-    public List<PlayerScript> mPlayers;
+    public List<PlayerScript> players;
 
     //private PoolRegistry mPoolRegistry;
 
@@ -20,12 +20,23 @@ public class GameManager : MonoBehaviour
     public PlayerScript localPlayer;
     public GameObject eventSystem;
     public bool isUltimateActive = false;
+    public int numOfActiveMenus = 0;
 
     public delegate void GameStarted();
     public static event GameStarted OnGameStarted;
 
+    public delegate void RoundStarted();
+    public static event RoundStarted OnRoundStarted;
+
     public delegate void LocalPlayerDead();
     public static event LocalPlayerDead OnLocalPlayerDead;
+
+    public delegate void RoundEnded();
+    public static event RoundEnded OnRoundEnded;
+
+    private int mNumOfReadyPlayers = 0;
+    private StartPoints mStartPoints;
+    private Player mRewiredPlayer;
 
     public void Awake()
     {
@@ -41,12 +52,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void Start()
+    {
+        mRewiredPlayer = ReInput.players.GetPlayer(0);
+        players = new List<PlayerScript>();
+    }
+
     public void ResetLocalGameState()
     {
-        mPlayers = new List<PlayerScript>();
         mNeededToGo = mInitialNeededToGo;
         mNumberOfGoMessages = 0;
         mNumberOfDeadPlayers = 0;
+        mNumOfReadyPlayers = 0;
         isUltimateActive = false;
     }
 
@@ -61,7 +78,7 @@ public class GameManager : MonoBehaviour
 
     public void SetPlayers(List<PlayerScript> allPlayers)
     {
-        mPlayers = allPlayers;
+        players = allPlayers;
     }
 
     public void AddPlayerMessageCounter()
@@ -74,10 +91,11 @@ public class GameManager : MonoBehaviour
         if (NetManager.instance.amIServer())
         {
             //enable the players to actually do stuff and update the chosen Spells
-            foreach (var p in mPlayers)
+            foreach (var p in players)
             {
                 p.RpcSetInputState(InputStateSystem.InputStateID.Normal);
-                p.RpcUpdateSpells(p.GetPlayerSpells().spellslot[0].spell.spellID, p.GetPlayerSpells().spellslot[1].spell.spellID, p.GetPlayerSpells().spellslot[2].spell.spellID, p.GetPlayerSpells().spellslot[3].spell.spellID);
+                PlayerSpells playerSpells = p.GetPlayerSpells();
+                playerSpells.RpcUpdateSpells(playerSpells.spellslot[0].spell.spellID, playerSpells.spellslot[1].spell.spellID, playerSpells.spellslot[2].spell.spellID, playerSpells.spellslot[3].spell.spellID);
             }
 
             NetManager.instance.RpcTriggerGameStarted();
@@ -86,14 +104,12 @@ public class GameManager : MonoBehaviour
 
     public void TriggerGameStarted()
     {
+        mStartPoints = FindObjectOfType<StartPoints>();
         if (OnGameStarted != null)
         {
             OnGameStarted();
         }
     }
-
-    public delegate void GameEnded();
-    public event GameEnded OnGameEnded;
 
     // INGAME
     // This is only executed on the Server
@@ -101,29 +117,32 @@ public class GameManager : MonoBehaviour
         ++mNumberOfDeadPlayers;
 
         //TODO: What happens if both die simultaniously?
-        if (mNumberOfDeadPlayers >= (mPlayers.Count - 1)) { //only one player left -> he/she won the game!
+        if (mNumberOfDeadPlayers >= (players.Count - 1)) { //only one player left -> he/she won the game!
 
             //Find out who has won and call post game screen
-            foreach (var p in mPlayers)
+            foreach (var p in players)
             {
                 if(p.healthScript.IsAlive())
                 {
                     winnerID = p.netId.Value;
-                    
                     break;
                 }
-            }
-            if (OnGameEnded != null)
-            {
-                OnGameEnded();
             }
             PostGameLobby(winnerID);
             ResetLocalGameState();
         }
     }
 
+    public void TriggerRoundEnded()
+    {
+        if (OnRoundEnded != null)
+        {
+            OnRoundEnded();
+        }
+    }
+
     public void PostGameLobby(uint winner) {
-        NetManager.instance.RpcLoadPostGameScreen(winner);
+        NetManager.instance.RpcRoundEnded(winner);
     }
 
     public void localPlayerDead()
@@ -133,5 +152,68 @@ public class GameManager : MonoBehaviour
         {
             OnLocalPlayerDead();
         }
+    }
+		
+    public void OnApplicationFocus(bool focus)
+    {
+		if (focus && mRewiredPlayer != null)
+        {
+            mRewiredPlayer.controllers.maps.SetMapsEnabled(numOfActiveMenus > 0, "UI");
+            mRewiredPlayer.controllers.maps.SetMapsEnabled(!(numOfActiveMenus > 0), "Default");
+            Cursor.lockState = numOfActiveMenus > 0 ? CursorLockMode.None : CursorLockMode.Locked;
+            Cursor.visible = numOfActiveMenus > 0;
+        }
+    }
+
+    //called on the server only!
+    public void playerReady()
+    {
+        mNumOfReadyPlayers++;
+        if(mNumOfReadyPlayers >= players.Count)
+        {
+            NetManager.instance.RpcTriggerRoundStarted();
+        }
+    }
+		
+    void ResetGame()
+    {
+		if (!(NetManager.instance.amIServer())) 
+		{
+			return;
+		}
+		List<Transform> startPositions = mStartPoints.GetRandomStartPositions();
+		for(int i = 0; i < players.Count; i++)
+		{
+			players[i].movement.RpcSetPosition(startPositions[i].position);
+			players[i].movement.RpcSetVelocity(Vector3.zero);
+			players[i].enabled = true;
+		}
+    }
+
+    public void TriggerOnRoundStarted()
+    {
+        ResetGame();
+        if (OnRoundStarted != null)
+        {
+            OnRoundStarted();
+        }
+	}
+
+    /// <summary>
+    /// Gets a list of all opponents of the given player script.
+    /// </summary>
+    /// <returns>The opponent.</returns>
+    /// <param name="self">Self.</param>
+    public List<PlayerScript> GetOpponents(PlayerScript self)
+    {
+        List<PlayerScript> opponents = new List<PlayerScript>(players.Count - 1);
+		for (int i = 0; i < players.Count; ++i)
+        {
+			if(players[i] != self)
+            {
+				opponents.Add(players[i]);
+            }
+        }
+        return opponents;
     }
 }

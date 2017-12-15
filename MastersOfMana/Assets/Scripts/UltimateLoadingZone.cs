@@ -6,31 +6,9 @@ using UnityEngine.Networking;
 public class UltimateLoadingZone : MonoBehaviour {
 
     public float ultimateEnergyPerSecond = 1;
+	public float tickDuration = 1;
 
     private Dictionary<NetworkInstanceId, Coroutine> mInstanceCoroutineDictionary = new Dictionary<NetworkInstanceId, Coroutine>();
-	private bool mIsLoadingActive = false;
-
-	public void OnEnable()
-	{
-		GameManager.OnRoundStarted += RoundStarted;
-		GameManager.OnRoundEnded += RoundEnded;
-	}
-
-	public void OnDisable()
-	{
-		GameManager.OnRoundStarted -= RoundStarted;
-		GameManager.OnRoundEnded -= RoundEnded;
-	}
-
-	public void RoundStarted()
-	{
-		mIsLoadingActive = true;
-	}
-
-	public void RoundEnded()
-	{
-		mIsLoadingActive = false;
-	}
 
     public void OnTriggerEnter(Collider other)
     {
@@ -66,8 +44,8 @@ public class UltimateLoadingZone : MonoBehaviour {
     {
         while (enabled)
         {
-            yield return new WaitForSeconds(1f);
-            if(!GameManager.instance.isUltimateActive && mIsLoadingActive)
+			yield return new WaitForSeconds(tickDuration);
+            if(!GameManager.instance.isUltimateActive)
             {
                 playerSpells.ultimateEnergy += ultimateEnergyPerSecond;
             }

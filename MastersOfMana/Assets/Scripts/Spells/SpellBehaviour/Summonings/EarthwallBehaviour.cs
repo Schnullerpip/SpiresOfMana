@@ -10,11 +10,24 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
 
     public float initialDistanceToCaster = 2;
 
+    public PreviewSpell preview;
+
+    public override void Preview(PlayerScript caster)
+    {
+        base.Preview(caster);
+
+        preview.instance.MoveAndRotate(caster.movement.mRigidbody.worldCenterOfMass + GetAimLocal(caster) * initialDistanceToCaster, Quaternion.LookRotation(GetAimLocal(caster)));
+    }
+
+    public override void StopPreview(PlayerScript caster)
+    {
+        base.StopPreview(caster);
+        preview.instance.Deactivate();
+    }
+
     public override void Execute(PlayerScript caster)
     {
-        Vector3 aimDirection = GetAim(caster);
-
-        GameObject wall = PoolRegistry.Instantiate(gameObject, caster.movement.mRigidbody.worldCenterOfMass + aimDirection * initialDistanceToCaster, Quaternion.LookRotation(aimDirection));
+        GameObject wall = PoolRegistry.Instantiate(gameObject, caster.movement.mRigidbody.worldCenterOfMass + GetAim(caster) * initialDistanceToCaster, Quaternion.LookRotation(GetAimLocal(caster)));
         wall.SetActive(true);
         NetworkServer.Spawn(wall);
     }

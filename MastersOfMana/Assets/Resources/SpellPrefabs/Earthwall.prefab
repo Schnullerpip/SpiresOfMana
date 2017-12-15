@@ -74,7 +74,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1559168603325644}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -27.594986, y: 7.894, z: -12.519436}
+  m_LocalPosition: {x: -3.7910118, y: 8.463, z: 9.398281}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4226518785157268}
@@ -280,6 +280,7 @@ MonoBehaviour:
     pitchtingRange:
       min: 0.8
       max: 1.2
+  deathSFX: {fileID: 0}
   SFXaudioSource: {fileID: 82297438318485464}
   damagePerSecond: 5
 --- !u!114 &114267851956015830
@@ -343,6 +344,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialDistanceToCaster: 2
+  preview: {fileID: 114154698241257480, guid: 8856a9373b075154a9858ac4fe468ec7, type: 2}
 --- !u!198 &198387531588014016
 ParticleSystem:
   m_ObjectHideFlags: 1

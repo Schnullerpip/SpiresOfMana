@@ -43,8 +43,6 @@ public class LightningStrike : NetworkBehaviour
  
     private Vector3 mRandomWander;
 
-    private float mPrediction;
-
     private void Awake()
     {
         //create a new material instance for every strike, 
@@ -82,7 +80,6 @@ public class LightningStrike : NetworkBehaviour
         blobShadow.orthographicSize = 0;
         blobShadow.gameObject.SetActive(true);
 
-        mPrediction = 1 + 1 * followPercentage;
         mSpeed = speed.Random();
 
         if(isServer)
@@ -126,7 +123,7 @@ public class LightningStrike : NetworkBehaviour
                                      Vector3.SmoothDamp(transform.position, targetPos, ref vel, smoothTime, mSpeed);
                                      //targetPos;
 
-                        Debug.DrawLine(transform.position,targetPos,Color.green);
+                        //Debug.DrawLine(transform.position,targetPos,Color.green);
                     }
                     else
                     {

@@ -7,6 +7,7 @@ public class IngameLobby : MonoBehaviour {
     public Canvas canvas;
     public GameObject spellselectionPanel;
     public GameObject lobby;
+	public Camera cam;
 
     void OnEnable()
     {

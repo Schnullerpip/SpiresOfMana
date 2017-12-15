@@ -48,6 +48,12 @@ namespace Prototype.NetworkLobby
 			matchNameInput.text = PlayerPrefs.GetString ("Playername", "DefaultName") + "'s Gameroom";
         }
 
+		public void OnDisable()
+		{
+			GameManager.instance.numOfActiveMenus--;
+			GameManager.instance.OnApplicationFocus (true);
+		}
+
         public void OnClickHost()
         {
             lobbyManager.StartHost();

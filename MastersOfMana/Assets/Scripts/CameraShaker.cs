@@ -44,7 +44,10 @@ public class CameraShaker : MonoBehaviour
 	public void Shake(float amount, float duration)
 	{
 		StopAllCoroutines();
-		StartCoroutine(C_Shake(amount, duration));
+		if (enabled) 
+		{
+			StartCoroutine(C_Shake(amount, duration));
+		}
 	}
 
 	IEnumerator C_Shake (float amount, float duration) {

@@ -37,6 +37,8 @@ public class MultipleMenuInput : MonoBehaviour {
     {
         Rewired.ActiveControllerChangedDelegate onControllerChangedDelegate = onControllerChanged;
         Rewired.ReInput.controllers.AddLastActiveControllerChangedDelegate(onControllerChangedDelegate);
+		GameManager.instance.numOfActiveMenus++;
+		GameManager.instance.OnApplicationFocus (true);
         highlightFirstSelected();
     }
 
@@ -50,6 +52,8 @@ public class MultipleMenuInput : MonoBehaviour {
 
     public void OnDisable()
     {
+		GameManager.instance.numOfActiveMenus--;
+		GameManager.instance.OnApplicationFocus (true);
         if (Rewired.ReInput.isReady)
         {
             Rewired.ActiveControllerChangedDelegate onControllerChangedDelegate = onControllerChanged;

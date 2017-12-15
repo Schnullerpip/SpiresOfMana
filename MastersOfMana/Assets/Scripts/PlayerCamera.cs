@@ -37,13 +37,30 @@ public class PlayerCamera : MonoBehaviour {
 		mCamera = GetComponentInChildren<Camera>();
 		mStartFOV = mCamera.fieldOfView;
 		mSlider = GetComponentInChildren<CamSlider>();
-        GameManager.OnRoundStarted += RoundStarted;
+		GameManager.OnRoundStarted += RoundStarted;
     }
+
+	void OnEnable()
+	{
+		GameManager.OnRoundStarted += RoundStarted;
+		GameManager.OnRoundEnded += RoundEnded;
+	}
+
+	void OnDisable()
+	{
+		GameManager.OnRoundStarted -= RoundStarted;
+		GameManager.OnRoundEnded -= RoundEnded;
+	}
 
     void RoundStarted()
     {
         gameObject.SetActive(true);
     }
+
+	void RoundEnded()
+	{
+		gameObject.SetActive(false);
+	}
 
 	void Start()
 	{

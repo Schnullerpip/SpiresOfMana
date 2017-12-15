@@ -24,6 +24,7 @@ public class IngameLobby : MonoBehaviour {
 
     public void SpellselectionFinished()
     {
+		spellselectionPanel.GetComponent<SpellSelectionPanel> ().OnReady ();
         spellselectionPanel.SetActive(false);
         lobby.gameObject.SetActive(true);
         GameManager.instance.localPlayer.playerLobby.CmdSetReady(true);

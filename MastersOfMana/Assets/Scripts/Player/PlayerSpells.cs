@@ -25,7 +25,10 @@ public class PlayerSpells : NetworkBehaviour {
     {
         //cache the playaer for later use
         mPlayer = GetComponent<PlayerScript>();
-
+		spellslot[0].spell = spellregistry.GetSpellByID(PlayerPrefs.GetInt("SpellSlot0", 0));
+		spellslot[1].spell = spellregistry.GetSpellByID(PlayerPrefs.GetInt("SpellSlot1", 1));
+		spellslot[2].spell = spellregistry.GetSpellByID(PlayerPrefs.GetInt("SpellSlot2", 2));
+		spellslot[3].spell = spellregistry.GetSpellByID(PlayerPrefs.GetInt("SpellSlot3", 101));
         //set the currently chosen spell to a default
 	    currentSpell = 0;
     }

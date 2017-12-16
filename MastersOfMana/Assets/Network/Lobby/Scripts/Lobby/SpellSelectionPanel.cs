@@ -221,7 +221,7 @@ public class SpellSelectionPanel : MonoBehaviour {
         PlayerPrefs.SetInt("SpellSlot2", mPlayerSpellList[2].spellID);
         PlayerPrefs.SetInt("SpellSlot3", mPlayerSpellList[3].spellID);
         PlayerPrefs.Save();
-        //mPlayerSpells.CmdSpellsChanged(mPlayerSpellList[0].spellID, mPlayerSpellList[1].spellID, mPlayerSpellList[2].spellID, mPlayerSpellList[3].spellID);
+        mPlayerSpells.CmdUpdateSpells(mPlayerSpellList[0].spellID, mPlayerSpellList[1].spellID, mPlayerSpellList[2].spellID, mPlayerSpellList[3].spellID);
     }
 
     public void OnDisable()

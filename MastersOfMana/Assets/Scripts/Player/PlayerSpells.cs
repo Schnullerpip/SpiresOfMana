@@ -140,11 +140,12 @@ public class PlayerSpells : NetworkBehaviour {
     /// <param name="spell1"></param>
     /// <param name="spell2"></param>
     /// <param name="spell3"></param>
-    public void UpdateSpells(int spell1, int spell2, int spell3, int spell4)
+    [Command]
+    public void CmdUpdateSpells(int spell1, int spell2, int spell3, int spell4)
     {
-        Prototype.NetworkLobby.LobbyManager NetworkManager = Prototype.NetworkLobby.LobbyManager.s_Singleton;
-        if (NetworkManager)
-        {
+        //Prototype.NetworkLobby.LobbyManager NetworkManager = Prototype.NetworkLobby.LobbyManager.s_Singleton;
+        //if (NetworkManager)
+        //{
             if (spellregistry)
             {
                 spellslot[0].spell = spellregistry.GetSpellByID(spell1);
@@ -152,20 +153,20 @@ public class PlayerSpells : NetworkBehaviour {
                 spellslot[2].spell = spellregistry.GetSpellByID(spell3);
                 spellslot[3].spell = spellregistry.GetSpellByID(spell4);
             }
-        }
+        //}
     }
 
-    /// <summary>
-    /// Update spells on client side
-    /// </summary>
-    /// <param name="spell1"></param>
-    /// <param name="spell2"></param>
-    /// <param name="spell3"></param>
-    [ClientRpc]
-    public void RpcUpdateSpells(int spell1, int spell2, int spell3, int spell4)
-    {
-        UpdateSpells(spell1, spell2, spell3, spell4);
-    }
+    ///// <summary>
+    ///// Update spells on client side
+    ///// </summary>
+    ///// <param name="spell1"></param>
+    ///// <param name="spell2"></param>
+    ///// <param name="spell3"></param>
+    //[ClientRpc]
+    //public void RpcUpdateSpells(int spell1, int spell2, int spell3, int spell4)
+    //{
+    //    UpdateSpells(spell1, spell2, spell3, spell4);
+    //}
 
     /// <summary>
     /// Simple Datacontainer (inner class) for a Pair of Spell and cooldown

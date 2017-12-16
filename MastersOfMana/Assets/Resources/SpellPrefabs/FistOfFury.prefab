@@ -219,14 +219,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f140fc052e4cde04d9b50817a5505c81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosionAmplitude: 8
   mExplosionForce: 11
   mPushDownForce: 20
-  mMinimumDamage: 12
-  mMaximumDamage: 40
-  mDamageFactor: 1
   explosionPrefab: {fileID: 1233248937701180, guid: 269420ecf4b3e5b47b6df9c50e9dab61,
     type: 2}
+  mExplosionFalloff:
+    force: 11
+    damage: 100
+    falloff:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: -0.0066184998
+        value: 0.30471802
+        inSlope: 0.708119
+        outSlope: 0.708119
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 1
+        value: 1
+        inSlope: 0.92074525
+        outSlope: 0.92074525
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+  mExplosionRadius: 6
+  mMaxDistance: 25
   previewPrefab: {fileID: 114041355954258062, guid: c9bd312dd9100433bbf9c52f1f65128c,
     type: 2}
 --- !u!135 &135348172352856590

@@ -30,6 +30,21 @@ public class WindWallBehaviour : A_SummoningBehaviour
         mWindForceDirection.Normalize();
     }
 
+	public PreviewSpell previewPrefab;
+
+	public override void Preview (PlayerScript caster)
+	{
+		base.Preview (caster);
+
+        previewPrefab.instance.Move(caster.transform.position + GetAimLocal(caster) * mCenterDistance);
+	}
+
+	public override void StopPreview (PlayerScript caster)
+	{
+		base.StopPreview (caster);
+		previewPrefab.instance.Deactivate();
+	}
+
     public override void Execute(PlayerScript caster)
     {
         //GameObject ww = PoolRegistry.WindWallPool.Get();

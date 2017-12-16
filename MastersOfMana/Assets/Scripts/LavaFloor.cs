@@ -5,7 +5,6 @@ using UnityEngine.Networking;
 
 public class LavaFloor : NetworkBehaviour
 {
-
     public int damagePerSecond;
     public float cycleTime = 40;
     public float amplitude = 4;
@@ -22,7 +21,7 @@ public class LavaFloor : NetworkBehaviour
         Debug.LogWarning("Remove code for stopping lava for release build!");
     }
 
-    private Dictionary<NetworkInstanceId, Coroutine> mInstanceCoroutineDictionary = new Dictionary<NetworkInstanceId, Coroutine>();
+    private Dictionary<HealthScript, Coroutine> mInstanceCoroutineDictionary = new Dictionary<HealthScript, Coroutine>();
 
     public void OnTriggerEnter(Collider other)
     {
@@ -32,16 +31,19 @@ public class LavaFloor : NetworkBehaviour
         }
         //Check if collision with player
         //Check FeetCollider to only trigger once per player
-        if (other.GetComponent<FeetCollider>())
+        HealthScript health = other.GetComponentInParent<HealthScript>();
+        if (health && !mInstanceCoroutineDictionary.ContainsKey(health))
         {
-            PlayerHealthScript playerHealth = other.GetComponentInParent<PlayerHealthScript>();
-            if (playerHealth)
-            {
-                //Remember which player this coroutine belongs to
-                mInstanceCoroutineDictionary.Add(playerHealth.netId, StartCoroutine(DealDamage(playerHealth)));
+            //Remember which player this coroutine belongs to
+            mInstanceCoroutineDictionary.Add(health, StartCoroutine(DealDamage(health)));
 
-                playerHealth.GetComponent<PlayerMovement>().RpcSetVelocityY(10);
-            }
+        }
+
+        ServerMoveable sm = other.GetComponentInParent<ServerMoveable>();
+        if (sm)
+        {
+            //shoot the moveable into the sky to make it jump mario-ayayayayay-style
+            sm.RpcSetVelocityY(10);
         }
     }
 
@@ -65,24 +67,20 @@ public class LavaFloor : NetworkBehaviour
         {
             return;
         }
-        //Check if collision with player
-        //Check FeetCollider to only trigger once per player
-        if (other.GetComponent<FeetCollider>())
+        //Check Healthscript to only trigger once per player
+        HealthScript health = other.GetComponentInParent<HealthScript>();
+        if (health && mInstanceCoroutineDictionary.ContainsKey(health))
         {
-            PlayerHealthScript playerHealth = other.GetComponentInParent<PlayerHealthScript>();
-            if (playerHealth)
-            {
-                StopCoroutine(mInstanceCoroutineDictionary[playerHealth.netId]);
-                mInstanceCoroutineDictionary.Remove(playerHealth.netId);
-            }
+            StopCoroutine(mInstanceCoroutineDictionary[health]);
+            mInstanceCoroutineDictionary.Remove(health);
         }
     }
 
-    public IEnumerator DealDamage(PlayerHealthScript playerHealth)
+    public IEnumerator DealDamage(HealthScript health)
     {
         while (enabled)
         {
-            playerHealth.TakeDamage(damagePerSecond, this.GetType());
+            health.TakeDamage(damagePerSecond, this.GetType());
             yield return new WaitForSeconds(1f);
         }
     }

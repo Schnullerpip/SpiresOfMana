@@ -156,7 +156,7 @@ public class GameManager : MonoBehaviour
 		
     public void OnApplicationFocus(bool focus)
     {
-		if (focus && mRewiredPlayer != null)
+		if (focus && ReInput.isReady)
         {
             mRewiredPlayer.controllers.maps.SetMapsEnabled(numOfActiveMenus > 0, "UI");
             mRewiredPlayer.controllers.maps.SetMapsEnabled(!(numOfActiveMenus > 0), "Default");

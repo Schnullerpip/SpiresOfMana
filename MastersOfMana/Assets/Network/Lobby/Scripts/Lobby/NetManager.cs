@@ -32,7 +32,7 @@ public class NetManager : NetworkBehaviour {
         GameManager.instance.winnerID = winner;
         //SceneManager.LoadSceneAsync("Scenes/arne_postGame", LoadSceneMode.Additive);
         FindObjectOfType<HUD>().ShowPostGameScreen(true);
-        GameManager.instance.TriggerRoundEnded();
+        //GameManager.instance.TriggerRoundEnded();
         //}
     }
 

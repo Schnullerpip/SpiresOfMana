@@ -21,7 +21,11 @@ public class HealPack : NetworkBehaviour
 
     public void OnEnable()
     {
-		GameManager.OnRoundEnded += RoundEnded;
+        if (!isServer)
+        {
+            return;
+        }
+        GameManager.OnRoundEnded += RoundEnded;
     }
 
 	void RoundEnded()

@@ -6,22 +6,15 @@ public class IngameMenu : MonoBehaviour {
     public Prototype.NetworkLobby.LobbyManager lobbyManager;
     public Canvas canvas;
     protected Rewired.Player mRewiredPlayer;
+    public MultipleMenuInput menuInput;
 
 	public UnityEngine.UI.Selectable defaultSelected;
 
     public void ToggleVisibility()
     {
-        if(canvas.enabled)
-        {
-            GameManager.instance.numOfActiveMenus--;
-        }
-        else
-        {
-            GameManager.instance.numOfActiveMenus++;
-        }
 		canvas.enabled = !canvas.enabled;
-
-        GameManager.instance.OnApplicationFocus(true);
+        //Small hack to use the OnDisable/OnEnable functionality of the MultipleMenuInput script
+        menuInput.enabled = canvas.enabled;
 
 		if(GameManager.instance.numOfActiveMenus > 0 && lobbyManager)
 		{
@@ -70,8 +63,5 @@ public class IngameMenu : MonoBehaviour {
     {
         lobbyManager.GoBackButton();
         Resume();
-        Cursor.lockState = CursorLockMode.None;
-        mRewiredPlayer.controllers.maps.SetMapsEnabled(true, "UI");
-        mRewiredPlayer.controllers.maps.SetMapsEnabled(false, "Default");
     }
 }

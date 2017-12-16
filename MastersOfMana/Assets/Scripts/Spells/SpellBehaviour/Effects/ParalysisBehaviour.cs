@@ -36,27 +36,49 @@ public class ParalysisBehaviour : A_EffectBehaviour
                 ConfirmedHit(p.movement.mRigidbody.worldCenterOfMass, caster, mHitRadius, mHitRange))
             {
                 //create an icecrystal
-                ParalysisBehaviour pb = PoolRegistry.GetInstance(gameObject, p.transform.position, caster.transform.rotation, 4, 4).GetComponent<ParalysisBehaviour>();
-                pb.mAffectedPlayerObject = p.gameObject;
-                pb.gameObject.SetActive(true);
-                pb.mTimeCount = 0;
-                pb.ActivateOnDeactivation.SetActive(true);
+                ParalysisBehaviour pb = PoolRegistry.GetInstance(gameObject, p.transform.position, caster.transform.rotation, 4, 4) .GetComponent<ParalysisBehaviour>();
+                pb.gameObject.layer = LayerMask.NameToLayer("IgnorePlayer");
+                pb.Init(p.gameObject);
                 NetworkServer.Spawn(pb.gameObject);
                 //apply damage just so the system registeres it as an affect
                 p.healthScript.TakeDamage(0, GetType());
 
-                pb.healthscript.OnDamageTaken += damage =>
-                {
-                    if (!pb.healthscript.IsAlive())
-                    {
-                        pb.RpcDisappear();
-                    }
-                };
-
                 return;
             }
         }
+
+        // no player was hit - mayby geometry?
+        {
+            RaycastHit hit;
+            caster.SetColliderIgnoreRaycast(true);
+            bool hitSomething = Physics.Raycast(new Ray(caster.GetCameraPosition(), caster.GetCameraLookDirection()), out hit);
+            caster.SetColliderIgnoreRaycast(false);
+            if (hitSomething)
+            {
+                //whatever it is its not a player - get its normal and create an iceCrystal with the hit points normal as rotation
+                ParalysisBehaviour pb = PoolRegistry.GetInstance(gameObject, hit.point, Quaternion.LookRotation(Vector3.forward, hit.normal), 4, 4).GetComponent<ParalysisBehaviour>();
+                pb.gameObject.layer = LayerMask.NameToLayer("Default");
+                pb.Init(null);
+                NetworkServer.Spawn(pb.gameObject);
+            }
+        }
     }
+
+    private void Init(GameObject affectedPlayer)
+    {
+        gameObject.SetActive(true);
+        mAffectedPlayerObject = affectedPlayer;
+        mTimeCount = 0;
+        ActivateOnDeactivation.SetActive(true);
+        healthscript.OnDamageTaken += damage =>
+        {
+            if (!healthscript.IsAlive())
+            {
+                RpcDisappear();
+            }
+        };
+    }
+
 
     public void OnEnable()
     {
@@ -67,7 +89,7 @@ public class ParalysisBehaviour : A_EffectBehaviour
     public void Update()
     {
         mTimeCount += Time.deltaTime;
-        if (mFollowTarget && (mTimeCount >= mLifetime-0.5f))
+        if (mFollowTarget && (mTimeCount >= mLifetime-1.5f))
         {
             mFollowTarget = false;
         }else if (mTimeCount >= mLifetime)
@@ -91,26 +113,35 @@ public class ParalysisBehaviour : A_EffectBehaviour
     public override void OnStartClient()
     {
         //slow down the affected Player
-        mAffectedPlayer = mAffectedPlayerObject.GetComponent<PlayerScript>();
-        //mAffectedPlayer.StartCoroutine(AffectPlayer());
-        ApplyMaliciousEffect();
+        if (mAffectedPlayerObject)
+        {
+            mAffectedPlayer = mAffectedPlayerObject.GetComponent<PlayerScript>();
+            //mAffectedPlayer.StartCoroutine(AffectPlayer());
+            ApplyMaliciousEffect();
+        }
     }
 
     private void ApplyMaliciousEffect()
     {
-        //clear movement input with player
-        mAffectedPlayer.movement.ClearMovementInput();
-        mAffectedPlayer.movement.SetMovementAllowed(false);
-        //slow down/stop the affected player
-        //mAffectedPlayer.movement.speed = mAffectedPlayer.movement.originalSpeed*mSlowFactor;
-        mAffectedPlayer.inputStateSystem.SetState(InputStateSystem.InputStateID.Paralyzed);
+        if (mAffectedPlayer)
+        {
+            //clear movement input with player
+            mAffectedPlayer.movement.ClearMovementInput();
+            mAffectedPlayer.movement.SetMovementAllowed(false);
+            //slow down/stop the affected player
+            //mAffectedPlayer.movement.speed = mAffectedPlayer.movement.originalSpeed*mSlowFactor;
+            mAffectedPlayer.inputStateSystem.SetState(InputStateSystem.InputStateID.Paralyzed);
+        }
     }
 
     private void RestoreNormalState()
     {
-        //revert back to normal status
-        mAffectedPlayer.movement.SetMovementAllowed(true);
-        mAffectedPlayer.inputStateSystem.SetState(InputStateSystem.InputStateID.Normal);
+        if (mAffectedPlayer)
+        {
+            //revert back to normal status
+            mAffectedPlayer.movement.SetMovementAllowed(true);
+            mAffectedPlayer.inputStateSystem.SetState(InputStateSystem.InputStateID.Normal);
+        }
     }
 
     //implements the handshake between server and client - bcs we MUST guarantee, that normal state is restored before unspawning!!

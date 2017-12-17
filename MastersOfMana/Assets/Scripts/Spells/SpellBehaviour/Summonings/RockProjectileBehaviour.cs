@@ -105,7 +105,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
             y = Random.Range(0.0f, 0.5f) * (Random.value > 0.5f ? -1 : 1),
             z = Random.Range(0.0f, 1.0f) * (Random.value > 0.5f ? -1 : 1)
         }.normalized;
-        r.y += 0.3f;
+        r.y += 0.45f;
         Vector2 xz = r.xz().normalized*0.8f;
         r.x = xz.x;
         r.z = xz.y;

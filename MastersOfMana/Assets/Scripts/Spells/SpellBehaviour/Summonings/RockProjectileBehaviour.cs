@@ -14,6 +14,14 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
     [SerializeField] private float mPushForce;
     [SerializeField] private float mShootingReach;
     [SerializeField] private Vector3[] mRandomOffsets;
+    [SerializeField] private Mesh[] mRandomRockMeshes;
+
+    //for realizing a shooting order
+    private RockProjectileBehaviour successor, previous;
+    private bool token;
+    public float shootFreqencyInSeconds;
+    private float mShootCount;
+
     private float mTimeCount = 0;
     private List<PlayerScript> enemys;
 
@@ -21,6 +29,17 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
     private bool mRotateAroundCaster = true;
     [SyncVar]
     private Vector3 mOffset;
+
+    //nice visuals
+    private Vector3 mRotationAxis;
+    [SerializeField]
+    private float mRotationSpeed;
+
+    private static int mOffsetCount = 0;
+    private static int mMeshCount = 0;
+
+    //to be able to remember which stone was casted y which player
+    private static Dictionary<PlayerScript, RockProjectileBehaviour> mShootingOrder = new Dictionary<PlayerScript, RockProjectileBehaviour>();
 
     public override void Execute(PlayerScript caster)
     {
@@ -34,8 +53,27 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         rp.casterObject = caster.gameObject;
         rp.caster = caster;
 
-        rp.mOffset = GetRandomOffset();
+        rp.mOffset = mRandomOffsets[mOffsetCount++];
+        if (mOffsetCount >= mRandomOffsets.Length)
+        {
+            mOffsetCount = 0;
+        }
         rp.RepositionRock();
+
+        //if that caster casted his/her first rockprojectile create a new list to remember his projectiles
+        if (mShootingOrder.ContainsKey(caster))
+        {
+            mShootingOrder[caster].successor = rp;
+            rp.previous = mShootingOrder[caster];
+            mShootingOrder[caster] = rp;
+            rp.mShootCount = 0;
+        }
+        else
+        {
+            rp.mShootCount = shootFreqencyInSeconds;
+            mShootingOrder.Add(caster, rp);
+            rp.previous = null;
+        }
 
         //spawn it
         rp.gameObject.SetActive(true);
@@ -67,12 +105,14 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
 
     private void RepositionRock()
     {
-        if (caster == null)
+
+        if (caster != null)
         {
-            
+            transform.SetPositionAndRotation(caster.movement.mRigidbody.worldCenterOfMass,
+                Quaternion.AngleAxis(mTimeCount * mRotationSpeed, mRotationAxis) *
+                Quaternion.AngleAxis(mTimeCount * mRotationVelocity, Vector3.up));
+            transform.Translate(mOffset);
         }
-        transform.SetPositionAndRotation(caster.movement.mRigidbody.worldCenterOfMass, Quaternion.AngleAxis(mTimeCount * mRotationVelocity, Vector3.up));
-        transform.Translate(mOffset);
     }
 
     public void Start()
@@ -96,6 +136,16 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
                 enemys.Add(p);
             }
         }
+
+        //assign one of the rock meshes
+        GetComponent<MeshFilter>().mesh = mRandomRockMeshes[mMeshCount++];
+        if (mMeshCount >= mRandomRockMeshes.Length)
+        {
+            mMeshCount = 0;
+        }
+
+        //for the visuals
+        mRotationAxis = mOffset.normalized;
     }
 
 
@@ -117,6 +167,16 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         }
 
         if (!mRotateAroundCaster) return;
+
+        //if it is this instances' turn to shot towards enemies
+        if (previous != null)
+        {
+            return; //this means an instance should be thrown before this instance
+        }
+        if((mShootCount+=Time.deltaTime) < shootFreqencyInSeconds)
+        {
+            return; //this rock instance should not yet be fired
+        }
 
         //check for each enemy, wheather or not we should shoot towards them
         //get nearest enemy
@@ -152,6 +212,18 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
                         mHitCollider.enabled = true;
                         //set velocity to shoot towards enemy
                         Vector3 projectileVelocity = Vector3.Normalize(nearest.movement.mRigidbody.worldCenterOfMass - transform.position)*mRockVelocity;
+
+                        //shoot the rock! -> make sure the shoting order stays legit
+                        if (successor)
+                        {
+                            //if there is another instance after this one, inform it, that it is next
+                            successor.previous = null;
+                        }
+                        else
+                        {
+                            //there is no successor -> make sure the next cast will be handled correctly
+                            mShootingOrder.Remove(caster);
+                        }
 
                         RpcShoot(transform.position, projectileVelocity);
                     }

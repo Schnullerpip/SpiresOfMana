@@ -52,6 +52,8 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         rp.mRotateAroundCaster = true;
         rp.casterObject = caster.gameObject;
         rp.caster = caster;
+        rp.previous = null;
+        rp.successor = null;
 
         rp.mOffset = mRandomOffsets[mOffsetCount++];
         if (mOffsetCount >= mRandomOffsets.Length)

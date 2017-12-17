@@ -19,6 +19,8 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
     [SerializeField] private float mShootingReach;
     [SerializeField] private Vector3[] mRandomOffsets;
     [SerializeField] private Mesh[] mRandomRockMeshes;
+    [SerializeField] private TrailRenderer trail;
+    [SerializeField] private ParticleSystem mRockDustParticles;
 
     //for realizing a shooting order
     private RockProjectileBehaviour successor, previous;
@@ -135,6 +137,10 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
     {
         base.OnStartClient();
 
+        trail.enabled = false;
+
+        mRockDustParticles.Play();
+
         //gather all the enemies
         enemys = new List<PlayerScript>();
         foreach (var p in GameManager.instance.players)
@@ -216,6 +222,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
                     PlayerScript enemy = rigid.GetComponentInParent<PlayerScript>();
                     if (enemy && enemy == nearest)
                     {
+                        mRockDustParticles.Stop();
                         mRotateAroundCaster = false;
                         mHitCollider.enabled = true;
                         //set velocity to shoot towards enemy
@@ -261,6 +268,8 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         ServerMoveable sm = collider.GetComponentInParent<ServerMoveable>();
         if (sm )
         {
+            trail.enabled = false;
+
             if (sm != caster.movement)
             {
                 Vector3 direction = sm.mRigidbody.worldCenterOfMass - transform.position;
@@ -289,6 +298,8 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
 
         mRigid.position = position;
         mRigid.velocity = velocity;
+
+        trail.enabled = true;
     }
 
     public void OnValidate()

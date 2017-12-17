@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4310153151749894}
   - component: {fileID: 33296900775860132}
-  - component: {fileID: 65555454562840364}
+  - component: {fileID: 135519342530548852}
   - component: {fileID: 114170302213897632}
   - component: {fileID: 23296771707370450}
   - component: {fileID: 54221785969162818}
@@ -40,7 +40,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1553457549544014}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -101,18 +101,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &65555454562840364
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1553457549544014}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 0.5, y: 0.5, z: 0.5}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &114035313697023828
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -146,7 +134,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serverMoveable: {fileID: 114238628051958222}
-  mHitCollider: {fileID: 65555454562840364}
+  mHitCollider: {fileID: 135519342530548852}
   mRockVelocity: 30
   mDamageAmount: 4
   mRotationVelocity: 170
@@ -169,7 +157,7 @@ MonoBehaviour:
   - {fileID: 4300054, guid: 1eeea274fd7287d4f83fb8181f278cee, type: 3}
   - {fileID: 4300062, guid: 1eeea274fd7287d4f83fb8181f278cee, type: 3}
   - {fileID: 4300064, guid: 1eeea274fd7287d4f83fb8181f278cee, type: 3}
-  shootFreqencyInSeconds: 1
+  shootFreqencyInSeconds: 3
   mRotationSpeed: 55
 --- !u!114 &114238628051958222
 MonoBehaviour:
@@ -215,3 +203,15 @@ MonoBehaviour:
     i15: 4
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
+--- !u!135 &135519342530548852
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1553457549544014}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Center: {x: 0, y: 0, z: 0}

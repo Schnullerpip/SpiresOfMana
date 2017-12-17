@@ -7,10 +7,14 @@ using Random = UnityEngine.Random;
 
 public class RockProjectileBehaviour : A_ServerMoveableSummoning
 {
-    [SerializeField] private BoxCollider mHitCollider;
+    [SerializeField] private SphereCollider mHitCollider;
     [SerializeField] private float mRockVelocity;
     [SerializeField] private int mDamageAmount;
-    [SerializeField] private float mRotationVelocity;
+
+    [SerializeField] private float mRotationVelocity;//initial value
+    [SyncVar]
+    private float mIndividualRotationVelocity;//will diverge a little to give the rocks an individual touch
+
     [SerializeField] private float mPushForce;
     [SerializeField] private float mShootingReach;
     [SerializeField] private Vector3[] mRandomOffsets;
@@ -54,6 +58,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         rp.caster = caster;
         rp.previous = null;
         rp.successor = null;
+        rp.mIndividualRotationVelocity = mRotationVelocity + Random.Range(-2, 5);
 
         rp.mOffset = mRandomOffsets[mOffsetCount++];
         if (mOffsetCount >= mRandomOffsets.Length)
@@ -111,8 +116,9 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         if (caster != null)
         {
             transform.SetPositionAndRotation(caster.movement.mRigidbody.worldCenterOfMass,
-                Quaternion.AngleAxis(mTimeCount * mRotationSpeed, mRotationAxis) *
-                Quaternion.AngleAxis(mTimeCount * mRotationVelocity, Vector3.up));
+                Quaternion.AngleAxis(mTimeCount *mRotationSpeed, mRotationAxis) * 
+                Quaternion.AngleAxis(mTimeCount * mIndividualRotationVelocity, Vector3.up));
+
             transform.Translate(mOffset);
         }
     }
@@ -188,7 +194,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         {
             if (enemys[i] != null)
             {
-                float dist = Vector3.Distance(transform.position, enemys[i].movement.mRigidbody.worldCenterOfMass);
+                float dist = Vector3.Distance(caster.transform.position, enemys[i].movement.mRigidbody.worldCenterOfMass);
                 if (dist < distance)
                 {
                     nearest = enemys[i];
@@ -202,7 +208,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
             //now if the stones direct path to the enemy is free, shoot it
             RaycastHit hit;
             Vector3 direction = Vector3.Normalize(nearest.transform.position - transform.position);
-            if (Physics.Raycast(new Ray(transform.position + direction*1.5f, direction), out hit))
+            if (Physics.Raycast(new Ray(transform.position, direction), out hit))
             {
                 Rigidbody rigid = hit.rigidbody;
                 if (rigid)

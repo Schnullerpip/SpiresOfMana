@@ -20,7 +20,11 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
     [SerializeField] private Vector3[] mRandomOffsets;
     [SerializeField] private Mesh[] mRandomRockMeshes;
     [SerializeField] private TrailRenderer trail;
+    [SerializeField] private TrailRenderer spawnTrail;
     [SerializeField] private ParticleSystem mRockDustParticles;
+    [SerializeField] private GameObject mCollisioinEffect;
+
+    public AudioSource whooshSource;
 
     //for realizing a shooting order
     private RockProjectileBehaviour successor, previous;
@@ -50,7 +54,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
     public override void Execute(PlayerScript caster)
     {
         //get a rock instance
-        RockProjectileBehaviour rp = PoolRegistry.GetInstance(this.gameObject, 4, 4).GetComponent<RockProjectileBehaviour>();
+        RockProjectileBehaviour rp = PoolRegistry.GetInstance(gameObject, 1, 1).GetComponent<RockProjectileBehaviour>();
 
         //initialize it
         //rp.caster = caster;
@@ -68,6 +72,10 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
             mOffsetCount = 0;
         }
         rp.RepositionRock();
+
+        //spawn an explosion to make an entrance!
+        GameObject spawnExplosion = PoolRegistry.GetInstance(mCollisioinEffect, rp.transform.position, rp.transform.rotation, 2, 4, Pool.PoolingStrategy.OnMissSubjoinElements, Pool.Activation.ReturnActivated);
+        NetworkServer.Spawn(spawnExplosion);
 
         //if that caster casted his/her first rockprojectile create a new list to remember his projectiles
         if (mShootingOrder.ContainsKey(caster))
@@ -88,6 +96,14 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         rp.gameObject.SetActive(true);
         NetworkServer.Spawn(rp.gameObject);
     }
+
+    void Awake()
+    {
+        base.Awake();
+        whooshSource = GetComponent<AudioSource>();
+    }
+
+
     [ContextMenu("InitializeRandomOffsets")]
     public void InitializeRandomOffsets()
     {
@@ -114,7 +130,6 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
 
     private void RepositionRock()
     {
-
         if (caster != null)
         {
             transform.SetPositionAndRotation(caster.movement.mRigidbody.worldCenterOfMass,
@@ -137,9 +152,6 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
     {
         base.OnStartClient();
 
-        trail.enabled = false;
-
-        mRockDustParticles.Play();
 
         //gather all the enemies
         enemys = new List<PlayerScript>();
@@ -158,8 +170,15 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
             mMeshCount = 0;
         }
 
+    }
+
+    public void OnEnable()
+    {
         //for the visuals
         mRotationAxis = mOffset.normalized;
+        spawnTrail.enabled = true;
+        trail.enabled = false;
+        mRockDustParticles.Play();
     }
 
 
@@ -174,6 +193,12 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         }
 
         mTimeCount += Time.deltaTime;
+
+        //after three seconds get rid of the spawn trail
+        if (spawnTrail.enabled && mTimeCount >= 3.0f)
+        {
+            spawnTrail.enabled = false;
+        }
 
         if (!isServer)
         {
@@ -282,11 +307,21 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
                 return;
             }
         }
-
-		gameObject.SetActive(false);
-        caster = null;
-		NetworkServer.UnSpawn(gameObject);
+        Explode();
     }
+
+    private void Explode()
+    {
+        spawnTrail.enabled = false;
+
+        GameObject collisionExplosion = PoolRegistry.GetInstance(mCollisioinEffect, transform.position,
+            transform.rotation, 1, 1, Pool.PoolingStrategy.OnMissSubjoinElements, Pool.Activation.ReturnActivated);
+        NetworkServer.Spawn(collisionExplosion);
+
+        gameObject.SetActive(false);
+        NetworkServer.UnSpawn(gameObject);
+    }
+
 
     [ClientRpc]
     private void RpcShoot(Vector3 position, Vector3 velocity)
@@ -299,7 +334,11 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         mRigid.position = position;
         mRigid.velocity = velocity;
 
+        //activate the trail
+        trail.enabled = false;
         trail.enabled = true;
+
+        whooshSource.Play();
     }
 
     public void OnValidate()

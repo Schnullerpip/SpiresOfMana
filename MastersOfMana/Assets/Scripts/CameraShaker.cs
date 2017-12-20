@@ -44,7 +44,10 @@ public class CameraShaker : MonoBehaviour
 	public void Shake(float amount, float duration)
 	{
 		StopAllCoroutines();
-		StartCoroutine(C_Shake(amount, duration));
+        if(isActiveAndEnabled)
+        {
+            StartCoroutine(C_Shake(amount, duration));
+        }
 	}
 
 	IEnumerator C_Shake (float amount, float duration) {
@@ -76,4 +79,9 @@ public class CameraShaker : MonoBehaviour
 		myCamera.localPosition = Vector3.zero;
 		myCamera.localRotation = Quaternion.identity;
 	}
+
+    public void OnDisable()
+    {
+        StopAllCoroutines();
+    }
 }

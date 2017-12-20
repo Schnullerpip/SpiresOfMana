@@ -6,35 +6,31 @@ using UnityEngine.Networking;
 public class HealPack : NetworkBehaviour
 {
 
-    public int healAmount = 15;
-    public int healPerTick = 1;
+    //public int healAmount = 15;
+    public int healPerTick = 2;
     public float tickDuration = 0.5f;
-    public System.Action<Transform> healSpawnCallback;
+    //public System.Action<Transform> healSpawnCallback;
     public ParticleSystem particles;
-    public AnimationCurve alphaValue;
-    public MeshRenderer healPackRenderer;
-	public Transform spawnPosition;
-    private Material material;
-    private int mInitialheal;
+    //public AnimationCurve alphaValue;
+    //public MeshRenderer healPackRenderer;
+	//public Transform spawnPosition;
+    //private Material material;
+    //private int mInitialheal;
 
     private Dictionary<NetworkInstanceId, Coroutine> mInstanceCoroutineDictionary = new Dictionary<NetworkInstanceId, Coroutine>();
 
     public void OnEnable()
     {
-        material = healPackRenderer.material;
-        mInitialheal = healAmount;
-		GameManager.OnRoundEnded += RoundEnded;
-        updateAlpha();
+        if (!isServer)
+        {
+            return;
+        }
+        GameManager.OnRoundEnded += RoundEnded;
     }
-
-	public void OnDisable()
-	{
-		GameManager.OnRoundEnded -= RoundEnded;
-	}
 
 	void RoundEnded()
 	{
-		deactivate();
+		OnDisable();
 	}
 
     public void OnTriggerEnter(Collider other)
@@ -52,10 +48,6 @@ public class HealPack : NetworkBehaviour
             {
                 //Remember which player this coroutine belongs to
                 mInstanceCoroutineDictionary.Add(playerHealth.netId, StartCoroutine(Heal(playerHealth)));
-                if (mInstanceCoroutineDictionary.Count == 1)
-                {
-                    startHealing();
-                }
             }
         }
     }
@@ -75,10 +67,6 @@ public class HealPack : NetworkBehaviour
             {
                 StopCoroutine(mInstanceCoroutineDictionary[playerHealth.netId]);
                 mInstanceCoroutineDictionary.Remove(playerHealth.netId);
-                if(mInstanceCoroutineDictionary.Count == 0)
-                {
-                    stopHealing();
-                }
             }
         }
     }
@@ -90,45 +78,18 @@ public class HealPack : NetworkBehaviour
             if (playerHealth.GetCurrentHealth() < playerHealth.GetMaxHealth())
             {
                 playerHealth.TakeHeal(healPerTick);
-                healAmount -= healPerTick;
-                updateAlpha();
-                //Check if the next heal would drain the healpack below 0
-                if (healAmount - healPerTick < 0)
-                {
-                    deactivate();
-                }
             }
             yield return new WaitForSeconds(tickDuration);
         }
     }
 
-    private void updateAlpha()
-    {
-        Color color = material.color;
-        color.a = alphaValue.Evaluate((float)healAmount / (float)mInitialheal);
-        material.color = color;
-    }
-
-    private void startHealing()
-    {
-        particles.Play();
-    }
-
-    private void stopHealing()
-    {
-        particles.Stop();
-    }
-
-    private void deactivate()
+    private void OnDisable()
     {
 		if (!isServer) 
 		{
 			return;
 		}
         StopAllCoroutines();
-		healSpawnCallback(spawnPosition);
-        gameObject.SetActive(false);
-        NetworkServer.UnSpawn(gameObject);
-        Destroy(gameObject);
+		GameManager.OnRoundEnded -= RoundEnded;
     }
 }

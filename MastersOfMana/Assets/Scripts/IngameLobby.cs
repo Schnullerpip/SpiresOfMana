@@ -11,8 +11,6 @@ public class IngameLobby : MonoBehaviour {
     void OnEnable()
     {
         GameManager.OnRoundStarted += RoundStarted;
-        GameManager.instance.numOfActiveMenus++;
-        GameManager.instance.OnApplicationFocus(true);
         spellselectionPanel.SetActive(true);
         lobby.gameObject.SetActive(false);
     }
@@ -24,6 +22,7 @@ public class IngameLobby : MonoBehaviour {
 
     public void SpellselectionFinished()
     {
+		spellselectionPanel.GetComponent<SpellSelectionPanel> ().OnReady ();
         spellselectionPanel.SetActive(false);
         lobby.gameObject.SetActive(true);
         GameManager.instance.localPlayer.playerLobby.CmdSetReady(true);
@@ -31,8 +30,6 @@ public class IngameLobby : MonoBehaviour {
 
     public void OnDisable()
     {
-        GameManager.instance.numOfActiveMenus--;
-        GameManager.instance.OnApplicationFocus(true);
         GameManager.OnRoundStarted -= RoundStarted;
     }
 }

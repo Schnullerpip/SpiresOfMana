@@ -20,7 +20,7 @@ public class PostGameMenu : MonoBehaviour
 
     public void OnEnable()
     {
-        if(GameManager.instance.winnerID == GameManager.instance.localPlayer.netId.Value)
+        if (GameManager.instance.winnerID == GameManager.instance.localPlayer.netId.Value)
         {
             text.text = "You won!!!";
         }
@@ -28,14 +28,6 @@ public class PostGameMenu : MonoBehaviour
         {
             text.text = "You Lost!";
         }
-        GameManager.instance.numOfActiveMenus++;
-        GameManager.instance.OnApplicationFocus(true);
         resumeButton.OnSelect(null);
-    }
-
-    public void OnDisable()
-    {
-        GameManager.instance.OnApplicationFocus(true);
-        GameManager.instance.numOfActiveMenus--;
     }
 }

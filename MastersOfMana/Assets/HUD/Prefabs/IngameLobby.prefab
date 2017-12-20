@@ -262,6 +262,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224978037685892448}
   - component: {fileID: 114580694439907500}
+  - component: {fileID: 114521024989356688}
   m_Layer: 5
   m_Name: IngameLobby
   m_TagString: Untagged
@@ -864,6 +865,18 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114521024989356688
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1606577188416232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bd5e59ecf1d16a48b619949670e9dc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  firstSelected: {fileID: 0}
 --- !u!114 &114580694439907500
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1196,7 +1209,6 @@ MonoBehaviour:
   spellList: {fileID: 224608668048781652}
   spellButtonPrefab: {fileID: 114853011476891102, guid: 12a9468030c24a44aaa0bd8372722c7d,
     type: 2}
-  player: {fileID: 0}
   showUltimates: 0
 --- !u!114 &114984788419657078
 MonoBehaviour:

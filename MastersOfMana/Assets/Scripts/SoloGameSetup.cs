@@ -37,9 +37,6 @@ public class SoloGameSetup : MonoBehaviour {
         NetworkManagerObject.transform.SetParent(this.transform);
         NetworkManagerObject.AddComponent<NetManager>();
 
-        Instantiate(ingameMenu);
-        //Instantiate(hurtIndicator);
-
 		StartCoroutine(PullingGameStart());
     }
 
@@ -58,7 +55,8 @@ public class SoloGameSetup : MonoBehaviour {
     public void Init()
     {
         bool spellMissing = false;
-        foreach(PlayerSpells.SpellSlot slot in GameManager.instance.localPlayer.GetPlayerSpells().spellslot)
+        Instantiate(ingameMenu);
+        foreach (PlayerSpells.SpellSlot slot in GameManager.instance.localPlayer.GetPlayerSpells().spellslot)
         {
             if(!slot.spell)
             {

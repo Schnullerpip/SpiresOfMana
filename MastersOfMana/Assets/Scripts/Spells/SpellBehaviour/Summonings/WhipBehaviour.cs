@@ -123,8 +123,6 @@ public class WhipBehaviour : A_SummoningBehaviour
             Vector3 aimDirection = Vector3.Normalize(whipBehaviour.linePoint1 - caster.transform.position);
             Vector3 forceVector = aimDirection * pullForce + Vector3.up * UpForce;
             caster.movement.RpcAddForce(forceVector, ForceMode.VelocityChange);
-
-            Debug.DrawRay(caster.movement.mRigidbody.worldCenterOfMass, forceVector, Color.red, 10);
         }
         //case 3: hit nothing
         else 

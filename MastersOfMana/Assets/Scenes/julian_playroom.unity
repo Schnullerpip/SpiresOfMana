@@ -150,6 +150,48 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4d2525e233b3f43c3b12876af4c38ff5, type: 2}
   m_IsPrefabParent: 0
+--- !u!1001 &480269993
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4870367893217202, guid: 9ed67b18f32bff948b23a43e2d59fc81, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4870367893217202, guid: 9ed67b18f32bff948b23a43e2d59fc81, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4870367893217202, guid: 9ed67b18f32bff948b23a43e2d59fc81, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4870367893217202, guid: 9ed67b18f32bff948b23a43e2d59fc81, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4870367893217202, guid: 9ed67b18f32bff948b23a43e2d59fc81, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071066
+      objectReference: {fileID: 0}
+    - target: {fileID: 4870367893217202, guid: 9ed67b18f32bff948b23a43e2d59fc81, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4870367893217202, guid: 9ed67b18f32bff948b23a43e2d59fc81, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: -0.70710695
+      objectReference: {fileID: 0}
+    - target: {fileID: 4870367893217202, guid: 9ed67b18f32bff948b23a43e2d59fc81, type: 2}
+      propertyPath: m_RootOrder
+      value: 9
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 9ed67b18f32bff948b23a43e2d59fc81, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &546840569
 GameObject:
   m_ObjectHideFlags: 0
@@ -264,6 +306,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mMaxHealth: 50
   mCurrentHealth: 50
+  damageSFXs: []
+  deathSFX: {fileID: 0}
+  SFXaudioSource: {fileID: 0}
 --- !u!114 &546840576
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -487,6 +532,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mMaxHealth: 50
   mCurrentHealth: 50
+  damageSFXs: []
+  deathSFX: {fileID: 0}
+  SFXaudioSource: {fileID: 0}
 --- !u!114 &690860916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -645,6 +693,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mMaxHealth: 50
   mCurrentHealth: 50
+  damageSFXs: []
+  deathSFX: {fileID: 0}
+  SFXaudioSource: {fileID: 0}
 --- !u!114 &699470541
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -916,6 +967,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mMaxHealth: 50
   mCurrentHealth: 50
+  damageSFXs: []
+  deathSFX: {fileID: 0}
+  SFXaudioSource: {fileID: 0}
 --- !u!114 &2064135516
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -47,7 +47,7 @@ public class ParalysisBehaviour : A_EffectBehaviour
             }
         }
 
-        // no player was hit - mayby geometry?
+        // no player was hit - maybe geometry?
         {
             RaycastHit hit;
             caster.SetColliderIgnoreRaycast(true);
@@ -110,7 +110,10 @@ public class ParalysisBehaviour : A_EffectBehaviour
             {
                 transform.position = mAffectedPlayer.transform.position;
             }
-            mAffectedPlayer.movement.mRigidbody.velocity = Vector3.zero;
+            if (mAffectedPlayer.movement.feet.IsGrounded())
+            {
+                mAffectedPlayer.movement.mRigidbody.velocity = Vector3.zero;
+            }
         }
     }
 

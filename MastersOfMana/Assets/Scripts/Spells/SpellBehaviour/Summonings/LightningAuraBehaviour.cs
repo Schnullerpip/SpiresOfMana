@@ -18,7 +18,7 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
     //the list that captures which players are shot
     private List<PlayerScript> mAlreadyCaught;
 
-    void Start()
+    void OnEnable()
     {
         mAlreadyCaught = new List<PlayerScript>();
         mEnergyLevel = mDuration;

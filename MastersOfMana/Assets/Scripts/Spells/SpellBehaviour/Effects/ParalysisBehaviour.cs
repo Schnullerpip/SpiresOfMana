@@ -104,9 +104,13 @@ public class ParalysisBehaviour : A_EffectBehaviour
 
     public void FixedUpdate()
     {
-        if (mAffectedPlayer && mFollowTarget)
+        if (mAffectedPlayer)
         {
-            transform.position = mAffectedPlayer.transform.position;
+            if (mFollowTarget)
+            {
+                transform.position = mAffectedPlayer.transform.position;
+            }
+            mAffectedPlayer.movement.mRigidbody.velocity = Vector3.zero;
         }
     }
 

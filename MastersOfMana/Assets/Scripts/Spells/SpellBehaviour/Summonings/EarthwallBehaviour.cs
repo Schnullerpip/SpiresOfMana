@@ -27,7 +27,7 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
 
     public override void Execute(PlayerScript caster)
     {
-        GameObject wall = PoolRegistry.Instantiate(gameObject, caster.movement.mRigidbody.worldCenterOfMass + GetAim(caster) * initialDistanceToCaster, Quaternion.LookRotation(GetAimLocal(caster)));
+        GameObject wall = PoolRegistry.Instantiate(gameObject, caster.movement.mRigidbody.worldCenterOfMass + GetAim(caster) * initialDistanceToCaster, Quaternion.LookRotation(GetAim(caster)));
         wall.SetActive(true);
         NetworkServer.Spawn(wall);
     }

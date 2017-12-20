@@ -97,7 +97,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         NetworkServer.Spawn(rp.gameObject);
     }
 
-    void Awake()
+    public override void Awake()
     {
         base.Awake();
         whooshSource = GetComponent<AudioSource>();

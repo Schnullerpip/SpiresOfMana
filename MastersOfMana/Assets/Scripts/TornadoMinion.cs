@@ -40,7 +40,7 @@ public class TornadoMinion : NetworkBehaviour {
 	}
 
 	[ClientRpc]
-	void RpcDisappear()
+	public void RpcDisappear()
 	{
 		//the action that is invoked at the end of the disappear animation
 		System.Action doneAction = null;

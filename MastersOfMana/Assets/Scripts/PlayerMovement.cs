@@ -229,7 +229,12 @@ public class PlayerMovement : ServerMoveable
     public Vector3 GetAnticipationPosition(float seconds)
     {
         Vector3 prediction = mRigidbody.position;
-        prediction += GetDeltaMovement() / Time.fixedDeltaTime * seconds;
+        prediction += GetCurrentMovementVector() * seconds;
         return prediction;
+    }
+
+    public Vector3 GetCurrentMovementVector()
+    {
+        return GetDeltaMovement() / Time.fixedDeltaTime;
     }
 }

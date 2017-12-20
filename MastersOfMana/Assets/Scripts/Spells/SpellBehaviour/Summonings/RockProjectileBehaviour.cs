@@ -44,6 +44,8 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
     private Vector3 mRotationAxis;
     [SerializeField]
     private float mRotationSpeed;
+    //will cache the spawnTrails Time property to be able to fade it out over time instead of just making it disappear
+    public float spawnTrailTime;
 
     private static int mOffsetCount = 0;
     private static int mMeshCount = 0;
@@ -164,7 +166,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         }
 
         //assign one of the rock meshes
-        GetComponent<MeshFilter>().mesh = mRandomRockMeshes[mMeshCount++];
+        GetComponentInChildren<MeshFilter>().mesh = mRandomRockMeshes[mMeshCount++];
         if (mMeshCount >= mRandomRockMeshes.Length)
         {
             mMeshCount = 0;
@@ -179,6 +181,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         spawnTrail.enabled = true;
         trail.enabled = false;
         mRockDustParticles.Play();
+        spawnTrail.time = spawnTrailTime;//reset the spawnTrail.time to its initial value
     }
 
 
@@ -195,9 +198,13 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         mTimeCount += Time.deltaTime;
 
         //after three seconds get rid of the spawn trail
-        if (spawnTrail.enabled && mTimeCount >= 3.0f)
+        if (spawnTrail.enabled)
         {
-            spawnTrail.enabled = false;
+            spawnTrail.time -= Time.deltaTime;
+            if (mTimeCount >= spawnTrailTime)
+            {
+                spawnTrail.enabled = false;
+            }
         }
 
         if (!isServer)
@@ -265,6 +272,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
                             mShootingOrder.Remove(caster);
                         }
 
+                        trail.enabled = true;
                         RpcShoot(transform.position, projectileVelocity);
                     }
                 }
@@ -291,13 +299,15 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         }
 
         ServerMoveable sm = collider.GetComponentInParent<ServerMoveable>();
-        if (sm )
+        if (sm)
         {
-            trail.enabled = false;
-
             if (sm != caster.movement)
             {
+                //we hit something, so disable the trail, that lines out our trajectorie
+                trail.enabled = false;
+
                 Vector3 direction = sm.mRigidbody.worldCenterOfMass - transform.position;
+
                 //push the hit object 
                 sm.RpcAddForce(direction.normalized*mPushForce, ForceMode.VelocityChange);
             }
@@ -307,6 +317,8 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
                 return;
             }
         }
+
+        //in any case we hit something (except for our caster) so we need to go away and make 'boom'!
         Explode();
     }
 
@@ -335,7 +347,6 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         mRigid.velocity = velocity;
 
         //activate the trail
-        trail.enabled = false;
         trail.enabled = true;
 
         whooshSource.Play();

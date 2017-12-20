@@ -207,10 +207,12 @@ public class SpellSelectionPanel : MonoBehaviour {
         sourceButton.navigation = navigation;
     }
 
-    //public void Cancel()
-    //{
-    //    LobbyManager.s_Singleton.Cancel();
-    //}
+    public void RandomizeSpells()
+    {
+        mPlayerSpellList = spellregistry.generateRandomSpells();
+        SetPlayerSpells(mPlayerSpellList);
+        mHUD.GetSpellHUD().UpdateSpellIcons();
+    }
 
     public void OnReady()
     {

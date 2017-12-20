@@ -61,7 +61,13 @@ public class IngameMenu : MonoBehaviour {
 
     public void GoToMainMenu()
     {
-        lobbyManager.GoBackButton();
-        Resume();
+        if(NetManager.instance.amIServer())
+        {
+            lobbyManager.StopHostClbk();
+        }
+        else
+        {
+            lobbyManager.StopClientClbk();
+        }
     }
 }

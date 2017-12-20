@@ -46,6 +46,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            mRewiredPlayer = ReInput.players.GetPlayer(0);
             instance = this;
             eventSystem.SetActive(true);
             DontDestroyOnLoad(this);
@@ -54,7 +55,6 @@ public class GameManager : MonoBehaviour
 
     public void Start()
     {
-        mRewiredPlayer = ReInput.players.GetPlayer(0);
         players = new List<PlayerScript>();
     }
 
@@ -94,8 +94,6 @@ public class GameManager : MonoBehaviour
             foreach (var p in players)
             {
                 p.RpcSetInputState(InputStateSystem.InputStateID.Normal);
-                PlayerSpells playerSpells = p.GetPlayerSpells();
-                playerSpells.RpcUpdateSpells(playerSpells.spellslot[0].spell.spellID, playerSpells.spellslot[1].spell.spellID, playerSpells.spellslot[2].spell.spellID, playerSpells.spellslot[3].spell.spellID);
             }
 
             NetManager.instance.RpcTriggerGameStarted();
@@ -153,6 +151,19 @@ public class GameManager : MonoBehaviour
             OnLocalPlayerDead();
         }
     }
+
+    public void SetMenuActive(bool active)
+    {
+        if(active)
+        {
+            numOfActiveMenus++;
+        }
+        else
+        {
+            numOfActiveMenus--;
+        }
+        OnApplicationFocus(true);
+    }
 		
     public void OnApplicationFocus(bool focus)
     {
@@ -177,6 +188,7 @@ public class GameManager : MonoBehaviour
 		
     void ResetGame()
     {
+        localPlayer.enabled = true;
 		if (!(NetManager.instance.amIServer())) 
 		{
 			return;

@@ -54,6 +54,11 @@ public class OpponentHUD : MonoBehaviour {
             transform.LookAt(mCamera.transform.position - v);
             transform.Rotate(0, 180, 0);
         }
+        else
+        {
+            mCamera = Camera.main;
+        }
+
     }
 
     private void localPlayerDead()

@@ -30,18 +30,21 @@ public class CamSlider : MonoBehaviour {
 
 	void LateUpdate()
 	{
-		mPlayer.SetColliderIgnoreRaycast(true);
+        if (mPlayer)
+        {
+            mPlayer.SetColliderIgnoreRaycast(true);
 
-		if(Physics.SphereCast(transform.position, wallDistance, transform.TransformPoint(mLocalEndPosition) - transform.position, out mHit	, mMaxDistance))
-		{
-			cam.position = Vector3.MoveTowards(cam.position,mHit.point + mHit.normal * wallDistance, inSpeed * Time.deltaTime);
-		}
-		else
-		{
-			cam.localPosition = Vector3.MoveTowards(cam.localPosition, mLocalEndPosition, outSpeed * Time.deltaTime);
-		}
+            if (Physics.SphereCast(transform.position, wallDistance, transform.TransformPoint(mLocalEndPosition) - transform.position, out mHit, mMaxDistance))
+            {
+                cam.position = Vector3.MoveTowards(cam.position, mHit.point + mHit.normal * wallDistance, inSpeed * Time.deltaTime);
+            }
+            else
+            {
+                cam.localPosition = Vector3.MoveTowards(cam.localPosition, mLocalEndPosition, outSpeed * Time.deltaTime);
+            }
 
-		mPlayer.SetColliderIgnoreRaycast(false);
+            mPlayer.SetColliderIgnoreRaycast(false);
+        }
 	}
 
 	void OnValidate()

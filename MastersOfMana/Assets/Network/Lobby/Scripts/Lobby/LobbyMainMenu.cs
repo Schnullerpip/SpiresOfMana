@@ -34,9 +34,6 @@ namespace Prototype.NetworkLobby
 
         public void OnEnable()
         {
-			GameManager.instance.numOfActiveMenus++;
-			GameManager.instance.OnApplicationFocus (true);
-
             matchNameInput.onEndEdit.RemoveAllListeners();
             matchNameInput.onEndEdit.AddListener(onEndEditGameName);
 

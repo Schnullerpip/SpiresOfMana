@@ -107,9 +107,11 @@ namespace Prototype.NetworkLobby
             else
             {
                 ChangeTo(null);
-
                 Destroy(GameObject.Find("MainMenuUI(Clone)"));
-				GameManager.instance.numOfActiveMenus--;
+                oldCancelDelegates.Clear();
+                backDelegate = null;
+                cancelDelegate = null;
+
                 //backDelegate = StopGameClbk;
                 isInGame = true;
             }
@@ -204,6 +206,8 @@ namespace Prototype.NetworkLobby
             oldCancelDelegates.Add(dele);
             cancelDelegate = dele;
         }
+
+        
 
         public void RemoveLastCancelDelegate()
         {

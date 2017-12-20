@@ -293,9 +293,6 @@ namespace Prototype.NetworkLobby
         {
             LobbyManager.s_Singleton.mainMenu.countdownPanel.UIText.text = "Match Starting in " + countdown;
             LobbyManager.s_Singleton.mainMenu.countdownPanel.gameObject.SetActive(countdown != 0);
-
-			LobbyManager.s_Singleton.mainMenu.GetRewiredPlayer().controllers.maps.SetMapsEnabled(false,"UI");
-			LobbyManager.s_Singleton.mainMenu.GetRewiredPlayer().controllers.maps.SetMapsEnabled(true,"Default");
         }
 
         [ClientRpc]

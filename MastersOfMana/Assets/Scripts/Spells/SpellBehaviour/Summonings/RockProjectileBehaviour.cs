@@ -44,6 +44,8 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
     private Vector3 mRotationAxis;
     [SerializeField]
     private float mRotationSpeed;
+    //will cache the spawnTrails Time property to be able to fade it out over time instead of just making it disappear
+    public float spawnTrailTime;
 
     private static int mOffsetCount = 0;
     private static int mMeshCount = 0;
@@ -164,7 +166,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         }
 
         //assign one of the rock meshes
-        GetComponent<MeshFilter>().mesh = mRandomRockMeshes[mMeshCount++];
+        GetComponentInChildren<MeshFilter>().mesh = mRandomRockMeshes[mMeshCount++];
         if (mMeshCount >= mRandomRockMeshes.Length)
         {
             mMeshCount = 0;
@@ -179,6 +181,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         spawnTrail.enabled = true;
         trail.enabled = false;
         mRockDustParticles.Play();
+        spawnTrail.time = spawnTrailTime;//reset the spawnTrail.time to its initial value
     }
 
 
@@ -195,9 +198,13 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         mTimeCount += Time.deltaTime;
 
         //after three seconds get rid of the spawn trail
-        if (spawnTrail.enabled && mTimeCount >= 3.0f)
+        if (spawnTrail.enabled)
         {
-            spawnTrail.enabled = false;
+            spawnTrail.time -= Time.deltaTime;
+            if (mTimeCount >= spawnTrailTime)
+            {
+                spawnTrail.enabled = false;
+            }
         }
 
         if (!isServer)

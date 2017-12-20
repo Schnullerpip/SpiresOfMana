@@ -45,7 +45,7 @@ public class A_State
     /// the state may decide or have an effect on how much damage is dealt in this situation,
     /// but it may never actually touch the health field. This is the responsibility of the PlayerHealthScript
     /// </returns>
-    public virtual int CalculateDamage(int amount)
+    public virtual int CalculateDamage(int amount, System.Type dealerType)
     {
         return amount;
     }

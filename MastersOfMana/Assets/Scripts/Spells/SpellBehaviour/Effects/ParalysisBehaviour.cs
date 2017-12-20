@@ -12,6 +12,8 @@ public class ParalysisBehaviour : A_EffectBehaviour
     [SerializeField] private CapsuleCollider iceCollider;
     [SerializeField] private HealthScript healthscript;
 
+    public float DamageRemitFactor = 1.0f;
+
     //just a part of the effect that needs to be reset manually or it wont work with pooling
     [SerializeField] private GameObject ActivateOnDeactivation;
 
@@ -42,6 +44,9 @@ public class ParalysisBehaviour : A_EffectBehaviour
                 NetworkServer.Spawn(pb.gameObject);
                 //apply damage just so the system registeres it as an affect
                 p.healthScript.TakeDamage(0, GetType());
+                p.SetEffectState(EffectStateSystem.EffectStateID.Frozen); //from now on only the ice crystal can damage the player
+
+                pb.healthscript.OnDamageTaken += pb.RemitDamage; //redirect the icecrystals damage to the player
 
                 return;
             }
@@ -103,6 +108,10 @@ public class ParalysisBehaviour : A_EffectBehaviour
         }
     }
 
+    private void RemitDamage(int amount) {
+        mAffectedPlayer.healthScript.TakeDamage((int)(amount * DamageRemitFactor), GetType());
+    }
+
     public void FixedUpdate()
     {
         if (mAffectedPlayer)
@@ -147,6 +156,7 @@ public class ParalysisBehaviour : A_EffectBehaviour
         if (mAffectedPlayer)
         {
             //revert back to normal status
+            mAffectedPlayer.SetEffectState(EffectStateSystem.EffectStateID.Normal);
             mAffectedPlayer.movement.SetMovementAllowed(true);
             mAffectedPlayer.inputStateSystem.SetState(InputStateSystem.InputStateID.Normal);
         }
@@ -167,6 +177,7 @@ public class ParalysisBehaviour : A_EffectBehaviour
     [Command]
     private void CmdUnspawnObject()
     {
+        healthscript.OnDamageTaken -= RemitDamage;
         NetworkServer.UnSpawn(gameObject);
     }
 }

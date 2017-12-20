@@ -47,11 +47,14 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
                     new Ray(caster.movement.mRigidbody.worldCenterOfMass,
                         (ps.movement.mRigidbody.worldCenterOfMass - caster.movement.mRigidbody.worldCenterOfMass)
                             .normalized),
-                    out hit) && hit.collider == other)
+                    out hit))
             {
-                if (!mAlreadyCaught.Contains(ps))
+                if (hit.collider == other)
                 {
-                    mAlreadyCaught.Add(ps);
+                    if (!mAlreadyCaught.Contains(ps))
+                    {
+                        mAlreadyCaught.Add(ps);
+                    }
                 }
             }
             else

@@ -158,7 +158,10 @@ public class ParalysisBehaviour : A_EffectBehaviour
     {
         RestoreNormalState();
         gameObject.SetActive(false);
-        CmdUnspawnObject();
+        if (!isServer)
+        {
+            CmdUnspawnObject();
+        }
     }
 
     [Command]

@@ -47,20 +47,20 @@ public class ParalysisBehaviour : A_EffectBehaviour
             }
         }
 
-        // no player was hit - mayby geometry?
+        // no player was hit - maybe geometry?
         {
-            RaycastHit hit;
-            caster.SetColliderIgnoreRaycast(true);
-            bool hitSomething = Physics.Raycast(new Ray(caster.GetCameraPosition(), caster.GetCameraLookDirection()), out hit);
-            caster.SetColliderIgnoreRaycast(false);
-            if (hitSomething)
-            {
-                //whatever it is its not a player - get its normal and create an iceCrystal with the hit points normal as rotation
-                ParalysisBehaviour pb = PoolRegistry.GetInstance(gameObject, hit.point, Quaternion.LookRotation(Vector3.forward, hit.normal), 4, 4).GetComponent<ParalysisBehaviour>();
-                pb.gameObject.layer = LayerMask.NameToLayer("Default");
-                pb.Init(null);
-                NetworkServer.Spawn(pb.gameObject);
-            }
+            //RaycastHit hit;
+            //caster.SetColliderIgnoreRaycast(true);
+            //bool hitSomething = Physics.Raycast(new Ray(caster.GetCameraPosition(), caster.GetCameraLookDirection()), out hit);
+            //caster.SetColliderIgnoreRaycast(false);
+            //if (hitSomething)
+            //{
+            //    //whatever it is its not a player - get its normal and create an iceCrystal with the hit points normal as rotation
+            //    ParalysisBehaviour pb = PoolRegistry.GetInstance(gameObject, hit.point, Quaternion.LookRotation(Vector3.forward, hit.normal), 4, 4).GetComponent<ParalysisBehaviour>();
+            //    pb.gameObject.layer = LayerMask.NameToLayer("Default");
+            //    pb.Init(null);
+            //    NetworkServer.Spawn(pb.gameObject);
+            //}
         }
     }
 
@@ -110,7 +110,10 @@ public class ParalysisBehaviour : A_EffectBehaviour
             {
                 transform.position = mAffectedPlayer.transform.position;
             }
-            mAffectedPlayer.movement.mRigidbody.velocity = Vector3.zero;
+            if (mAffectedPlayer.movement.feet.IsGrounded())
+            {
+                mAffectedPlayer.movement.mRigidbody.velocity = Vector3.zero;
+            }
         }
     }
 

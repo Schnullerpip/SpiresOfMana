@@ -265,6 +265,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
                             mShootingOrder.Remove(caster);
                         }
 
+                        trail.enabled = true;
                         RpcShoot(transform.position, projectileVelocity);
                     }
                 }
@@ -291,13 +292,15 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         }
 
         ServerMoveable sm = collider.GetComponentInParent<ServerMoveable>();
-        if (sm )
+        if (sm)
         {
-            trail.enabled = false;
-
             if (sm != caster.movement)
             {
+                //we hit something, so disable the trail, that lines out our trajectorie
+                trail.enabled = false;
+
                 Vector3 direction = sm.mRigidbody.worldCenterOfMass - transform.position;
+
                 //push the hit object 
                 sm.RpcAddForce(direction.normalized*mPushForce, ForceMode.VelocityChange);
             }
@@ -307,6 +310,8 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
                 return;
             }
         }
+
+        //in any case we hit something (except for our caster) so we need to go away and make 'boom'!
         Explode();
     }
 
@@ -335,7 +340,6 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         mRigid.velocity = velocity;
 
         //activate the trail
-        trail.enabled = false;
         trail.enabled = true;
 
         whooshSource.Play();

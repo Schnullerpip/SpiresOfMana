@@ -17,6 +17,11 @@ public class HurtIndicator : MonoBehaviour {
     private float mPlayerMaxHealth;
     private bool mIsInitialized = false;
 
+    public void Awake()
+    {
+        GameManager.OnRoundStarted += RoundStarted;
+    }
+
     //// Use this for initialization
     void OnEnable()
     {
@@ -27,7 +32,6 @@ public class HurtIndicator : MonoBehaviour {
         localPlayerHealthScript.OnHealthChanged += HealthChanged;
         localPlayerHealthScript.OnDamageTaken += DamageTaken;
         GameManager.OnLocalPlayerDead += localPlayerDead;
-        GameManager.OnRoundStarted += RoundStarted;
     }
 
     public void RoundStarted()
@@ -55,6 +59,11 @@ public class HurtIndicator : MonoBehaviour {
             localPlayerHealthScript.OnDamageTaken -= DamageTaken;
         }
 		GameManager.OnLocalPlayerDead -= localPlayerDead;
+    }
+
+    public void OnDestroy()
+    {
+        GameManager.OnRoundStarted -= RoundStarted;
     }
 
     private void Update()

@@ -123,7 +123,7 @@ public class LightningStrike : NetworkBehaviour
                                      Vector3.SmoothDamp(transform.position, targetPos, ref vel, smoothTime, mSpeed);
                                      //targetPos;
 
-                        Debug.DrawLine(transform.position,targetPos,Color.green);
+                        //Debug.DrawLine(transform.position,targetPos,Color.green);
                     }
                     else
                     {

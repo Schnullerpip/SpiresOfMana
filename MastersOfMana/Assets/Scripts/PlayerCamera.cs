@@ -52,6 +52,11 @@ public class PlayerCamera : MonoBehaviour {
         GameManager.OnRoundStarted -= RoundStarted;
     }
 
+    public void OnDestroy()
+    {
+        GameManager.OnRoundStarted -= RoundStarted;
+    }
+
     private void RoundEnded()
     {
         gameObject.SetActive(false);

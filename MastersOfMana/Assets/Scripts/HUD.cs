@@ -17,8 +17,8 @@ public class HUD : MonoBehaviour {
         GameManager.OnRoundStarted += RoundStarted;
     }
 
-	// Use this for initialization
-	void Init()
+    // Use this for initialization
+    void Init()
     {
         foreach(GameObject obj in HudPrefabs)
         {
@@ -46,6 +46,7 @@ public class HUD : MonoBehaviour {
     void OnDisable()
     {
         GameManager.OnGameStarted -= Init;
+        GameManager.OnRoundStarted -= RoundStarted;
     }
 
    public void ShowPostGameScreen(bool show)

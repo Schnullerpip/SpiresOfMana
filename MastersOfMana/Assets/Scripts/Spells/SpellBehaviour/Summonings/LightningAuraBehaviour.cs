@@ -37,15 +37,26 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
         NetworkServer.Spawn(la.gameObject);
     }
 
-    public new void OnTriggerEnter(Collider other)
+    public void OnTriggerStay(Collider other)
     {
         PlayerScript ps = other.GetComponentInParent<PlayerScript>();
-        if (ps && ps != caster && !mAlreadyCaught.Contains(ps))
+        if (ps && ps != caster)
         {
-            mAlreadyCaught.Add(ps);
-           if (!mStaticPotential.isPlaying)
+            RaycastHit hit;
+            if (Physics.Raycast(
+                    new Ray(caster.movement.mRigidbody.worldCenterOfMass,
+                        (ps.movement.mRigidbody.worldCenterOfMass - caster.movement.mRigidbody.worldCenterOfMass)
+                            .normalized),
+                    out hit) && hit.collider == other)
             {
-                ActivateLightningProjectile();
+                if (!mAlreadyCaught.Contains(ps))
+                {
+                    mAlreadyCaught.Add(ps);
+                }
+            }
+            else
+            {
+                mAlreadyCaught.Remove(ps);
             }
         }
     }

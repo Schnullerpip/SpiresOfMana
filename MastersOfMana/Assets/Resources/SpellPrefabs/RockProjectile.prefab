@@ -21,7 +21,6 @@ GameObject:
   - component: {fileID: 4228223356025862}
   - component: {fileID: 198813951793673506}
   - component: {fileID: 199809885456881236}
-  - component: {fileID: 96208253745375578}
   m_Layer: 0
   m_Name: RockDustParticles
   m_TagString: Untagged
@@ -37,10 +36,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4310153151749894}
-  - component: {fileID: 33296900775860132}
   - component: {fileID: 135519342530548852}
   - component: {fileID: 114170302213897632}
-  - component: {fileID: 23296771707370450}
   - component: {fileID: 54221785969162818}
   - component: {fileID: 114438001905655322}
   - component: {fileID: 114035313697023828}
@@ -49,6 +46,24 @@ GameObject:
   - component: {fileID: 82722937265953982}
   m_Layer: 0
   m_Name: RockProjectile
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1978076510885550
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4587720116558602}
+  - component: {fileID: 33824986256335162}
+  - component: {fileID: 23099229577711150}
+  - component: {fileID: 96758126637695114}
+  m_Layer: 0
+  m_Name: mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -78,15 +93,29 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4228223356025862}
+  - {fileID: 4587720116558602}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!23 &23296771707370450
+--- !u!4 &4587720116558602
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1978076510885550}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.57, y: 0.57, z: 0.57}
+  m_Children: []
+  m_Father: {fileID: 4310153151749894}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &23099229577711150
 MeshRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1553457549544014}
+  m_GameObject: {fileID: 1978076510885550}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -113,12 +142,12 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!33 &33296900775860132
+--- !u!33 &33824986256335162
 MeshFilter:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1553457549544014}
+  m_GameObject: {fileID: 1978076510885550}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!54 &54221785969162818
 Rigidbody:
@@ -215,13 +244,13 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
---- !u!96 &96208253745375578
+--- !u!96 &96758126637695114
 TrailRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1547148176064044}
+  m_GameObject: {fileID: 1978076510885550}
   m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -248,7 +277,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 1.94
+  m_Time: 2
   m_Parameters:
     serializedVersion: 2
     widthMultiplier: 1
@@ -257,15 +286,9 @@ TrailRenderer:
       m_Curve:
       - serializedVersion: 2
         time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-      - serializedVersion: 2
-        time: 0.62487423
-        value: 0.49263984
-        inSlope: -1.4096498
-        outSlope: -1.4096498
+        value: 0.3750019
+        inSlope: -0.8549709
+        outSlope: -0.8549709
         tangentMode: 0
       - serializedVersion: 2
         time: 1
@@ -355,9 +378,9 @@ TrailRenderer:
       m_Curve:
       - serializedVersion: 2
         time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
+        value: 0.39583397
+        inSlope: -0.48500302
+        outSlope: -0.48500302
         tangentMode: 0
       - serializedVersion: 2
         time: 1
@@ -461,13 +484,14 @@ MonoBehaviour:
   - {fileID: 4300062, guid: 1eeea274fd7287d4f83fb8181f278cee, type: 3}
   - {fileID: 4300064, guid: 1eeea274fd7287d4f83fb8181f278cee, type: 3}
   trail: {fileID: 96941244509779496}
-  spawnTrail: {fileID: 96208253745375578}
+  spawnTrail: {fileID: 96758126637695114}
   mRockDustParticles: {fileID: 198813951793673506}
   mCollisioinEffect: {fileID: 1019098708853560, guid: 9ed67b18f32bff948b23a43e2d59fc81,
     type: 2}
-  whooshSource: {fileID: 0}
+  whooshSource: {fileID: 82722937265953982}
   shootFreqencyInSeconds: 1
   mRotationSpeed: 55
+  spawnTrailTime: 3
 --- !u!114 &114238628051958222
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -583,7 +607,7 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 1660474953
+  randomSeed: 1530032498
   InitialModule:
     serializedVersion: 3
     enabled: 1

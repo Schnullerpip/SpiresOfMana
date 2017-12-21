@@ -184,13 +184,16 @@ public class DashBehaviour : A_EffectBehaviour
         NetworkServer.Spawn(pe.gameObject);
 
         //make the trail disappear after one second
-        caster.StartCoroutine(UnspawnTrail(ds));
+        caster.StartCoroutine(Unspawn(ds, pe));
     }
 
-    public IEnumerator UnspawnTrail(GameObject obj)
+    public IEnumerator Unspawn(GameObject trail, GameObject blastEffect)
     {
         yield return new WaitForSeconds(1);
-        obj.SetActive(false);
-        NetworkServer.UnSpawn(obj);
+        trail.SetActive(false);
+        blastEffect.SetActive(false);
+
+        NetworkServer.UnSpawn(trail);
+        NetworkServer.UnSpawn(blastEffect);
     }
 }

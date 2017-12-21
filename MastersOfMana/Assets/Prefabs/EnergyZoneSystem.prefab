@@ -19,8 +19,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4475230516373896}
-  - component: {fileID: 114009191780137236}
   - component: {fileID: 114874537687323934}
+  - component: {fileID: 114973350284306172}
   m_Layer: 0
   m_Name: EnergyZoneSystem
   m_TagString: Untagged
@@ -41,40 +41,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114009191780137236
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1819722768198950}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 180df4741ca65f445a5051f406887e4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  duration: 20
-  spawnTimes:
-  - 30
-  - 35
-  - 35
-  - 35
-  - 35
-  - 35
-  - 35
-  - 35
-  - 35
-  - 35
-  spawnObjects:
-  - {fileID: 1619450679201972, guid: acd46b4d248498f4faba4e8ff9c23a2a, type: 2}
-  - {fileID: 1825692200654376, guid: 92b047d11723872499076b2b2de29999, type: 2}
-  - {fileID: 1619450679201972, guid: acd46b4d248498f4faba4e8ff9c23a2a, type: 2}
-  - {fileID: 1825692200654376, guid: 92b047d11723872499076b2b2de29999, type: 2}
-  - {fileID: 1619450679201972, guid: acd46b4d248498f4faba4e8ff9c23a2a, type: 2}
-  - {fileID: 1825692200654376, guid: 92b047d11723872499076b2b2de29999, type: 2}
-  - {fileID: 1619450679201972, guid: acd46b4d248498f4faba4e8ff9c23a2a, type: 2}
-  - {fileID: 1825692200654376, guid: 92b047d11723872499076b2b2de29999, type: 2}
-  - {fileID: 1619450679201972, guid: acd46b4d248498f4faba4e8ff9c23a2a, type: 2}
-  - {fileID: 1825692200654376, guid: 92b047d11723872499076b2b2de29999, type: 2}
 --- !u!114 &114874537687323934
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -107,3 +73,47 @@ MonoBehaviour:
     i15: 253
   m_ServerOnly: 1
   m_LocalPlayerAuthority: 0
+--- !u!114 &114973350284306172
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1819722768198950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b3db52c1a45e94db36fbc20bd1d75e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 20
+  spawnZones:
+  - spawnDelay: 30
+    spanwObject: {fileID: 1619450679201972, guid: acd46b4d248498f4faba4e8ff9c23a2a,
+      type: 2}
+  - spawnDelay: 35
+    spanwObject: {fileID: 1825692200654376, guid: 92b047d11723872499076b2b2de29999,
+      type: 2}
+  - spawnDelay: 35
+    spanwObject: {fileID: 1619450679201972, guid: acd46b4d248498f4faba4e8ff9c23a2a,
+      type: 2}
+  - spawnDelay: 35
+    spanwObject: {fileID: 1825692200654376, guid: 92b047d11723872499076b2b2de29999,
+      type: 2}
+  - spawnDelay: 35
+    spanwObject: {fileID: 1619450679201972, guid: acd46b4d248498f4faba4e8ff9c23a2a,
+      type: 2}
+  - spawnDelay: 35
+    spanwObject: {fileID: 1825692200654376, guid: 92b047d11723872499076b2b2de29999,
+      type: 2}
+  - spawnDelay: 35
+    spanwObject: {fileID: 1619450679201972, guid: acd46b4d248498f4faba4e8ff9c23a2a,
+      type: 2}
+  - spawnDelay: 35
+    spanwObject: {fileID: 1825692200654376, guid: 92b047d11723872499076b2b2de29999,
+      type: 2}
+  - spawnDelay: 35
+    spanwObject: {fileID: 1619450679201972, guid: acd46b4d248498f4faba4e8ff9c23a2a,
+      type: 2}
+  - spawnDelay: 35
+    spanwObject: {fileID: 1825692200654376, guid: 92b047d11723872499076b2b2de29999,
+      type: 2}
+  EnergyZones: {fileID: 0}

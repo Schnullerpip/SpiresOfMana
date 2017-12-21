@@ -18,7 +18,13 @@ public class JumpBehaviour : A_EffectBehaviour
 	public override void Preview (PlayerScript caster)
 	{
 		base.Preview (caster);
-		previewPrefab.instance.Move(caster.transform.position + Vector3.up * 0.05f);
+
+        Vector3 vector = caster.movement.mRigidbody.velocity + caster.movement.GetCurrentMovementVector();
+
+        //TODO: this is a temporary fix!
+        vector.y = jumpForce - 1;
+
+        (previewPrefab.instance as PreviewSpellTrajectory).VisualizeTrajectory(caster.transform.position, vector, caster.movement.mRigidbody.mass);
 	}
 
 	public override void StopPreview (PlayerScript caster)

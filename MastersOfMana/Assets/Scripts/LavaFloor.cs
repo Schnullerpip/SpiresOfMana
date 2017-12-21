@@ -34,16 +34,14 @@ public class LavaFloor : NetworkBehaviour
         HealthScript health = other.GetComponentInParent<HealthScript>();
         if (health && !mInstanceCoroutineDictionary.ContainsKey(health))
         {
+            ServerMoveable sm = other.GetComponentInParent<ServerMoveable>();
+            if (sm) {
+                //shoot the moveable into the sky to make it jump mario-ayayayayay-style
+                sm.RpcSetVelocityY(10);
+            }
             //Remember which player this coroutine belongs to
-            mInstanceCoroutineDictionary.Add(health, StartCoroutine(DealDamage(health)));
+            mInstanceCoroutineDictionary.Add(health, StartCoroutine(DealDamage(health, sm)));
 
-        }
-
-        ServerMoveable sm = other.GetComponentInParent<ServerMoveable>();
-        if (sm)
-        {
-            //shoot the moveable into the sky to make it jump mario-ayayayayay-style
-            sm.RpcSetVelocityY(10);
         }
     }
 
@@ -76,12 +74,18 @@ public class LavaFloor : NetworkBehaviour
         }
     }
 
-    public IEnumerator DealDamage(HealthScript health)
+    public IEnumerator DealDamage(HealthScript health, ServerMoveable sm = null)
     {
         while (enabled)
         {
             health.TakeDamage(damagePerSecond, this.GetType());
             yield return new WaitForSeconds(1f);
+
+            if (sm)
+            {
+                //shoot the moveable into the sky to make it jump mario-ayayayayay-style
+                sm.RpcSetVelocityY(10);
+            }
         }
     }
 

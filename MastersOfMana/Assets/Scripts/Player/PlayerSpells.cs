@@ -36,14 +36,24 @@ public class PlayerSpells : NetworkBehaviour {
 	public void OnEnable()
 	{
 		GameManager.OnRoundStarted += RoundStarted;
-	}
+        GameManager.OnRoundEnded += RoundEnded;
+    }
 
 	public void OnDisable()
 	{
 		GameManager.OnRoundStarted -= RoundStarted;
-	}
+        GameManager.OnRoundEnded += RoundEnded;
+    }
 
-	void RoundStarted()
+    public void RoundEnded()
+    {
+        foreach(SpellSlot slot in spellslot)
+        {
+            slot.cooldown = 0;
+        }
+    }
+
+    void RoundStarted()
 	{
 		ultimateEnergy = 0;
 	}

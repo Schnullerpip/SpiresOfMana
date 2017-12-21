@@ -26,7 +26,7 @@ public static class Extensions
     }
     #endregion
 
-	#region
+	#region Array
 	/// <summary>
 	/// Returns a random element of the array.
 	/// </summary>
@@ -44,6 +44,17 @@ public static class Extensions
 	{
 		return Random.Range(0,array.Length);
 	}
+
+    /// <summary>
+    /// Returns the last element of the array.
+    /// </summary>
+    /// <returns>The element.</returns>
+    /// <param name="array">Array.</param>
+    /// <typeparam name="T">The 1st type parameter.</typeparam>
+    public static T LastElement<T>(this T[] array)
+    {
+        return array[array.Length - 1];
+    }
 	#endregion
 
     #region Bounds

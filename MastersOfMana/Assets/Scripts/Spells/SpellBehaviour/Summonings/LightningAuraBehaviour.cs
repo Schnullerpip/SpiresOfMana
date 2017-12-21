@@ -5,13 +5,10 @@ using UnityEngine.Networking;
 
 public class LightningAuraBehaviour : A_SummoningBehaviour
 {
-    [SerializeField] private float mInitialEnergyLevel = 50;
+    [SerializeField] private float mDuration = 50;
     [SerializeField] private float mCountTillDamage = 1.0f;
     [SerializeField] private int mDamage = 1;
     private float mEnergyLevel;
-    [SerializeField] private float mEnergyDecreaseFactor = 0.1f;
-
-    [SerializeField] private A_Spell mMySpell;
 
     [SerializeField]
     private ParticleSystem mStaticPotential;
@@ -21,34 +18,48 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
     //the list that captures which players are shot
     private List<PlayerScript> mAlreadyCaught;
 
-    void Start()
+    void OnEnable()
     {
         mAlreadyCaught = new List<PlayerScript>();
-        mEnergyLevel = mInitialEnergyLevel;
+        mEnergyLevel = mDuration;
         mTimeCount = mCountTillDamage;
     }
 
     public override void Execute(PlayerScript caster)
     {
         LightningAuraBehaviour la = PoolRegistry.GetInstance(this.gameObject, 4, 4).GetComponent<LightningAuraBehaviour>();
-        la.transform.position = caster.movement.mRigidbody.worldCenterOfMass;
+        la.transform.position = caster.transform.position;
         la.gameObject.SetActive(true);
         la.transform.rotation = Quaternion.Euler(Vector3.zero);
         la.caster = caster;
         la.casterObject = caster.gameObject;
-        la.mEnergyLevel = mInitialEnergyLevel;//should work in Start also
+        la.mEnergyLevel = mDuration;//should work in Start also
         NetworkServer.Spawn(la.gameObject);
     }
 
-    public new void OnTriggerEnter(Collider other)
+    public void OnTriggerStay(Collider other)
     {
         PlayerScript ps = other.GetComponentInParent<PlayerScript>();
-        if (ps && ps != caster && !mAlreadyCaught.Contains(ps))
+        if (ps && ps != caster)
         {
-            mAlreadyCaught.Add(ps);
-           if (!mStaticPotential.isPlaying)
+            RaycastHit hit;
+            if (Physics.Raycast(
+                    new Ray(caster.movement.mRigidbody.worldCenterOfMass,
+                        (ps.movement.mRigidbody.worldCenterOfMass - caster.movement.mRigidbody.worldCenterOfMass)
+                            .normalized),
+                    out hit))
             {
-                ActivateLightningProjectile();
+                if (hit.collider == other)
+                {
+                    if (!mAlreadyCaught.Contains(ps))
+                    {
+                        mAlreadyCaught.Add(ps);
+                    }
+                }
+            }
+            else
+            {
+                mAlreadyCaught.Remove(ps);
             }
         }
     }
@@ -118,9 +129,9 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
             Vector3 lightningDirection =
                 Vector3.Normalize(nearest.movement.mRigidbody.worldCenterOfMass - transform.position);
             lightningDirection *= 30;
-            vel.x = lightningDirection.x;
-            vel.y = lightningDirection.y;
-            vel.z = lightningDirection.z;
+            //vel.x = lightningDirection.x;
+            //vel.y = lightningDirection.y;
+            mLightningProjectile.transform.LookAt(nearest.movement.mRigidbody.worldCenterOfMass);
 
             //apply damage to nearest opponent
             mTimeCount += Time.deltaTime;
@@ -137,8 +148,8 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
         //lose static energy
         if (isServer)
         {
-            mEnergyLevel -= mEnergyLevel*mEnergyDecreaseFactor * Time.deltaTime;
-            if (mEnergyLevel < 1.0f)
+            mEnergyLevel -= Time.deltaTime;
+            if (mEnergyLevel < 0.0f)
             {
                 Disappear();
             }

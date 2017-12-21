@@ -1,4 +1,3 @@
-﻿using System;
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
@@ -19,7 +18,6 @@ public class WhipBehaviour : A_SummoningBehaviour
 	public LineRenderer lineRenderer;
 
 	public PreviewSpell previewPrefab;
-	private static PreviewSpell sPreview; 
 
 	[SyncVar(hook = "SetLinePoint0")]
 	private Vector3 linePoint0;
@@ -50,32 +48,23 @@ public class WhipBehaviour : A_SummoningBehaviour
 	{
 		base.Preview (caster);
 
-		if(!sPreview)
-		{
-			sPreview = GameObject.Instantiate(previewPrefab) as PreviewSpell;
-			sPreview.Deactivate();
-		}
-
 		RaycastHit hit;
 		Ray ray = caster.aim.GetCameraRig().GetCenterRay();
 
 		if(RayCast(caster, ray, out hit))
 		{
-			sPreview.Move(hit.point); 
+			previewPrefab.instance.Move(hit.point); 
 		}
 		else
 		{
-			sPreview.Deactivate();
+            previewPrefab.instance.Deactivate();
 		}
 	}
 
 	public override void StopPreview (PlayerScript caster)
 	{
 		base.StopPreview (caster);
-		if(sPreview)
-		{
-			sPreview.Deactivate();
-		}
+        previewPrefab.instance.Deactivate();
 	}
 
     public override void Execute(PlayerScript caster)
@@ -117,8 +106,9 @@ public class WhipBehaviour : A_SummoningBehaviour
             }
         }
 
-
         RaycastHit hit;
+
+        //case 1: hit the player
         if (hitPlayer)
         {
             Vector3 aimDirection = Vector3.Normalize(whipBehaviour.linePoint1 - caster.handTransform.position);
@@ -126,32 +116,31 @@ public class WhipBehaviour : A_SummoningBehaviour
             hitPlayer.movement.RpcAddForce(force, ForceMode.VelocityChange);
             hitPlayer.healthScript.TakeDamage(0, GetType());
         }
+        //case 2: hit geometry
         else if (RayCast(caster, new Ray(caster.GetCameraPosition(), caster.GetCameraLookDirection()), out hit) && hit.distance <= maxDistance)
         {
             whipBehaviour.linePoint1 = hit.point;
-            Vector3 aimDirection = Vector3.Normalize(whipBehaviour.linePoint1 - caster.handTransform.position);
+            Vector3 aimDirection = Vector3.Normalize(whipBehaviour.linePoint1 - caster.transform.position);
             Vector3 forceVector = aimDirection * pullForce + Vector3.up * UpForce;
             caster.movement.RpcAddForce(forceVector, ForceMode.VelocityChange);
         }
-        else {
+        //case 3: hit nothing
+        else 
+        {
             whipBehaviour.linePoint1 = caster.handTransform.position + caster.GetCameraLookDirection() * maxDistance;
         }
 
         whipBehaviour.gameObject.SetActive(true);
 		NetworkServer.Spawn(whipBehaviour.gameObject, whipBehaviour.GetComponent<NetworkIdentity>().assetId);
 
-		whipBehaviour.StartCoroutine(whipBehaviour.Done());
+		whipBehaviour.StartCoroutine(whipBehaviour.DelayedUnspawn());
     }
 
-	public IEnumerator Done()
+    public IEnumerator DelayedUnspawn()
 	{
 		yield return new WaitForSeconds(disappearTimer);
 
 		gameObject.SetActive(false);
 		NetworkServer.UnSpawn(gameObject);
 	}
-
-    protected override void ExecuteCollision_Host(Collision collision) 
-	{
-    }
 }

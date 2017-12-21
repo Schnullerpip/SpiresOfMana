@@ -9,6 +9,7 @@ public class SpellSelectionPanel : MonoBehaviour {
     public SpellRegistry spellregistry;
     public RectTransform spellList;
     public Button spellButtonPrefab;
+    public SpellDescription spellDescription;
     private PlayerSpells mPlayerSpells;
     private List<A_Spell> mPlayerSpellList = new List<A_Spell>();
     private HUD mHUD;
@@ -87,7 +88,7 @@ public class SpellSelectionPanel : MonoBehaviour {
     private void OnClickSpellButton(A_Spell spell)
     {
         tradeSpells(spell);
-        //Cancel();
+        spellDescription.SetDescription(spell.spellDescription);
     }
 
     public void tradeSpells(A_Spell spell)

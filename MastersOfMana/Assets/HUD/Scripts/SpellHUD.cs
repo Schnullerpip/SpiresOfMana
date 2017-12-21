@@ -15,7 +15,7 @@ public class SpellHUD : MonoBehaviour
     private List<Image> spellIcons = new List<Image>();
     private List<Image> spellHighlights = new List<Image>();
     private List<Image> spellCooldowns = new List<Image>();
-    public Image targetCooldown;
+    public GameObject target;
 
     public delegate void CooldownFinished();
     public event CooldownFinished OnCooldownFinished;
@@ -25,9 +25,9 @@ public class SpellHUD : MonoBehaviour
     // Use this for initialization
     void OnEnable ()
     {
-        //GameManager.OnGameStarted += Init;
         GameManager.OnLocalPlayerDead += LocalPlayerDead;
-        //Init();
+        GameManager.OnRoundStarted += RoundStarted;
+        GameManager.OnRoundEnded += RoundEnded;
     }
 
     public void Start()
@@ -71,12 +71,6 @@ public class SpellHUD : MonoBehaviour
             {
                 OnCooldownFinished();
             }
-            //SpellSlots[0].GetChild(1).GetComponent<ParticleSystem>().Play(false);// Simulate(100.0f);
-        }
-        spellCooldowns[SpellSlotID].fillAmount = CooldownPercentage;
-        if(SpellSlotID == displayedCurrentSpell)
-        {
-            targetCooldown.fillAmount = 1-CooldownPercentage;
         }
     }
 
@@ -127,8 +121,19 @@ public class SpellHUD : MonoBehaviour
 
     void OnDisable()
     {
-        //GameManager.OnGameStarted -= Init;
         GameManager.OnLocalPlayerDead -= LocalPlayerDead;
+        GameManager.OnRoundStarted -= RoundStarted;
+        GameManager.OnRoundEnded -= RoundEnded;
+    }
+
+    private void RoundStarted()
+    {
+        target.SetActive(true);
+    }
+
+    private void RoundEnded()
+    {
+        target.SetActive(false);
     }
 
     private void LocalPlayerDead()

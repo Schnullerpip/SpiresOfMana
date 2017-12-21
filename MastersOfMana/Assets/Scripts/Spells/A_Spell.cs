@@ -14,6 +14,17 @@ public abstract class A_Spell : ScriptableObject
     public float castDurationInSeconds;
     public float resolveDurationInSeconds;
 
+    [System.Serializable]
+    public struct SpellDescription
+    {
+        public int damage;
+        public int force;
+        public int cooldown;
+        public string spellName;
+        public UnityEngine.Video.VideoClip video;
+    }
+    public SpellDescription spellDescription;
+
     [HideInInspector]
     public int spellID;
 

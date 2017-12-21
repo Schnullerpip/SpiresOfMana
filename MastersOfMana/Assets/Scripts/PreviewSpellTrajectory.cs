@@ -15,30 +15,57 @@ public class PreviewSpellTrajectory : PreviewSpell
 
     private void Awake()
     {
-        mPath = new Vector3[maxPointCount + 1];
+        mPath = new Vector3[maxPointCount];
+        line.positionCount = maxPointCount;
     }
 
+    /// <summary>
+    /// Visualizes the players trajectory. This takes into account the fact, that the player is pulled extra towards the ground on his way down.
+    /// </summary>
+    /// <param name="movement">Movement.</param>
+    /// <param name="velocity">Velocity.</param>
+    public void VisualizePlayerTrajectory(PlayerMovement movement, Vector3 velocity)
+    {
+        Rigidbody playerRigid = movement.mRigidbody;
+
+        int end = Trajectory.GetVerticesNonAlloc(mPath, playerRigid.position, ref velocity, maxPointCount, pathStepSize, playerRigid.mass,
+        () =>
+            {
+                if (velocity.y < 0)
+                {
+                    velocity += Physics.gravity * movement.additionalFallGravityMultiplier * Time.fixedDeltaTime;
+                }
+            }
+        );
+        
+        SetPath(end);
+    }
+
+    /// <summary>
+    /// Visualizes the trajectory.
+    /// </summary>
+    /// <param name="position">Position.</param>
+    /// <param name="velocity">Velocity.</param>
+    /// <param name="mass">Mass.</param>
     public void VisualizeTrajectory(Vector3 position, Vector3 velocity, float mass)
+    {
+        int end = Trajectory.GetVerticesNonAlloc(mPath, position, ref velocity, maxPointCount, pathStepSize, mass);
+
+        SetPath(end);
+    }
+
+	private void SetPath(int end)
 	{
-        Vector3[] ar = Trajectory.GetPoints(position, velocity, maxPointCount, pathStepSize, mass);
-
-        for (int i = 0; i < mPath.Length; i++)
-        {
-            if(i < ar.Length)
-            {
-                mPath[i] = ar[i];
-            }
-            else
-            {
-                mPath[i] = ar.LastElement();
-            }
-        }
-
-        mDesiredPos = ar.LastElement();
-
-		line.positionCount = maxPointCount;
+        //repeate the last element on the path
+        for (int i = end; i < mPath.Length; i++)
+		{
+			mPath[i] = mPath[end];
+		}
+		
+		mDesiredPos = mPath[end];
+		
         line.SetPositions(mPath);
-
+		
 		gameObject.SetActive(true);
 	}
 }

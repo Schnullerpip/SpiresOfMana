@@ -3603,7 +3603,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 356c681d295f65b4f8135af87966141d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mMaxHealth: 2
+  mMaxHealth: 50
   mCurrentHealth: 2
   damageSFXs: []
   deathSFX: {fileID: 0}
@@ -3624,6 +3624,7 @@ MonoBehaviour:
   mHitRange: 100
   iceCollider: {fileID: 136013939397025880}
   healthscript: {fileID: 114606265922729536}
+  DamageRemitFactor: 0.5
   ActivateOnDeactivation: {fileID: 1257795798645050}
 --- !u!114 &114710326431594060
 MonoBehaviour:

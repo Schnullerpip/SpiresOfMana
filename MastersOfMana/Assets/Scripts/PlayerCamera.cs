@@ -20,12 +20,17 @@ public class PlayerCamera : MonoBehaviour {
 	public float zoomedInFOV = 30;
 	public float zoomSpeed = 1;
 
+    [Header("Head Bobbing")]
+    public float bobbingSpeed;
+    public float bobbingAmount;
+
 	private float mStartFOV;
 	private int mCurrentShoulder = 1;
 	private Camera mCamera;
 	private Vector3 mMovementVelocity; 
 
 	private CamSlider mSlider;
+    private float mBobbingFactor;
 
 	public Camera GetCamera()
 	{
@@ -77,12 +82,16 @@ public class PlayerCamera : MonoBehaviour {
 		{
 			mSlider.SetPlayer(followTarget);
 			followTarget.healthScript.OnDamageTaken += GetComponentInChildren<CameraShaker>().ShakeByDamage;
+            followTarget.movement.onMovement += HeadBobbing;
 		}
 	}
 
 	void FixedUpdate()
 	{
 		Vector3 targetPosition = followTarget.transform.position;
+
+        //add a headbobbing effect
+        targetPosition.y += mBobbingFactor;
 
 		transform.position = Vector3.SmoothDamp(transform.position, targetPosition ,ref mMovementVelocity, movementDamping);
 	}
@@ -95,6 +104,19 @@ public class PlayerCamera : MonoBehaviour {
 
 		joint.rotation = targetRotation;
 	}
+
+    private void HeadBobbing(float movementSpeed, Vector2 direction, bool isGrounded)
+    {
+        if (isGrounded && movementSpeed > 0.01f)
+        {
+            float effect = movementSpeed / followTarget.movement.speed;
+            mBobbingFactor = Mathf.Sin(Time.time * bobbingSpeed) * bobbingAmount * effect;
+        }
+        else
+        {
+            mBobbingFactor = 0.0f;
+        }
+    }
 
 	/// <summary>
 	/// Shoots a ray from the center of the viewport.

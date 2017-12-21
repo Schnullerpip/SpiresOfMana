@@ -156,7 +156,8 @@ public class PlayerMovement : ServerMoveable
 
 		if(onMovement != null)
 		{
-			onMovement(newMovement.magnitude, localMovement.xz(), feet.IsGrounded());
+            float mag = newMovement.magnitude;
+            onMovement(mag, localMovement.xz(), feet.IsGrounded());
 		}
 
 		mIsFalling = mRigidbody.velocity.y <= -fallingDamageThreshold;

@@ -264,25 +264,25 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 		}
 	}
 
-    public virtual void Awake()
-    {
-        GameManager.OnRoundEnded += EndSpell;
-    }
+    //public virtual void Awake()
+    //{
+    //    GameManager.OnRoundEnded += EndSpell;
+    //}
 
-    public virtual void OnDestroy()
-    {
-        GameManager.OnRoundEnded -= EndSpell;
-    }
+    //public virtual void OnDestroy()
+    //{
+    //    GameManager.OnRoundEnded -= EndSpell;
+    //}
 
     /// <summary>
     /// Stop the spell execution and clean up any remaining spell parts
     /// </summary>
-    public virtual void EndSpell()
-    {
-        if (isServer)
-        {
-            NetworkServer.UnSpawn(this.gameObject);
-            this.gameObject.SetActive(false);
-        }
-    }
+    //public virtual void EndSpell()
+    //{
+    //    if (isServer)
+    //    {
+    //        NetworkServer.UnSpawn(this.gameObject);
+    //        this.gameObject.SetActive(false);
+    //    }
+    //}
 }

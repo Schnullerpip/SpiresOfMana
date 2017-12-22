@@ -135,17 +135,16 @@ public class TornadopocalypeBehaviour : A_SummoningBehaviour
 		this.gameObject.SetActive(false);
 	}
 
-    public override void EndSpell()
-    {
-        base.EndSpell();
-        if (isServer)
-        {
-            Debug.Log("ENdspell");
-            GameManager.instance.isUltimateActive = false;
-            for (int i = 0; i < numOfTornados; i++)
-            {
-                tornadoMinions[i].RpcDisappear();
-            }
-        }
-    }
+    //public override void EndSpell()
+    //{
+    //    base.EndSpell();
+    //    if (isServer)
+    //    {
+    //        GameManager.instance.isUltimateActive = false;
+    //        for (int i = 0; i < numOfTornados; i++)
+    //        {
+    //            tornadoMinions[i].RpcDisappear();
+    //        }
+    //    }
+    //}
 }

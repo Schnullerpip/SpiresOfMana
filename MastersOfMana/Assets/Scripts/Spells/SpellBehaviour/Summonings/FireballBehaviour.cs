@@ -45,10 +45,12 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 	{
 		base.Preview(caster);
 
+        bool spellReady = CurrentSpellReady(caster);
+
 		RaycastHit hit;
 		if(caster.HandTransformIsObscured(out hit))
 		{
-			preview.instance.MoveAndRotate(hit.point, caster.aim.currentLookRotation);
+            preview.instance.MoveAndRotate(hit.point, caster.aim.currentLookRotation, spellReady);
 			return;
 		}
 	
@@ -57,7 +59,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 		{
 			//this is only reset here, because the aimdirection will also set the ignore layer
 			caster.SetColliderIgnoreRaycast(false);
-			preview.instance.MoveAndRotate(caster.handTransform.position, caster.aim.currentLookRotation);
+            preview.instance.MoveAndRotate(caster.handTransform.position, caster.aim.currentLookRotation, spellReady);
 			return;
 		}
 
@@ -66,13 +68,13 @@ public class FireballBehaviour : A_ServerMoveableSummoning
         caster.SetColliderIgnoreRaycast(true);
 		if(Physics.SphereCast(caster.handTransform.position, ballRadius, aimDirection, out hit))
 		{
-			preview.instance.MoveAndRotate(hit.point + hit.normal * ballRadius, Quaternion.LookRotation(hit.normal));
+            preview.instance.MoveAndRotate(hit.point + hit.normal * ballRadius, Quaternion.LookRotation(hit.normal), spellReady);
 		}
 		else
 		{
             if(Physics.CheckSphere(caster.handTransform.position, ballRadius))
 			{
-				preview.instance.MoveAndRotate(caster.handTransform.position, caster.aim.currentLookRotation);
+                preview.instance.MoveAndRotate(caster.handTransform.position, caster.aim.currentLookRotation, spellReady);
 			}
 			else
 			{

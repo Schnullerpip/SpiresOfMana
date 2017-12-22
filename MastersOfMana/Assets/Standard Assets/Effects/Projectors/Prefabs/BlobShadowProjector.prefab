@@ -5,10 +5,10 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 400002}
-  - 119: {fileID: 11900000}
+  - component: {fileID: 400002}
+  - component: {fileID: 11900000}
   m_Layer: 0
   m_Name: BlobShadowProjector
   m_TagString: Untagged
@@ -25,12 +25,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
-  m_LocalRotation: {x: .75157696, y: 0, z: 0, w: .659645498}
-  m_LocalPosition: {x: 0, y: 1.87699997, z: 0}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 1.877, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1002 &400003
 EditorExtensionImpl:
   serializedVersion: 6
@@ -42,13 +43,13 @@ Projector:
   m_GameObject: {fileID: 100002}
   m_Enabled: 1
   serializedVersion: 2
-  m_NearClipPlane: .100000001
+  m_NearClipPlane: 0.1
   m_FarClipPlane: 50
   m_FieldOfView: 30
   m_AspectRatio: 1
   m_Orthographic: 0
   m_OrthographicSize: 2
-  m_Material: {fileID: 2100000, guid: e30ff3588e719f34bbf0c66f22d97487, type: 2}
+  m_Material: {fileID: 2100000, guid: fd4a7ae2c4d58453c8be4a52577768b4, type: 2}
   m_IgnoreLayers:
     serializedVersion: 2
     m_Bits: 0

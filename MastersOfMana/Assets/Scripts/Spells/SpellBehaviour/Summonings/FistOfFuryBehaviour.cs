@@ -24,7 +24,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
 
 		if(Physics.Raycast(caster.transform.position + Vector3.up * 0.2f, Vector3.down, out hit))
 		{
-            preview.instance.Move(hit.point);
+            preview.instance.Move(hit.point, CurrentSpellReady(caster));
 		}
 	}
 

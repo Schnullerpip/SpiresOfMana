@@ -111,7 +111,7 @@ public class DashBehaviour : A_EffectBehaviour
 
 		Vector3 newPosition = GetNewPosition(caster, direction, out hit);
 
-		preview.instance.MoveAndRotate(newPosition, caster.transform.rotation);
+        preview.instance.MoveAndRotate(newPosition, caster.transform.rotation, CurrentSpellReady(caster));
 	}
 
 	public override void StopPreview (PlayerScript caster)

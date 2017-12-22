@@ -10,9 +10,7 @@ using System.Collections.Generic;
 /// </summary>
 public abstract class A_SpellBehaviour : NetworkBehaviour
 {
-	public virtual void Awake()	{}
-
-	public abstract void Execute(PlayerScript caster);
+    public abstract void Execute(PlayerScript caster);
 
 	public virtual void Preview(PlayerScript caster) {}
 
@@ -265,4 +263,26 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 			cachedHealth[i].TakeDamage(Mathf.RoundToInt(explFalloff.EvaluateDamage(affectFactors[i]) * externalDamageFactor), GetType());
 		}
 	}
+
+    public virtual void Awake()
+    {
+        //GameManager.OnRoundEnded += EndSpell;
+    }
+
+    //public virtual void OnDestroy()
+    //{
+    //    GameManager.OnRoundEnded -= EndSpell;
+    //}
+
+    /// <summary>
+    /// Stop the spell execution and clean up any remaining spell parts
+    /// </summary>
+    //public virtual void EndSpell()
+    //{
+    //    if (isServer)
+    //    {
+    //        NetworkServer.UnSpawn(this.gameObject);
+    //        this.gameObject.SetActive(false);
+    //    }
+    //}
 }

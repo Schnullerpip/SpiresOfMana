@@ -18,10 +18,11 @@ public class TornadopocalypeBehaviour : A_SummoningBehaviour
 	private PlayerScript[] mOpponents;
 	private PlayerScript mCaster;
 
-	private TornadoMinion[] tornadoMinions;
+    private TornadoMinion[] tornadoMinions;
+    private int numOfTornados = 0;
 
-	#region implemented abstract members of A_SpellBehaviour
-	public override void Execute (PlayerScript caster)
+    #region implemented abstract members of A_SpellBehaviour
+    public override void Execute (PlayerScript caster)
 	{
 		GameManager.instance.isUltimateActive = true;
 
@@ -62,8 +63,11 @@ public class TornadopocalypeBehaviour : A_SummoningBehaviour
 
 	private void Init()
 	{
-		mOpponents = GetOpponents();
-//		mOpponents = GetAllPlayers();
+        //Calc the maximum number of tornados possible
+        numOfTornados = 0;
+        tornadoMinions = new TornadoMinion[Mathf.CeilToInt(duration * interval.min)];
+        mOpponents = GetOpponents();
+		mOpponents = GetAllPlayers();
 
 		for (int i = 0; i < mOpponents.Length; i++) 
 		{
@@ -114,8 +118,9 @@ public class TornadopocalypeBehaviour : A_SummoningBehaviour
 			{
 				tornado.gameObject.SetActive(false);
 			}
-
-			yield return new WaitForSeconds(interval.Random());
+            tornadoMinions[numOfTornados] = tornado;
+            numOfTornados++; //make sure we start filling the array at 0
+            yield return new WaitForSeconds(interval.Random());
 		}
 	}
 
@@ -129,4 +134,17 @@ public class TornadopocalypeBehaviour : A_SummoningBehaviour
 		NetworkServer.UnSpawn(this.gameObject);
 		this.gameObject.SetActive(false);
 	}
+
+    //public override void EndSpell()
+    //{
+    //    base.EndSpell();
+    //    if (isServer)
+    //    {
+    //        GameManager.instance.isUltimateActive = false;
+    //        for (int i = 0; i < numOfTornados; i++)
+    //        {
+    //            tornadoMinions[i].RpcDisappear();
+    //        }
+    //    }
+    //}
 }

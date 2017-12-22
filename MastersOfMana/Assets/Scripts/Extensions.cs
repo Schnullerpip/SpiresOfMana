@@ -26,34 +26,48 @@ public static class Extensions
     }
     #endregion
 
-	#region Array
+	#region IList
 	/// <summary>
-	/// Returns a random element of the array.
+    /// Returns a random element of the list.
 	/// </summary>
 	/// <returns>The element.</returns>
-	public static T RandomElement<T>(this T[] array)
+	public static T RandomElement<T>(this IList<T> list)
 	{
-		return array[array.RandomIndex()];
+        return list[list.RandomIndex()];
 	}
 
 	/// <summary>
-	/// Returns a random index of the array.
+    /// Returns a random index of the list.
 	/// </summary>
 	/// <returns>The index.</returns>
-	public static int RandomIndex<T>(this T[] array)
+    public static int RandomIndex<T>(this IList<T> list)
 	{
-		return Random.Range(0,array.Length);
+        return UnityEngine.Random.Range(0,list.Count);
 	}
 
     /// <summary>
-    /// Returns the last element of the array.
+    /// Returns the last element of the list.
     /// </summary>
     /// <returns>The element.</returns>
-    /// <param name="array">Array.</param>
+    /// <param name="list">List.</param>
     /// <typeparam name="T">The 1st type parameter.</typeparam>
-    public static T LastElement<T>(this T[] array)
+    public static T LastElement<T>(this IList<T> list)
     {
-        return array[array.Length - 1];
+        return list[list.Count - 1];
+    }
+
+    /// <summary>
+    /// Shuffles the element order of the specified list.
+    /// </summary>
+    public static void Shuffle<T>(this List<T> ts)
+    {
+        for (int i = 0; i < ts.Count - 1; ++i)
+        {
+            var r = UnityEngine.Random.Range(i, ts.Count);
+            var tmp = ts[i];
+            ts[i] = ts[r];
+            ts[r] = tmp;
+        }
     }
 	#endregion
 
@@ -61,9 +75,9 @@ public static class Extensions
     public static Vector3 RandomInside(this Bounds bounds)
     {
         Vector3 returnVec;
-        returnVec.x = Random.Range(bounds.min.x, bounds.max.x);
-        returnVec.y = Random.Range(bounds.min.y, bounds.max.y);
-        returnVec.z = Random.Range(bounds.min.z, bounds.max.z);
+        returnVec.x = UnityEngine.Random.Range(bounds.min.x, bounds.max.x);
+        returnVec.y = UnityEngine.Random.Range(bounds.min.y, bounds.max.y);
+        returnVec.z = UnityEngine.Random.Range(bounds.min.z, bounds.max.z);
         return returnVec;
     }
     #endregion
@@ -168,23 +182,5 @@ public static class Extensions
 	{
 		return SmoothDamp(current, target, ref currentDerivative, smoothTime, Time.deltaTime);
 	}
-    #endregion
-
-    #region List
-    /// <summary>
-    /// Shuffles the element order of the specified list.
-    /// </summary>
-    public static void Shuffle<T>(this List<T> ts)
-    {
-        var count = ts.Count;
-        var last = count - 1;
-        for (var i = 0; i < last; ++i)
-        {
-            var r = UnityEngine.Random.Range(i, count);
-            var tmp = ts[i];
-            ts[i] = ts[r];
-            ts[r] = tmp;
-        }
-    }
     #endregion
 }

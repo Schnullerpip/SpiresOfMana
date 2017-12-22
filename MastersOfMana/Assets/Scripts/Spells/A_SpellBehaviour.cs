@@ -264,10 +264,10 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 		}
 	}
 
-    //public virtual void Awake()
-    //{
-    //    GameManager.OnRoundEnded += EndSpell;
-    //}
+    public virtual void Awake()
+    {
+        //GameManager.OnRoundEnded += EndSpell;
+    }
 
     //public virtual void OnDestroy()
     //{

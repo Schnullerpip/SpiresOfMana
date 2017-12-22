@@ -69,6 +69,7 @@ public class SpellHUD : MonoBehaviour
                 OnCooldownFinished();
             }
         }
+        spellCooldowns[SpellSlotID].fillAmount = CooldownPercentage;
     }
 
     public void SetCurrentSpell(int currentSpell)

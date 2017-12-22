@@ -3,18 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class EnergyZoneSystem : NetworkBehaviour {
-
+public class EnergyZoneSystem : NetworkBehaviour 
+{
 	public float duration = 20;
 
 	[System.Serializable]
-	public struct spawnZone{
+	public struct spawnZone
+    {
 		public float spawnDelay;
 		public GameObject spanwObject;
 	}
 
 	public List<spawnZone> spawnZones;
 	public Transform EnergyZones;
+
+    public AudioSource audioSource;
+    public AudioClip appearanceSfx;
 
     private List<Transform> mHealSpawns = new List<Transform>();
     private int currentIndex = 0;
@@ -60,9 +64,13 @@ public class EnergyZoneSystem : NetworkBehaviour {
 			yield return new WaitForSeconds(spawnZones[currentIndex].spawnDelay);
 
             //Get a random spawn position
-			Transform healSpawnPosition = mHealSpawns[Mathf.FloorToInt(Random.Range(0, mHealSpawns.Count - 0.00001f))];
-			Vector3 position = healSpawnPosition.position;
-			Quaternion rotation = healSpawnPosition.rotation;
+            Transform healSpawnPosition = mHealSpawns.RandomElement();
+            Vector3 position = healSpawnPosition.position;
+
+            audioSource.transform.position = position;
+            audioSource.Play();
+
+            Quaternion rotation = healSpawnPosition.rotation;
             mHealSpawns.Remove(healSpawnPosition);
 			position.y += spawnZones[currentIndex].spanwObject.transform.localScale.y * 0.5f;
             //Instantiate and spawn

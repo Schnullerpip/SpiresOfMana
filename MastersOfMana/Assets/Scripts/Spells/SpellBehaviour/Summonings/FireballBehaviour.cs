@@ -28,8 +28,6 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 
     public GameObject[] DeactivatedObjectsOnCollision;
 
-	public PreviewSpell preview;
-
     public override void Awake()
     {
         base.Awake();

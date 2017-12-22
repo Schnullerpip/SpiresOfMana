@@ -23,8 +23,6 @@ public class DashBehaviour : A_EffectBehaviour
 	[Tooltip("This is the distance the lower sphere of the capsule is pushed forwards to handle straight walls better. This should be rather low")]
 	public float feetAdvancement = 0.1f;
 
-	public PreviewSpell preview;
-
     //spawnable effectprefabs
     public GameObject dashEffectPrefab;
     public GameObject dashBlastEffect;

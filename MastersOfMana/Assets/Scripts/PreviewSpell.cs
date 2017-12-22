@@ -21,7 +21,7 @@ public class PreviewSpell : MonoBehaviour
 		{
 			if(!mPreview)
 			{
-				mPreview = GameObject.Instantiate(this);
+				mPreview = Instantiate(this);
 			}
 			return mPreview;
 		}

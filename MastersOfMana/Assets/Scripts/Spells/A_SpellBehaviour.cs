@@ -12,6 +12,8 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 {
     public abstract void Execute(PlayerScript caster);
 
+    public PreviewSpell preview;
+
 	public virtual void Preview(PlayerScript caster) {}
 
 	public virtual void StopPreview(PlayerScript caster) {}

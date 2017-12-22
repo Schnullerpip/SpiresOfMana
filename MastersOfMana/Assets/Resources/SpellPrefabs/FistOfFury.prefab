@@ -219,6 +219,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f140fc052e4cde04d9b50817a5505c81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  preview: {fileID: 114041355954258062, guid: c9bd312dd9100433bbf9c52f1f65128c, type: 2}
   mExplosionForce: 11
   mPushDownForce: 20
   explosionPrefab: {fileID: 1233248937701180, guid: 269420ecf4b3e5b47b6df9c50e9dab61,
@@ -246,8 +247,6 @@ MonoBehaviour:
       m_RotationOrder: 0
   mExplosionRadius: 6
   mMaxDistance: 25
-  previewPrefab: {fileID: 114041355954258062, guid: c9bd312dd9100433bbf9c52f1f65128c,
-    type: 2}
 --- !u!135 &135348172352856590
 SphereCollider:
   m_ObjectHideFlags: 1

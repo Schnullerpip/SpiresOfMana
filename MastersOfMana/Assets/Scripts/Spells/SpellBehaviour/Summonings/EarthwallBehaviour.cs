@@ -10,8 +10,6 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
 
     public float initialDistanceToCaster = 2;
 
-    public PreviewSpell preview;
-
     public override void Preview(PlayerScript caster)
     {
         base.Preview(caster);

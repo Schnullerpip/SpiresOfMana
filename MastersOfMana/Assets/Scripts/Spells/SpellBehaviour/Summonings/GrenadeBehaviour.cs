@@ -21,7 +21,6 @@ public class GrenadeBehaviour : A_ServerMoveableSummoning
 	public GameObject explosionPrefab;
 	public GameObject grenadeMesh;
 
-	public PreviewSpellTrajectory previewPrefab;
 	private static float? sRigidMass = null;
 
 //    private Rigidbody mStickTo = null;
@@ -48,13 +47,13 @@ public class GrenadeBehaviour : A_ServerMoveableSummoning
 
 		Vector3 vel = GetAimLocal(caster) * throwForce;
 
-		(previewPrefab.instance as PreviewSpellTrajectory).VisualizeTrajectory(caster.handTransform.position, vel, sRigidMass.Value);
+        (preview.instance as PreviewSpellTrajectory).VisualizeTrajectory(caster.handTransform.position, vel, sRigidMass.Value);
 	}
 
 	public override void StopPreview (PlayerScript caster)
 	{
 		base.StopPreview (caster);
-		previewPrefab.instance.Deactivate();
+        preview.instance.Deactivate();
 
 	}
 

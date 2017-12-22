@@ -65,13 +65,14 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 
 		Vector3 aimDirection = GetAimLocal(caster, out hit);
 	
+        caster.SetColliderIgnoreRaycast(true);
 		if(Physics.SphereCast(caster.handTransform.position, ballRadius, aimDirection, out hit))
 		{
+            Debug.Log(hit.collider.name);
 			preview.instance.MoveAndRotate(hit.point + hit.normal * ballRadius, Quaternion.LookRotation(hit.normal));
 		}
 		else
 		{
-			caster.SetColliderIgnoreRaycast(true);
             if(Physics.CheckSphere(caster.handTransform.position, ballRadius))
 			{
 				preview.instance.MoveAndRotate(caster.handTransform.position, caster.aim.currentLookRotation);
@@ -80,8 +81,8 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 			{
 				preview.instance.Deactivate();
 			}
-            caster.SetColliderIgnoreRaycast(false);
-		}
+        }
+		caster.SetColliderIgnoreRaycast(false);
 	}
 
 	public override void StopPreview (PlayerScript caster)

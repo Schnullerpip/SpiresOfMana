@@ -235,9 +235,15 @@ public class PlayerScript : NetworkBehaviour
     /// </summary>
     public void SpawnSpectator()
     {
+        StartCoroutine(DramaticDeathPause());
+        this.enabled = false;
+    }
+
+    private IEnumerator DramaticDeathPause()
+    {
+        yield return new WaitForSeconds(2);
         (Instantiate(specCamPrefab) as SpectatorCamera).Setup(aim.GetCameraRig().GetCamera());
         aim.GetCameraRig().gameObject.SetActive(false);
-        this.enabled = false;
     }
 
     // Update is called once per frame

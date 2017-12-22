@@ -19,13 +19,24 @@ public class JumpBehaviour : A_EffectBehaviour
 	{
 		base.Preview (caster);
 
-        Vector3 vector = caster.movement.mRigidbody.velocity + caster.movement.GetCurrentMovementVector();
+        PlayerMovement movement = caster.movement;
 
-        //TODO: this is a temporary fix!
-        vector.y = jumpForce - 1;
+        Vector3 vector = movement.GetCurrentMovementVector();
 
-        (previewPrefab.instance as PreviewSpellTrajectory).VisualizeTrajectory(caster.transform.position, vector, caster.movement.mRigidbody.mass);
-	}
+        //only show the preview when moving
+        if(vector.xz().sqrMagnitude < 0.01f)
+        {
+            StopPreview(caster);
+            return;
+        }
+
+        //this is to fix the inaccuracy of the trajectory calculation, its a magic number
+        vector.y = (jumpForce * 0.98f);
+
+        caster.SetColliderIgnoreRaycast(true);
+        (previewPrefab.instance as PreviewSpellTrajectory).VisualizePlayerTrajectory(caster.movement, vector);
+        caster.SetColliderIgnoreRaycast(false);
+    }
 
 	public override void StopPreview (PlayerScript caster)
 	{

@@ -41,7 +41,9 @@ public class IngameLobby : MonoBehaviour
     public void OnDisable()
     {
         GameManager.OnRoundStarted -= RoundStarted;
-        if(mCineCam)
+        if (mCineCam)
+        {
             mCineCam.SetActive(false);
+        }
     }
 }

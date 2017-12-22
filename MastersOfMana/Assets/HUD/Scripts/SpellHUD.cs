@@ -15,7 +15,6 @@ public class SpellHUD : MonoBehaviour
     private List<Image> spellIcons = new List<Image>();
     private List<Image> spellHighlights = new List<Image>();
     private List<Image> spellCooldowns = new List<Image>();
-    public GameObject target;
 
     public delegate void CooldownFinished();
     public event CooldownFinished OnCooldownFinished;
@@ -26,8 +25,6 @@ public class SpellHUD : MonoBehaviour
     void OnEnable ()
     {
         GameManager.OnLocalPlayerDead += LocalPlayerDead;
-        GameManager.OnRoundStarted += RoundStarted;
-        GameManager.OnRoundEnded += RoundEnded;
     }
 
     public void Start()
@@ -122,18 +119,6 @@ public class SpellHUD : MonoBehaviour
     void OnDisable()
     {
         GameManager.OnLocalPlayerDead -= LocalPlayerDead;
-        GameManager.OnRoundStarted -= RoundStarted;
-        GameManager.OnRoundEnded -= RoundEnded;
-    }
-
-    private void RoundStarted()
-    {
-        target.SetActive(true);
-    }
-
-    private void RoundEnded()
-    {
-        target.SetActive(false);
     }
 
     private void LocalPlayerDead()

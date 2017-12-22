@@ -25,6 +25,7 @@ public class HUD : MonoBehaviour {
             Instantiate(obj, transform);
         }
         mSpellHUD = GetComponentInChildren<SpellHUD>();
+        mSpellHUD.transform.SetAsLastSibling();
 
         mPostGameScreen = GetComponentInChildren<PostGameMenu>();
         mPostGameScreen.gameObject.SetActive(false);

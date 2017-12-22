@@ -10,6 +10,9 @@ public class SpellSelectionPanel : MonoBehaviour {
     public RectTransform spellList;
     public Button spellButtonPrefab;
     public SpellDescription spellDescription;
+    public Transform spellHudAnchor;
+    private Vector3 mSpellHudOriginalPosition;
+    private Transform mSpellHudTransform;
     private PlayerSpells mPlayerSpells;
     private List<A_Spell> mPlayerSpellList = new List<A_Spell>();
     private HUD mHUD;
@@ -17,6 +20,8 @@ public class SpellSelectionPanel : MonoBehaviour {
     private bool mShowUltimates = false;
     private bool mUltimatesShown = false;
     private List<Button> spellButtons = new List<Button>();
+    private Dictionary<A_Spell, Button> mSpellButtonDictionary = new Dictionary<A_Spell, Button>();
+    private int mHighlighted = -1;
 
     private void OnEnable()
     {
@@ -24,14 +29,20 @@ public class SpellSelectionPanel : MonoBehaviour {
         spellButtons[0].OnSelect(null);
     }
 
-    public void Init()
+    private void Awake()
     {
         mPlayerSpells = GameManager.instance.localPlayer.GetPlayerSpells();
         mPlayerSpellList = GetPlayerSpells();
         mHUD = GetComponentInParent<HUD>();
+        mSpellHudTransform = GameObject.FindObjectOfType<SpellHUD>().transform;
+        mSpellHudOriginalPosition = mSpellHudTransform.GetComponent<RectTransform>().position;
+    }
+
+    public void Init()
+    {
         fillList();
         // This will make sure the first spell is highlighted when opening
-        GetComponentInParent<MultipleMenuInput>().firstSelected = spellButtons[0].gameObject;
+        mSpellHudTransform.GetComponent<RectTransform>().position = spellHudAnchor.transform.position;
     }
 
     private void fillList()
@@ -55,6 +66,7 @@ public class SpellSelectionPanel : MonoBehaviour {
             spellButton.transform.localScale = new Vector3(1, 1, 1);
             spellButton.onClick.AddListener(delegate { OnClickSpellButton(spell); });
             spellButtons.Add(spellButton);
+            mSpellButtonDictionary.Add(spell, spellButton);
         }
     }
 
@@ -177,6 +189,13 @@ public class SpellSelectionPanel : MonoBehaviour {
             mUltimatesShown = mShowUltimates;
             fillList();
         }
+        if (mHighlighted != mPlayerSpells.currentSpell || EventSystem.current.currentSelectedGameObject == null)
+        {
+            mHighlighted = mPlayerSpells.currentSpell;
+            A_Spell currentSpell = mPlayerSpells.GetCurrentspell().spell;
+            EventSystem.current.SetSelectedGameObject(mSpellButtonDictionary[currentSpell].gameObject);
+            spellDescription.SetDescription(currentSpell.spellDescription);
+        }
     }
 
     public enum OnSelectDirection
@@ -213,6 +232,7 @@ public class SpellSelectionPanel : MonoBehaviour {
         mPlayerSpellList = spellregistry.generateRandomSpells();
         SetPlayerSpells(mPlayerSpellList);
         mHUD.GetSpellHUD().UpdateSpellIcons();
+        mHighlighted = -1; //We need to artificially invalidate the highlighted spell, because this changes the spell in the current selected, but not the selected slot
     }
 
     public void OnReady()
@@ -230,5 +250,6 @@ public class SpellSelectionPanel : MonoBehaviour {
     public void OnDisable()
     {
         clearList();
+        mSpellHudTransform.GetComponent<RectTransform>().position = mSpellHudOriginalPosition;
     }
 }

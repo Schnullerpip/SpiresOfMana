@@ -13,8 +13,6 @@ public class JumpBehaviour : A_EffectBehaviour
 
 	public GameObject vacuumPrefab;
 
-	public PreviewSpell previewPrefab;
-
 	public override void Preview (PlayerScript caster)
 	{
 		base.Preview (caster);
@@ -34,14 +32,14 @@ public class JumpBehaviour : A_EffectBehaviour
         vector.y = (jumpForce * 0.98f);
 
         caster.SetColliderIgnoreRaycast(true);
-        (previewPrefab.instance as PreviewSpellTrajectory).VisualizePlayerTrajectory(caster.movement, vector);
+        (preview.instance as PreviewSpellTrajectory).VisualizePlayerTrajectory(caster.movement, vector);
         caster.SetColliderIgnoreRaycast(false);
     }
 
 	public override void StopPreview (PlayerScript caster)
 	{
 		base.StopPreview (caster);
-		previewPrefab.instance.Deactivate();
+        preview.instance.Deactivate();
 	}
 
 	public override void Execute(PlayerScript caster)

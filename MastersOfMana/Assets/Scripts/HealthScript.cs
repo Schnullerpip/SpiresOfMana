@@ -51,8 +51,11 @@ public class HealthScript : NetworkBehaviour
     {
         if(newHealth == 0)
         {
-            isAlive = false;
-			PlayDeathSFX();
+            if(isAlive)
+            {
+                isAlive = false;
+                PlayDeathSFX();
+			}
         }
         HealthChangedHook(newHealth);
         // we need to set this value manually, because we have a hook attached 

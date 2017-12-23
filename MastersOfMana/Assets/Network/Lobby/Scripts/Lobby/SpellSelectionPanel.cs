@@ -72,6 +72,7 @@ public class SpellSelectionPanel : MonoBehaviour {
 
     private void clearList()
     {
+        mSpellButtonDictionary.Clear();
         foreach (Button button in spellButtons)
         {
             Destroy(button.gameObject);

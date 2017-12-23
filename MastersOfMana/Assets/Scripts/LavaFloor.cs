@@ -9,13 +9,17 @@ public class LavaFloor : NetworkBehaviour
     public float cycleTime = 40;
     public float amplitude = 4;
     public AnimationCurve lavaFlow;
-    private float startHeight;
-    private float runTime = 0;
+
+    public float repelForce = 10;
+
+    private float mStartHeight;
+    private float mRunTime = 0;
     private bool mLavaActive = false;
+
 
     public void Start()
     {
-        startHeight = transform.position.y;
+        mStartHeight = transform.position.y;
         GameManager.OnRoundStarted += RoundStarted;
         GameManager.OnRoundEnded += RoundEnded;
         Debug.LogWarning("Remove code for stopping lava for release build!");
@@ -32,30 +36,25 @@ public class LavaFloor : NetworkBehaviour
         //Check if collision with player
         //Check FeetCollider to only trigger once per player
         HealthScript health = other.GetComponentInParent<HealthScript>();
-        if (health && !mInstanceCoroutineDictionary.ContainsKey(health))
+        if (health && health.IsAlive() && !mInstanceCoroutineDictionary.ContainsKey(health))
         {
             ServerMoveable sm = other.GetComponentInParent<ServerMoveable>();
-            if (sm) {
-                //shoot the moveable into the sky to make it jump mario-ayayayayay-style
-                sm.RpcSetVelocityY(10);
-            }
             //Remember which player this coroutine belongs to
-            mInstanceCoroutineDictionary.Add(health, StartCoroutine(DealDamage(health, sm)));
-
+            mInstanceCoroutineDictionary.Add(health, StartCoroutine(DealDamage(health, sm)));	
         }
     }
 
     void RoundStarted()
     {
         mLavaActive = true;
-        runTime = 0;
+        mRunTime = 0;
     }
 
     void RoundEnded()
     {
         mLavaActive = false;
         Vector3 newTrans = transform.position;
-        newTrans.y = startHeight;
+        newTrans.y = mStartHeight;
         transform.position = newTrans;
     }
 
@@ -78,14 +77,21 @@ public class LavaFloor : NetworkBehaviour
     {
         while (enabled)
         {
-            health.TakeDamage(damagePerSecond, this.GetType());
-            yield return new WaitForSeconds(1f);
+            if(!health.IsAlive())
+            {
+                StopCoroutine(mInstanceCoroutineDictionary[health]);
+                mInstanceCoroutineDictionary.Remove(health);
+                yield break;
+            }
 
-            if (sm)
+            health.TakeDamage(damagePerSecond, this.GetType());
+
+            if (sm && health.IsAlive())
             {
                 //shoot the moveable into the sky to make it jump mario-ayayayayay-style
-                sm.RpcSetVelocityY(10);
+                sm.RpcSetVelocityY(repelForce);
             }
+			yield return new WaitForSeconds(1f);
         }
     }
 
@@ -97,10 +103,10 @@ public class LavaFloor : NetworkBehaviour
             {
                 RoundEnded();
             }
-            runTime += Time.deltaTime;
+            mRunTime += Time.deltaTime;
             Vector3 newTransformPosition = transform.position;
-            float evaluation = lavaFlow.Evaluate(runTime / cycleTime);
-            newTransformPosition.y = evaluation * amplitude + startHeight;
+            float evaluation = lavaFlow.Evaluate(mRunTime / cycleTime);
+            newTransformPosition.y = evaluation * amplitude + mStartHeight;
             transform.position = newTransformPosition;
         }
     }

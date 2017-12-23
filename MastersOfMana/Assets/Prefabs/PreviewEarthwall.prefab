@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4382991450700392}
   - component: {fileID: 114154698241257480}
+  - component: {fileID: 114179149694543384}
   m_Layer: 0
   m_Name: PreviewEarthwall
   m_TagString: Untagged
@@ -123,6 +124,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   smoothTime: 0.016
+  recolor:
+  - {fileID: 114179149694543384}
+  recoloringSpeed: 3
+--- !u!114 &114179149694543384
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1261822136480380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68797316d3d0347ffaba7bda286bbb0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  secondaryColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  renderers:
+  - {fileID: 23541872170158484}
 --- !u!114 &114220882864157532
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -125,6 +125,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4356811811671528}
   - component: {fileID: 114041355954258062}
+  - component: {fileID: 114134621150084044}
+  - component: {fileID: 114635959261767372}
   m_Layer: 0
   m_Name: PreviewDash
   m_TagString: DebugPreviewIndicator
@@ -1135,6 +1137,46 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   smoothTime: 0.016
+  recolor:
+  - {fileID: 114134621150084044}
+  - {fileID: 114635959261767372}
+  recoloringSpeed: 3
+--- !u!114 &114134621150084044
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1245775523633678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68797316d3d0347ffaba7bda286bbb0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  secondaryColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  renderers:
+  - {fileID: 137567220770506340}
+  - {fileID: 137869676393227148}
+  - {fileID: 137984493282681638}
+  - {fileID: 137131890236046656}
+  - {fileID: 137571868053140422}
+  - {fileID: 137990070460114698}
+  - {fileID: 137995491879316678}
+  - {fileID: 137823344674432428}
+  - {fileID: 137031779664366820}
+--- !u!114 &114635959261767372
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1245775523633678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c238f34ac36cd4cd492ba0b8d92870b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  secondaryColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  projectors:
+  - {fileID: 119976764248927206}
 --- !u!119 &119976764248927206
 Projector:
   m_ObjectHideFlags: 1

@@ -109,7 +109,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4264982599178694}
-  - component: {fileID: 95914685184055126}
   m_Layer: 0
   m_Name: Platform
   m_TagString: Untagged
@@ -451,23 +450,6 @@ MeshCollider:
   m_InflateMesh: 0
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300002, guid: dba7e398670aa914da6bb77166def7e9, type: 3}
---- !u!95 &95914685184055126
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1886640158221012}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: dba7e398670aa914da6bb77166def7e9, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &114174634445055322
 MonoBehaviour:
   m_ObjectHideFlags: 1

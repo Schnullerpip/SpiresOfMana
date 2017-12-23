@@ -12,9 +12,16 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 {
     public abstract void Execute(PlayerScript caster);
 
+    public PreviewSpell preview;
+
 	public virtual void Preview(PlayerScript caster) {}
 
 	public virtual void StopPreview(PlayerScript caster) {}
+
+    protected static bool CurrentSpellReady(PlayerScript caster)
+    {
+        return caster.GetPlayerSpells().GetCurrentspell().cooldown <= 0;
+    }
 
     /// <summary>
     /// references the spell's caster, must be set in OnStartClient!!

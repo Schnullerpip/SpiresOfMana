@@ -9,6 +9,9 @@ public class PreviewSpell : MonoBehaviour
 	protected Vector3 mDesiredPos;
 	protected Quaternion mDesiredRot;
 
+    public Recolor[] recolor;
+    public float recoloringSpeed = 3.0f;
+
 	private PreviewSpell mPreview;
 
 	/// <summary>
@@ -21,7 +24,7 @@ public class PreviewSpell : MonoBehaviour
 		{
 			if(!mPreview)
 			{
-				mPreview = GameObject.Instantiate(this);
+				mPreview = Instantiate(this);
 			}
 			return mPreview;
 		}
@@ -40,8 +43,35 @@ public class PreviewSpell : MonoBehaviour
 		#if UNITY_EDITOR
 		Assert.IsFalse(IsPrefab(), "Method called on Prefab. Use instance instead!");
 		#endif
+
 		gameObject.SetActive(false);
 	}
+
+    private void Recoloring(bool backToOriginal, bool instantColorChange)
+    {
+        if (backToOriginal)
+        {
+            for (int i = 0; i < recolor.Length; ++i)
+            {
+                if (instantColorChange)
+                {
+                    recolor[i].RevertColor();
+                }
+                else
+                {
+                    recolor[i].RevertColor(Time.deltaTime * recoloringSpeed);
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < recolor.Length; ++i)
+            {
+                //always change this instantly, since the preview disappears when the spell resolves
+                recolor[i].ChangeColor();
+            }
+        }
+    }
 
 	/// <summary>
 	/// Moves the position and rotates. Also activates the object if inactive.
@@ -49,56 +79,71 @@ public class PreviewSpell : MonoBehaviour
 	/// </summary>
 	/// <param name="position">Position.</param>
 	/// <param name="rotation">Rotation.</param>
-	public void MoveAndRotate(Vector3 position, Quaternion rotation)
+	public void MoveAndRotate(Vector3 position, Quaternion rotation, bool available = true)
 	{
 		#if UNITY_EDITOR
 		Assert.IsFalse(IsPrefab(), "Method called on Prefab. Use instance instead!");
-		#endif		
+		#endif
+
 		mDesiredPos = position;
 		mDesiredRot = rotation;
 
-		if(!gameObject.activeInHierarchy)
+        bool wasActive = gameObject.activeInHierarchy;
+
+        if(!wasActive)
 		{
 			gameObject.SetActive(true);
 			transform.position = mDesiredPos;
 			transform.rotation = mDesiredRot;
 		}
+
+        Recoloring(available, !wasActive);
 	}
 
 	/// <summary>
 	/// Move the specified position. Also activates the object if inactive.
 	/// </summary>
 	/// <param name="position">Position.</param>
-	public void Move(Vector3 position)
+	public void Move(Vector3 position, bool available = true)
 	{
 		#if UNITY_EDITOR
 		Assert.IsFalse(IsPrefab(), "Method called on Prefab. Use instance instead!");
-		#endif		
+		#endif
+
 		mDesiredPos = position;
 
-		if(!gameObject.activeInHierarchy)
-		{
+        bool wasActive = gameObject.activeInHierarchy;
+
+        if (!wasActive)
+        {
 			gameObject.SetActive(true);
 			transform.position = mDesiredPos;
 		}
+
+        Recoloring(available, !wasActive);
 	}
 
 	/// <summary>
 	/// Rotate the specified rotation. Also activates the object if inactive.
 	/// </summary>
 	/// <param name="rotation">Rotation.</param>
-	public void Rotate(Quaternion rotation)
+	public void Rotate(Quaternion rotation, bool available = true)
 	{
 		#if UNITY_EDITOR
 		Assert.IsFalse(IsPrefab(), "Method called on Prefab. Use instance instead!");
 		#endif
+
 		mDesiredRot = rotation;
 
-		if(!gameObject.activeInHierarchy)
-		{
+        bool wasActive = gameObject.activeInHierarchy;
+
+        if (!wasActive)
+        {
 			gameObject.SetActive(true);
 			transform.rotation = mDesiredRot;
 		}
+
+        Recoloring(available, !wasActive);
 	}
 
 	Vector3 vel;

@@ -14,8 +14,6 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     [SerializeField] private float mExplosionRadius;
     [SerializeField] private float mMaxDistance;
 
-	public PreviewSpell previewPrefab;
-
     //will store the transform.position of the caster when he casted - the difference between that and he collisionpoint will be a factor to the resulting damage
     private Vector3 castPosition;
 
@@ -26,14 +24,14 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
 
 		if(Physics.Raycast(caster.transform.position + Vector3.up * 0.2f, Vector3.down, out hit))
 		{
-			previewPrefab.instance.Move(hit.point);
+            preview.instance.Move(hit.point, CurrentSpellReady(caster));
 		}
 	}
 
 	public override void StopPreview (PlayerScript caster)
 	{
 		base.StopPreview (caster);
-		previewPrefab.instance.Deactivate();
+        preview.instance.Deactivate();
 	}
 
     public override void Execute(PlayerScript caster)

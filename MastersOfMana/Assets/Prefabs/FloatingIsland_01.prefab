@@ -21,7 +21,6 @@ GameObject:
   - component: {fileID: 4417049978267194}
   - component: {fileID: 33899308627113648}
   - component: {fileID: 23207959392838896}
-  - component: {fileID: 95981941756034612}
   - component: {fileID: 64011888970050614}
   m_Layer: 0
   m_Name: FloatingIsland_01_Mesh
@@ -125,20 +124,3 @@ MeshCollider:
   m_InflateMesh: 0
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300004, guid: eb5027b5985d3ec43a1ec5e41d66e114, type: 3}
---- !u!95 &95981941756034612
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1691960208151128}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: eb5027b5985d3ec43a1ec5e41d66e114, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1

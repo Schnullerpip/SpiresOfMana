@@ -3,7 +3,7 @@
     Properties
     {
         _WireThickness ("Wire Thickness", RANGE(0, 800)) = 100
-        _WireColor ("Wire Color", Color) = (0.0, 1.0, 0.0, 1.0)
+        _Color ("Wire Color", Color) = (0.0, 1.0, 0.0, 1.0)
         _BaseColor ("Base Color", Color) = (0.0, 0.0, 0.0, 0.0)
     }
 
@@ -32,7 +32,7 @@
             #include "UnityCG.cginc"
 
             float _WireThickness;
-            uniform float4 _WireColor; 
+            uniform float4 _Color; 
             uniform float4 _BaseColor;
 
             struct appdata
@@ -122,7 +122,7 @@
 
                 // Smooth our line out
                 float t = exp2(-2 * minDistanceToEdge * minDistanceToEdge);
-                fixed4 finalColor = lerp(_BaseColor, _WireColor, t);
+                fixed4 finalColor = lerp(_BaseColor, _Color, t);
 
                 return finalColor;
             }

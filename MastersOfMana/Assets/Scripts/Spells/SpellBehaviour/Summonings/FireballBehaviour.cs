@@ -28,8 +28,6 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 
     public GameObject[] DeactivatedObjectsOnCollision;
 
-	public PreviewSpell preview;
-
     public override void Awake()
     {
         base.Awake();
@@ -47,10 +45,12 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 	{
 		base.Preview(caster);
 
+        bool spellReady = CurrentSpellReady(caster);
+
 		RaycastHit hit;
 		if(caster.HandTransformIsObscured(out hit))
 		{
-			preview.instance.MoveAndRotate(hit.point, caster.aim.currentLookRotation);
+            preview.instance.MoveAndRotate(hit.point, caster.aim.currentLookRotation, spellReady);
 			return;
 		}
 	
@@ -59,29 +59,29 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 		{
 			//this is only reset here, because the aimdirection will also set the ignore layer
 			caster.SetColliderIgnoreRaycast(false);
-			preview.instance.MoveAndRotate(caster.handTransform.position, caster.aim.currentLookRotation);
+            preview.instance.MoveAndRotate(caster.handTransform.position, caster.aim.currentLookRotation, spellReady);
 			return;
 		}
 
 		Vector3 aimDirection = GetAimLocal(caster, out hit);
 	
+        caster.SetColliderIgnoreRaycast(true);
 		if(Physics.SphereCast(caster.handTransform.position, ballRadius, aimDirection, out hit))
 		{
-			preview.instance.MoveAndRotate(hit.point + hit.normal * ballRadius, Quaternion.LookRotation(hit.normal));
+            preview.instance.MoveAndRotate(hit.point + hit.normal * ballRadius, Quaternion.LookRotation(hit.normal), spellReady);
 		}
 		else
 		{
-			caster.SetColliderIgnoreRaycast(true);
             if(Physics.CheckSphere(caster.handTransform.position, ballRadius))
 			{
-				preview.instance.MoveAndRotate(caster.handTransform.position, caster.aim.currentLookRotation);
+                preview.instance.MoveAndRotate(caster.handTransform.position, caster.aim.currentLookRotation, spellReady);
 			}
 			else
 			{
 				preview.instance.Deactivate();
 			}
-            caster.SetColliderIgnoreRaycast(false);
-		}
+        }
+		caster.SetColliderIgnoreRaycast(false);
 	}
 
 	public override void StopPreview (PlayerScript caster)

@@ -10,13 +10,13 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
 
     public float initialDistanceToCaster = 2;
 
-    public PreviewSpell preview;
-
     public override void Preview(PlayerScript caster)
     {
         base.Preview(caster);
 
-        preview.instance.MoveAndRotate(caster.movement.mRigidbody.worldCenterOfMass + GetAimLocal(caster) * initialDistanceToCaster, Quaternion.LookRotation(GetAimLocal(caster)));
+        preview.instance.MoveAndRotate(caster.movement.mRigidbody.worldCenterOfMass + GetAimLocal(caster) * initialDistanceToCaster, 
+                                       Quaternion.LookRotation(GetAimLocal(caster)),
+                                      CurrentSpellReady(caster));
     }
 
     public override void StopPreview(PlayerScript caster)

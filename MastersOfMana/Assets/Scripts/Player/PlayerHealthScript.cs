@@ -4,7 +4,8 @@ using System.Reflection.Emit;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class PlayerHealthScript : HealthScript {
+public class PlayerHealthScript : HealthScript 
+{
 	
     private PlayerScript mPlayer;
 
@@ -26,6 +27,7 @@ public class PlayerHealthScript : HealthScript {
             GameManager.instance.PlayerDown();
             //Show the postGame screen for this player
             RpcPlayerDead();
+            mPlayer.SetInputState(InputStateSystem.InputStateID.Dead);
         }
 
         //fire the stats checks
@@ -60,7 +62,5 @@ public class PlayerHealthScript : HealthScript {
     public override void HealthChangedHook(int newHealth)
     {
 		base.HealthChangedHook(newHealth);
-
- 
     }
 }

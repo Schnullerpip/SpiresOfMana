@@ -242,6 +242,12 @@ public class PlayerScript : NetworkBehaviour
     private IEnumerator DramaticDeathPause()
     {
         yield return new WaitForSeconds(2);
+        //Only spawn the specatator if the game is actually still running!
+        //Otherwise we might miss the RoundEnded event because of the pause!
+        if(!GameManager.instance.gameRunning)
+        {
+            yield break;
+        }
         (Instantiate(specCamPrefab) as SpectatorCamera).Setup(aim.GetCameraRig().GetCamera());
         aim.GetCameraRig().gameObject.SetActive(false);
     }

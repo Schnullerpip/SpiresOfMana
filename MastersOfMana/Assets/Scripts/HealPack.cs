@@ -21,17 +21,17 @@ public class HealPack : NetworkBehaviour
 
     public void OnEnable()
     {
-        if (!isServer)
-        {
-            return;
-        }
         GameManager.OnRoundEnded += RoundEnded;
     }
 
 	void RoundEnded()
 	{
-		OnDisable();
-	}
+        if (isServer)
+        {
+            NetworkServer.UnSpawn(gameObject);
+            Destroy(gameObject);
+        }
+    }
 
     public void OnTriggerEnter(Collider other)
     {

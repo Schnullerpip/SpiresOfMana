@@ -3,12 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class UltimateLoadingZone : MonoBehaviour {
+public class UltimateLoadingZone : NetworkBehaviour {
 
     public float ultimateEnergyPerSecond = 1;
 	public float tickDuration = 1;
 
     private Dictionary<NetworkInstanceId, Coroutine> mInstanceCoroutineDictionary = new Dictionary<NetworkInstanceId, Coroutine>();
+
+    public void OnEnable()
+    {
+        GameManager.OnRoundEnded += RoundEnded;
+    }
+
+    public void OnDisable()
+    {
+        StopAllCoroutines();
+        GameManager.OnRoundEnded -= RoundEnded;
+    }
+
+    private void RoundEnded()
+    {
+        if (isServer)
+        {
+            NetworkServer.UnSpawn(gameObject);
+            Destroy(gameObject);
+        }
+    }
 
     public void OnTriggerEnter(Collider other)
     {

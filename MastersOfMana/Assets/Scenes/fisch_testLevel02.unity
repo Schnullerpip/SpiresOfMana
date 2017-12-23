@@ -1857,6 +1857,10 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1141904039544438, guid: df6c14ede86997448849721dddef0cb4, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: df6c14ede86997448849721dddef0cb4, type: 2}
   m_IsPrefabParent: 0
@@ -7515,19 +7519,19 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4852928331750076, guid: 9e480aa3dc1767a4ca51f4f9c89c6ca6, type: 2}
       propertyPath: m_LocalRotation.x
-      value: 0.73182106
+      value: 0.7318211
       objectReference: {fileID: 0}
     - target: {fileID: 4852928331750076, guid: 9e480aa3dc1767a4ca51f4f9c89c6ca6, type: 2}
       propertyPath: m_LocalRotation.y
-      value: -0.122230805
+      value: -0.12223081
       objectReference: {fileID: 0}
     - target: {fileID: 4852928331750076, guid: 9e480aa3dc1767a4ca51f4f9c89c6ca6, type: 2}
       propertyPath: m_LocalRotation.z
-      value: -0.12521213
+      value: -0.12521215
       objectReference: {fileID: 0}
     - target: {fileID: 4852928331750076, guid: 9e480aa3dc1767a4ca51f4f9c89c6ca6, type: 2}
       propertyPath: m_LocalRotation.w
-      value: -0.65864974
+      value: -0.6586498
       objectReference: {fileID: 0}
     - target: {fileID: 4852928331750076, guid: 9e480aa3dc1767a4ca51f4f9c89c6ca6, type: 2}
       propertyPath: m_RootOrder
@@ -8600,6 +8604,21 @@ Prefab:
       propertyPath: EnergyZones
       value: 
       objectReference: {fileID: 82973678}
+    - target: {fileID: 114973350284306172, guid: d4a7025127c441d4aa9a572c6d8041fd,
+        type: 2}
+      propertyPath: spawnZones.Array.data[0].spawnDelay
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 114973350284306172, guid: d4a7025127c441d4aa9a572c6d8041fd,
+        type: 2}
+      propertyPath: spawnZones.Array.data[1].spawnDelay
+      value: 35
+      objectReference: {fileID: 0}
+    - target: {fileID: 114973350284306172, guid: d4a7025127c441d4aa9a572c6d8041fd,
+        type: 2}
+      propertyPath: spawnZones.Array.data[2].spawnDelay
+      value: 35
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d4a7025127c441d4aa9a572c6d8041fd, type: 2}
   m_IsPrefabParent: 0

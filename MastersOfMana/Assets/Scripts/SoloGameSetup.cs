@@ -6,8 +6,6 @@ public class SoloGameSetup : MonoBehaviour {
 
 	public GameObject gameManagerPrefab;
     public GameObject directHostHack;
-    public GameObject healthHUD;
-    public GameObject spellHUD;
     public GameObject ingameMenu;
     public GameObject hurtIndicator;
 
@@ -40,7 +38,12 @@ public class SoloGameSetup : MonoBehaviour {
 		StartCoroutine(PullingGameStart());
     }
 
-	IEnumerator PullingGameStart()
+    public void OnEnable()
+    {
+        GameManager.OnRoundStarted += RoundStarted;
+    }
+
+    IEnumerator PullingGameStart()
 	{
 		//hack: wait for the gamemanager to be done initializing
 		while(GameManager.instance.localPlayer == null)
@@ -68,16 +71,16 @@ public class SoloGameSetup : MonoBehaviour {
         {
             Debug.Log("Assign spell to player prefab spellslot!");
         }
-        else
-        {
-            //Instantiate(healthHUD);//.GetComponent<HealthHUD>().Init();
-            //Instantiate(spellHUD);//.GetComponent<SpellHUD>().Init();
-        }
-        GameManager.instance.localPlayer.transform.position = transform.position;
+    }
+
+    void RoundStarted()
+    {
+        GameManager.instance.localPlayer.movement.RpcSetPosition(transform.position);
     }
 
     void OnDisable()
     {
         GameManager.OnGameStarted -= Init;
+        GameManager.OnRoundStarted -= RoundStarted;
     }
 }

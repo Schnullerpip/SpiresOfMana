@@ -31,6 +31,8 @@ public class JumpBehaviour : A_EffectBehaviour
         //this is to fix the inaccuracy of the trajectory calculation, its a magic number
         vector.y = (jumpForce * 0.98f);
 
+        preview.instance.SetAvailability(caster.CurrentSpellReady());
+
         caster.SetColliderIgnoreRaycast(true);
         (preview.instance as PreviewSpellTrajectory).VisualizePlayerTrajectory(caster.movement, vector);
         caster.SetColliderIgnoreRaycast(false);

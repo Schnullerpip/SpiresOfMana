@@ -45,8 +45,9 @@ public class GrenadeBehaviour : A_ServerMoveableSummoning
 			sRigidMass = GetComponent<Rigidbody>().mass;
 		}
 
-		Vector3 vel = GetAimLocal(caster) * throwForce;
+		Vector3 vel = GetAimClient(caster) * throwForce;
 
+        preview.instance.SetAvailability(caster.CurrentSpellReady());
         (preview.instance as PreviewSpellTrajectory).VisualizeTrajectory(caster.handTransform.position, vel, sRigidMass.Value);
 	}
 
@@ -66,7 +67,7 @@ public class GrenadeBehaviour : A_ServerMoveableSummoning
 
         grenadeBehaviour.gameObject.SetActive(true);
 
-		Vector3 aimDirection = GetAim(caster);
+		Vector3 aimDirection = GetAimServer(caster);
 		
 		grenadeBehaviour.Reset(caster.handTransform.position, caster.transform.rotation);
 		grenadeBehaviour.mRigid.velocity = aimDirection * throwForce;

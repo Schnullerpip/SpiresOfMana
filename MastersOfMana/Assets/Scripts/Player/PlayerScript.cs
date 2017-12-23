@@ -324,4 +324,9 @@ public class PlayerScript : NetworkBehaviour
 		mCurrentLookDirection = currentLookDirection;
 		mPlayerSpells.spellslot[mPlayerSpells.currentSpell].Cast(this);
     }
+
+    public bool CurrentSpellReady()
+    {
+        return mPlayerSpells.GetCurrentspell().cooldown <= 0;
+    }
 }

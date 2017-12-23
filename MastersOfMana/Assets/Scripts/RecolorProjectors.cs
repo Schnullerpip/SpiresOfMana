@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RecolorProjectors : Recolor 
+public class RecolorProjectors : ARecolorSingleColor
 {
     public Projector[] projectors;
-    private Material[] mMaterials;
 
-    private void Awake()
+    protected override void Init()
     {
         mOriginalColors = new Color[projectors.Length];
 
@@ -23,16 +22,6 @@ public class RecolorProjectors : Recolor
     private void GetProjectorsInChildren()
     {
         projectors = GetComponentsInChildren<Projector>();
-    }
-
-    public override void ChangeColor()
-    {
-        ChangeColorTo(secondaryColor);
-    }
-
-    public override void ChangeColor(float t)
-    {
-        ChangeColorTo(secondaryColor, t);
     }
 
     public override void ChangeColorTo(Color col)

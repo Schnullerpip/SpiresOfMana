@@ -2,64 +2,100 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RecolorRenderer : Recolor
+public class RecolorRenderer : ARecolorSingleColor
 {
-    public Renderer[] renderers;
+    public RendererProperty[] rendererProperties;
 
-    private void Awake()
+    protected override void Init()
     {
-        mOriginalColors = new Color[renderers.Length];
+        mOriginalColors = new Color[rendererProperties.Length];
         for (int i = 0; i < mOriginalColors.Length; ++i)
         {
-            mOriginalColors[i] = renderers[i].material.color;
+            mOriginalColors[i] = rendererProperties[i].GetColor();
         }
     }
 
     [ContextMenu("GetRendererInChildren")]
     private void GetRendererInChildren()
     {
-        renderers = GetComponentsInChildren<Renderer>();
-    }
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        rendererProperties = new RendererProperty[renderers.Length];
 
-    public override void ChangeColor()
-    {
-        ChangeColorTo(secondaryColor);
-    }
+        for (int i = 0; i < rendererProperties.Length; ++i)
+        {
+            rendererProperties[i] = new RendererProperty();
+            rendererProperties[i].renderer = renderers[i];
 
-    public override void ChangeColor(float t)
-    {
-        ChangeColorTo(secondaryColor, t);
+            rendererProperties[i].Validate();
+        }
     }
 
     public override void RevertColor()
     {
-        for (int i = 0; i < renderers.Length; ++i)
+        for (int i = 0; i < rendererProperties.Length; ++i)
         {
-            renderers[i].material.color = mOriginalColors[i];
+            rendererProperties[i].SetColor(mOriginalColors[i]);
         }
     }
 
     public override void RevertColor(float t)
     {
-        for (int i = 0; i < renderers.Length; ++i)
+        for (int i = 0; i < rendererProperties.Length; ++i)
         {
-            renderers[i].material.color = Color.Lerp(renderers[i].material.color, mOriginalColors[i], t);
+            rendererProperties[i].SetColor(Color.Lerp(rendererProperties[i].GetColor(), mOriginalColors[i], t));
         }
     }
 
     public override void ChangeColorTo(Color col)
     {
-        for (int i = 0; i < renderers.Length; ++i)
+        for (int i = 0; i < rendererProperties.Length; ++i)
         {
-            renderers[i].material.color = col;
+            rendererProperties[i].SetColor(col);
         }
     }
 
     public override void ChangeColorTo(Color col, float t)
     {
-        for (int i = 0; i < renderers.Length; ++i)
+        for (int i = 0; i < rendererProperties.Length; ++i)
         {
-            renderers[i].material.color = Color.Lerp(renderers[i].material.color, col, t);
+            rendererProperties[i].SetColor(Color.Lerp(rendererProperties[i].GetColor(), col, t));
+        }
+    }
+
+    private void OnValidate()
+    {
+        for (int i = 0; i < rendererProperties.Length; ++i)
+        {
+            rendererProperties[i].Validate();
+        }
+    }
+
+    [System.Serializable]
+    public class RendererProperty
+    {
+        public Renderer renderer;
+        public string propertyName;
+
+        [ReadOnly]
+        public int propertyId;
+
+        internal void Validate()
+        {
+            if (string.IsNullOrEmpty(propertyName))
+            {
+                propertyName = "_Color";
+            }
+            propertyId = Shader.PropertyToID(propertyName);
+        }
+
+        public Color GetColor()
+        {
+            return renderer.material.GetColor(propertyId);
+        }
+
+        public void SetColor(Color col)
+        {
+            renderer.material.SetColor(propertyId, col);
         }
     }
 }

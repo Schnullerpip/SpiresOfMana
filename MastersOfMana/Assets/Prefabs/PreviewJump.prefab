@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4356811811671528}
   - component: {fileID: 114196693041124364}
+  - component: {fileID: 114284358015752628}
   - component: {fileID: 120382898158435780}
   m_Layer: 0
   m_Name: PreviewJump
@@ -53,9 +54,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   smoothTime: 0.016
+  recolor:
+  - {fileID: 114284358015752628}
+  recoloringSpeed: 3
   line: {fileID: 120382898158435780}
   maxPointCount: 120
   pathStepSize: 0.02
+--- !u!114 &114284358015752628
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1245775523633678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68797316d3d0347ffaba7bda286bbb0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  secondaryColor: {r: 0.147, g: 0.147, b: 0.147, a: 0.5}
+  rendererProperties:
+  - renderer: {fileID: 120382898158435780}
+    propertyName: _TintColor
+    propertyId: 83
 --- !u!120 &120382898158435780
 LineRenderer:
   m_ObjectHideFlags: 1
@@ -69,7 +89,7 @@ LineRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: e10e0e20cb75b44dca954682bb957879, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -45,12 +45,12 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 	{
 		base.Preview(caster);
 
-        bool spellReady = CurrentSpellReady(caster);
+        preview.instance.SetAvailability(caster.CurrentSpellReady());
 
 		RaycastHit hit;
 		if(caster.HandTransformIsObscured(out hit))
 		{
-            preview.instance.MoveAndRotate(hit.point, caster.aim.currentLookRotation, spellReady);
+            preview.instance.MoveAndRotate(hit.point, caster.aim.currentLookRotation);
 			return;
 		}
 	
@@ -59,22 +59,22 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 		{
 			//this is only reset here, because the aimdirection will also set the ignore layer
 			caster.SetColliderIgnoreRaycast(false);
-            preview.instance.MoveAndRotate(caster.handTransform.position, caster.aim.currentLookRotation, spellReady);
+            preview.instance.MoveAndRotate(caster.handTransform.position, caster.aim.currentLookRotation);
 			return;
 		}
 
-		Vector3 aimDirection = GetAimLocal(caster, out hit);
+		Vector3 aimDirection = GetAimClient(caster, out hit);
 	
         caster.SetColliderIgnoreRaycast(true);
 		if(Physics.SphereCast(caster.handTransform.position, ballRadius, aimDirection, out hit))
 		{
-            preview.instance.MoveAndRotate(hit.point + hit.normal * ballRadius, Quaternion.LookRotation(hit.normal), spellReady);
+            preview.instance.MoveAndRotate(hit.point + hit.normal * ballRadius, Quaternion.LookRotation(hit.normal));
 		}
 		else
 		{
             if(Physics.CheckSphere(caster.handTransform.position, ballRadius))
 			{
-                preview.instance.MoveAndRotate(caster.handTransform.position, caster.aim.currentLookRotation, spellReady);
+                preview.instance.MoveAndRotate(caster.handTransform.position, caster.aim.currentLookRotation);
 			}
 			else
 			{
@@ -92,7 +92,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 
     public override void Execute(PlayerScript caster)
     {
-		Vector3 aimDirection = GetAim(caster); 
+		Vector3 aimDirection = GetAimServer(caster); 
 
 		Vector3 initPos;
 		RaycastHit hit;

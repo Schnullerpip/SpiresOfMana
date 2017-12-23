@@ -49,7 +49,17 @@ public class WhipBehaviour : A_SummoningBehaviour
 		RaycastHit hit;
 		Ray ray = caster.aim.GetCameraRig().GetCenterRay();
 
-		if(RayCast(caster, ray, out hit))
+        preview.instance.SetAvailability(caster.CurrentSpellReady());
+
+        Vector3 hitPlayerPos;
+
+        PlayerScript hitPlayer = HitAPlayer(caster, out hitPlayerPos, false);
+
+        if(hitPlayer)
+        {
+            preview.instance.Move(hitPlayerPos);
+        }
+        else if(RayCast(caster, ray, out hit))
 		{
 			preview.instance.Move(hit.point); 
 		}
@@ -65,37 +75,42 @@ public class WhipBehaviour : A_SummoningBehaviour
         preview.instance.Deactivate();
 	}
 
-    public override void Execute(PlayerScript caster)
+    /// <summary>
+    /// Checks wether or not a player is in the hittable range.
+    /// </summary>
+    /// <returns>The AP layer.</returns>
+    /// <param name="player">The opponents PlayerScript if there was one.</param>
+    /// <param name="pos">Position of the hit. Either the center, head or feet.</param>
+    private PlayerScript HitAPlayer(PlayerScript player, out Vector3 pos, bool onServer)
     {
-		WhipBehaviour whipBehaviour = PoolRegistry.GetInstance(this.gameObject, 4, 4).GetComponent<WhipBehaviour>();
-
-        //initialize the linepoint
-        whipBehaviour.linePoint0 = caster.handTransform.position;
-
         //check for a hit
-        var opponents = GameManager.instance.players;
+
+		var opponents = GameManager.instance.players;
+
         PlayerScript hitPlayer = null;
+        pos = Vector3.zero;
+
         foreach (var p in opponents)
         {
-            if (p == caster)
+            if (p == player)
             {
                 continue;
             }
 
-            if (ConfirmedHit(p.movement.mRigidbody.worldCenterOfMass, caster, hitRadius, maxDistance))
+            if (HelperConfiredHit(p.movement.mRigidbody.worldCenterOfMass, player, hitRadius, maxDistance, onServer))
             {
                 hitPlayer = p;
-                whipBehaviour.linePoint1 = p.movement.mRigidbody.worldCenterOfMass;
+                pos = p.movement.mRigidbody.worldCenterOfMass;
             }
-            else if (ConfirmedHit(p.headJoint.position, caster, hitRadius, maxDistance))
+            else if (HelperConfiredHit(p.headJoint.position, player, hitRadius, maxDistance, onServer))
             {
                 hitPlayer = p;
-                whipBehaviour.linePoint1 = p.headJoint.position;
+                pos = p.headJoint.position;
             }
-            else if (ConfirmedHit(p.transform.position, caster, hitRadius, maxDistance))
+            else if (HelperConfiredHit(p.transform.position, player, hitRadius, maxDistance, onServer))
             {
                 hitPlayer = p;
-                whipBehaviour.linePoint1 = p.transform.position;
+                pos = p.transform.position;
             }
 
             if (hitPlayer)
@@ -104,12 +119,42 @@ public class WhipBehaviour : A_SummoningBehaviour
             }
         }
 
+        return hitPlayer;
+    }
+
+    private bool HelperConfiredHit(Vector3 h_point, PlayerScript h_caster, float h_hitRadius, float h_hitRange, bool onServer)
+    {
+        if(onServer)
+        {
+            return ConfirmedHitServer(h_point, h_caster, h_hitRadius, h_hitRange);
+        }
+        else
+        {
+            return ConfirmedHitClient(h_point, h_caster, h_hitRadius, h_hitRange);
+        }
+    }
+
+    public override void Execute(PlayerScript caster)
+    {
+		WhipBehaviour whipBehaviour = PoolRegistry.GetInstance(this.gameObject, 4, 4).GetComponent<WhipBehaviour>();
+
+        whipBehaviour.caster = caster;
+
+        //initialize the linepoint
+        whipBehaviour.linePoint0 = caster.handTransform.position;
+
+        //check for a hit
+        Vector3 hitPlayerPos;
+
+        PlayerScript hitPlayer = HitAPlayer(caster, out hitPlayerPos, true);
+
         RaycastHit hit;
 
         //case 1: hit the player
         if (hitPlayer)
         {
-            Vector3 aimDirection = Vector3.Normalize(whipBehaviour.linePoint1 - caster.handTransform.position);
+            whipBehaviour.linePoint1 = hitPlayerPos;
+            Vector3 aimDirection = Vector3.Normalize(hitPlayerPos - caster.handTransform.position);
             Vector3 force = -aimDirection*pullForce + Vector3.up*UpForce;
             hitPlayer.movement.RpcAddForce(force, ForceMode.VelocityChange);
             hitPlayer.healthScript.TakeDamage(0, GetType());

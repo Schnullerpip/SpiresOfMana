@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4356811811671528}
   - component: {fileID: 114187039191824956}
+  - component: {fileID: 114785704671225308}
   - component: {fileID: 120509795566080850}
   m_Layer: 0
   m_Name: PreviewGrenade
@@ -35,7 +36,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1245775523633678}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.3608322, y: 7.080826, z: 3.0247803}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -53,9 +54,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   smoothTime: 0.016
+  recolor:
+  - {fileID: 114785704671225308}
+  recoloringSpeed: 3
   line: {fileID: 120509795566080850}
   maxPointCount: 90
   pathStepSize: 0.02
+--- !u!114 &114785704671225308
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1245775523633678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68797316d3d0347ffaba7bda286bbb0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  secondaryColor: {r: 0.147, g: 0.147, b: 0.147, a: 0.5}
+  rendererProperties:
+  - renderer: {fileID: 120509795566080850}
+    propertyName: _TintColor
+    propertyId: 83
 --- !u!120 &120509795566080850
 LineRenderer:
   m_ObjectHideFlags: 1
@@ -89,10 +109,10 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Positions:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0.15, z: 1.63}
-  - {x: 0, y: -0.84, z: 3.63}
-  - {x: 0, y: -4.32, z: 7.12}
+  - {x: 0, y: 1.47, z: 0}
+  - {x: 0, y: 2.01, z: 1.63}
+  - {x: 0, y: 1.02, z: 3.11}
+  - {x: 0, y: 0, z: 3.4}
   m_Parameters:
     serializedVersion: 2
     widthMultiplier: 0.36
@@ -128,17 +148,17 @@ LineRenderer:
       m_RotationOrder: 0
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 1, b: 1, a: 1}
-      key1: {r: 1, g: 1, b: 1, a: 1}
-      key2: {r: 1, g: 0, b: 0, a: 0}
-      key3: {r: 1, g: 0, b: 0, a: 0}
+      key0: {r: 0, g: 0, b: 0, a: 1}
+      key1: {r: 0.38235295, g: 0.38235295, b: 0.38235295, a: 1}
+      key2: {r: 0.9558823, g: 0.9558823, b: 0.9558823, a: 0}
+      key3: {r: 1, g: 1, b: 1, a: 0}
       key4: {r: 1, g: 0, b: 0, a: 0}
       key5: {r: 1, g: 0, b: 0, a: 0}
       key6: {r: 1, g: 0, b: 0, a: 0}
       key7: {r: 0, g: 0, b: 0, a: 0}
       ctime0: 0
-      ctime1: 65535
-      ctime2: 65535
+      ctime1: 6168
+      ctime2: 30455
       ctime3: 65535
       ctime4: 65535
       ctime5: 65535
@@ -152,8 +172,8 @@ LineRenderer:
       atime5: 0
       atime6: 0
       atime7: 0
-      m_Mode: 1
-      m_NumColorKeys: 2
+      m_Mode: 0
+      m_NumColorKeys: 4
       m_NumAlphaKeys: 2
     numCornerVertices: 0
     numCapVertices: 5

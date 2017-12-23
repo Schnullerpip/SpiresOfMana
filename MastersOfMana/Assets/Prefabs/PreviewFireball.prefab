@@ -208,6 +208,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   secondaryColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  renderers:
-  - {fileID: 23394804949500618}
-  - {fileID: 23837392615018222}
+  rendererProperties:
+  - renderer: {fileID: 23394804949500618}
+    propertyName: _Color
+    propertyId: 10
+  - renderer: {fileID: 23837392615018222}
+    propertyName: _Color
+    propertyId: 10

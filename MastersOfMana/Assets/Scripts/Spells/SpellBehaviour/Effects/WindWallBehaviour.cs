@@ -34,7 +34,7 @@ public class WindWallBehaviour : A_SummoningBehaviour
 	{
 		base.Preview (caster);
 
-        preview.instance.Move(caster.transform.position + GetAimLocal(caster) * mCenterDistance);
+        preview.instance.Move(caster.transform.position + GetAimClient(caster) * mCenterDistance);
 	}
 
 	public override void StopPreview (PlayerScript caster)
@@ -49,7 +49,7 @@ public class WindWallBehaviour : A_SummoningBehaviour
         GameObject ww = PoolRegistry.GetInstance(this.gameObject, 4, 4);
         WindWallBehaviour windwall = ww.GetComponent<WindWallBehaviour>();
 
-		Vector3 direction =	GetAim(caster);
+		Vector3 direction =	GetAimServer(caster);
 
         //put the center of the windbox infront of the caster
 		windwall.center = caster.handTransform.position + direction * mCenterDistance;

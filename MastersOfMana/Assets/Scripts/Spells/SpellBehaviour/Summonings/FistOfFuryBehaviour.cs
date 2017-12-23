@@ -22,9 +22,11 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
 		base.Preview (caster);
 		RaycastHit hit;
 
+        preview.instance.SetAvailability(caster.CurrentSpellReady());
+
 		if(Physics.Raycast(caster.transform.position + Vector3.up * 0.2f, Vector3.down, out hit))
 		{
-            preview.instance.Move(hit.point, CurrentSpellReady(caster));
+            preview.instance.Move(hit.point);
 		}
 	}
 
@@ -81,8 +83,6 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         float resultingHeightFactor = distance/mMaxDistance;
         resultingHeightFactor = Mathf.Clamp(resultingHeightFactor, 0.0f, 1.0f); // if the maxDistance was topped, dont let the damage escalate
 
-        Debug.Log("resultingHeightFactor: " + resultingHeightFactor);
-
         caster.SetColliderIgnoreRaycast(true);
 
         //apply Explosion force and damage
@@ -99,7 +99,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
 
     public IEnumerator DestroyNextFrame()
     {
-        yield return 0;//wait 1 frame
+        yield return null;//wait 1 frame
 
         NetworkServer.UnSpawn(gameObject);
         gameObject.SetActive(false);

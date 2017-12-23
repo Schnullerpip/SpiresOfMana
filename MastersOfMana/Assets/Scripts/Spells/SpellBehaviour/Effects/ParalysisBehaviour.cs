@@ -33,9 +33,9 @@ public class ParalysisBehaviour : A_EffectBehaviour
         {
             if (p == caster) continue;
 
-            if (ConfirmedHit(p.headJoint.position, caster, mHitRadius, mHitRange) ||
-                ConfirmedHit(p.transform.position, caster, mHitRadius, mHitRange) ||
-                ConfirmedHit(p.movement.mRigidbody.worldCenterOfMass, caster, mHitRadius, mHitRange))
+            if (ConfirmedHitServer(p.headJoint.position, caster, mHitRadius, mHitRange) ||
+                ConfirmedHitServer(p.transform.position, caster, mHitRadius, mHitRange) ||
+                ConfirmedHitServer(p.movement.mRigidbody.worldCenterOfMass, caster, mHitRadius, mHitRange))
             {
                 //create an icecrystal
                 ParalysisBehaviour pb = PoolRegistry.GetInstance(gameObject, p.transform.position, caster.transform.rotation, 4, 4) .GetComponent<ParalysisBehaviour>();

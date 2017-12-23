@@ -18,11 +18,6 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 
 	public virtual void StopPreview(PlayerScript caster) {}
 
-    protected static bool CurrentSpellReady(PlayerScript caster)
-    {
-        return caster.GetPlayerSpells().GetCurrentspell().cooldown <= 0;
-    }
-
     /// <summary>
     /// references the spell's caster, must be set in OnStartClient!!
     /// </summary>
@@ -56,16 +51,16 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 	/// </summary>
 	/// <returns>The aim.</returns>
 	/// <param name="player">Player.</param>
-	public Vector3 GetAim(PlayerScript player)
+	public Vector3 GetAimServer(PlayerScript player)
 	{
 		RaycastHit hit;
-		return GetAim(player, out hit);
+		return GetAimServer(player, out hit);
 	}
 
-	public Vector3 GetAimLocal(PlayerScript player)
+	public Vector3 GetAimClient(PlayerScript player)
 	{
 		RaycastHit hit;
-		return GetAimLocal(player, out hit);
+		return GetAimClient(player, out hit);
 	}
 
 	/// <summary>
@@ -75,14 +70,14 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 	/// <returns>The aim.</returns>
 	/// <param name="player">Player.</param>
 	/// <param name="hit">Hit.</param>
-	public Vector3 GetAim(PlayerScript player, out RaycastHit hit)
+    public Vector3 GetAimServer(PlayerScript player, out RaycastHit hit)
 	{
 		Ray ray = new Ray(player.GetCameraPosition(), player.GetCameraLookDirection());
 
 		return RayCast(player, ray, out hit);
 	}
 
-	public Vector3 GetAimLocal(PlayerScript player, out RaycastHit hit)
+	public Vector3 GetAimClient(PlayerScript player, out RaycastHit hit)
 	{
 		Ray ray = player.aim.GetCameraRig().GetCenterRay();
 
@@ -112,20 +107,40 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
     /// <param name="caster"> provides information about it's whereabouts, as well as it's camera's </param>
     /// <param name="hitRadius"> tolerance to hit or no hit </param>
     /// <returns>whether or not point should be hit or not</returns>
-    protected static bool ConfirmedHit(Vector3 point, PlayerScript caster, float hitRadius, float hitRange)
+    protected static bool ConfirmedHitServer(Vector3 point, PlayerScript caster, float hitRadius, float hitRange)
     {
-        RaycastHit hit;
         Vector3 onPlane = Vector3.ProjectOnPlane((point - caster.GetCameraPosition()), -caster.GetCameraLookDirection());
         float dotProduct = Vector3.Dot((point - caster.handTransform.position), caster.GetCameraLookDirection());
-        return
-            /*hit by raw aim?*/
-            onPlane.sqrMagnitude <= hitRadius*hitRadius &&
-            //hit object is infront of me?
-            dotProduct > 0 &&
-            /*direct sight? - avoid hit when an obstacle is inbetween*/
-            Physics.Raycast(new Ray(point, (caster.movement.mRigidbody.worldCenterOfMass - point).normalized), out hit) &&
-            hit.distance <= hitRange &&
-            hit.transform.gameObject == caster.gameObject;
+        return PlanarCheck(point, caster, hitRadius, hitRange, onPlane, dotProduct);
+    }
+
+    /// <summary>
+    ///project the casters lookdirection on the plane of the other player's position
+    /// </summary>
+    /// <param name="point"> point to be projected </param>
+    /// <param name="caster"> provides information about it's whereabouts, as well as it's camera's </param>
+    /// <param name="hitRadius"> tolerance to hit or no hit </param>
+    /// <returns>whether or not point should be hit or not</returns>
+    protected static bool ConfirmedHitClient(Vector3 point, PlayerScript caster, float hitRadius, float hitRange)
+    {
+        Transform cameraTransform = caster.aim.GetCameraRig().GetCamera().transform;
+        Vector3 onPlane = Vector3.ProjectOnPlane((point - cameraTransform.position), -cameraTransform.forward);
+        float dotProduct = Vector3.Dot((point - caster.handTransform.position), cameraTransform.forward);
+       
+        return PlanarCheck(point, caster, hitRadius, hitRange, onPlane, dotProduct);
+    }
+
+    private static bool PlanarCheck(Vector3 point, PlayerScript caster, float hitRadius, float hitRange, Vector3 onPlane, float dotProduct)
+    {
+        RaycastHit hit;
+        /*hit by raw aim?*/
+        return onPlane.sqrMagnitude <= hitRadius * hitRadius &&
+                    //hit object is infront of me?
+                    dotProduct > 0 &&
+                    /*direct sight? - avoid hit when an obstacle is inbetween*/
+                    Physics.Raycast(new Ray(point, (caster.movement.mRigidbody.worldCenterOfMass - point).normalized), out hit) &&
+                    hit.distance <= hitRange &&
+                    hit.transform.gameObject == caster.gameObject;
     }
 
     protected static void IterateCollidersAndApply<H>(Collider[] array, Action<H> action)

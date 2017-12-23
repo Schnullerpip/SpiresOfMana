@@ -9,10 +9,11 @@ public class PreviewSpell : MonoBehaviour
 	protected Vector3 mDesiredPos;
 	protected Quaternion mDesiredRot;
 
-    public Recolor[] recolor;
+    public ARecolor[] recolor;
     public float recoloringSpeed = 3.0f;
 
-	private PreviewSpell mPreview;
+	protected PreviewSpell mPreview;
+    protected bool mAvailable = true;
 
 	/// <summary>
 	/// Gets the scene instance of the preview object. Instatiates a new one if null
@@ -35,6 +36,11 @@ public class PreviewSpell : MonoBehaviour
 		Deactivate();
 	}
 
+    public void SetAvailability(bool value)
+    {
+        mAvailable = value;
+    }
+
 	/// <summary>
 	/// Deactivate this instance.
 	/// </summary>
@@ -47,7 +53,7 @@ public class PreviewSpell : MonoBehaviour
 		gameObject.SetActive(false);
 	}
 
-    private void Recoloring(bool backToOriginal, bool instantColorChange)
+    protected void Recoloring(bool backToOriginal, bool instantColorChange)
     {
         if (backToOriginal)
         {
@@ -79,7 +85,7 @@ public class PreviewSpell : MonoBehaviour
 	/// </summary>
 	/// <param name="position">Position.</param>
 	/// <param name="rotation">Rotation.</param>
-	public void MoveAndRotate(Vector3 position, Quaternion rotation, bool available = true)
+    public void MoveAndRotate(Vector3 position, Quaternion rotation)
 	{
 		#if UNITY_EDITOR
 		Assert.IsFalse(IsPrefab(), "Method called on Prefab. Use instance instead!");
@@ -97,14 +103,14 @@ public class PreviewSpell : MonoBehaviour
 			transform.rotation = mDesiredRot;
 		}
 
-        Recoloring(available, !wasActive);
+        Recoloring(mAvailable, !wasActive);
 	}
 
 	/// <summary>
 	/// Move the specified position. Also activates the object if inactive.
 	/// </summary>
 	/// <param name="position">Position.</param>
-	public void Move(Vector3 position, bool available = true)
+    public void Move(Vector3 position)
 	{
 		#if UNITY_EDITOR
 		Assert.IsFalse(IsPrefab(), "Method called on Prefab. Use instance instead!");
@@ -120,14 +126,14 @@ public class PreviewSpell : MonoBehaviour
 			transform.position = mDesiredPos;
 		}
 
-        Recoloring(available, !wasActive);
+        Recoloring(mAvailable, !wasActive);
 	}
 
 	/// <summary>
 	/// Rotate the specified rotation. Also activates the object if inactive.
 	/// </summary>
 	/// <param name="rotation">Rotation.</param>
-	public void Rotate(Quaternion rotation, bool available = true)
+    public void Rotate(Quaternion rotation)
 	{
 		#if UNITY_EDITOR
 		Assert.IsFalse(IsPrefab(), "Method called on Prefab. Use instance instead!");
@@ -143,7 +149,7 @@ public class PreviewSpell : MonoBehaviour
 			transform.rotation = mDesiredRot;
 		}
 
-        Recoloring(available, !wasActive);
+        Recoloring(mAvailable, !wasActive);
 	}
 
 	Vector3 vel;

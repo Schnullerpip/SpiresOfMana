@@ -66,6 +66,14 @@ public class PreviewSpellTrajectory : PreviewSpell
 		
         line.SetPositions(mPath);
 		
-		gameObject.SetActive(true);
+        bool wasActive = gameObject.activeInHierarchy;
+
+        if (!wasActive)
+        {
+            gameObject.SetActive(true);
+            transform.position = mDesiredPos;
+        }
+
+        Recoloring(mAvailable, !wasActive);
 	}
 }

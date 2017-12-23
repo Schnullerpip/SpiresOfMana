@@ -10,6 +10,23 @@ public class UltimateLoadingZone : MonoBehaviour {
 
     private Dictionary<NetworkInstanceId, Coroutine> mInstanceCoroutineDictionary = new Dictionary<NetworkInstanceId, Coroutine>();
 
+    public void OnEnable()
+    {
+        GameManager.OnRoundEnded += RoundEnded;
+    }
+
+    public void OnDisable()
+    {
+        StopAllCoroutines();
+        GameManager.OnRoundEnded -= RoundEnded;
+    }
+
+    private void RoundEnded()
+    {
+        NetworkServer.UnSpawn(gameObject);
+        Destroy(gameObject);
+    }
+
     public void OnTriggerEnter(Collider other)
     {
         //Check if collision with player

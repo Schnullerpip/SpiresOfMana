@@ -30,8 +30,9 @@ public class HealPack : NetworkBehaviour
 
 	void RoundEnded()
 	{
-		OnDisable();
-	}
+        NetworkServer.UnSpawn(gameObject);
+        Destroy(gameObject);
+    }
 
     public void OnTriggerEnter(Collider other)
     {

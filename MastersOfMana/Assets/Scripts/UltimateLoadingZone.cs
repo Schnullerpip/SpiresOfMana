@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class UltimateLoadingZone : MonoBehaviour {
+public class UltimateLoadingZone : NetworkBehaviour {
 
     public float ultimateEnergyPerSecond = 1;
 	public float tickDuration = 1;
@@ -23,8 +23,11 @@ public class UltimateLoadingZone : MonoBehaviour {
 
     private void RoundEnded()
     {
-        NetworkServer.UnSpawn(gameObject);
-        Destroy(gameObject);
+        if (isServer)
+        {
+            NetworkServer.UnSpawn(gameObject);
+            Destroy(gameObject);
+        }
     }
 
     public void OnTriggerEnter(Collider other)

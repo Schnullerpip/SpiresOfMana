@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     public GameObject eventSystem;
     public bool isUltimateActive = false;
     public int numOfActiveMenus = 0;
+    public bool gameRunning = false;
 
     public delegate void GameStarted();
     public static event GameStarted OnGameStarted;
@@ -103,6 +104,7 @@ public class GameManager : MonoBehaviour
     public void TriggerGameStarted()
     {
         mStartPoints = FindObjectOfType<StartPoints>();
+        gameRunning = true;
         if (OnGameStarted != null)
         {
             OnGameStarted();
@@ -133,6 +135,7 @@ public class GameManager : MonoBehaviour
 
     public void TriggerRoundEnded()
     {
+        gameRunning = false;
         if (OnRoundEnded != null)
         {
             OnRoundEnded();
@@ -198,6 +201,7 @@ public class GameManager : MonoBehaviour
 		{
 			players[i].movement.RpcSetPosition(startPositions[i].position);
 			players[i].movement.RpcSetVelocity(Vector3.zero);
+            players[i].RpcSetInputState(InputStateSystem.InputStateID.Normal);
 			players[i].enabled = true;
 		}
     }

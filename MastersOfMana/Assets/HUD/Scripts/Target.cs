@@ -7,7 +7,7 @@ public class Target : MonoBehaviour {
     public void Awake()
     {
         GameManager.OnRoundStarted += RoundStarted;
-        GameManager.OnRoundEnded += RoundStarted;
+        GameManager.OnLocalPlayerDead += LocalPlayerDead;
         gameObject.SetActive(false);
     }
 
@@ -16,7 +16,7 @@ public class Target : MonoBehaviour {
         gameObject.SetActive(true);
     }
 
-    private void RoundEnded()
+    private void LocalPlayerDead()
     {
         gameObject.SetActive(false);
     }
@@ -24,6 +24,6 @@ public class Target : MonoBehaviour {
     public void OnDestroy()
     {
         GameManager.OnRoundStarted -= RoundStarted;
-        GameManager.OnRoundEnded -= RoundStarted;
+        GameManager.OnLocalPlayerDead -= LocalPlayerDead;
     }
 }

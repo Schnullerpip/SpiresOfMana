@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class HealthHUD : MonoBehaviour
@@ -8,6 +9,11 @@ public class HealthHUD : MonoBehaviour
 
     private PlayerHealthScript localPlayerHealthScript;
     private bool isInitialized = false;
+
+    public Transform healthScale;
+    public Gradient healthGradient;
+    public Image filling;
+    public float scrollingSpeed = 2;
 
     // Use this for initialization
     void OnEnable()
@@ -39,6 +45,8 @@ public class HealthHUD : MonoBehaviour
             oponnentHUD.player = player;
             oponnentHUD.Init();
         }
+
+        mCurrentHealth = localPlayerHealthScript.GetMaxHealth();
     }
 
     void OnDisable()
@@ -50,9 +58,44 @@ public class HealthHUD : MonoBehaviour
         }
     }
 
+    private int mCurrentHealth;
+
     public void SetHealth(int health)
     {
-        healthText.text = "Health: " + health;
+        //healthText.text = health.ToString();
+        StopAllCoroutines();
+        StartCoroutine(HealthScroll(health, scrollingSpeed));
+    }
+
+    private IEnumerator HealthScroll(int newHealth, float speed)
+    {
+        //convert the health to a float, so we can calculate sub-integer
+        float currentHealthFloat = mCurrentHealth;
+
+        while(Mathf.Abs(currentHealthFloat - newHealth) >= float.Epsilon)
+        {
+            currentHealthFloat = Mathf.MoveTowards(currentHealthFloat, newHealth, Time.deltaTime * speed);
+            ScaleAndColor();
+
+            //this part is important, as this allows us to just kill the coroutine and start a new one
+            mCurrentHealth = Mathf.RoundToInt(currentHealthFloat);
+            healthText.text = mCurrentHealth.ToString();
+
+            yield return null;
+        }
+
+        //when done, adjust the color, scale and number once more to make sure that we didn't overshoot
+        ScaleAndColor();
+
+        mCurrentHealth = newHealth;
+        healthText.text = newHealth.ToString();
+    }
+
+    private void ScaleAndColor()
+    {
+        float f = mCurrentHealth / 100.0f;
+        healthScale.localScale = healthScale.localScale.Change(y: f);
+        filling.color = healthGradient.Evaluate(1 - f);
     }
 
 	private void LocalPlayerDead()

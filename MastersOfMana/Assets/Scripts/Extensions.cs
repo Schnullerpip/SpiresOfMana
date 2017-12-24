@@ -24,6 +24,21 @@ public static class Extensions
     {
         return new Vector3(vec2.x, 0, vec2.y);
     }
+
+    /// <summary>
+    /// <para>Returns the specified vec3 with a changed x, y and/or z component.
+    /// Can be used if the temporary vector is not necessary.</para>
+    /// <para>eg: transform.position = transform.position.Change( x: 10 );</para>
+    /// </summary>
+    /// <returns>The change.</returns>
+    /// <param name="vec3">Vec3.</param>
+    /// <param name="x">The x coordinate.</param>
+    /// <param name="y">The y coordinate.</param>
+    /// <param name="z">The z coordinate.</param>
+    public static Vector3 Change(this Vector3 vec3, float? x = null, float? y = null, float? z = null)
+    {
+        return new Vector3(x ?? vec3.x, y ?? vec3.y, z ?? vec3.z);
+    }
     #endregion
 
 	#region IList

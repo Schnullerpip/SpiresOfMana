@@ -21,6 +21,7 @@ namespace Prototype.NetworkLobby
         public LobbyCountdownPanel countdownPanel;
         public RectTransform spellSelectionPanel;
         public RectTransform optionsPanel;
+        public InputField playernameField;
 
         public InputField matchNameInput;
         public Button backButton;
@@ -42,7 +43,9 @@ namespace Prototype.NetworkLobby
             backButton.onClick.AddListener(lobbyManager.GoBackButton);
 
 			rewiredPlayer = ReInput.players.GetPlayer (0);
-			matchNameInput.text = PlayerPrefs.GetString ("Playername", "DefaultName") + "'s Gameroom";
+            string playername = PlayerPrefs.GetString("Playername", "DefaultName");
+            matchNameInput.text = playername + "'s Gameroom";
+            playernameField.text = playername;
         }
 
         public void OnClickHost()
@@ -128,5 +131,11 @@ namespace Prototype.NetworkLobby
 #endif
         }
 
+        public void OnPlayerNameChanged(InputField input)
+        {
+            PlayerPrefs.SetString("Playername", input.text);
+            PlayerPrefs.Save();
+            matchNameInput.text = input.text + "'s Gameroom";
+        }
     }
 }

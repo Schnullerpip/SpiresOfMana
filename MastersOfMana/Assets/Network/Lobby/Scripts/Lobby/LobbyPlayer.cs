@@ -123,8 +123,9 @@ namespace Prototype.NetworkLobby
 
             CheckRemoveButton();
 
-            if (playerColor == Color.white)
-                CmdColorChange();
+            playerColor = PlayerPrefsExtended.GetColor("Playercolor", Color.white);
+            CmdSetPlayerColor(playerColor);
+            CmdColorChange();
 
             ChangeReadyButtonColor(JoinColor);
 
@@ -219,6 +220,7 @@ namespace Prototype.NetworkLobby
                 if (isLocalPlayer)
                 {
                     PlayerPrefs.SetString("Playername", playerName);
+                    PlayerPrefsExtended.SetColor("Playercolor", playerColor);
                     PlayerPrefs.Save();
                 }
             }
@@ -312,6 +314,12 @@ namespace Prototype.NetworkLobby
         //====== Server Command
 
         [Command]
+        public void CmdSetPlayerColor(Color color)
+        {
+            playerColor = color;
+        }
+
+        [Command]
         public void CmdColorChange()
         {
             int idx = System.Array.IndexOf(Colors, playerColor);
@@ -320,7 +328,7 @@ namespace Prototype.NetworkLobby
 
             if (idx < 0) idx = 0;
 
-            idx = (idx + 1) % Colors.Length;
+            //idx = (idx + 1) % Colors.Length;
 
             bool alreadyInUse = false;
 
@@ -341,10 +349,12 @@ namespace Prototype.NetworkLobby
             if (inUseIdx >= 0)
             {//if we already add an entry in the colorTabs, we change it
                 _colorInUse[inUseIdx] = idx;
+                Debug.Log("Change");
             }
             else
             {//else we add it
                 _colorInUse.Add(idx);
+                Debug.Log("Add");
             }
 
             playerColor = Colors[idx];

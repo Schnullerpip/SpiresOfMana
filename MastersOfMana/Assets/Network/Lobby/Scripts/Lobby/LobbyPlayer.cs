@@ -112,6 +112,7 @@ namespace Prototype.NetworkLobby
 				readyButtonText.color = ReadyColor;
 			}
             readyButton.interactable = false;
+            colorButton.interactable = false;
         }
 
         void SetupLocalPlayer()
@@ -152,6 +153,7 @@ namespace Prototype.NetworkLobby
             backButton = GetComponentInParent<LobbyPlayerList>().backButton;
             AssignCustomNavigation(readyButton, backButton, OnSelectDirection.down);
             AssignCustomNavigation(removePlayerButton, backButton, OnSelectDirection.down);
+            removePlayerButton.gameObject.SetActive(false);
 
             //when OnClientEnterLobby is called, the loval PlayerController is not yet created, so we need to redo that here to disable
             //the add button if we reach maxLocalPlayer. We pass 0, as it was already counted on OnClientEnterLobby

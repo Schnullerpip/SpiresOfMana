@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 222901514579283734}
   - component: {fileID: 114569920183854154}
   - component: {fileID: 114853011476891102}
+  - component: {fileID: 114806671110587774}
   m_Layer: 5
   m_Name: SpellButton
   m_TagString: Untagged
@@ -100,6 +101,73 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114806671110587774
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1595006412173192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cd0d58b0811147418ce12e061a95f87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scaledSize: 1.2
+  growCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 3.61746
+      outSlope: 3.61746
+      tangentMode: 34
+    - serializedVersion: 2
+      time: 0.42715415
+      value: 1.5452131
+      inSlope: 0.40878558
+      outSlope: 0.40878558
+      tangentMode: 34
+    - serializedVersion: 2
+      time: 0.69946074
+      value: 0.78278494
+      inSlope: -0.59796643
+      outSlope: -0.59796643
+      tangentMode: 34
+    - serializedVersion: 2
+      time: 0.8868956
+      value: 1.0834222
+      inSlope: 0.433194
+      outSlope: 0.433194
+      tangentMode: 34
+    - serializedVersion: 2
+      time: 1
+      value: 1
+      inSlope: -0.73756796
+      outSlope: -0.73756796
+      tangentMode: 34
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  shrinkCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  speed: 6
 --- !u!114 &114853011476891102
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -120,8 +188,8 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 0.409, g: 0.409, b: 0.409, a: 1}
-    m_HighlightedColor: {r: 0.258984, g: 0.8514533, b: 0.872, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_HighlightedColor: {r: 0.328, g: 1, b: 1, a: 1}
+    m_PressedColor: {r: 1, g: 0.7111562, b: 0.3455882, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -135,7 +203,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 114569920183854154}
+  m_TargetGraphic: {fileID: 0}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:

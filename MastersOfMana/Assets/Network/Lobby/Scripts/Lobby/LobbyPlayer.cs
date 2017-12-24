@@ -30,6 +30,7 @@ namespace Prototype.NetworkLobby
         public GameObject localIcone;
         public GameObject remoteIcone;
         private Button backButton;
+        private bool initialized = false;
 
         //OnMyName function will be invoked on clients when server change the value of playerName
         [SyncVar(hook = "OnMyName")]
@@ -125,7 +126,6 @@ namespace Prototype.NetworkLobby
 
             playerColor = PlayerPrefsExtended.GetColor("Playercolor", Color.white);
             CmdSetPlayerColor(playerColor);
-            CmdColorChange();
 
             ChangeReadyButtonColor(JoinColor);
 
@@ -317,6 +317,8 @@ namespace Prototype.NetworkLobby
         public void CmdSetPlayerColor(Color color)
         {
             playerColor = color;
+            CmdColorChange();
+            initialized = true;
         }
 
         [Command]
@@ -346,15 +348,13 @@ namespace Prototype.NetworkLobby
             }
             while (alreadyInUse);
 
-            if (inUseIdx >= 0)
+            if (inUseIdx >= 0 && initialized)//If its not initialized yet, make sure  we add the color and don't overwrite another one!
             {//if we already add an entry in the colorTabs, we change it
                 _colorInUse[inUseIdx] = idx;
-                Debug.Log("Change");
             }
             else
             {//else we add it
                 _colorInUse.Add(idx);
-                Debug.Log("Add");
             }
 
             playerColor = Colors[idx];

@@ -29,6 +29,8 @@ public class PlayerMovement : ServerMoveable
 
 	public FeetCollider feet;
 
+    public SoundEffects soundEffects;
+
 	private bool mIsFalling = false;
 	private Vector3 mMoveInput;
 	private bool mFocusActive;
@@ -237,5 +239,26 @@ public class PlayerMovement : ServerMoveable
     public Vector3 GetCurrentMovementVector()
     {
         return GetDeltaMovement() / Time.fixedDeltaTime;
+    }
+
+    /// <summary>
+    /// This method is called from the player animator. The event is triggered when a foot is touching the ground.
+    /// </summary>
+    private void Step()
+    {
+        soundEffects.PlayStepSound();
+    }
+
+    [System.Serializable]
+    public class SoundEffects
+    {
+        public AudioClip[] stepSounds;
+        public AudioSource sfxSource;
+
+        public void PlayStepSound()
+        {
+            sfxSource.pitch = 1;
+            sfxSource.PlayOneShot(stepSounds.RandomElement());
+        }
     }
 }

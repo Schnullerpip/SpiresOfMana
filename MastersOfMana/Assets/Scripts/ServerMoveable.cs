@@ -13,7 +13,9 @@ public class ServerMoveable : NetworkBehaviour
 
     //determines whether the instance allows movement or not
     [SyncVar] private bool mMovementAllowed = true;
-    public void SetMovementAllowed(bool allowance)
+
+    [ClientRpc]
+    public void RpcSetMovementAllowed(bool allowance)
     {
         mMovementAllowed = allowance;
     }

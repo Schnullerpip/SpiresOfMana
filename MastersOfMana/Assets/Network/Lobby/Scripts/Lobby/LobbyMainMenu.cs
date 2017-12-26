@@ -22,6 +22,8 @@ namespace Prototype.NetworkLobby
         public RectTransform spellSelectionPanel;
         public RectTransform optionsPanel;
         public InputField playernameField;
+        private int playerColorIndex = 0;
+        public Image playerColor;
 
         public InputField matchNameInput;
         public Button backButton;
@@ -46,6 +48,28 @@ namespace Prototype.NetworkLobby
             string playername = PlayerPrefs.GetString("Playername", "DefaultName");
             matchNameInput.text = playername + "'s Gameroom";
             playernameField.text = playername;
+            playerColor.color = PlayerPrefsExtended.GetColor("Playercolor", LobbyPlayer.Colors[playerColorIndex]);
+            playerColorIndex = System.Array.IndexOf(LobbyPlayer.Colors, playerColor.color);
+        }
+
+        public void OnClickNextPlayerColor()
+        {
+            playerColorIndex++;
+            if (playerColorIndex > LobbyPlayer.Colors.Length - 1)
+            {
+                playerColorIndex = 0;
+            }
+            playerColor.color = LobbyPlayer.Colors[playerColorIndex];
+        }
+
+        public void OnClickPreviousPlayerColor()
+        {
+            playerColorIndex--;
+            if(playerColorIndex < 0)
+            {
+                playerColorIndex = LobbyPlayer.Colors.Length - 1;
+            }
+            playerColor.color = LobbyPlayer.Colors[playerColorIndex];
         }
 
         public void OnClickHost()
@@ -77,6 +101,9 @@ namespace Prototype.NetworkLobby
 
         public void OnClickCreateMatchmakingGame()
         {
+            lobbyManager.isHost = true;
+            PlayerPrefsExtended.SetColor("Playercolor", playerColor.color);
+            PlayerPrefs.Save();
             lobbyManager.StartMatchMaker();
             lobbyManager.matchMaker.CreateMatch(
                 matchNameInput.text,
@@ -94,6 +121,9 @@ namespace Prototype.NetworkLobby
 
         public void OnClickOpenServerList()
         {
+            lobbyManager.isHost = false;
+            PlayerPrefsExtended.SetColor("Playercolor", playerColor.color);
+            PlayerPrefs.Save();
             lobbyManager.StartMatchMaker();
             lobbyManager.SetCancelDelegate(lobbyManager.SimpleBackClbk);
             lobbyManager.backDelegate = lobbyManager.Cancel;

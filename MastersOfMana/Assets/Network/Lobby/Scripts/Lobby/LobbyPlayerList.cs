@@ -1,18 +1,19 @@
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
+using UnityEngine.Networking;
 using System.Collections.Generic;
 
 namespace Prototype.NetworkLobby
 {
     //List of players in the lobby
-    public class LobbyPlayerList : MonoBehaviour
+    public class LobbyPlayerList : NetworkBehaviour
     {
         public static LobbyPlayerList _instance = null;
 
         public RectTransform playerListContentTransform;
         public GameObject warningDirectPlayServer;
         public Button backButton;
+        public Button startButton;
 
         protected VerticalLayoutGroup _layout;
         protected List<LobbyPlayer> _players = new List<LobbyPlayer>();
@@ -24,6 +25,8 @@ namespace Prototype.NetworkLobby
 
         public void OnEnable()
         {
+            //Only the Server can Start the game!
+            startButton.enabled = LobbyManager.s_Singleton.isHost;
             LobbyManager.s_Singleton.SetCancelDelegate(GoBack);
             _instance = this;
             _layout = playerListContentTransform.GetComponent<VerticalLayoutGroup>();
@@ -34,10 +37,12 @@ namespace Prototype.NetworkLobby
             LobbyManager.s_Singleton.RemoveLastCancelDelegate();
         }
 
-        public void DisplayDirectServerWarning(bool enabled)
+        public void OnStartClicked()
         {
-            if(warningDirectPlayServer != null)
-                warningDirectPlayServer.SetActive(enabled);
+            foreach (LobbyPlayer player in _players)
+            {
+                player.RpcSetPlayerReady();
+            }
         }
 
         void Update()

@@ -51,10 +51,6 @@ public class ParalysisBehaviour : A_EffectBehaviour
 	    {
 	        preview.instance.Move(hit.point);
 	    }
-	    else
-	    {
-            Debug.Log("nothing hit");
-	    }
 		caster.SetColliderIgnoreRaycast(false);
 	}
 

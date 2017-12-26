@@ -1,9 +1,6 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityStandardAssets.Utility;
 
 public class ParalysisBehaviour : A_EffectBehaviour
 {
@@ -14,7 +11,7 @@ public class ParalysisBehaviour : A_EffectBehaviour
     [SerializeField] private float mReductionIntervalInSeconds;
     [SerializeField] private float mLifeTime;
     private int mDamagePerSecond;
-    [SerializeField] private float mLifetimeAfterCrush;
+    [SerializeField] private float mLifetimeAfterShatter;
     [SerializeField] private GameObject mShatterEffect;
     [SerializeField] private Transform[] mFragmentTransforms;
 
@@ -40,6 +37,33 @@ public class ParalysisBehaviour : A_EffectBehaviour
     [SyncVar] private GameObject mAffectedPlayerObject;
     private PlayerScript mAffectedPlayer;
 
+	public override void Preview (PlayerScript caster)
+	{
+		base.Preview(caster);
+
+        preview.instance.SetAvailability(caster.CurrentSpellReady());
+
+		Ray ray = caster.aim.GetCameraRig().GetCenterRay();
+
+		RaycastHit hit;
+		caster.SetColliderIgnoreRaycast(true);
+	    if (Physics.Raycast(ray, out hit))
+	    {
+	        preview.instance.Move(hit.point);
+	    }
+	    else
+	    {
+            Debug.Log("nothing hit");
+	    }
+		caster.SetColliderIgnoreRaycast(false);
+	}
+
+	public override void StopPreview (PlayerScript caster)
+	{
+		base.StopPreview (caster);
+        preview.instance.Deactivate();
+	}
+
     public override void Execute(PlayerScript caster)
     {
         //check for a hit
@@ -54,13 +78,15 @@ public class ParalysisBehaviour : A_EffectBehaviour
             {
                 //create an icecrystal
                 ParalysisBehaviour pb = PoolRegistry.GetInstance(gameObject, p.transform.position, caster.transform.rotation, 1, 1) .GetComponent<ParalysisBehaviour>();
-                pb.gameObject.layer = LayerMask.NameToLayer("IgnorePlayer");
-                pb.Init(p.gameObject);
-                NetworkServer.Spawn(pb.gameObject);
-                //apply damage just so the system registeres it as an affect
-                p.healthScript.TakeDamage(0, GetType());
-                p.SetEffectState(EffectStateSystem.EffectStateID.Frozen); //from now on only the ice crystal can damage the player
 
+                pb.gameObject.layer = LayerMask.NameToLayer("IgnorePlayer");
+
+                pb.Init(p.gameObject);
+                pb.mAffectedPlayer = p;
+
+                NetworkServer.Spawn(pb.gameObject);
+
+                p.SetEffectState(EffectStateSystem.EffectStateID.Frozen); //from now on only the ice crystal can damage the player
 
                 return;
             }
@@ -93,7 +119,7 @@ public class ParalysisBehaviour : A_EffectBehaviour
         healthscript.ResetObject();
 
         //according to how long the paralysis should be applied, calculate how much damage the icecrystal has to inflict to itself per second to disappear after its lifetime
-        mDamagePerSecond = (int)(healthscript.GetMaxHealth()/mLifeTime);
+        mDamagePerSecond = (int)(healthscript.GetMaxHealth()/mLifeTime*mReductionIntervalInSeconds);
 
         //make sure all the fragments are inactive
         for (int i = 0; i < fragments.Length; ++i)
@@ -109,17 +135,15 @@ public class ParalysisBehaviour : A_EffectBehaviour
             var dummyTrans = mFragmentTransforms[i];
             fragTrans.position = dummyTrans.position;
             fragTrans.rotation = dummyTrans.rotation;
-
         }
     }
 
     public void OnEnable()
     {
+        mAffectedPlayer = null;
         mShatterEffect.SetActive(false);
         mFollowTarget = true;
-        gameObject.layer = LayerMask.NameToLayer("IgnorePlayer");
         mLastIndex = 0;
-
     }
 
     public override void OnStartClient()
@@ -142,7 +166,6 @@ public class ParalysisBehaviour : A_EffectBehaviour
             healthscript.OnDamageTaken += RemitDamage; //redirect the icecrystals damage to the player
         }
     }
-    #endregion
 
     private void ApplyMaliciousEffect()
     {
@@ -150,12 +173,13 @@ public class ParalysisBehaviour : A_EffectBehaviour
         {
             //clear movement input with player
             mAffectedPlayer.movement.ClearMovementInput();
-            mAffectedPlayer.movement.SetMovementAllowed(false);
+            mAffectedPlayer.movement.RpcSetMovementAllowed(false);
             //slow down/stop the affected player
             //mAffectedPlayer.movement.speed = mAffectedPlayer.movement.originalSpeed*mSlowFactor;
             mAffectedPlayer.inputStateSystem.SetState(InputStateSystem.InputStateID.Paralyzed);
         }
     }
+    #endregion
 
     #region UpdateRoutines
     public void Update()
@@ -165,8 +189,9 @@ public class ParalysisBehaviour : A_EffectBehaviour
         if (isServer && mTimeCount >= mReductionIntervalInSeconds)
         {
             mTimeCount = 0;
+
             //damages itself, so it will disappear eventually
-            healthscript.TakeDamage(mDamagePerSecond, GetType());
+            healthscript.TakeDamage(mDamagePerSecond, null);
         }
     }
     
@@ -196,7 +221,9 @@ public class ParalysisBehaviour : A_EffectBehaviour
     {
         if (isServer && !healthscript.IsAlive())
         {
+            RestoreNormalState();
             RpcDisappear();
+            StartCoroutine(DisappearAfterSeconds(this, mLifetimeAfterShatter));
         }
     }
     /// <summary>
@@ -237,19 +264,15 @@ public class ParalysisBehaviour : A_EffectBehaviour
         {
             //revert back to normal status
             mAffectedPlayer.SetEffectState(EffectStateSystem.EffectStateID.Normal);
-            mAffectedPlayer.movement.SetMovementAllowed(true);
-            mAffectedPlayer.inputStateSystem.SetState(InputStateSystem.InputStateID.Normal);
+            mAffectedPlayer.movement.RpcSetMovementAllowed(true);
+            mAffectedPlayer.SetInputState(InputStateSystem.InputStateID.Normal);
         }
     }
 
-    //implements the handshake between server and client - bcs we MUST guarantee, that normal state is restored before unspawning!!
     [ClientRpc]
     private void RpcDisappear()
     {
-        RestoreNormalState();
-        //make the ice crystal shatter
         Shatter();
-        StartCoroutine(DisappearAfterSeconds(mLifetimeAfterCrush));
     }
 
     /// <summary>
@@ -258,6 +281,10 @@ public class ParalysisBehaviour : A_EffectBehaviour
     private void Shatter()
     {
         mShatterEffect.SetActive(true);
+        mFollowTarget = false;
+
+        //disallow collisions for the icecrystal collider
+        gameObject.layer = LayerMask.NameToLayer("IgnorePlayer");
 
         //disable the actual crystal and replace it completely with the fragments
         ActivateOnDeactivation.SetActive(false);
@@ -268,27 +295,19 @@ public class ParalysisBehaviour : A_EffectBehaviour
             var rigid = fragments[i].GetComponent<Rigidbody>();
             rigid.isKinematic = false;
             rigid.useGravity = true;
-            rigid.AddExplosionForce(0.4f, transform.position, 3.0f);
+            rigid.AddExplosionForce(1000.0f, transform.position, 30.0f);
         }
     }
 
-    IEnumerator DisappearAfterSeconds(float seconds)
+    IEnumerator DisappearAfterSeconds(ParalysisBehaviour pb, float seconds)
     {
         yield return new WaitForSeconds(seconds);
-        gameObject.SetActive(false);
-        if (!isServer)
+        pb.gameObject.SetActive(false);
+
+        if (isServer)
         {
-            CmdUnspawnObject();
+            NetworkServer.UnSpawn(pb.gameObject);
         }
-    }
-
-
-
-    [Command]
-    private void CmdUnspawnObject()
-    {
-        Debug.Log("invoking Disappear on isServer: " + isServer);
-        NetworkServer.UnSpawn(gameObject);
     }
     #endregion
 }

@@ -50,6 +50,7 @@ public class JumpBehaviour : A_EffectBehaviour
         JumpBehaviour jumpBehaviour = PoolRegistry.GetInstance(gameObject, 4, 4).GetComponent<JumpBehaviour>();
 
         jumpBehaviour.transform.position = caster.transform.position;
+        jumpBehaviour.caster = caster;
 
         //now activate it
         jumpBehaviour.gameObject.SetActive(true);
@@ -111,6 +112,14 @@ public class JumpBehaviour : A_EffectBehaviour
         
         gameObject.SetActive(false);
         NetworkServer.UnSpawn(gameObject);
+    }
+
+    private void LateUpdate()
+    {
+        if (caster)
+        {
+			transform.position = caster.transform.position;
+		}
     }
 
     void OnValidate()

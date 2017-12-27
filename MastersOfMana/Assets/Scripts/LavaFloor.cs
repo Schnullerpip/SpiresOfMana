@@ -103,10 +103,10 @@ public class LavaFloor : NetworkBehaviour
     [ClientRpc]
     private void RpcPlayDamageSound(Vector3 position)
     {
-        bubblingSource.transform.position = position;
+        burnSource.transform.position = position;
         PitchingAudioClip clip = burnClips.RandomElement();
-        bubblingSource.pitch = clip.GetRandomPitch();
-        bubblingSource.PlayOneShot(clip.audioClip);
+        burnSource.pitch = clip.GetRandomPitch();
+        burnSource.PlayOneShot(clip.audioClip);
     }
 
     private void FixedUpdate()

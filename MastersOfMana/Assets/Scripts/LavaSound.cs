@@ -6,20 +6,24 @@ public class LavaSound : MonoBehaviour {
 
 	public Transform lava;
 
-    public Transform ears;
+    private Transform mEars;
 
 	void LateUpdate () 
     {
-	    if(!ears || !ears.gameObject.activeInHierarchy)
+	    if(mEars == null || !mEars.gameObject.activeInHierarchy)
         {
             AudioListener listener = FindObjectOfType<AudioListener>();
             if(listener)
             {
-                ears = listener.transform;
+                mEars = listener.transform;
+            }
+            else
+            {
+                return;
             }
         }
 
-        Vector3 pos = ears.position;
+        Vector3 pos = mEars.position;
         pos.y = lava.position.y;
         transform.position = pos;
 	}

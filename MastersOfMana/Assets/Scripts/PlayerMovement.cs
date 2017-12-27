@@ -194,6 +194,8 @@ public class PlayerMovement : ServerMoveable
                 onLandingWhileFalling(delta);
 			}
 		}
+
+        soundEffects.PlayLandingSFX();
 	}
 
 	/// <summary>
@@ -255,10 +257,18 @@ public class PlayerMovement : ServerMoveable
         public AudioClip[] stepSounds;
         public AudioSource sfxSource;
 
+        public PitchingAudioClip landingSfx;
+
         public void PlayStepSound()
         {
             sfxSource.pitch = 1;
             sfxSource.PlayOneShot(stepSounds.RandomElement());
+        }
+
+        public void PlayLandingSFX()
+        {
+            sfxSource.pitch = landingSfx.GetRandomPitch();
+            sfxSource.PlayOneShot(landingSfx.audioClip);
         }
     }
 }

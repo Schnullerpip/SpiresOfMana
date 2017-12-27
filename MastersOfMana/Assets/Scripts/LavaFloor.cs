@@ -16,6 +16,10 @@ public class LavaFloor : NetworkBehaviour
     private float mRunTime = 0;
     private bool mLavaActive = false;
 
+    [Header("SFX")]
+    public AudioSource bubblingSource;
+    public AudioSource burnSource;
+    public PitchingAudioClip[] burnClips;
 
     public void Start()
     {
@@ -77,7 +81,7 @@ public class LavaFloor : NetworkBehaviour
     {
         while (enabled)
         {
-            if(!health.IsAlive())
+            if (!health.IsAlive())
             {
                 StopCoroutine(mInstanceCoroutineDictionary[health]);
                 mInstanceCoroutineDictionary.Remove(health);
@@ -85,14 +89,24 @@ public class LavaFloor : NetworkBehaviour
             }
 
             health.TakeDamage(damagePerSecond, this.GetType());
+            RpcPlayDamageSound(health.transform.position);
 
             if (sm && health.IsAlive())
             {
                 //shoot the moveable into the sky to make it jump mario-ayayayayay-style
                 sm.RpcSetVelocityY(repelForce);
             }
-			yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(1f);
         }
+    }
+
+    [ClientRpc]
+    private void RpcPlayDamageSound(Vector3 position)
+    {
+        bubblingSource.transform.position = position;
+        PitchingAudioClip clip = burnClips.RandomElement();
+        bubblingSource.pitch = clip.GetRandomPitch();
+        bubblingSource.PlayOneShot(clip.audioClip);
     }
 
     private void FixedUpdate()

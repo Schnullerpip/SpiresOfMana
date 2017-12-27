@@ -1552,7 +1552,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 2
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -1816,6 +1816,11 @@ MonoBehaviour:
     - {fileID: 8300000, guid: e3ae2b62727164a8a85bf010d8969fe2, type: 3}
     - {fileID: 8300000, guid: 63fd06920cf484c809a900473cadb9ec, type: 3}
     sfxSource: {fileID: 82262730603465000}
+    landingSfx:
+      audioClip: {fileID: 8300000, guid: 234f8bf2620b146738feebb4b363b421, type: 3}
+      pitchtingRange:
+        min: 0.8
+        max: 1.2
 --- !u!114 &114211396574403768
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1913,7 +1918,7 @@ MonoBehaviour:
     pitchtingRange:
       min: 0.9
       max: 1.1
-  deathSFX: {fileID: 8300000, guid: 84e1cf0e5dff35745b6881671cec1a7e, type: 3}
+  deathSFX: {fileID: 8300000, guid: 15232b1d0d1bd428387f21515dfda36e, type: 3}
   SFXaudioSource: {fileID: 82406275544267284}
 --- !u!114 &114612807110646480
 MonoBehaviour:

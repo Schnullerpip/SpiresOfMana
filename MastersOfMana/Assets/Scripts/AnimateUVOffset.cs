@@ -26,4 +26,19 @@ public class AnimateUVOffset : MonoBehaviour
 
         material.SetTextureOffset(mPropertyId, mUV);
 	}
+
+    private void OnDestroy()
+    {
+        Revert();
+    }
+
+    private void OnDisable()
+    {
+        Revert();
+    }
+
+    void Revert()
+    {
+        material.SetTextureOffset(mPropertyId, Vector2.zero);
+    }
 }

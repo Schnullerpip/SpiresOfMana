@@ -54,6 +54,21 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
     //to be able to remember which stone was casted y which player
     private static Dictionary<PlayerScript, RockProjectileBehaviour> mShootingOrder = new Dictionary<PlayerScript, RockProjectileBehaviour>();
 
+	public override void Preview (PlayerScript caster)
+	{
+		base.Preview (caster);
+
+	    preview.instance.transform.localScale = mShootingReach * 2 * Vector3.one; // * 2 because we want to describe the radius rather than the diameter
+        preview.instance.Move(caster.movement.mRigidbody.worldCenterOfMass);
+	}
+
+	public override void StopPreview (PlayerScript caster)
+	{
+		base.StopPreview (caster);
+        preview.instance.Deactivate();
+	}
+
+
     public override void Execute(PlayerScript caster)
     {
         //get a rock instance
@@ -228,12 +243,13 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         //check for each enemy, wheather or not we should shoot towards them
         //get nearest enemy
         PlayerScript nearest = null;
+        Vector3 casterPos = caster.movement.mRigidbody.worldCenterOfMass;
         float distance = 10000;
         for (var i = 0; i < enemys.Count; ++i)
         {
             if (enemys[i] != null)
             {
-                float dist = Vector3.Distance(caster.transform.position, enemys[i].movement.mRigidbody.worldCenterOfMass);
+                float dist = Vector3.Distance(casterPos, enemys[i].movement.mRigidbody.worldCenterOfMass);
                 if (dist < distance)
                 {
                     nearest = enemys[i];
@@ -242,7 +258,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
             }
         }
         //if nearest is in reach shoot it!
-        if (distance < mShootingReach && nearest)
+        if (distance <= mShootingReach && nearest)
         {
             //now if the stones direct path to the enemy is free, shoot it
             RaycastHit hit;
@@ -352,6 +368,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
 
         whooshSource.Play();
     }
+
 
     public void OnValidate()
     {

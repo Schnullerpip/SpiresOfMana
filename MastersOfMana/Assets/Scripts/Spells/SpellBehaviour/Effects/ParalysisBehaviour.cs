@@ -187,7 +187,9 @@ public class ParalysisBehaviour : A_EffectBehaviour
             mTimeCount = 0;
 
             //damages itself, so it will disappear eventually
-            healthscript.TakeDamage(mDamagePerSecond, null);
+            mRemitDamage = false; //dont remit the damage to the affected player for self inflicted damage
+            healthscript.TakeDamage(mDamagePerSecond, GetType());
+            mRemitDamage = true; //all other damage sources should go through to the affected player
         }
     }
     
@@ -222,12 +224,14 @@ public class ParalysisBehaviour : A_EffectBehaviour
             StartCoroutine(DisappearAfterSeconds(this, mLifetimeAfterShatter));
         }
     }
+
     /// <summary>
     /// puts the damage taken through to the affectedPlayer
     /// </summary>
     /// <param name="amount"></param>
+    private bool mRemitDamage = true;
     private void RemitDamage(int amount) {
-        if (mAffectedPlayer)
+        if (mRemitDamage && mAffectedPlayer)
         {
             mAffectedPlayer.healthScript.TakeDamage((int)(amount * DamageRemitFactor), GetType());
         }

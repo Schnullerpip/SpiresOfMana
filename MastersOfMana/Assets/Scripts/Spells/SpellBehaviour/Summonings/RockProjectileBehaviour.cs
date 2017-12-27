@@ -41,6 +41,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
     private Vector3 mOffset;
 
     //nice visuals
+    [SyncVar]
     private Vector3 mRotationAxis;
     [SerializeField]
     private float mRotationSpeed;
@@ -214,14 +215,14 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
 
         if (!mRotateAroundCaster) return;
 
-        //if it is this instances' turn to shot towards enemies
+        //if it is this instances' turn to shoot towards enemies
         if (previous != null)
         {
             return; //this means an instance should be thrown before this instance
         }
         if((mShootCount+=Time.deltaTime) < shootFreqencyInSeconds)
         {
-            return; //this rock instance should not yet be fired
+            return; //this rock instance should not yet be fired - delay is neccessary or else all rocks would be fired at once
         }
 
         //check for each enemy, wheather or not we should shoot towards them

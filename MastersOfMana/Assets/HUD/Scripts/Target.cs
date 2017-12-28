@@ -8,6 +8,7 @@ public class Target : MonoBehaviour {
     {
         GameManager.OnRoundStarted += RoundStarted;
         GameManager.OnLocalPlayerDead += LocalPlayerDead;
+        GameManager.OnRoundEnded += LocalPlayerDead;
         gameObject.SetActive(false);
     }
 
@@ -24,6 +25,7 @@ public class Target : MonoBehaviour {
     public void OnDestroy()
     {
         GameManager.OnRoundStarted -= RoundStarted;
+        GameManager.OnRoundEnded -= LocalPlayerDead;
         GameManager.OnLocalPlayerDead -= LocalPlayerDead;
     }
 }

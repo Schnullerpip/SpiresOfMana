@@ -14,6 +14,7 @@ namespace Prototype.NetworkLobby
         public GameObject warningDirectPlayServer;
         public Button backButton;
         public Button startButton;
+        public Text waitingText;
 
         protected VerticalLayoutGroup _layout;
         protected List<LobbyPlayer> _players = new List<LobbyPlayer>();
@@ -26,7 +27,8 @@ namespace Prototype.NetworkLobby
         public void OnEnable()
         {
             //Only the Server can Start the game!
-            startButton.enabled = LobbyManager.s_Singleton.isHost;
+            startButton.gameObject.SetActive(LobbyManager.s_Singleton.isHost);
+            waitingText.gameObject.SetActive(!LobbyManager.s_Singleton.isHost);
             LobbyManager.s_Singleton.SetCancelDelegate(GoBack);
             _instance = this;
             _layout = playerListContentTransform.GetComponent<VerticalLayoutGroup>();

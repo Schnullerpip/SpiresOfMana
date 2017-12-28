@@ -103,6 +103,7 @@ public class GameManager : MonoBehaviour
 
     public void TriggerGameStarted()
     {
+        ResetLocalGameState();
         mStartPoints = FindObjectOfType<StartPoints>();
         gameRunning = true;
         if (OnGameStarted != null)

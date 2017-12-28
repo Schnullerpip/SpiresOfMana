@@ -385,6 +385,10 @@ namespace Prototype.NetworkLobby
         }
 
         // --- Countdown management
+        public override void OnLobbyClientExit()
+        {
+            mLoadedPlayers.Clear();
+        }
 
         public override void OnLobbyServerPlayersReady()
         {

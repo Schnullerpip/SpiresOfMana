@@ -1,12 +1,11 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Networking;
 using System.Collections.Generic;
 
 namespace Prototype.NetworkLobby
 {
     //List of players in the lobby
-    public class LobbyPlayerList : NetworkBehaviour
+    public class LobbyPlayerList : MonoBehaviour
     {
         public static LobbyPlayerList _instance = null;
 

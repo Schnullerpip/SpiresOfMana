@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 public class LightningAuraBehaviour : A_SummoningBehaviour
 {
     [SerializeField] private float mDuration = 50;
-    [SerializeField] private float mCountTillDamage = 1.0f;
+    [SerializeField] private float mCountTilDamage = 1.0f;
     [SerializeField] private int mDamage = 1;
     private float mEnergyLevel;
 
@@ -15,14 +15,31 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
     [SerializeField]
     private ParticleSystem mLightningProjectile;
 
+
     //the list that captures which players are shot
     private List<PlayerScript> mAlreadyCaught;
+
+    [SerializeField] private SphereCollider mDecectionTrigger; 
+
+	public override void Preview (PlayerScript caster)
+	{
+		base.Preview (caster);
+
+	    preview.instance.transform.localScale = (mDecectionTrigger.radius * 2) * Vector3.one;
+        preview.instance.Move(caster.movement.mRigidbody.worldCenterOfMass);
+	}
+
+	public override void StopPreview (PlayerScript caster)
+	{
+		base.StopPreview (caster);
+        preview.instance.Deactivate();
+	}
 
     void OnEnable()
     {
         mAlreadyCaught = new List<PlayerScript>();
         mEnergyLevel = mDuration;
-        mTimeCount = mCountTillDamage;
+        mTimeCount = mCountTilDamage;
     }
 
     public override void Execute(PlayerScript caster)
@@ -125,23 +142,13 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
             }
             //since mAlreadyCaught is not empty we assume, that mLightningProjectile is already active
             //shoot the lightning projectile at nearest opponent
-            var vel = mLightningProjectile.velocityOverLifetime;
-            Vector3 lightningDirection =
-                Vector3.Normalize(nearest.movement.mRigidbody.worldCenterOfMass - transform.position);
-            lightningDirection *= 30;
-            //vel.x = lightningDirection.x;
-            //vel.y = lightningDirection.y;
             mLightningProjectile.transform.LookAt(nearest.movement.mRigidbody.worldCenterOfMass);
 
             //apply damage to nearest opponent
-            mTimeCount += Time.deltaTime;
-            if (mTimeCount >= mCountTillDamage)
+            if (isServer && ((mTimeCount+=Time.deltaTime) >= mCountTilDamage))
             {
                 mTimeCount = 0;
-                if (isServer)
-                {
-                    nearest.healthScript.TakeDamage(mDamage, this.GetType());
-                }
+                nearest.healthScript.TakeDamage(mDamage, this.GetType());
             }
         }
 

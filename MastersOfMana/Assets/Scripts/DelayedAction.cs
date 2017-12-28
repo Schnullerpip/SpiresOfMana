@@ -5,9 +5,19 @@ using UnityEngine.Events;
 
 public class DelayedAction : MonoBehaviour 
 {
-	public Action[] actions;
+	public bool invokeOnEnable;
 
-	public void InvokeActions()
+    public Action[] actions;
+
+    private void OnEnable()
+    {
+        if(invokeOnEnable)
+        {
+            InvokeActions();
+        }
+    }
+
+    public void InvokeActions()
 	{
 		for (int i = 0; i < actions.Length; ++i) 
 		{
@@ -31,10 +41,5 @@ public class DelayedAction : MonoBehaviour
 	{
 		public float timer;
 		public UnityEvent unityEvent;
-	}
-
-	public void iuadsfhugo(GameObject go)
-	{
-		
 	}
 }

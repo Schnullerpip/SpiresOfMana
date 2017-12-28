@@ -49,6 +49,9 @@ public class JumpBehaviour : A_EffectBehaviour
         //Get a jumpinstance out of the pool
         JumpBehaviour jumpBehaviour = PoolRegistry.GetInstance(gameObject, 4, 4).GetComponent<JumpBehaviour>();
 
+        jumpBehaviour.transform.position = caster.transform.position;
+        jumpBehaviour.caster = caster;
+
         //now activate it
         jumpBehaviour.gameObject.SetActive(true);
 
@@ -111,11 +114,19 @@ public class JumpBehaviour : A_EffectBehaviour
         NetworkServer.UnSpawn(gameObject);
     }
 
+    private void LateUpdate()
+    {
+        if (caster)
+        {
+			transform.position = caster.transform.position;
+		}
+    }
+
     void OnValidate()
 	{
 	    if (vacuumPrefab)
 	    {
-            vacuumPrefab.transform.localScale = Vector3.one * pullInRadius * 2;
+            //vacuumPrefab.transform.localScale = Vector3.one * pullInRadius * 2;
 	    }
 	}
 }

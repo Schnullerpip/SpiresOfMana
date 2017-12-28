@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EffectStateFrozen : A_EffectState {
-    public EffectStateFrozen(PlayerScript player) :base(player) { }
+    public EffectStateFrozen(PlayerScript player) : base(player) { }
 
     public override int CalculateDamage(int amount, System.Type dealerType)
     {

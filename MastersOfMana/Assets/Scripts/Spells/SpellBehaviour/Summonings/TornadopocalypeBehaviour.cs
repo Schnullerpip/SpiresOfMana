@@ -149,12 +149,15 @@ private IEnumerator Spawn(PlayerScript target)
 	{
         yield return new WaitForSeconds(time);
 
-	    caster.healthScript.OnInstanceDied -= EndSpell;
-        mIsActive = false;
-		//reset the flag so a new ultimate can be started
-		GameManager.instance.UnregisterUltiSpell(this);
+	    if (gameObject.activeSelf && mIsActive)
+	    {
+            caster.healthScript.OnInstanceDied -= EndSpell;
+            mIsActive = false;
+            //reset the flag so a new ultimate can be started
+            GameManager.instance.UnregisterUltiSpell(this);
 
-		NetworkServer.UnSpawn(gameObject);
-		gameObject.SetActive(false);
+            NetworkServer.UnSpawn(gameObject);
+            gameObject.SetActive(false);
+	    }
 	}
 }

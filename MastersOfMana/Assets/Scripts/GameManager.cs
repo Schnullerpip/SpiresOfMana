@@ -66,7 +66,12 @@ public class GameManager : MonoBehaviour
         mNumberOfGoMessages = 0;
         mNumberOfDeadPlayers = 0;
         mNumOfReadyPlayers = 0;
-        isUltimateActive = false;
+        //end ultispells, that are currently running
+        if (isUltimateActive)
+        {
+            isUltimateActive = false;
+            currentlyCastUltiSpell.EndSpell();
+        }
     }
 
     public void Go()
@@ -158,11 +163,6 @@ public class GameManager : MonoBehaviour
     {
         gameRunning = false;
 
-        //end ultispells, that are currently running
-        if (isUltimateActive)
-        {
-            currentlyCastUltiSpell.EndSpell();
-        }
 
         if (OnRoundEnded != null)
         {

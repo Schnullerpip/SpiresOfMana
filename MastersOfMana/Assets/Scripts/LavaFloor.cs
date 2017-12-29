@@ -24,9 +24,20 @@ public class LavaFloor : NetworkBehaviour
     public void Start()
     {
         mStartHeight = transform.position.y;
+
+        Debug.LogWarning("Remove code for stopping lava for release build!");
+    }
+
+    public void OnEnable()
+    {
         GameManager.OnRoundStarted += RoundStarted;
         GameManager.OnRoundEnded += RoundEnded;
-        Debug.LogWarning("Remove code for stopping lava for release build!");
+    }
+
+    public void OnDisable()
+    {
+        GameManager.OnRoundStarted -= RoundStarted;
+        GameManager.OnRoundEnded -= RoundEnded;
     }
 
     private Dictionary<HealthScript, Coroutine> mInstanceCoroutineDictionary = new Dictionary<HealthScript, Coroutine>();

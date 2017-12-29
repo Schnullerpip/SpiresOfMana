@@ -297,9 +297,10 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
     //}
 
     /// <summary>
-    /// Stop the spell execution and clean up any remaining spell parts
+    /// Stop the spell and clean up any remaining spell parts
     /// </summary>
-    //public virtual void EndSpell()
+    public virtual void EndSpell() { }
+
     //{
     //    if (isServer)
     //    {

@@ -53,7 +53,6 @@ public class TornadoMinion : NetworkBehaviour {
 		}
 
 		StartCoroutine(Die(doneAction));
-
 	}
 
 	/// <summary>
@@ -113,7 +112,10 @@ public class TornadoMinion : NetworkBehaviour {
 				ps.healthScript.TakeDamage(damage, typeof(TornadopocalypeBehaviour));
 
 				mHot = false;
-				RpcDisappear();
+			    if (gameObject.activeSelf && isServer)
+			    {
+                    RpcDisappear();
+			    }
 			}
 			else
 			{

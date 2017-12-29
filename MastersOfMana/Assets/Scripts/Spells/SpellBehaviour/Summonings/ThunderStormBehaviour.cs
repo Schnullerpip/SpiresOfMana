@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -29,7 +28,7 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
 	#region implemented abstract members of A_SpellBehaviour
 	public override void Execute (PlayerScript caster)
 	{
-		GameManager.instance.isUltimateActive = true;
+		GameManager.instance.RegisterUltiSpell(this);
 
 		ThunderStormBehaviour thunderStormBehaviour = PoolRegistry.GetInstance(gameObject, 1, 1).GetComponent<ThunderStormBehaviour>();
 
@@ -40,7 +39,20 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
 		thunderStormBehaviour.gameObject.SetActive(true);
 
         thunderStormBehaviour.StartCoroutine(thunderStormBehaviour.Init());
+	    caster.healthScript.OnInstanceDied += thunderStormBehaviour.EndSpell;
 	}
+
+    public override void EndSpell()
+    {
+	    caster.healthScript.OnInstanceDied -= EndSpell;
+        mIsActive = false;
+
+        //reset the flag so a new ultimate can be started
+        GameManager.instance.UnregisterUltiSpell(this);
+
+        NetworkServer.UnSpawn(this.gameObject);
+        gameObject.SetActive(false);
+    }
 	#endregion
 
     private IEnumerator Init()
@@ -69,7 +81,7 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
         yield return new WaitForSeconds(strikePrefab.anticipationTime * 2 + strikePrefab.lifetime);
 
         //reset the flag so a new ultimate can be started
-        GameManager.instance.isUltimateActive = false;
+        GameManager.instance.UnregisterUltiSpell(this);
 
         NetworkServer.UnSpawn(this.gameObject);
         this.gameObject.SetActive(false);

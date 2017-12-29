@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     public PlayerScript localPlayer;
     public GameObject eventSystem;
     public bool isUltimateActive = false;
+    public A_SpellBehaviour currentlyCastUltiSpell = null;
     public int numOfActiveMenus = 0;
     public bool gameRunning = false;
 
@@ -134,9 +135,35 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void RegisterUltiSpell(A_SpellBehaviour ultiSpell)
+    {
+        isUltimateActive = true;
+        currentlyCastUltiSpell = ultiSpell;
+    }
+
+    public void UnregisterUltiSpell(A_SpellBehaviour ultiSpell)
+    {
+        if (isUltimateActive && currentlyCastUltiSpell == ultiSpell)
+        {
+            isUltimateActive = false;
+            currentlyCastUltiSpell = null;
+        }
+        else
+        {
+            Debug.Log("Trying to unregister an ultiSpell, that is not registered!");
+        }
+    }
+
     public void TriggerRoundEnded()
     {
         gameRunning = false;
+
+        //end ultispells, that are currently running
+        if (isUltimateActive)
+        {
+            currentlyCastUltiSpell.EndSpell();
+        }
+
         if (OnRoundEnded != null)
         {
             OnRoundEnded();

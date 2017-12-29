@@ -190,5 +190,4 @@ public class LightningStrike : NetworkBehaviour
 		NetworkServer.UnSpawn(this.gameObject);
 		this.gameObject.SetActive(false);
 	}
-
 }

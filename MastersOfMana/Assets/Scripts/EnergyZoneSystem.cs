@@ -17,9 +17,6 @@ public class EnergyZoneSystem : NetworkBehaviour
 	public List<spawnZone> spawnZones;
 	public Transform EnergyZones;
 
-    public AudioSource audioSource;
-    public AudioClip appearanceSfx;
-
     private List<Transform> mZoneSpawns = new List<Transform>();
     private int currentIndex = 0;
 
@@ -63,9 +60,6 @@ public class EnergyZoneSystem : NetworkBehaviour
             //Get a random spawn position
             Transform healSpawnPosition = mZoneSpawns.RandomElement();
             Vector3 position = healSpawnPosition.position;
-
-            audioSource.transform.position = position;
-            audioSource.Play();
 
             Quaternion rotation = healSpawnPosition.rotation;
             mZoneSpawns.Remove(healSpawnPosition);

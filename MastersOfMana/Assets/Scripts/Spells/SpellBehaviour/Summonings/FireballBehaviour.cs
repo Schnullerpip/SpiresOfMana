@@ -156,7 +156,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 		}
 
 		//skip trigger and the casters collision boxes
-        if (collider.isTrigger || caster.IsColliderPartOf(collider))
+        if (collider.isTrigger || (caster && caster.IsColliderPartOf(collider)))
         {
             return;
         }

@@ -19,12 +19,19 @@ public class GrenadeBehaviour : A_ServerMoveableSummoning
 	public float explosionTime = 0.5f;
 
 	public GameObject explosionPrefab;
-	public GameObject grenadeMesh;
 
-	private static float? sRigidMass = null;
+	public Transform mesh;
+    public AnimationCurve scaleX;
+    public AnimationCurve scaleY;
+    public AnimationCurve scaleZ;
 
-//    private Rigidbody mStickTo = null;
-//    private Vector3 mStickPosition;
+    [Header("SFX")]
+    public PitchingAudioClip[] collisionSounds;
+    public PitchingAudioClip[] throwSounds;
+
+    public AudioSource audioSource;
+
+    private static float? sRigidMass = null;
 
     public override void Awake()
     {
@@ -60,24 +67,30 @@ public class GrenadeBehaviour : A_ServerMoveableSummoning
 
     public override void Execute(PlayerScript caster)
     {
-		//GrenadeBehaviour grenadeBehaviour = PoolRegistry.GrenadePool.Get().GetComponent<GrenadeBehaviour>();
 		GrenadeBehaviour grenadeBehaviour = PoolRegistry.GetInstance(this.gameObject, 4, 4).GetComponent<GrenadeBehaviour>();
-        //create an instance of this grenade on the client's machine
+
 		grenadeBehaviour.caster = caster;
 
         grenadeBehaviour.gameObject.SetActive(true);
 
 		Vector3 aimDirection = GetAimServer(caster);
-		
-		grenadeBehaviour.Reset(caster.handTransform.position, caster.transform.rotation);
+		                                                      //aweful fix, this should prevent spawing the grenade inside the player due to lag
+        grenadeBehaviour.Reset(caster.handTransform.position + aimDirection, caster.transform.rotation);
+
 		grenadeBehaviour.mRigid.velocity = aimDirection * throwForce;
 
-		NetworkServer.Spawn(grenadeBehaviour.gameObject, grenadeBehaviour.GetComponent<NetworkIdentity>().assetId);
+        //create an instance of this grenade on the client's machine
+        NetworkServer.Spawn(grenadeBehaviour.gameObject, grenadeBehaviour.GetComponent<NetworkIdentity>().assetId);
 
 		grenadeBehaviour.StartCoroutine(grenadeBehaviour.LightFuse(lifeTime));
     }
 
-	void Reset (Vector3 pos, Quaternion rot)
+    private void OnEnable()
+    {
+        throwSounds.RandomElement().Play(audioSource);
+    }
+
+    void Reset (Vector3 pos, Quaternion rot)
 	{
 		transform.position = pos;
 		transform.rotation = rot;
@@ -88,8 +101,23 @@ public class GrenadeBehaviour : A_ServerMoveableSummoning
 
 	IEnumerator LightFuse(float time)
 	{
-		//TODO cache waitforseconds
-		yield return new WaitForSeconds(time);
+        float f = 0;
+		Vector3 scale = Vector3.zero;
+
+        while(f < time)
+        {
+            float t = f / time;
+
+            scale.x = scaleX.Evaluate(t);
+            scale.y = scaleY.Evaluate(t);
+            scale.z = scaleZ.Evaluate(t);
+
+            mesh.localScale = scale;
+
+            f += Time.deltaTime;
+            yield return null;
+        }
+
 		mRigid.isKinematic = true;
 
 		if(isServer)
@@ -111,4 +139,16 @@ public class GrenadeBehaviour : A_ServerMoveableSummoning
 	{
         Instantiate(explosionPrefab,position,rotation);
 	}
+
+    [ClientRpc]
+    void RpcPlayCollisionSFX()
+    {
+        collisionSounds.RandomElement().Play(audioSource);
+    }
+
+    protected override void ExecuteCollision_Host(Collision collision)
+    {
+        base.ExecuteCollision_Host(collision);
+        RpcPlayCollisionSFX();
+    }
 }

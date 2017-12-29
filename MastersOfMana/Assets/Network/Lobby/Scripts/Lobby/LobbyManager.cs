@@ -26,6 +26,7 @@ namespace Prototype.NetworkLobby
         public LobbyMainMenu mainMenu;
 
         public bool isInGame = false;
+        public bool isHost = false;
 
         //Client numPlayers from NetworkManager is always 0, so we count (throught connect/destroy in LobbyPlayer) the number
         //of players, so that even client know how many player there is.
@@ -384,10 +385,14 @@ namespace Prototype.NetworkLobby
         }
 
         // --- Countdown management
+        public override void OnLobbyClientExit()
+        {
+            mLoadedPlayers.Clear();
+        }
 
         public override void OnLobbyServerPlayersReady()
         {
-			bool allready = true;
+            bool allready = true;
 			for(int i = 0; i < lobbySlots.Length; ++i)
 			{
 				if(lobbySlots[i] != null)
@@ -398,6 +403,11 @@ namespace Prototype.NetworkLobby
 
 			if(allready)
 				StartCoroutine(ServerCountdownCoroutine());
+        }
+
+        public void StartServerCountdown()
+        {
+            StartCoroutine(ServerCountdownCoroutine());
         }
 
         public IEnumerator ServerCountdownCoroutine()

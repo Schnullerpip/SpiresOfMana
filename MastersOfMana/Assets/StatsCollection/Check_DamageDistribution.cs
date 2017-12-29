@@ -124,8 +124,14 @@ public class Check_DamageDistribution : ICheck
         GameManager.OnRoundEnded += GameEndRoutine;
     }
 
-	// Use this for initialization
-	public new void Start()
+    private void OnDisable()
+    {
+        GameManager.OnRoundEnded -= GameEndRoutine;
+        GameManager.OnGameStarted -= Init;
+    }
+
+    // Use this for initialization
+    public new void Start()
 	{
 	    base.Start();
 

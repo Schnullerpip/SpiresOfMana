@@ -10,6 +10,10 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
 
     public float initialDistanceToCaster = 2;
 
+    public EarthWallHealthScript health;
+    public AudioSource loopSource;
+    public FloatRange volumeOverLife;
+
     public override void Preview(PlayerScript caster)
     {
         base.Preview(caster);
@@ -35,5 +39,10 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
     protected override void ExecuteCollision_Host(Collision collision)
     {
         //should a collision with a wall really do anything?
+    }
+
+    private void Update()
+    {
+        loopSource.volume = volumeOverLife.Lerp(health.GetCurrentHealth() * 1.0f / health.GetMaxHealth() * 1.0f);
     }
 }

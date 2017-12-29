@@ -104,7 +104,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &134858
 GameObject:
   m_ObjectHideFlags: 0
@@ -388,8 +388,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: GoBackButton
+      - m_Target: {fileID: 11487034}
+        m_MethodName: OnReadyClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -981,22 +981,12 @@ MonoBehaviour:
   readyButton: {fileID: 11413860}
   waitingPlayerButton: {fileID: 11405868}
   removePlayerButton: {fileID: 11443358}
-  RandomizeButton: {fileID: 0}
   localIcone: {fileID: 153088}
   remoteIcone: {fileID: 189178}
   playerName: 
   playerColor: {r: 1, g: 1, b: 1, a: 1}
   OddRowColor: {r: 0.98039216, g: 0.98039216, b: 0.98039216, a: 1}
   EvenRowColor: {r: 0.7058824, g: 0.7058824, b: 0.7058824, a: 1}
-  spellButton1: {fileID: 0}
-  spellButton2: {fileID: 0}
-  spellButton3: {fileID: 0}
-  spellButton4: {fileID: 0}
-  spells:
-  - {fileID: 11400000, guid: d41a648d6ad49334090f1c47fbc8cd34, type: 2}
-  - {fileID: 11400000, guid: 611a54db86ce0d947bd50c5a12f8aeb0, type: 2}
-  - {fileID: 11400000, guid: e233f7ca8bad7cc4482f17316c60348f, type: 2}
-  - {fileID: 11400000, guid: 5e46db46851fd7c45a2fead014d7fc2f, type: 2}
 --- !u!114 &11487112
 MonoBehaviour:
   m_ObjectHideFlags: 1

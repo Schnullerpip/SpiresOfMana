@@ -169,7 +169,7 @@ public class ParalysisBehaviour : A_EffectBehaviour
         {
             //clear movement input with player
             mAffectedPlayer.movement.ClearMovementInput();
-            mAffectedPlayer.movement.RpcSetMovementAllowed(false);
+            mAffectedPlayer.movement.SetMovementAllowed(false);
             //slow down/stop the affected player
             //mAffectedPlayer.movement.speed = mAffectedPlayer.movement.originalSpeed*mSlowFactor;
             mAffectedPlayer.inputStateSystem.SetState(InputStateSystem.InputStateID.Paralyzed);
@@ -264,7 +264,7 @@ public class ParalysisBehaviour : A_EffectBehaviour
         {
             //revert back to normal status
             mAffectedPlayer.SetEffectState(EffectStateSystem.EffectStateID.Normal);
-            mAffectedPlayer.movement.RpcSetMovementAllowed(true);
+            mAffectedPlayer.movement.SetMovementAllowed(true);
             mAffectedPlayer.SetInputState(InputStateSystem.InputStateID.Normal);
         }
     }

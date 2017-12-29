@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace Prototype.NetworkLobby
@@ -13,6 +12,8 @@ namespace Prototype.NetworkLobby
         public RectTransform playerListContentTransform;
         public GameObject warningDirectPlayServer;
         public Button backButton;
+        public Button startButton;
+        public Text waitingText;
 
         protected VerticalLayoutGroup _layout;
         protected List<LobbyPlayer> _players = new List<LobbyPlayer>();
@@ -24,6 +25,9 @@ namespace Prototype.NetworkLobby
 
         public void OnEnable()
         {
+            //Only the Server can Start the game!
+            startButton.gameObject.SetActive(LobbyManager.s_Singleton.isHost);
+            waitingText.gameObject.SetActive(!LobbyManager.s_Singleton.isHost);
             LobbyManager.s_Singleton.SetCancelDelegate(GoBack);
             _instance = this;
             _layout = playerListContentTransform.GetComponent<VerticalLayoutGroup>();
@@ -34,10 +38,12 @@ namespace Prototype.NetworkLobby
             LobbyManager.s_Singleton.RemoveLastCancelDelegate();
         }
 
-        public void DisplayDirectServerWarning(bool enabled)
+        public void OnStartClicked()
         {
-            if(warningDirectPlayServer != null)
-                warningDirectPlayServer.SetActive(enabled);
+            foreach (LobbyPlayer player in _players)
+            {
+                player.RpcSetPlayerReady();
+            }
         }
 
         void Update()

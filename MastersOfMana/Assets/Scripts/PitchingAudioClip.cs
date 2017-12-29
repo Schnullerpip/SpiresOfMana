@@ -10,4 +10,10 @@ public struct PitchingAudioClip
 	{
 		return pitchtingRange.Random();
 	}
+
+    public void Play(AudioSource source)
+    {
+        source.pitch = GetRandomPitch();
+        source.PlayOneShot(audioClip);
+    }
 }

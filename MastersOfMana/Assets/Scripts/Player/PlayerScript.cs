@@ -241,6 +241,10 @@ public class PlayerScript : NetworkBehaviour
 
     private IEnumerator DramaticDeathPause()
     {
+		if(!GameManager.instance.gameRunning)
+		{
+			yield break;
+		}
         yield return new WaitForSeconds(2);
         //Only spawn the specatator if the game is actually still running!
         //Otherwise we might miss the RoundEnded event because of the pause!

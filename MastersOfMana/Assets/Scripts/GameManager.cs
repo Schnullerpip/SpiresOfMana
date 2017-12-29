@@ -111,7 +111,6 @@ public class GameManager : MonoBehaviour
     {
         ResetLocalGameState();
         mStartPoints = FindObjectOfType<StartPoints>();
-        gameRunning = true;
         if (OnGameStarted != null)
         {
             OnGameStarted();
@@ -236,6 +235,7 @@ public class GameManager : MonoBehaviour
 
     public void TriggerOnRoundStarted()
     {
+        gameRunning = true;
         ResetGame();
         if (OnRoundStarted != null)
         {

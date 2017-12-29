@@ -6,16 +6,9 @@ using UnityEngine.Networking;
 public class HealPack : NetworkBehaviour
 {
 
-    //public int healAmount = 15;
     public int healPerTick = 2;
     public float tickDuration = 0.5f;
-    //public System.Action<Transform> healSpawnCallback;
     public ParticleSystem particles;
-    //public AnimationCurve alphaValue;
-    //public MeshRenderer healPackRenderer;
-	//public Transform spawnPosition;
-    //private Material material;
-    //private int mInitialheal;
 
     private Dictionary<NetworkInstanceId, Coroutine> mInstanceCoroutineDictionary = new Dictionary<NetworkInstanceId, Coroutine>();
 
@@ -85,11 +78,7 @@ public class HealPack : NetworkBehaviour
 
     private void OnDisable()
     {
-		if (!isServer) 
-		{
-			return;
-		}
-        StopAllCoroutines();
 		GameManager.OnRoundEnded -= RoundEnded;
+        StopAllCoroutines();
     }
 }

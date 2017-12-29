@@ -79,10 +79,6 @@ public class HealPack : NetworkBehaviour
     private void OnDisable()
     {
 		GameManager.OnRoundEnded -= RoundEnded;
-		if (!isServer) 
-		{
-			return;
-		}
         StopAllCoroutines();
     }
 }

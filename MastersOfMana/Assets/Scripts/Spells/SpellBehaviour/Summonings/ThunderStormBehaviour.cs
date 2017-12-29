@@ -28,10 +28,10 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
 	#region implemented abstract members of A_SpellBehaviour
 	public override void Execute (PlayerScript caster)
 	{
-		GameManager.instance.RegisterUltiSpell(this);
 
 		ThunderStormBehaviour thunderStormBehaviour = PoolRegistry.GetInstance(gameObject, 1, 1).GetComponent<ThunderStormBehaviour>();
 
+		GameManager.instance.RegisterUltiSpell(thunderStormBehaviour);
 		thunderStormBehaviour.caster = caster;
 		thunderStormBehaviour.transform.position = transform.position;
 
@@ -80,11 +80,14 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
         //wait additional time to make the effect not look so abrupt
         yield return new WaitForSeconds(strikePrefab.anticipationTime * 2 + strikePrefab.lifetime);
 
-        //reset the flag so a new ultimate can be started
-        GameManager.instance.UnregisterUltiSpell(this);
+	    if (gameObject.activeSelf && GameManager.instance.isUltimateActive)
+	    {
+            //reset the flag so a new ultimate can be started
+            GameManager.instance.UnregisterUltiSpell(this);
 
-        NetworkServer.UnSpawn(this.gameObject);
-        this.gameObject.SetActive(false);
+            NetworkServer.UnSpawn(this.gameObject);
+            this.gameObject.SetActive(false);
+	    }
     }
 
     private IEnumerator RepeatedStrike(PlayerScript playerScript)

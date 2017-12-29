@@ -69,7 +69,7 @@ public class StormBlastBehaviour : A_EffectBehaviour
         sbb.gameObject.SetActive(true);
         NetworkServer.Spawn(sbb.gameObject);
 
-        GameManager.instance.RegisterUltiSpell(this);
+        GameManager.instance.RegisterUltiSpell(sbb);
         sbb.StartCoroutine(UnspawnStormblastAfterSeconds(sbb, mLifeTime));
         caster.healthScript.OnInstanceDied += sbb.EndSpell;
     }

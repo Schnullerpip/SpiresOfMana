@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 114063912447669244}
   - component: {fileID: 33826309388683064}
   - component: {fileID: 23566099000480260}
+  - component: {fileID: 114338991011690978}
   m_Layer: 0
   m_Name: RockProjectilePreview
   m_TagString: Untagged
@@ -56,7 +57,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: eebe50c972f8541d092093d3cbb0dea8, type: 2}
+  - {fileID: 2100000, guid: 8d1a03c5a45512f47b1bf2f24523bea7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -95,6 +96,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   secondaryColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   rendererProperties: []
+--- !u!114 &114338991011690978
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1974899652621956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d20ec2ebb64e45e4c88ca5f2139d3dad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114879560510636316
 MonoBehaviour:
   m_ObjectHideFlags: 1

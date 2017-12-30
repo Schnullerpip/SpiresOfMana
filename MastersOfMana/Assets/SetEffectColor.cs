@@ -30,8 +30,10 @@ public class SetEffectColor : MonoBehaviour {
         RFX4_ColorHelper.ChangeObjectColorByHUE(gameObject, hue);
         if (transformMotion != null) transformMotion.HUE = hue;
         if (rayCastCollision != null) rayCastCollision.HUE = hue;
-        foreach(var trail in particleTrail)
-            if(trail != null) trail.ColorOverLifeTime.colorKeys[0].color = Color;
+        for(int i = 0; i < particleTrail.Length; i++)
+        {
+            particleTrail[i].ColorOverLifeTime.colorKeys[0].color = Color;
+        }
         previousColor = Color;
     }
 }

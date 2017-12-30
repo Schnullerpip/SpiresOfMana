@@ -1,11 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class FlipNormals : MonoBehaviour {
 
+    /// <summary>
+    /// makes a mesh visible from inside out (only) 
+    /// iterates through all triangles of a mesh
+    /// flips all normals and reorders triangles
+    /// can be used when intending to do something like a skybox
+    /// </summary>
     [ContextMenu("FlipNormals")]
-	// Use this for initialization
 	void FlipTheNormals ()
 	{
 	    Mesh mesh = GetComponent<MeshFilter>().sharedMesh;

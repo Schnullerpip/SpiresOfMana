@@ -43,15 +43,29 @@ public class ParalysisBehaviour : A_EffectBehaviour
 
         preview.instance.SetAvailability(caster.CurrentSpellReady());
 
-		Ray ray = caster.aim.GetCameraRig().GetCenterRay();
+        Vector3 hitPlayerPos;
+        PlayerScript hitPlayer = HitAPlayer(caster, mHitRadius, mHitRange, out hitPlayerPos, false);
 
+        if(hitPlayer)
+        {
+            preview.instance.Move(hitPlayerPos);
+            return;
+        }
+
+        //hit geometry?
+        caster.SetColliderIgnoreRaycast(true);
+		Ray ray = caster.aim.GetCameraRig().GetCenterRay();
 		RaycastHit hit;
-		caster.SetColliderIgnoreRaycast(true);
-	    if (Physics.Raycast(ray, out hit))
-	    {
-	        preview.instance.Move(hit.point);
-	    }
-		caster.SetColliderIgnoreRaycast(false);
+        if(Physics.Raycast(ray, out hit))
+		{
+			preview.instance.Move(hit.point); 
+		}
+		else
+		{
+            preview.instance.Deactivate();
+		}
+        caster.SetColliderIgnoreRaycast(true);
+
 	}
 
 	public override void StopPreview (PlayerScript caster)

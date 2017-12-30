@@ -10,12 +10,17 @@ public class UltimateLoadingZone : NetworkBehaviour {
     public GameObject ActivateWhenEntered;
 
     private Dictionary<NetworkInstanceId, Coroutine> mInstanceCoroutineDictionary = new Dictionary<NetworkInstanceId, Coroutine>();
+    [SyncVar]
     private int playersInside;
 
     public void OnEnable()
     {
         GameManager.OnRoundEnded += RoundEnded;
-        playersInside = 0;
+
+        if (isServer)
+        {
+            playersInside = 0;
+        }
     }
 
     public void OnDisable()
@@ -45,9 +50,8 @@ public class UltimateLoadingZone : NetworkBehaviour {
                 //Remember which player this coroutine belongs to
                 mInstanceCoroutineDictionary.Add(playerSpells.netId, StartCoroutine(IncreaseUltimateEnergy(playerSpells)));
 
-                //start effect only when a player is affected
-                playersInside++;
-                ActivateWhenEntered.SetActive(true);
+                if(isServer)
+                    playersInside++;
             }
         }
     }
@@ -64,14 +68,16 @@ public class UltimateLoadingZone : NetworkBehaviour {
                 StopCoroutine(mInstanceCoroutineDictionary[playerSpells.netId]);
                 mInstanceCoroutineDictionary.Remove(playerSpells.netId);
 
-                playersInside--;
-                if(playersInside == 0)
-                {
-                    ActivateWhenEntered.SetActive(false);
-                }else if(playersInside < 0)
-                {
-                    Debug.Log("There are less than zero players in a loading zone -> this is not how counting works...");
-                }
+                if(isServer)
+                    playersInside--;
+
+                //if (playersInside == 0)
+                //{
+                //    ActivateWhenEntered.SetActive(false);
+                //}else if(playersInside < 0)
+                //{
+                //    Debug.Log("There are less than zero players in a loading zone -> this is not how counting works...");
+                //}
             }
         }
     }
@@ -86,5 +92,13 @@ public class UltimateLoadingZone : NetworkBehaviour {
                 playerSpells.ultimateEnergy += ultimateEnergyPerSecond;
             }
         }
+    }
+
+    private void Update()
+    {
+        if(playersInside > 0 && ActivateWhenEntered.activeSelf == false)
+            ActivateWhenEntered.SetActive(true);
+        else if(playersInside == 0 && ActivateWhenEntered.activeSelf == true)
+            ActivateWhenEntered.SetActive(false);
     }
 }

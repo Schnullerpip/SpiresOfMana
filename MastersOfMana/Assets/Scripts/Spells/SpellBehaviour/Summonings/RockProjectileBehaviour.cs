@@ -58,6 +58,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
 	{
 		base.Preview (caster);
 
+        preview.instance.SetAvailability(caster.CurrentSpellReady());
 	    preview.instance.transform.localScale = mShootingReach * 2 * Vector3.one; // * 2 because we want to describe the radius rather than the diameter
         preview.instance.Move(caster.movement.mRigidbody.worldCenterOfMass);
 	}

@@ -81,7 +81,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1974899652621956}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 4300002, guid: 685623f364a054173a01b650111ccfa0, type: 3}
 --- !u!114 &114063912447669244
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -93,8 +93,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68797316d3d0347ffaba7bda286bbb0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  secondaryColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  rendererProperties: []
+  secondaryColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.078}
+  rendererProperties:
+  - renderer: {fileID: 23566099000480260}
+    propertyName: _TintColor
+    propertyId: 83
 --- !u!114 &114879560510636316
 MonoBehaviour:
   m_ObjectHideFlags: 1

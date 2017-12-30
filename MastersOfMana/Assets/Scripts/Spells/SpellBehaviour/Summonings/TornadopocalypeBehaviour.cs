@@ -16,10 +16,8 @@ public class TornadopocalypeBehaviour : A_SummoningBehaviour
 	public TornadoMinion tornadoMinionPrefab;
 
 	private PlayerScript[] mOpponents;
-	private PlayerScript mCaster;
 
-    private TornadoMinion[] tornadoMinions;
-    private int numOfTornados = 0;
+    private List<TornadoMinion> tornadoMinions;
 
     #region implemented abstract members of A_SpellBehaviour
     public override void Execute (PlayerScript caster)
@@ -28,7 +26,7 @@ public class TornadopocalypeBehaviour : A_SummoningBehaviour
 
         TornadopocalypeBehaviour tornadopocalypse = PoolRegistry.GetInstance(this.gameObject,1,1).GetComponent<TornadopocalypeBehaviour>();
 
-		tornadopocalypse.mCaster = caster;
+        tornadopocalypse.caster = caster;
 		tornadopocalypse.transform.position = transform.position;
 
 		NetworkServer.Spawn(tornadopocalypse.gameObject, tornadopocalypse.GetComponent<NetworkIdentity>().assetId);
@@ -38,42 +36,25 @@ public class TornadopocalypeBehaviour : A_SummoningBehaviour
 	}
 	#endregion
 
-	PlayerScript[] GetOpponents ()
-	{
-		PlayerScript[] allPlayers = GetAllPlayers();
-		int j = 0;
-		PlayerScript[] opponents = new PlayerScript[allPlayers.Length - 1];
-		for (int i = 0; i < allPlayers.Length; ++i) 
-		{
-			if (allPlayers [i] == mCaster) {
-				continue;
-			}
-			opponents [j] = allPlayers [i];
-			++j;
-		}
-
-		return opponents;
-	}
-
-	//TODO: extract this to the gamemanager
-	PlayerScript[] GetAllPlayers()
-	{
-		return FindObjectsOfType<PlayerScript>();
-	}
 
 	private void Init()
 	{
-        //Calc the maximum number of tornados possible
-        numOfTornados = 0;
-        tornadoMinions = new TornadoMinion[Mathf.CeilToInt(duration * interval.min)];
-        mOpponents = GetOpponents();
-		mOpponents = GetAllPlayers();
+		mOpponents = GameManager.instance.GetOpponents(caster).ToArray();
 
-		for (int i = 0; i < mOpponents.Length; i++) 
+		if(tornadoMinions == null)
 		{
-			StartCoroutine(Spawn(mOpponents[i]));
+			tornadoMinions = new List<TornadoMinion>();   
 		}
-			
+		else
+		{
+			tornadoMinions.Clear();
+		}
+  
+        for (int i = 0; i < mOpponents.Length; i++) 
+        {
+            StartCoroutine(Spawn(mOpponents[i]));
+        }
+
         StartCoroutine(DelayedStop(duration));
 	}
 
@@ -95,9 +76,7 @@ public class TornadopocalypeBehaviour : A_SummoningBehaviour
 			//TODO: use our poolregistry
 			TornadoMinion tornado = Instantiate(tornadoMinionPrefab, initPos, target.transform.rotation);
 //			TornadoMinion tornado = PoolRegistry.Instantiate(tornadoMinionPrefab.gameObject, Pool.Activation.ReturnDeactivated).GetComponent<TornadoMinion>();
-
-			Vector3 pos = target.transform.position 
-				+ target.movement.GetDeltaMovement() / Time.deltaTime //take movement into account			
+            Vector3 pos = target.movement.GetAnticipationPosition(2) //take movement into account
 				+ Random.insideUnitCircle.normalized.ToVector3xz() * initalOffsetToPlayer.Random(); //random around the players position
 
 			//move afterwards to make sure the validation of the position is calculated from the targets position. 
@@ -118,8 +97,8 @@ public class TornadopocalypeBehaviour : A_SummoningBehaviour
 			{
 				tornado.gameObject.SetActive(false);
 			}
-            tornadoMinions[numOfTornados] = tornado;
-            numOfTornados++; //make sure we start filling the array at 0
+            tornadoMinions.Add(tornado);
+
             yield return new WaitForSeconds(interval.Random());
 		}
 	}

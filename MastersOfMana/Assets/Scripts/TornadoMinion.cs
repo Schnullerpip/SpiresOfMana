@@ -76,12 +76,14 @@ public class TornadoMinion : NetworkBehaviour {
 		mInitalScale = transform.localScale;
 		Appear();
 
-		if(!isServer)
-		{
-			return;
-		}
-
 		mAgent = GetComponent<NavMeshAgent>();
+
+		mAgent.enabled = isServer;
+
+        if(!isServer)
+        {
+            return;
+        }
 
 		OnTriggerEvent trigger = GetComponentInChildren<OnTriggerEvent>();
 		trigger.onTriggerEnter += TriggerEnter;
@@ -101,8 +103,6 @@ public class TornadoMinion : NetworkBehaviour {
 
 			Vector3 direction = rigid.worldCenterOfMass - pushPos;
 			direction.Normalize();
-
-//			direction += (Quaternion.LookRotation(direction) * (clockWise ? Vector3.right : Vector3.left)) * tangentForce;
 
 			Vector3 appliedForce = direction * force;
 

@@ -223,6 +223,9 @@ public class GameManager : MonoBehaviour
     /// <param name="self">Self.</param>
     public List<PlayerScript> GetOpponents(PlayerScript self)
     {
+        Debug.Assert(self != null, 
+                     "Opponents of null is not very sensical. Either you forgot to set a player or you just want \"GameManager.instance.player\"");
+
         List<PlayerScript> opponents = new List<PlayerScript>(players.Count - 1);
 		for (int i = 0; i < players.Count; ++i)
         {

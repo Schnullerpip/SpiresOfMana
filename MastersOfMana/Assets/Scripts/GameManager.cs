@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     public PlayerScript localPlayer;
     public GameObject eventSystem;
     public bool isUltimateActive = false;
+    public A_SpellBehaviour currentlyCastUltiSpell = null;
     public int numOfActiveMenus = 0;
     public bool gameRunning = false;
 
@@ -65,7 +66,12 @@ public class GameManager : MonoBehaviour
         mNumberOfGoMessages = 0;
         mNumberOfDeadPlayers = 0;
         mNumOfReadyPlayers = 0;
-        isUltimateActive = false;
+        //end ultispells, that are currently running
+        if (isUltimateActive)
+        {
+            isUltimateActive = false;
+            currentlyCastUltiSpell.EndSpell();
+        }
     }
 
     public void Go()
@@ -105,7 +111,6 @@ public class GameManager : MonoBehaviour
     {
         ResetLocalGameState();
         mStartPoints = FindObjectOfType<StartPoints>();
-        gameRunning = true;
         if (OnGameStarted != null)
         {
             OnGameStarted();
@@ -134,9 +139,30 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void RegisterUltiSpell(A_SpellBehaviour ultiSpell)
+    {
+        isUltimateActive = true;
+        currentlyCastUltiSpell = ultiSpell;
+    }
+
+    public void UnregisterUltiSpell(A_SpellBehaviour ultiSpell)
+    {
+        if (isUltimateActive && currentlyCastUltiSpell == ultiSpell)
+        {
+            isUltimateActive = false;
+            currentlyCastUltiSpell = null;
+        }
+        else
+        {
+            Debug.Log("Trying to unregister an ultiSpell, that is not registered!");
+        }
+    }
+
     public void TriggerRoundEnded()
     {
         gameRunning = false;
+
+
         if (OnRoundEnded != null)
         {
             OnRoundEnded();
@@ -209,6 +235,7 @@ public class GameManager : MonoBehaviour
 
     public void TriggerOnRoundStarted()
     {
+        gameRunning = true;
         ResetGame();
         if (OnRoundStarted != null)
         {

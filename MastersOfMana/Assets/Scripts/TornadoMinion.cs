@@ -53,7 +53,6 @@ public class TornadoMinion : NetworkBehaviour {
 		}
 
 		StartCoroutine(Die(doneAction));
-
 	}
 
 	/// <summary>
@@ -71,14 +70,16 @@ public class TornadoMinion : NetworkBehaviour {
 		mCurrentLifetime = lifeTime;
 	}
 
-	public override void OnStartClient()
+    private void Awake()
+    {
+        mInitalScale = transform.localScale;
+    }
+
+    public override void OnStartClient()
 	{
-		mInitalScale = transform.localScale;
 		Appear();
 
 		mAgent = GetComponent<NavMeshAgent>();
-
-		mAgent.enabled = isServer;
 
         if(!isServer)
         {
@@ -113,7 +114,10 @@ public class TornadoMinion : NetworkBehaviour {
 				ps.healthScript.TakeDamage(damage, typeof(TornadopocalypeBehaviour));
 
 				mHot = false;
-				RpcDisappear();
+			    if (gameObject.activeSelf && isServer)
+			    {
+                    RpcDisappear();
+			    }
 			}
 			else
 			{
@@ -164,7 +168,7 @@ public class TornadoMinion : NetworkBehaviour {
 	IEnumerator Die (System.Action onDone = null) 
 	{
 		float t = 0;
-		while(t < 1)
+        while(t < 1)
 		{
 
 			transform.localScale = mInitalScale * dieCurve.Evaluate(t);

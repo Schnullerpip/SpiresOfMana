@@ -51,6 +51,7 @@ public class PlayerSpells : NetworkBehaviour {
         {
             slot.cooldown = 0;
         }
+		ultimateEnergy = 0;
     }
 
     void RoundStarted()

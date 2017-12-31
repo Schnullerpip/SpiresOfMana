@@ -15,6 +15,11 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
     [SerializeField]
     private ParticleSystem mLightningProjectile;
 
+    public AudioSource mAudioSource;
+    public AudioClip CastEffectClip;
+    public AudioClip StaticEnergyLoop;
+    public AudioClip AttackSound;
+
 
     //the list that captures which players are shot
     private List<PlayerScript> mAlreadyCaught;
@@ -37,6 +42,7 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
 
     void OnEnable()
     {
+        mAudioSource.PlayOneShot(CastEffectClip);
         mAlreadyCaught = new List<PlayerScript>();
         mEnergyLevel = mDuration;
         mTimeCount = mCountTilDamage;
@@ -196,6 +202,7 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
 
     private void ActivateLightningProjectile()
     {
+        mAudioSource.PlayOneShot(AttackSound);
         mStaticPotential.gameObject.SetActive(false);
         mLightningProjectile.gameObject.SetActive(true);
         mStaticPotential.Stop();

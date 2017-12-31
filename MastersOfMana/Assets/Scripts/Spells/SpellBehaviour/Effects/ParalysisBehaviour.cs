@@ -185,6 +185,9 @@ public class ParalysisBehaviour : A_EffectBehaviour
         }
     }
 
+    /// <summary>
+    /// will make the affected player immovable, ignoring all input and also preventing being moved by the server
+    /// </summary>
     private void ApplyMaliciousEffect()
     {
         if (mAffectedPlayer)
@@ -192,8 +195,8 @@ public class ParalysisBehaviour : A_EffectBehaviour
             //clear movement input with player
             mAffectedPlayer.movement.ClearMovementInput();
             mAffectedPlayer.movement.SetMovementAllowed(false);
+
             //slow down/stop the affected player
-            //mAffectedPlayer.movement.speed = mAffectedPlayer.movement.originalSpeed*mSlowFactor;
             mAffectedPlayer.inputStateSystem.SetState(InputStateSystem.InputStateID.Paralyzed);
         }
     }
@@ -214,7 +217,7 @@ public class ParalysisBehaviour : A_EffectBehaviour
             mRemitDamage = true; //all other damage sources should go through to the affected player
         }
     }
-    
+
     public void FixedUpdate()
     {
         if (mAffectedPlayer)
@@ -222,11 +225,6 @@ public class ParalysisBehaviour : A_EffectBehaviour
             if (mFollowTarget)
             {
                 transform.position = mAffectedPlayer.transform.position;
-            }
-            //prevent stair sliding
-            if (mAffectedPlayer.movement.feet.IsGrounded())
-            {
-                mAffectedPlayer.movement.mRigidbody.velocity = Vector3.zero;
             }
         }
     }

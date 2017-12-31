@@ -159,12 +159,19 @@ public class ParalysisBehaviour : A_EffectBehaviour
 
     public override void OnStartClient()
     {
+        base.OnStartClient();
+
         //slow down the affected Player
         if (mAffectedPlayerObject)
         {
             mAffectedPlayer = mAffectedPlayerObject.GetComponent<PlayerScript>();
-            //mAffectedPlayer.StartCoroutine(AffectPlayer());
+            gameObject.layer = LayerMask.NameToLayer("IgnorePlayer");
+
             ApplyMaliciousEffect();
+        }
+        else
+        {
+            gameObject.layer = LayerMask.NameToLayer("Default");
         }
     }
 

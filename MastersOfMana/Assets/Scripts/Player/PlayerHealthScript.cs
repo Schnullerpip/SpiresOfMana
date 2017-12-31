@@ -23,6 +23,10 @@ public class PlayerHealthScript : HealthScript
         int actualDamage = mPlayer.effectStateSystem.current.CalculateDamage(amount, typeOfDamageDealer);
         base.TakeDamage(actualDamage, typeOfDamageDealer);
         if (!IsAlive() && hasBeenAlive) {
+
+            //if the player was casting a spell - stop its preview
+            mPlayer.GetPlayerSpells().StopPreview();
+
             //this mPlayer is dead!!! tell the Gamemanager, that one is down
             GameManager.instance.PlayerDown();
             //Show the postGame screen for this player

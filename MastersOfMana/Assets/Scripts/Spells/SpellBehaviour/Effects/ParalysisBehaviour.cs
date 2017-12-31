@@ -196,6 +196,8 @@ public class ParalysisBehaviour : A_EffectBehaviour
             mAffectedPlayer.movement.ClearMovementInput();
             mAffectedPlayer.movement.SetMovementAllowed(false);
 
+            mAffectedPlayer.inputStateSystem.current.SetPreview(false);
+
             //slow down/stop the affected player
             mAffectedPlayer.inputStateSystem.SetState(InputStateSystem.InputStateID.Paralyzed);
         }

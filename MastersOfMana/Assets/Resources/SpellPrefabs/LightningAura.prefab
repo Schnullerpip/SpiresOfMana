@@ -105,7 +105,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1270497008473598}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.24633408, y: 9.176, z: 7.987999}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4572635989441690}
@@ -542,8 +542,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   preview: {fileID: 114879560510636316, guid: 3deca10ba12068b47906dfb677554e93, type: 2}
   mDuration: 5
-  mCountTilDamage: 1
-  mDamage: 4
+  mCountTilDamage: 0.25
+  mDamage: 1
   mStaticPotential: {fileID: 198975284805952996}
   mLightningProjectile: {fileID: 198504703758112080}
   mDecectionTrigger: {fileID: 135246191822953554}
@@ -594,7 +594,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 9
+  m_Radius: 3
   m_Center: {x: 0, y: 1.5, z: 0}
 --- !u!182 &182541259549421760
 WindZone:
@@ -3948,7 +3948,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -341209673
+  randomSeed: 50990176
   InitialModule:
     serializedVersion: 3
     enabled: 1

@@ -154,6 +154,7 @@ public class ParalysisBehaviour : A_EffectBehaviour
         mShatterEffect.SetActive(false);
         mFollowTarget = true;
         mLastIndex = 0;
+        iceCollider.isTrigger = false;
     }
 
     public override void OnStartClient()
@@ -298,7 +299,8 @@ public class ParalysisBehaviour : A_EffectBehaviour
         mFollowTarget = false;
 
         //disallow collisions for the icecrystal collider
-        gameObject.layer = LayerMask.NameToLayer("IgnorePlayer");
+        iceCollider.isTrigger = true;
+        gameObject.layer = LayerMask.NameToLayer("IgnoreAll");
 
         //disable the actual crystal and replace it completely with the fragments
         ActivateOnDeactivation.SetActive(false);

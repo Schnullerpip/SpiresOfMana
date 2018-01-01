@@ -8,16 +8,29 @@ public class HealPack : NetworkBehaviour
 
     public int healPerTick = 2;
     public float tickDuration = 0.5f;
-    public ParticleSystem particles;
+    public GameObject ActivateWhenEntered;
 
     private Dictionary<NetworkInstanceId, Coroutine> mInstanceCoroutineDictionary = new Dictionary<NetworkInstanceId, Coroutine>();
+    [SyncVar]
+    private int playersInside;
 
     public void OnEnable()
     {
         GameManager.OnRoundEnded += RoundEnded;
+
+        if (isServer)
+        {
+            playersInside = 0;
+        }
     }
 
-	void RoundEnded()
+    private void OnDisable()
+    {
+        GameManager.OnRoundEnded -= RoundEnded;
+        StopAllCoroutines();
+    }
+
+    void RoundEnded()
 	{
         if (isServer)
         {
@@ -32,6 +45,7 @@ public class HealPack : NetworkBehaviour
         {
             return;
         }
+
         //Check if collision with player
         //Check FeetCollider to only trigger once per player
         if (other.GetComponent<FeetCollider>())
@@ -41,6 +55,8 @@ public class HealPack : NetworkBehaviour
             {
                 //Remember which player this coroutine belongs to
                 mInstanceCoroutineDictionary.Add(playerHealth.netId, StartCoroutine(Heal(playerHealth)));
+
+                playersInside++;
             }
         }
     }
@@ -51,6 +67,7 @@ public class HealPack : NetworkBehaviour
         {
             return;
         }
+
         //Check if collision with player
         //Check FeetCollider to only trigger once per player
         if (other.GetComponent<FeetCollider>())
@@ -60,6 +77,8 @@ public class HealPack : NetworkBehaviour
             {
                 StopCoroutine(mInstanceCoroutineDictionary[playerHealth.netId]);
                 mInstanceCoroutineDictionary.Remove(playerHealth.netId);
+
+                playersInside--;
             }
         }
     }
@@ -76,9 +95,11 @@ public class HealPack : NetworkBehaviour
         }
     }
 
-    private void OnDisable()
+    private void Update()
     {
-		GameManager.OnRoundEnded -= RoundEnded;
-        StopAllCoroutines();
+        if (playersInside > 0 && ActivateWhenEntered.activeSelf == false)
+            ActivateWhenEntered.SetActive(true);
+        else if (playersInside == 0 && ActivateWhenEntered.activeSelf == true)
+            ActivateWhenEntered.SetActive(false);
     }
 }

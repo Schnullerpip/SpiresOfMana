@@ -5,20 +5,20 @@ using UnityEngine.Networking;
 
 public class EnergyZoneSystem : NetworkBehaviour 
 {
-	public float duration = 20;
+    public float initialDelay = 10;
+	public float lifetime = 20;
+    public float gapBetweenSpawns = 10;
+    public List<GameObject> spawnables;
+    public Transform spawnpointsParent;
 
-	[System.Serializable]
-	public struct spawnZone
-    {
-		public float spawnDelay;
-		public GameObject spanwObject;
-	}
+	//[System.Serializable]
+	//public struct spawnZone
+ //   {
+	//	public float spawnDelay;
+	//	public GameObject spawnObject;
+	//}
 
-	public List<spawnZone> spawnZones;
-	public Transform EnergyZones;
-
-    private List<Transform> mZoneSpawns = new List<Transform>();
-    private int currentIndex = 0;
+    private List<Transform> mSpawnpoints = new List<Transform>();
 
 	public void OnEnable()
 	{
@@ -35,14 +35,16 @@ public class EnergyZoneSystem : NetworkBehaviour
 
 	void RoundStarted()
 	{
-        mZoneSpawns.Clear();
-        //find all possible spawnPositions
-		for(int i = 0; i < EnergyZones.childCount; i++)
+        mSpawnpoints.Clear();
+        //find all possible spawnPoints
+        for(int i = 0; i < spawnpointsParent.childCount; i++)
         {
-			mZoneSpawns.Add(EnergyZones.GetChild(i));
+            Transform child = spawnpointsParent.GetChild(i);
+            if (child.gameObject.activeSelf)
+                mSpawnpoints.Add(child);
         }
-		currentIndex = 0;
-		StartCoroutine(SpawnHeals());
+
+        StartCoroutine(SpawnHeals(true));
 	}
 
 	void RoundEnded()
@@ -50,33 +52,29 @@ public class EnergyZoneSystem : NetworkBehaviour
 		StopAllCoroutines();
 	}
 
-    private IEnumerator SpawnHeals()
+    private IEnumerator SpawnHeals(bool init = false)
     {
-        //Spawns the healthpackets one after the other
-		while(currentIndex < spawnZones.Count)
-        {
-			yield return new WaitForSeconds(spawnZones[currentIndex].spawnDelay);
+        if(init)
+            yield return new WaitForSeconds(initialDelay);//to skip initial spawn; is 1 frame "too late"
+        else
+            yield return new WaitForSeconds(gapBetweenSpawns);
 
-            //Get a random spawn position
-            Transform healSpawnPosition = mZoneSpawns.RandomElement();
-            Vector3 position = healSpawnPosition.position;
-
-            Quaternion rotation = healSpawnPosition.rotation;
-            mZoneSpawns.Remove(healSpawnPosition);
-			position.y += spawnZones[currentIndex].spanwObject.transform.localScale.y * 0.5f;
-            //Instantiate and spawn
-			GameObject obj = Instantiate(spawnZones[currentIndex].spanwObject, position, rotation);
-			StartCoroutine(Despawn(healSpawnPosition, obj));
-            NetworkServer.Spawn(obj.gameObject);
-			currentIndex++;
-        }
+        //Get a random spawn position
+        Transform healSpawnPosition = mSpawnpoints.RandomElement();
+        Vector3 position = healSpawnPosition.position;
+        Quaternion rotation = healSpawnPosition.rotation;
+        //Instantiate and spawn
+        GameObject obj = Instantiate(spawnables.RandomElement(), position, rotation);
+        obj.transform.localScale = healSpawnPosition.localScale;
+        StartCoroutine(Despawn(healSpawnPosition, obj));
+        NetworkServer.Spawn(obj.gameObject);
     }
 
     private IEnumerator Despawn(Transform trans, GameObject obj)
     {
-		yield return new WaitForSeconds(duration);
+		yield return new WaitForSeconds(lifetime);
 		NetworkServer.UnSpawn (obj);
 		Destroy (obj);
-        mZoneSpawns.Add(trans);
+        StartCoroutine(SpawnHeals());
     }
 }

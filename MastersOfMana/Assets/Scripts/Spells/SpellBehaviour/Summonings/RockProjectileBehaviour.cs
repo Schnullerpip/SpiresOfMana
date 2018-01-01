@@ -339,6 +339,13 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         Explode();
     }
 
+    public override void EndSpell()
+    {
+        StopPreview(caster);
+        Explode();
+    }
+
+
     private void Explode()
     {
         spawnTrail.enabled = false;

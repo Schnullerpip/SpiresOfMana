@@ -123,20 +123,25 @@ public class GameManager : MonoBehaviour
         ++mNumberOfDeadPlayers;
 
         //TODO: What happens if both die simultaniously?
-        if (mNumberOfDeadPlayers >= (players.Count - 1)) { //only one player left -> he/she won the game!
-
-            //Find out who has won and call post game screen
-            foreach (var p in players)
-            {
-                if(p.healthScript.IsAlive())
-                {
-                    winnerID = p.netId.Value;
-                    break;
-                }
-            }
-            PostGameLobby(winnerID);
-            ResetLocalGameState();
+        if (mNumberOfDeadPlayers >= (players.Count - 1)) //only one player left -> he/she won the game!
+        { 
+            PostGame();
         }
+    }
+
+    public void PostGame()
+    {
+        //Find out who has won and call post game screen
+        foreach (var p in players)
+        {
+            if (p.healthScript.IsAlive())
+            {
+                winnerID = p.netId.Value;
+                break;
+            }
+        }
+        PostGameLobby(winnerID);
+        ResetLocalGameState();
     }
 
     public void RegisterUltiSpell(A_SpellBehaviour ultiSpell)
@@ -213,6 +218,58 @@ public class GameManager : MonoBehaviour
         if(mNumOfReadyPlayers >= players.Count)
         {
             NetManager.instance.RpcTriggerRoundStarted();
+        }
+    }
+
+    public void PlayerDisconnected()
+    {
+        for (int i = 0; i < players.Count; i++)
+        {
+            if (!players[i].gameObject.activeSelf)
+            {
+                players.Remove(players[i]);
+                i--;
+            }
+        }
+
+        if (!NetManager.instance.amIServer())
+        {
+            return;
+        }
+
+            //If the game is runnning we need to check for dead players
+            if (gameRunning)
+        {
+            //We need to recheck if all but one players are dead!
+            //Since we can't be sure that we can still access the players Healthscript we need to check the alive status of all remaining players again
+            mNumberOfDeadPlayers = 0;
+            foreach (PlayerScript player in players)
+            {
+                if (!player.healthScript.IsAlive())
+                {
+                    ++mNumberOfDeadPlayers;
+                }
+            }
+            if (mNumberOfDeadPlayers >= (players.Count - 1)) //only one player left -> he/she won the game!
+            {
+                PostGame();
+            }
+        }
+        //Otherwise we need to check for ready players
+        else
+        {
+            mNumOfReadyPlayers = 0;
+            foreach(PlayerScript player in players)
+            {
+                if (player.playerLobby.isReady)
+                {
+                    ++mNumOfReadyPlayers;
+                }
+            }
+            if (mNumOfReadyPlayers >= players.Count)
+            {
+                NetManager.instance.RpcTriggerRoundStarted();
+            }
         }
     }
 		

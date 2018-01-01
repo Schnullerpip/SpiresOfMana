@@ -15,6 +15,11 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
     [SerializeField]
     private ParticleSystem mLightningProjectile;
 
+    public AudioSource mAudioSource;
+    public AudioClip CastEffectClip;
+    public AudioClip StaticEnergyLoop;
+    public AudioClip AttackSound;
+
 
     //the list that captures which players are shot
     private List<PlayerScript> mAlreadyCaught;
@@ -37,9 +42,11 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
 
     void OnEnable()
     {
+        mAudioSource.PlayOneShot(CastEffectClip);
         mAlreadyCaught = new List<PlayerScript>();
         mEnergyLevel = mDuration;
         mTimeCount = mCountTilDamage;
+        mSelfInflictDamageTimeCount = 0;
     }
 
     public override void Execute(PlayerScript caster)
@@ -107,13 +114,20 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
         transform.position = caster.movement.mRigidbody.worldCenterOfMass;
     }
 
-    private float mTimeCount;
+    private float mTimeCount, mSelfInflictDamageTimeCount;
     void Update()
     {
         //as long as we dont have a caster, do nothing
         if (!caster)
         {
             return;
+        }
+
+        //damage the caster as a penalty
+        if (isServer && (mSelfInflictDamageTimeCount += Time.deltaTime) >= 2.0f)
+        {
+            mSelfInflictDamageTimeCount = 0;
+            caster.healthScript.TakeDamage(1, GetType());
         }
 
         if (mAlreadyCaught.Count == 0)
@@ -131,15 +145,21 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
             }
             //which opponent is nearest?
             PlayerScript nearest = mAlreadyCaught[0];
-            float distance = Vector3.Distance(caster.transform.position, nearest.transform.position);
-            for (int i = 1; i < mAlreadyCaught.Count; ++i)
+
+            //if there are more than one opponents in reach, choose the nearest
+            if (mAlreadyCaught.Count > 1)
             {
-                float dist = Vector3.Distance(mAlreadyCaught[i].transform.position, caster.transform.position);
-                if (dist < distance)
+                float distance = Vector3.Distance(caster.transform.position, nearest.transform.position);
+                for (int i = 1; i < mAlreadyCaught.Count; ++i)
                 {
-                    nearest = mAlreadyCaught[i];
+                    float dist = Vector3.Distance(mAlreadyCaught[i].transform.position, caster.transform.position);
+                    if (dist < distance)
+                    {
+                        nearest = mAlreadyCaught[i];
+                    }
                 }
             }
+
             //since mAlreadyCaught is not empty we assume, that mLightningProjectile is already active
             //shoot the lightning projectile at nearest opponent
             mLightningProjectile.transform.LookAt(nearest.movement.mRigidbody.worldCenterOfMass);
@@ -156,25 +176,33 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
         if (isServer)
         {
             mEnergyLevel -= Time.deltaTime;
-            if (mEnergyLevel < 0.0f)
+            if (mEnergyLevel <= 0.0f)
             {
                 Disappear();
             }
         }
     }
 
+    public override void EndSpell()
+    {
+        Disappear();
+    }
+
     private void Disappear()
     {
         mStaticPotential.gameObject.SetActive(false);
         mStaticPotential.Stop();
+
         mLightningProjectile.gameObject.SetActive(false);
         mLightningProjectile.Stop();
+
         gameObject.SetActive(false);
         NetworkServer.UnSpawn(gameObject);
     }
 
     private void ActivateLightningProjectile()
     {
+        mAudioSource.PlayOneShot(AttackSound);
         mStaticPotential.gameObject.SetActive(false);
         mLightningProjectile.gameObject.SetActive(true);
         mStaticPotential.Stop();

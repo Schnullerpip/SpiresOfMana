@@ -297,14 +297,66 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
     //}
 
     /// <summary>
-    /// Stop the spell execution and clean up any remaining spell parts
+    /// Stop the spell and clean up any remaining spell parts
     /// </summary>
-    //public virtual void EndSpell()
-    //{
-    //    if (isServer)
-    //    {
-    //        NetworkServer.UnSpawn(this.gameObject);
-    //        this.gameObject.SetActive(false);
-    //    }
-    //}
+    public virtual void EndSpell() { }
+
+    /// <summary>
+    /// Checks wether or not a player is in the hittable range.
+    /// </summary>
+    /// <returns>The AP layer.</returns>
+    /// <param name="player">The opponents PlayerScript if there was one.</param>
+    /// <param name="pos">Position of the hit. Either the center, head or feet.</param>
+    protected static PlayerScript HitAPlayer(PlayerScript player, float hitRadius, float maxDistance, out Vector3 pos, bool onServer)
+    {
+        //check for a hit
+
+		var opponents = GameManager.instance.players;
+
+        PlayerScript hitPlayer = null;
+        pos = Vector3.zero;
+
+        foreach (var p in opponents)
+        {
+            if (p == player)
+            {
+                continue;
+            }
+
+            if (HelperConfiredHit(p.movement.mRigidbody.worldCenterOfMass, player, hitRadius, maxDistance, onServer))
+            {
+                hitPlayer = p;
+                pos = p.movement.mRigidbody.worldCenterOfMass;
+            }
+            else if (HelperConfiredHit(p.headJoint.position, player, hitRadius, maxDistance, onServer))
+            {
+                hitPlayer = p;
+                pos = p.headJoint.position;
+            }
+            else if (HelperConfiredHit(p.transform.position, player, hitRadius, maxDistance, onServer))
+            {
+                hitPlayer = p;
+                pos = p.transform.position;
+            }
+
+            if (hitPlayer)
+            {
+                break;
+            }
+        }
+
+        return hitPlayer;
+    }
+
+    protected static  bool HelperConfiredHit(Vector3 h_point, PlayerScript h_caster, float h_hitRadius, float h_hitRange, bool onServer)
+    {
+        if(onServer)
+        {
+            return ConfirmedHitServer(h_point, h_caster, h_hitRadius, h_hitRange);
+        }
+        else
+        {
+            return ConfirmedHitClient(h_point, h_caster, h_hitRadius, h_hitRange);
+        }
+    }
 }

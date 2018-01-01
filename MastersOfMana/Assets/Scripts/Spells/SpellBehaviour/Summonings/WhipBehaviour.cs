@@ -53,7 +53,7 @@ public class WhipBehaviour : A_SummoningBehaviour
 
         Vector3 hitPlayerPos;
 
-        PlayerScript hitPlayer = HitAPlayer(caster, out hitPlayerPos, false);
+        PlayerScript hitPlayer = HitAPlayer(caster, hitRadius, maxDistance, out hitPlayerPos, false);
 
         if(hitPlayer)
         {
@@ -75,64 +75,7 @@ public class WhipBehaviour : A_SummoningBehaviour
         preview.instance.Deactivate();
 	}
 
-    /// <summary>
-    /// Checks wether or not a player is in the hittable range.
-    /// </summary>
-    /// <returns>The AP layer.</returns>
-    /// <param name="player">The opponents PlayerScript if there was one.</param>
-    /// <param name="pos">Position of the hit. Either the center, head or feet.</param>
-    private PlayerScript HitAPlayer(PlayerScript player, out Vector3 pos, bool onServer)
-    {
-        //check for a hit
 
-		var opponents = GameManager.instance.players;
-
-        PlayerScript hitPlayer = null;
-        pos = Vector3.zero;
-
-        foreach (var p in opponents)
-        {
-            if (p == player)
-            {
-                continue;
-            }
-
-            if (HelperConfiredHit(p.movement.mRigidbody.worldCenterOfMass, player, hitRadius, maxDistance, onServer))
-            {
-                hitPlayer = p;
-                pos = p.movement.mRigidbody.worldCenterOfMass;
-            }
-            else if (HelperConfiredHit(p.headJoint.position, player, hitRadius, maxDistance, onServer))
-            {
-                hitPlayer = p;
-                pos = p.headJoint.position;
-            }
-            else if (HelperConfiredHit(p.transform.position, player, hitRadius, maxDistance, onServer))
-            {
-                hitPlayer = p;
-                pos = p.transform.position;
-            }
-
-            if (hitPlayer)
-            {
-                break;
-            }
-        }
-
-        return hitPlayer;
-    }
-
-    private bool HelperConfiredHit(Vector3 h_point, PlayerScript h_caster, float h_hitRadius, float h_hitRange, bool onServer)
-    {
-        if(onServer)
-        {
-            return ConfirmedHitServer(h_point, h_caster, h_hitRadius, h_hitRange);
-        }
-        else
-        {
-            return ConfirmedHitClient(h_point, h_caster, h_hitRadius, h_hitRange);
-        }
-    }
 
     public override void Execute(PlayerScript caster)
     {
@@ -146,7 +89,7 @@ public class WhipBehaviour : A_SummoningBehaviour
         //check for a hit
         Vector3 hitPlayerPos;
 
-        PlayerScript hitPlayer = HitAPlayer(caster, out hitPlayerPos, true);
+        PlayerScript hitPlayer = HitAPlayer(caster, hitRadius, maxDistance, out hitPlayerPos, true);
 
         RaycastHit hit;
 

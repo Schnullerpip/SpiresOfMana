@@ -58,6 +58,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
 	{
 		base.Preview (caster);
 
+        preview.instance.SetAvailability(caster.CurrentSpellReady());
 	    preview.instance.transform.localScale = mShootingReach * 2 * Vector3.one; // * 2 because we want to describe the radius rather than the diameter
         preview.instance.Move(caster.movement.mRigidbody.worldCenterOfMass);
 	}
@@ -203,11 +204,10 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
 
     public void Update()
     {
-        //if we dont have a caster anymore - disappear
-        if (!caster)
+        //if we dont have a caster anymore - disappear (disconnected or player is dead)
+        if (!caster || !caster.healthScript.IsAlive())
         {
-            gameObject.SetActive(false);
-            NetworkServer.UnSpawn(gameObject);
+            Explode();
             return;
         }
 
@@ -338,6 +338,13 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         //in any case we hit something (except for our caster) so we need to go away and make 'boom'!
         Explode();
     }
+
+    public override void EndSpell()
+    {
+        StopPreview(caster);
+        Explode();
+    }
+
 
     private void Explode()
     {

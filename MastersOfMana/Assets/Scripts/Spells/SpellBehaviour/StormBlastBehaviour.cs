@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -11,10 +11,11 @@ public class StormBlastBehaviour : A_EffectBehaviour
     [SerializeField] private float mInterval = 10;
     [SerializeField] private float mLifeTime = 10;
     [SerializeField] private ParticleSystem mBlastEffect;
+    private bool mIsActive = false;
 
-    public override void OnStartClient()
+    void OnEnable()
     {
-        base.OnStartClient();
+        mIsActive = true;
     }
 
     // Update is called once per frame
@@ -24,7 +25,7 @@ public class StormBlastBehaviour : A_EffectBehaviour
         //reposition the object
 	    transform.position = caster.transform.position;
 
-	    if ((mTimeCount += Time.deltaTime) > mInterval)
+	    if (mIsActive && ((mTimeCount += Time.deltaTime) > mInterval))
 	    {
             //reset timer
             mTimeCount = 0;
@@ -68,16 +69,26 @@ public class StormBlastBehaviour : A_EffectBehaviour
         sbb.gameObject.SetActive(true);
         NetworkServer.Spawn(sbb.gameObject);
 
-        GameManager.instance.isUltimateActive = true;
-        sbb.StartCoroutine(UnspawnStormblastAfterSeconds(sbb.gameObject, mLifeTime));
+        GameManager.instance.RegisterUltiSpell(sbb);
+        sbb.StartCoroutine(UnspawnStormblastAfterSeconds(sbb, mLifeTime));
+        caster.healthScript.OnInstanceDied += sbb.EndSpell;
     }
 
-    IEnumerator UnspawnStormblastAfterSeconds(GameObject go, float seconds)
+    public override void EndSpell()
+    {
+        caster.healthScript.OnInstanceDied -= EndSpell;
+        mIsActive = false;
+        gameObject.SetActive(false);
+        GameManager.instance.UnregisterUltiSpell(this);
+        NetworkServer.UnSpawn(gameObject);
+    }
+
+    IEnumerator UnspawnStormblastAfterSeconds(StormBlastBehaviour sbb, float seconds)
     {
         yield return new WaitForSeconds(seconds);
-
-        go.SetActive(false);
-        GameManager.instance.isUltimateActive = false;
-        NetworkServer.UnSpawn(go);
+        if (sbb.gameObject.activeSelf && mIsActive)
+        {
+            sbb.EndSpell();
+        }
     }
 }

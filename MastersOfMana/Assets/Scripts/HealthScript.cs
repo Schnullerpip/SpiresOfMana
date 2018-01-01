@@ -29,6 +29,9 @@ public class HealthScript : NetworkBehaviour
 	public delegate void HealthChanged(int damage);
 	public event HealthChanged OnHealthChanged;
 
+    public delegate void Died();
+    public event Died OnInstanceDied;
+
     //states whether the GameObject is alive or not
     [SyncVar]
     private bool isAlive = true;
@@ -100,6 +103,10 @@ public class HealthScript : NetworkBehaviour
         int tempCurrentHealth = mCurrentHealth - amount;
         if (tempCurrentHealth <= 0) {
             mCurrentHealth = 0;
+            if (OnInstanceDied != null)
+            {
+                OnInstanceDied();
+            }
         }
         else
         {

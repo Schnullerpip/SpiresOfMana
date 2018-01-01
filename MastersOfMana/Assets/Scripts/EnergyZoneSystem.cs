@@ -39,7 +39,9 @@ public class EnergyZoneSystem : NetworkBehaviour
         //find all possible spawnPoints
         for(int i = 0; i < spawnpointsParent.childCount; i++)
         {
-            mSpawnpoints.Add(spawnpointsParent.GetChild(i).GetComponent<Transform>());
+            Transform child = spawnpointsParent.GetChild(i);
+            if (child.gameObject.activeSelf)
+                mSpawnpoints.Add(child);
         }
 
         StartCoroutine(SpawnHeals(true));
@@ -60,8 +62,7 @@ public class EnergyZoneSystem : NetworkBehaviour
         //Get a random spawn position
         Transform healSpawnPosition = mSpawnpoints.RandomElement();
         Vector3 position = healSpawnPosition.position;
-
-        Quaternion rotation = Quaternion.identity;
+        Quaternion rotation = healSpawnPosition.rotation;
         //Instantiate and spawn
         GameObject obj = Instantiate(spawnables.RandomElement(), position, rotation);
         obj.transform.localScale = healSpawnPosition.localScale;

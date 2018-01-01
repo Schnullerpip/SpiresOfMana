@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class UltimateLoadingZone : NetworkBehaviour {
+public class UltimateLoadingZone : NetworkBehaviour
+{
 
     public float ultimateEnergyPerSecond = 1;
 	public float tickDuration = 1;
@@ -40,9 +41,14 @@ public class UltimateLoadingZone : NetworkBehaviour {
 
     public void OnTriggerEnter(Collider other)
     {
+        if (!isServer)
+        {
+            return;
+        }
+
         //Check if collision with player
         //Check FeetCollider to only trigger once per player
-        if(other.GetComponent<FeetCollider>())
+        if (other.GetComponent<FeetCollider>())
         {
             PlayerSpells playerSpells = other.GetComponentInParent<PlayerSpells>();
             if(playerSpells)
@@ -50,14 +56,16 @@ public class UltimateLoadingZone : NetworkBehaviour {
                 //Remember which player this coroutine belongs to
                 mInstanceCoroutineDictionary.Add(playerSpells.netId, StartCoroutine(IncreaseUltimateEnergy(playerSpells)));
 
-                if(isServer)
-                    playersInside++;
+                playersInside++;
             }
         }
     }
 
     public void OnTriggerExit(Collider other)
     {
+        if (!isServer)
+            return;
+
         //Check if collision with player
         //Check FeetCollider to only trigger once per player
         if (other.GetComponent<FeetCollider>())
@@ -68,16 +76,7 @@ public class UltimateLoadingZone : NetworkBehaviour {
                 StopCoroutine(mInstanceCoroutineDictionary[playerSpells.netId]);
                 mInstanceCoroutineDictionary.Remove(playerSpells.netId);
 
-                if(isServer)
-                    playersInside--;
-
-                //if (playersInside == 0)
-                //{
-                //    ActivateWhenEntered.SetActive(false);
-                //}else if(playersInside < 0)
-                //{
-                //    Debug.Log("There are less than zero players in a loading zone -> this is not how counting works...");
-                //}
+                playersInside--;
             }
         }
     }
@@ -96,7 +95,7 @@ public class UltimateLoadingZone : NetworkBehaviour {
 
     private void Update()
     {
-        if(playersInside > 0 && ActivateWhenEntered.activeSelf == false)
+        if(playersInside > 0 && ActivateWhenEntered.activeSelf == false)//has to be in the update, because playersInside can be changed anytime by the server
             ActivateWhenEntered.SetActive(true);
         else if(playersInside == 0 && ActivateWhenEntered.activeSelf == true)
             ActivateWhenEntered.SetActive(false);

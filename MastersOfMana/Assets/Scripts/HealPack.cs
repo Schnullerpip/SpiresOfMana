@@ -24,7 +24,13 @@ public class HealPack : NetworkBehaviour
         }
     }
 
-	void RoundEnded()
+    private void OnDisable()
+    {
+        GameManager.OnRoundEnded -= RoundEnded;
+        StopAllCoroutines();
+    }
+
+    void RoundEnded()
 	{
         if (isServer)
         {
@@ -39,6 +45,7 @@ public class HealPack : NetworkBehaviour
         {
             return;
         }
+
         //Check if collision with player
         //Check FeetCollider to only trigger once per player
         if (other.GetComponent<FeetCollider>())
@@ -49,8 +56,7 @@ public class HealPack : NetworkBehaviour
                 //Remember which player this coroutine belongs to
                 mInstanceCoroutineDictionary.Add(playerHealth.netId, StartCoroutine(Heal(playerHealth)));
 
-                if (isServer)
-                    playersInside++;
+                playersInside++;
             }
         }
     }
@@ -61,6 +67,7 @@ public class HealPack : NetworkBehaviour
         {
             return;
         }
+
         //Check if collision with player
         //Check FeetCollider to only trigger once per player
         if (other.GetComponent<FeetCollider>())
@@ -71,8 +78,7 @@ public class HealPack : NetworkBehaviour
                 StopCoroutine(mInstanceCoroutineDictionary[playerHealth.netId]);
                 mInstanceCoroutineDictionary.Remove(playerHealth.netId);
 
-                if (isServer)
-                    playersInside--;
+                playersInside--;
             }
         }
     }
@@ -87,12 +93,6 @@ public class HealPack : NetworkBehaviour
             }
             yield return new WaitForSeconds(tickDuration);
         }
-    }
-
-    private void OnDisable()
-    {
-		GameManager.OnRoundEnded -= RoundEnded;
-        StopAllCoroutines();
     }
 
     private void Update()

@@ -109,6 +109,11 @@ public class PlayerScript : NetworkBehaviour
         }
     }
 
+    public void OnDestroy()
+    {
+        GameManager.instance.PlayerDisconnected();
+    }
+
     // Use this for initialization
     public void Start()
     {

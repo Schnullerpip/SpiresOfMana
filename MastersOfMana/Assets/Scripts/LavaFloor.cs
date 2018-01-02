@@ -6,8 +6,6 @@ using UnityEngine.Networking;
 public class LavaFloor : NetworkBehaviour
 {
     public int damagePerSecond;
-    public float cycleTime = 40;
-    public float amplitude = 4;
     public AnimationCurve lavaFlow;
 
     public float repelForce = 10;
@@ -16,10 +14,29 @@ public class LavaFloor : NetworkBehaviour
     private float mRunTime = 0;
     private bool mLavaActive = false;
 
+    [Header("Emission Animation")]
+    [CurveDisplay]
+    public AnimationCurve emission;
+    public float emissionAmplifier = 4;
+    public float rampTime = 0.5f;
+
+    private Renderer mRenderer;
+    private float mEmissionStart;
+    private int mEmissionID;
+    private int mNextOutbreakIndex = 1;
+
     [Header("SFX")]
     public AudioSource bubblingSource;
     public AudioSource burnSource;
     public PitchingAudioClip[] burnClips;
+    public AudioSource outbreakSource;
+
+    private void Awake()
+    {
+        mRenderer = GetComponentInChildren<Renderer>();
+        mEmissionID = Shader.PropertyToID("_EmissionStrength");
+        mEmissionStart = mRenderer.material.GetFloat(mEmissionID);
+    }
 
     public void Start()
     {
@@ -63,6 +80,7 @@ public class LavaFloor : NetworkBehaviour
     {
         mLavaActive = true;
         mRunTime = 0;
+        mNextOutbreakIndex = 1;
     }
 
     void RoundEnded()
@@ -71,6 +89,8 @@ public class LavaFloor : NetworkBehaviour
         Vector3 newTrans = transform.position;
         newTrans.y = mStartHeight;
         transform.position = newTrans;
+        mRenderer.material.SetFloat(mEmissionID, mEmissionStart);
+
     }
 
     public void OnTriggerExit(Collider other)
@@ -128,11 +148,55 @@ public class LavaFloor : NetworkBehaviour
             {
                 RoundEnded();
             }
-            mRunTime += Time.deltaTime;
+
             Vector3 newTransformPosition = transform.position;
-            float evaluation = lavaFlow.Evaluate(mRunTime / cycleTime);
-            newTransformPosition.y = evaluation * amplitude + mStartHeight;
+            float evaluation = lavaFlow.Evaluate(mRunTime);
+            newTransformPosition.y = evaluation + mStartHeight;
             transform.position = newTransformPosition;
+
+            float emissionEval = emission.Evaluate(mRunTime);
+
+            if(mNextOutbreakIndex < emission.length && mRunTime > emission.keys[mNextOutbreakIndex].time)
+            {
+                mNextOutbreakIndex += 4;
+                Outbreak();
+            }
+
+            mRenderer.material.SetFloat(mEmissionID, mEmissionStart + emissionEval * emissionAmplifier);
+
+            mRunTime += Time.fixedDeltaTime;
         }
+    }
+
+    private void Outbreak()
+    {
+        outbreakSource.Play();
+    }
+
+    private void OnValidate()
+    {
+        AnimationCurve temp = new AnimationCurve();
+
+        for (int i = 0; i < lavaFlow.length; ++i)
+        {
+            Keyframe key = new Keyframe(lavaFlow.keys[i].time, 0, 0, 0);
+            temp.AddKey(key);
+
+            if (i > 0 && i < lavaFlow.length - 1)
+            {
+                if (i % 2 == 1)
+                {
+                    key = new Keyframe(lavaFlow.keys[i].time + rampTime, 1, 0, 0);
+                }
+                else
+                {
+                    key = new Keyframe(lavaFlow.keys[i].time - rampTime, 1, 0, 0);
+                }
+
+                temp.AddKey(key);
+            }
+        }
+
+        emission.keys = temp.keys;
     }
 }

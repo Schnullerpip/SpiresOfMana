@@ -19,8 +19,14 @@ public class EnergyZoneSystem : NetworkBehaviour
 	//}
 
     private List<Transform> mSpawnpoints = new List<Transform>();
+    private LavaFloor mLavaFloor;
 
-	public void OnEnable()
+    public void Start()
+    {
+        mLavaFloor = FindObjectOfType<LavaFloor>();
+    }
+
+    public void OnEnable()
 	{
 		GameManager.OnRoundStarted += RoundStarted;
 		GameManager.OnRoundEnded += RoundEnded;
@@ -60,7 +66,7 @@ public class EnergyZoneSystem : NetworkBehaviour
             yield return new WaitForSeconds(gapBetweenSpawns);
 
         //Get a random spawn position
-        Transform healSpawnPosition = mSpawnpoints.RandomElement();
+        Transform healSpawnPosition = GetRandomSpawnPosition();
         Vector3 position = healSpawnPosition.position;
         Quaternion rotation = healSpawnPosition.rotation;
         //Instantiate and spawn
@@ -68,6 +74,17 @@ public class EnergyZoneSystem : NetworkBehaviour
         obj.transform.localScale = healSpawnPosition.localScale;
         StartCoroutine(Despawn(healSpawnPosition, obj));
         NetworkServer.Spawn(obj.gameObject);
+    }
+
+    private Transform GetRandomSpawnPosition()
+    {
+        Transform healSpawnPosition = mSpawnpoints.RandomElement();
+        if(healSpawnPosition.position.y < mLavaFloor.transform.position.y)
+        {
+            mSpawnpoints.Remove(healSpawnPosition);
+            healSpawnPosition = GetRandomSpawnPosition();
+        }
+        return healSpawnPosition;
     }
 
     private IEnumerator Despawn(Transform trans, GameObject obj)

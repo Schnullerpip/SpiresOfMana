@@ -59,7 +59,6 @@ GameObject:
   - component: {fileID: 4759319563353992}
   - component: {fileID: 33587426073145406}
   - component: {fileID: 23852596919613806}
-  - component: {fileID: 114163996588703216}
   m_Layer: 0
   m_Name: FloorOfLava
   m_TagString: Untagged
@@ -152,7 +151,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: ed70843b3cee0834fa4bb35e4dd60b34, type: 2}
+  - {fileID: 2100000, guid: bd7842fbdc63341a1a8d236581791259, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -532,75 +531,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
---- !u!114 &114163996588703216
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1310517581602906}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d17bfa5a601ae4ee28628761aefd8f2b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  material: {fileID: 2100000, guid: ed70843b3cee0834fa4bb35e4dd60b34, type: 2}
-  propertyName: _MainTex
-  xCurve:
-    curve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 2
-        time: 0
-        value: 0
-        inSlope: 0.046555106
-        outSlope: 0.046555106
-        tangentMode: 0
-      - serializedVersion: 2
-        time: 0.5
-        value: 1
-        inSlope: -0.019554105
-        outSlope: -0.019554105
-        tangentMode: 0
-      - serializedVersion: 2
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-      m_PreInfinity: 1
-      m_PostInfinity: 1
-      m_RotationOrder: 0
-    amplitude: 0.1
-    frequence: 0.1
-    offset: 0.2
-  yCurve:
-    curve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 2
-        time: 0
-        value: 0
-        inSlope: 0.046555106
-        outSlope: 0.046555106
-        tangentMode: 0
-      - serializedVersion: 2
-        time: 0.5
-        value: 1
-        inSlope: -0.019554105
-        outSlope: -0.019554105
-        tangentMode: 0
-      - serializedVersion: 2
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-      m_PreInfinity: 1
-      m_PostInfinity: 1
-      m_RotationOrder: 0
-    amplitude: 0.1
-    frequence: 0.02
-    offset: 0
 --- !u!114 &114509025285551534
 MonoBehaviour:
   m_ObjectHideFlags: 1

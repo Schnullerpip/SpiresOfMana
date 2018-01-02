@@ -25,7 +25,9 @@ public class HealthHUD : MonoBehaviour
         }
         // Get notified whenever health is changed
         localPlayerHealthScript.OnHealthChanged += SetHealth;
-        SetHealth(localPlayerHealthScript.GetCurrentHealth());
+
+        //when enabled, set the hud to the maximum instantly, this should avoid the bar filling on a restart from 0
+        SetHealthInstant(localPlayerHealthScript.GetMaxHealth());
     }
 
     public void Init()
@@ -60,11 +62,26 @@ public class HealthHUD : MonoBehaviour
 
     private int mCurrentHealth;
 
+    /// <summary>
+    /// Sets the health in the HUD over time.
+    /// </summary>
+    /// <param name="health">Health.</param>
     public void SetHealth(int health)
     {
-        //healthText.text = health.ToString();
         StopAllCoroutines();
         StartCoroutine(HealthScroll(health, scrollingSpeed));
+    }
+
+    /// <summary>
+    /// Sets the health in the HUD instantly.
+    /// </summary>
+    /// <param name="health">Health.</param>
+    public void SetHealthInstant(int health)
+    {
+        StopAllCoroutines();
+        mCurrentHealth = health;
+        healthText.text = mCurrentHealth.ToString();
+		ScaleAndColor();
     }
 
     private IEnumerator HealthScroll(int newHealth, float speed)
@@ -88,7 +105,7 @@ public class HealthHUD : MonoBehaviour
         ScaleAndColor();
 
         mCurrentHealth = newHealth;
-        healthText.text = newHealth.ToString();
+        healthText.text = mCurrentHealth.ToString();
     }
 
     private void ScaleAndColor()

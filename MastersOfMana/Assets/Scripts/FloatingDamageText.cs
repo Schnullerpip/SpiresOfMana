@@ -6,15 +6,14 @@ using UnityEngine.UI;
 public class FloatingDamageText : MonoBehaviour {
 
     public Text text;
-    public float xRange = 15.0f;
-    public float yDeviation = 5.0f;
-    public float yExpected = -10.0f;
-    public float gravity = 0.0f;
+    public FloatRange xRange = new FloatRange(-15.0f, 15.0f);
+    public FloatRange yDeviation = new FloatRange(0.0f, 15.0f);
+    public float gravity = 1.0f;
     public float lifetime = 1.0f;
     public float drag = 0.9f;
 
     private Vector2 mVelocity;
-    private RectTransform rect;
+    private RectTransform mRect;
 
 	public void SetDamageText(int damage)
     {
@@ -23,26 +22,32 @@ public class FloatingDamageText : MonoBehaviour {
 
     public void Awake()
     {
-        rect = GetComponent<RectTransform>();
+        mRect = GetComponent<RectTransform>();
     }
 
     public void OnEnable()
     {
         StartCoroutine(DeactivateAfter(lifetime));
-        rect.anchoredPosition3D = Vector3.zero;
-        mVelocity = new Vector2(Random.Range(-xRange, xRange), Random.Range(-yDeviation, yDeviation) + yExpected);
+        mRect.anchoredPosition3D = Vector3.zero;
+        mVelocity = new Vector2(xRange.Random(), yDeviation.Random());
     }
 
-    private IEnumerator DeactivateAfter(float sceonds)
+    private void OnDisable()
     {
-        yield return new WaitForSeconds(sceonds);
+        gameObject.SetActive(false);
+        StopAllCoroutines();
+    }
+
+    private IEnumerator DeactivateAfter(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
         gameObject.SetActive(false);
     } 
 
     public void Update()
     {
         mVelocity.y -= gravity;
-        rect.anchoredPosition += mVelocity * Time.deltaTime * transform.localScale.x;
+        mRect.anchoredPosition += mVelocity * Time.deltaTime * transform.localScale.x;
         mVelocity *= drag;
     }
 }

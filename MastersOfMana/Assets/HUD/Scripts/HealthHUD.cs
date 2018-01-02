@@ -15,6 +15,10 @@ public class HealthHUD : MonoBehaviour
     public Image filling;
     public float scrollingSpeed = 2;
 
+    public FloatingDamageTextSystem floatingDamageTextSystem;
+
+    private int mCurrentHealth;
+
     // Use this for initialization
     void OnEnable()
     {
@@ -22,7 +26,13 @@ public class HealthHUD : MonoBehaviour
         if(!isInitialized)
         {
             Init();
+
+            floatingDamageTextSystem.player = GameManager.instance.localPlayer;
+            floatingDamageTextSystem.Init();
+
+			localPlayerHealthScript.OnHealthReset += floatingDamageTextSystem.SubscribeToEvents;
         }
+
         // Get notified whenever health is changed
         localPlayerHealthScript.OnHealthChanged += SetHealth;
 
@@ -30,19 +40,21 @@ public class HealthHUD : MonoBehaviour
         SetHealthInstant(localPlayerHealthScript.GetMaxHealth());
     }
 
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.O))
+        {
+            localPlayerHealthScript.TakeDamage(10,GetType());
+        }
+    }
+
     public void Init()
     {
         isInitialized = true;
         localPlayerHealthScript = GameManager.instance.localPlayer.healthScript;
         //Create one floating damge text system per non-local player so we can cache the transform
-        foreach (PlayerScript player in FindObjectsOfType<PlayerScript>())
+        foreach (PlayerScript player in GameManager.instance.GetNonLocalPlayers())
         {
-            //Don't create a system for the local player
-            if (player.netId == GameManager.instance.localPlayer.netId)
-            {
-                continue;
-            }
-
             OpponentHUD oponnentHUD = Instantiate(opponentHUDPrefab);
             oponnentHUD.player = player;
             oponnentHUD.Init();
@@ -53,14 +65,13 @@ public class HealthHUD : MonoBehaviour
 
     void OnDisable()
     {
+        floatingDamageTextSystem.UnsubscribeFromEvents();
         GameManager.OnLocalPlayerDead -= LocalPlayerDead;
         if (localPlayerHealthScript)
         {
             localPlayerHealthScript.OnHealthChanged -= SetHealth;
         }
     }
-
-    private int mCurrentHealth;
 
     /// <summary>
     /// Sets the health in the HUD over time.

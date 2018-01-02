@@ -39,7 +39,7 @@ GameObject:
   - component: {fileID: 224670133368973320}
   - component: {fileID: 114122279467578972}
   m_Layer: 5
-  m_Name: FloatingText
+  m_Name: FloatingTextHUD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -58,14 +58,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   text: {fileID: 114562677525243774}
   xRange:
-    min: -1000
-    max: 1000
+    min: -140
+    max: 230
   yDeviation:
-    min: 0
-    max: 1500
+    min: 600
+    max: 1000
   gravity: 50
   lifetime: 2
-  drag: 0.95
+  drag: 0.99
 --- !u!114 &114562677525243774
 MonoBehaviour:
   m_ObjectHideFlags: 1

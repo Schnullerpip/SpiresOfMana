@@ -86,6 +86,8 @@ public class PlayerScript : NetworkBehaviour
 
 	private ColliderPack mColliderPack;
 
+    private Coroutine specatorCoroutine;
+
     /// <summary>
     /// Is the provided collider part of the players whole compound collider?
     /// </summary>
@@ -99,6 +101,7 @@ public class PlayerScript : NetworkBehaviour
 	void Awake()
 	{
         mPlayerSpells = GetComponent<PlayerSpells>();
+        GameManager.OnRoundEnded += RoundEnded;
 	}
 
     private void OnDisable()
@@ -112,6 +115,7 @@ public class PlayerScript : NetworkBehaviour
     public void OnDestroy()
     {
         GameManager.instance.PlayerDisconnected();
+        GameManager.OnRoundEnded -= RoundEnded;
     }
 
     // Use this for initialization
@@ -243,7 +247,7 @@ public class PlayerScript : NetworkBehaviour
     /// </summary>
     public void SpawnSpectator()
     {
-        StartCoroutine(DramaticDeathPause());
+        specatorCoroutine = StartCoroutine(DramaticDeathPause());
         this.enabled = false;
     }
 
@@ -301,6 +305,14 @@ public class PlayerScript : NetworkBehaviour
 			mColliderPack.RestoreOriginalLayer();
 		}
 	}
+
+    private void RoundEnded()
+    {
+        if (specatorCoroutine != null)
+        {
+            StopCoroutine(specatorCoroutine);
+        }
+    }
 
 	void LateUpdate()
 	{

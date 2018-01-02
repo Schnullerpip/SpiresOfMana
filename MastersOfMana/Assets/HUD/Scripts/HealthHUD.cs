@@ -36,7 +36,7 @@ public class HealthHUD : MonoBehaviour
             //subscribe to round start and end to attach the floating damage system to the health scripts
             //this is necessary so the restart "heal" is not displayed and to reset the health bar instantly
             GameManager.OnRoundStarted += RoundStart;
-            GameManager.OnRoundEnded += floatingDamageTextSystem.UnsubscribeFromEvents;
+            GameManager.OnRoundEnded += RoundEnd;
         }
 
         // Get notified whenever health is changed
@@ -52,6 +52,7 @@ public class HealthHUD : MonoBehaviour
 
     private void RoundEnd()
     {
+        gameObject.SetActive(false);
         floatingDamageTextSystem.UnsubscribeFromEvents();
     }
 

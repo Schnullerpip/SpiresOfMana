@@ -70,4 +70,10 @@ public class IngameMenu : MonoBehaviour {
             lobbyManager.StopClientClbk();
         }
     }
+
+    //This makes sure that we set GameRunning to false in any case where we change the game scene
+    private void OnDestroy()
+    {
+        GameManager.instance.gameRunning = false;
+    }
 }

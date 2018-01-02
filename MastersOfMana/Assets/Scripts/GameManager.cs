@@ -33,6 +33,9 @@ public class GameManager : MonoBehaviour
     public delegate void LocalPlayerDead();
     public static event LocalPlayerDead OnLocalPlayerDead;
 
+    public delegate void LocalPlayerWon();
+    public static event LocalPlayerWon OnLocalPlayerWon;
+
     public delegate void RoundEnded();
     public static event RoundEnded OnRoundEnded;
 
@@ -167,7 +170,6 @@ public class GameManager : MonoBehaviour
     {
         gameRunning = false;
 
-
         if (OnRoundEnded != null)
         {
             OnRoundEnded();
@@ -206,7 +208,16 @@ public class GameManager : MonoBehaviour
         {
             mRewiredPlayer.controllers.maps.SetMapsEnabled(numOfActiveMenus > 0, "UI");
             mRewiredPlayer.controllers.maps.SetMapsEnabled(!(numOfActiveMenus > 0), "Default");
-            Cursor.lockState = numOfActiveMenus > 0 ? CursorLockMode.None : CursorLockMode.Locked;
+            //If the game is running, check if a menu is currently open
+            if(gameRunning)
+            {
+                Cursor.lockState = numOfActiveMenus > 0 ? CursorLockMode.None : CursorLockMode.Locked;
+            }
+            //If the game is not running, never lock the mouse
+            else
+            {
+                Cursor.lockState = CursorLockMode.None;
+            }
             Cursor.visible = numOfActiveMenus > 0;
         }
     }
@@ -294,12 +305,21 @@ public class GameManager : MonoBehaviour
     public void TriggerOnRoundStarted()
     {
         gameRunning = true;
+        OnApplicationFocus(true);
         ResetGame();
         if (OnRoundStarted != null)
         {
             OnRoundStarted();
         }
 	}
+
+    public void TriggerOnLocalPlayerWon()
+    {
+        if (OnLocalPlayerWon != null)
+        {
+            OnLocalPlayerWon();
+        }
+    }
 
     /// <summary>
     /// Gets a list of all opponents of the given player script.

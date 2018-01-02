@@ -275,15 +275,13 @@ GameObject:
   - component: {fileID: 22312876}
   - component: {fileID: 11422868}
   - component: {fileID: 11466428}
-  - component: {fileID: 114402217130636838}
-  - component: {fileID: 114445203220250366}
   m_Layer: 5
   m_Name: LobbyManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &157748
 GameObject:
   m_ObjectHideFlags: 1
@@ -1337,11 +1335,11 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114402217130636838}
+      - m_Target: {fileID: 114907993927819114}
         m_MethodName: OnPlayerNameChanged
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 11484364}
+          m_ObjectArgument: {fileID: 114634165809472392}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.InputField, UnityEngine.UI
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -1455,7 +1453,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114402217130636838}
+      - m_Target: {fileID: 114907993927819114}
         m_MethodName: OnClickCreateMatchmakingGame
         m_Mode: 1
         m_Arguments:
@@ -2730,7 +2728,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1613109371814600
 GameObject:
   m_ObjectHideFlags: 1
@@ -2791,13 +2789,15 @@ GameObject:
   m_Component:
   - component: {fileID: 224553051348914446}
   - component: {fileID: 114648816584878240}
+  - component: {fileID: 114172167183928290}
+  - component: {fileID: 114907993927819114}
   m_Layer: 5
   m_Name: MainPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1709652934341904
 GameObject:
   m_ObjectHideFlags: 1
@@ -2932,7 +2932,6 @@ GameObject:
   - component: {fileID: 222434964683180590}
   - component: {fileID: 114080024053701198}
   - component: {fileID: 11499846}
-  - component: {fileID: 114307734619142086}
   m_Layer: 5
   m_Name: LobbyPanel
   m_TagString: Untagged
@@ -3464,6 +3463,17 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Select and Trigger
+--- !u!114 &114172167183928290
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1689417932013498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc7575121cbedfd4c862c0be5fd8cc4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114260149064679248
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3509,38 +3519,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: BACK
---- !u!114 &114307734619142086
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1820477212224956}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 192
-    i1: 151
-    i2: 130
-    i3: 81
-    i4: 255
-    i5: 123
-    i6: 16
-    i7: 212
-    i8: 251
-    i9: 149
-    i10: 74
-    i11: 75
-    i12: 86
-    i13: 172
-    i14: 217
-    i15: 240
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
 --- !u!114 &114317230414849154
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3700,29 +3678,6 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
---- !u!114 &114402217130636838
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 155310}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a0312403f252434c912587ebde8fb96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lobbyManager: {fileID: 0}
-  mainMenuPanel: {fileID: 224553051348914446}
-  lobbyServerList: {fileID: 22488586}
-  lobbyPanel: {fileID: 224507569570876230}
-  infoPanel: {fileID: 11442006}
-  countdownPanel: {fileID: 11413810}
-  spellSelectionPanel: {fileID: 0}
-  optionsPanel: {fileID: 22442386}
-  playernameField: {fileID: 11484364}
-  playerColor: {fileID: 114719442483147214}
-  matchNameInput: {fileID: 114634165809472392}
-  backButton: {fileID: 114402211098065612}
 --- !u!114 &114436840786418730
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3750,17 +3705,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114445203220250366
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 155310}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc7575121cbedfd4c862c0be5fd8cc4b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114452988191662334
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3812,7 +3756,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114402217130636838}
+      - m_Target: {fileID: 114907993927819114}
         m_MethodName: Quit
         m_Mode: 1
         m_Arguments:
@@ -3877,7 +3821,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114402217130636838}
+      - m_Target: {fileID: 114907993927819114}
         m_MethodName: OnClickPreviousPlayerColor
         m_Mode: 1
         m_Arguments:
@@ -4123,7 +4067,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114402217130636838}
+      - m_Target: {fileID: 114907993927819114}
         m_MethodName: OnClickOptions
         m_Mode: 1
         m_Arguments:
@@ -4728,7 +4672,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114402217130636838}
+      - m_Target: {fileID: 114907993927819114}
         m_MethodName: OnClickOpenServerList
         m_Mode: 1
         m_Arguments:
@@ -4791,7 +4735,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114402217130636838}
+      - m_Target: {fileID: 114907993927819114}
         m_MethodName: OnClickNextPlayerColor
         m_Mode: 1
         m_Arguments:
@@ -4929,6 +4873,29 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114907993927819114
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1689417932013498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a0312403f252434c912587ebde8fb96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lobbyManager: {fileID: 0}
+  mainMenuPanel: {fileID: 224553051348914446}
+  lobbyServerList: {fileID: 22488586}
+  lobbyPanel: {fileID: 224507569570876230}
+  infoPanel: {fileID: 11442006}
+  countdownPanel: {fileID: 11413810}
+  spellSelectionPanel: {fileID: 0}
+  optionsPanel: {fileID: 22442386}
+  playernameField: {fileID: 11484364}
+  playerColor: {fileID: 114719442483147214}
+  matchNameInput: {fileID: 114634165809472392}
+  backButton: {fileID: 114402211098065612}
 --- !u!114 &114935325981888708
 MonoBehaviour:
   m_ObjectHideFlags: 1

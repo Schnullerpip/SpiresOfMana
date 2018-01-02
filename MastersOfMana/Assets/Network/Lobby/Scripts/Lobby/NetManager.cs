@@ -26,14 +26,13 @@ public class NetManager : NetworkBehaviour {
     [ClientRpc]
     public void RpcRoundEnded(uint winner)
     {
-        //If the player is dead, he already has the postGame loaded!
-        //if (GameManager.instance.localPlayer.healthScript.IsAlive())
-        //{
+
         GameManager.instance.winnerID = winner;
-        //SceneManager.LoadSceneAsync("Scenes/arne_postGame", LoadSceneMode.Additive);
         FindObjectOfType<HUD>().ShowPostGameScreen(true);
-        //GameManager.instance.TriggerRoundEnded();
-        //}
+        if (GameManager.instance.winnerID == GameManager.instance.localPlayer.netId.Value)
+        {
+            GameManager.instance.TriggerOnLocalPlayerWon();
+        }
     }
 
     [ClientRpc]

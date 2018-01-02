@@ -26,6 +26,7 @@ public class PlayerHealthScript : HealthScript
 
             //if the player was casting a spell - stop its preview
             mPlayer.GetPlayerSpells().StopPreview();
+            mPlayer.inputStateSystem.current.SetPreview(false);
 
             //this mPlayer is dead!!! tell the Gamemanager, that one is down
             GameManager.instance.PlayerDown();

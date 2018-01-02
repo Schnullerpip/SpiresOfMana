@@ -206,7 +206,16 @@ public class GameManager : MonoBehaviour
         {
             mRewiredPlayer.controllers.maps.SetMapsEnabled(numOfActiveMenus > 0, "UI");
             mRewiredPlayer.controllers.maps.SetMapsEnabled(!(numOfActiveMenus > 0), "Default");
-            Cursor.lockState = numOfActiveMenus > 0 ? CursorLockMode.None : CursorLockMode.Locked;
+            //If the game is running, check if a menu is currently open
+            if(gameRunning)
+            {
+                Cursor.lockState = numOfActiveMenus > 0 ? CursorLockMode.None : CursorLockMode.Locked;
+            }
+            //If the game is not running, never lock the mouse
+            else
+            {
+                Cursor.lockState = CursorLockMode.None;
+            }
             Cursor.visible = numOfActiveMenus > 0;
         }
     }
@@ -294,6 +303,7 @@ public class GameManager : MonoBehaviour
     public void TriggerOnRoundStarted()
     {
         gameRunning = true;
+        OnApplicationFocus(true);
         ResetGame();
         if (OnRoundStarted != null)
         {

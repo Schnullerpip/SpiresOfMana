@@ -72,7 +72,7 @@ public class PlayerScript : NetworkBehaviour
 	[SyncVar] public string playerName;
     [SyncVar] public Color playerColor;
 
-	public Renderer rendererToColor;
+    public ARecolorSingleColor[] recolors;
 
     public PlayerHealthScript healthScript;
 
@@ -180,7 +180,10 @@ public class PlayerScript : NetworkBehaviour
 	public override void OnStartClient ()
 	{
 		base.OnStartClient ();
-		rendererToColor.material.color = playerColor;
+        foreach (var r in recolors)
+        {
+            r.ChangeColorTo(playerColor);
+        }
 	}
 
     //Statechanging ----------------------------------------

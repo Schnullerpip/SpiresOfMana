@@ -50,7 +50,7 @@ Shader "Custom/Lava" {
             #pragma multi_compile DIRLIGHTMAP_OFF DIRLIGHTMAP_COMBINED DIRLIGHTMAP_SEPARATE
             #pragma multi_compile DYNAMICLIGHTMAP_OFF DYNAMICLIGHTMAP_ON
             #pragma multi_compile_fog
-            #pragma only_renderers d3d9 d3d11 glcore gles 
+            #pragma only_renderers d3d9 d3d11 glcore gles metal 
             #pragma target 3.0
             uniform float4 _Color;
             uniform sampler2D _MainTex; uniform float4 _MainTex_ST;
@@ -121,12 +121,9 @@ Shader "Custom/Lava" {
                 float3 viewDirection = normalize(_WorldSpaceCameraPos.xyz - i.posWorld.xyz);
                 float4 node_7955 = _Time;
                 float node_8998 = (node_7955.g*_frequency);
-                float node_6202 = 0.016;
-                float3 node_6706 = (_TurbolanceSettings.rgb*node_6202);
-                float3 node_9303 = node_6706.rgb;
+                float3 node_9303 = (_TurbolanceSettings.rgb*0.016).rgb;
                 float4 node_8561 = _Time;
-                float2 node_4726 = float2((node_9303.r*node_8561.g),(node_9303.g*node_8561.g));
-                float2 node_5004 = (node_4726+i.uv0);
+                float2 node_5004 = (float2((node_9303.r*node_8561.g),(node_9303.g*node_8561.g))+i.uv0);
                 float4 _Turbulance_var = tex2D(_Turbulance,TRANSFORM_TEX(node_5004, _Turbulance));
                 float2 node_8211 = (i.uv0+float2((sin(node_8998)*_amplitude),(sin((node_8998+_offset))*_amplitude))+(node_9303.b*_Turbulance_var.g));
                 float3 _BumpMap_var = UnpackNormal(tex2D(_BumpMap,TRANSFORM_TEX(node_8211, _BumpMap)));
@@ -268,7 +265,7 @@ Shader "Custom/Lava" {
             #pragma multi_compile DIRLIGHTMAP_OFF DIRLIGHTMAP_COMBINED DIRLIGHTMAP_SEPARATE
             #pragma multi_compile DYNAMICLIGHTMAP_OFF DYNAMICLIGHTMAP_ON
             #pragma multi_compile_fog
-            #pragma only_renderers d3d9 d3d11 glcore gles 
+            #pragma only_renderers d3d9 d3d11 glcore gles metal 
             #pragma target 3.0
             uniform float4 _Color;
             uniform sampler2D _MainTex; uniform float4 _MainTex_ST;
@@ -328,12 +325,9 @@ Shader "Custom/Lava" {
                 float3 viewDirection = normalize(_WorldSpaceCameraPos.xyz - i.posWorld.xyz);
                 float4 node_7955 = _Time;
                 float node_8998 = (node_7955.g*_frequency);
-                float node_6202 = 0.016;
-                float3 node_6706 = (_TurbolanceSettings.rgb*node_6202);
-                float3 node_9303 = node_6706.rgb;
+                float3 node_9303 = (_TurbolanceSettings.rgb*0.016).rgb;
                 float4 node_8561 = _Time;
-                float2 node_4726 = float2((node_9303.r*node_8561.g),(node_9303.g*node_8561.g));
-                float2 node_5004 = (node_4726+i.uv0);
+                float2 node_5004 = (float2((node_9303.r*node_8561.g),(node_9303.g*node_8561.g))+i.uv0);
                 float4 _Turbulance_var = tex2D(_Turbulance,TRANSFORM_TEX(node_5004, _Turbulance));
                 float2 node_8211 = (i.uv0+float2((sin(node_8998)*_amplitude),(sin((node_8998+_offset))*_amplitude))+(node_9303.b*_Turbulance_var.g));
                 float3 _BumpMap_var = UnpackNormal(tex2D(_BumpMap,TRANSFORM_TEX(node_8211, _BumpMap)));
@@ -416,7 +410,7 @@ Shader "Custom/Lava" {
             #pragma multi_compile DIRLIGHTMAP_OFF DIRLIGHTMAP_COMBINED DIRLIGHTMAP_SEPARATE
             #pragma multi_compile DYNAMICLIGHTMAP_OFF DYNAMICLIGHTMAP_ON
             #pragma multi_compile_fog
-            #pragma only_renderers d3d9 d3d11 glcore gles 
+            #pragma only_renderers d3d9 d3d11 glcore gles metal 
             #pragma target 3.0
             uniform float4 _Color;
             uniform sampler2D _MainTex; uniform float4 _MainTex_ST;
@@ -463,12 +457,9 @@ Shader "Custom/Lava" {
                 
                 float4 node_7955 = _Time;
                 float node_8998 = (node_7955.g*_frequency);
-                float node_6202 = 0.016;
-                float3 node_6706 = (_TurbolanceSettings.rgb*node_6202);
-                float3 node_9303 = node_6706.rgb;
+                float3 node_9303 = (_TurbolanceSettings.rgb*0.016).rgb;
                 float4 node_8561 = _Time;
-                float2 node_4726 = float2((node_9303.r*node_8561.g),(node_9303.g*node_8561.g));
-                float2 node_5004 = (node_4726+i.uv0);
+                float2 node_5004 = (float2((node_9303.r*node_8561.g),(node_9303.g*node_8561.g))+i.uv0);
                 float4 _Turbulance_var = tex2D(_Turbulance,TRANSFORM_TEX(node_5004, _Turbulance));
                 float2 node_8211 = (i.uv0+float2((sin(node_8998)*_amplitude),(sin((node_8998+_offset))*_amplitude))+(node_9303.b*_Turbulance_var.g));
                 float4 _EmissionMap_var = tex2D(_EmissionMap,TRANSFORM_TEX(node_8211, _EmissionMap));

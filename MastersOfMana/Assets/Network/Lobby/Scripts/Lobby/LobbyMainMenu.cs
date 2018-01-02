@@ -10,8 +10,6 @@ namespace Prototype.NetworkLobby
     {
         public LobbyManager lobbyManager;
 
-
-
         [Header("UI Reference")]
 
         public RectTransform mainMenuPanel;
@@ -39,8 +37,6 @@ namespace Prototype.NetworkLobby
         {
             matchNameInput.onEndEdit.RemoveAllListeners();
             matchNameInput.onEndEdit.AddListener(onEndEditGameName);
-
-            lobbyManager = GameObject.FindObjectOfType<LobbyManager>();
             backButton.onClick.RemoveAllListeners();
             backButton.onClick.AddListener(lobbyManager.GoBackButton);
 

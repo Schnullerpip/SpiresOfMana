@@ -33,6 +33,9 @@ public class GameManager : MonoBehaviour
     public delegate void LocalPlayerDead();
     public static event LocalPlayerDead OnLocalPlayerDead;
 
+    public delegate void LocalPlayerWon();
+    public static event LocalPlayerWon OnLocalPlayerWon;
+
     public delegate void RoundEnded();
     public static event RoundEnded OnRoundEnded;
 
@@ -166,7 +169,6 @@ public class GameManager : MonoBehaviour
     public void TriggerRoundEnded()
     {
         gameRunning = false;
-
 
         if (OnRoundEnded != null)
         {
@@ -310,6 +312,14 @@ public class GameManager : MonoBehaviour
             OnRoundStarted();
         }
 	}
+
+    public void TriggerOnLocalPlayerWon()
+    {
+        if (OnLocalPlayerWon != null)
+        {
+            OnLocalPlayerWon();
+        }
+    }
 
     /// <summary>
     /// Gets a list of all opponents of the given player script.

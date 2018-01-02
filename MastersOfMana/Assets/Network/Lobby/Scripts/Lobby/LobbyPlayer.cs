@@ -281,6 +281,8 @@ namespace Prototype.NetworkLobby
 
         public void OnNameChanged(string str)
         {
+            PlayerPrefs.SetString("Playername", str);
+            PlayerPrefs.Save();
             CmdNameChanged(str);
         }
 

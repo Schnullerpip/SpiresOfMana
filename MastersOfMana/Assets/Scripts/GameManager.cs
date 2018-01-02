@@ -232,7 +232,8 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if (!NetManager.instance.amIServer())
+        //If we don't have a NetManager return!
+        if (!NetManager.instance || !NetManager.instance.amIServer())
         {
             return;
         }

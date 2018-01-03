@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 public abstract class LoadingZone : NetworkBehaviour
 {
     public LoadingZoneEffectActiveBehaviour SpawnWhenEntered;
+    public GameObject spawnPlatform;
 
     protected Dictionary<NetworkInstanceId, Coroutine> mInstanceCoroutineDictionary = new Dictionary<NetworkInstanceId, Coroutine>();
 

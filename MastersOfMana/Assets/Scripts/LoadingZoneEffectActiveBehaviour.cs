@@ -8,25 +8,33 @@ public class LoadingZoneEffectActiveBehaviour : MonoBehaviour {
     public float secondsToDelayDestruction = 1;
     public ParticleSystem[] listOfParticleSystems;
 
-    private GameObject objectToTrack;
+    private GameObject mObjectToTrack;
+    private bool mIsDestroyingItself = false;
+
+    private void OnEnable()
+    {
+        mIsDestroyingItself = false;
+    }
 
     public void SetObjectToTrack(GameObject go)
     {
-        objectToTrack = go;
+        mObjectToTrack = go;
 
         foreach(var ps in listOfParticleSystems)
         {
-            ps.GetComponent<RFX4_ParticleTrail>().Target = objectToTrack;
+            ps.GetComponent<RFX4_ParticleTrail>().Target = mObjectToTrack;
         }
     }
 
     public GameObject getTrackedObject()
     {
-        return objectToTrack;
+        return mObjectToTrack;
     }
 
     public void Selfdestruct(DestructionMode dm)
     {
+        mIsDestroyingItself = true;
+
         Debug.Log(gameObject.name + " destruction called!");
         foreach(var ps in listOfParticleSystems)
         {
@@ -54,5 +62,10 @@ public class LoadingZoneEffectActiveBehaviour : MonoBehaviour {
         {
             Debug.LogError("Unknown DestructionMode entered!");
         }
+    }
+
+    public bool isDestroyingItselfAlready()
+    {
+        return mIsDestroyingItself;
     }
 }

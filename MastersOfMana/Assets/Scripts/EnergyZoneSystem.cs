@@ -50,7 +50,7 @@ public class EnergyZoneSystem : NetworkBehaviour
                 mSpawnpoints.Add(child);
         }
 
-        StartCoroutine(SpawnHeals(true));
+        StartCoroutine(SpawnZone(true));
 	}
 
 	void RoundEnded()
@@ -58,7 +58,7 @@ public class EnergyZoneSystem : NetworkBehaviour
 		StopAllCoroutines();
 	}
 
-    private IEnumerator SpawnHeals(bool init = false)
+    private IEnumerator SpawnZone(bool init = false)
     {
         if(init)
             yield return new WaitForSeconds(initialDelay);//to skip initial spawn; is 1 frame "too late"
@@ -66,13 +66,14 @@ public class EnergyZoneSystem : NetworkBehaviour
             yield return new WaitForSeconds(gapBetweenSpawns);
 
         //Get a random spawn position
-        Transform healSpawnPosition = GetRandomSpawnPosition();
-        Vector3 position = healSpawnPosition.position;
-        Quaternion rotation = healSpawnPosition.rotation;
+        Transform spawnPoint = GetRandomSpawnPosition();
+        Vector3 position = spawnPoint.position;
+        Quaternion rotation = spawnPoint.rotation;
         //Instantiate and spawn
         GameObject obj = Instantiate(spawnables.RandomElement(), position, rotation);
-        obj.transform.localScale = healSpawnPosition.localScale;
-        StartCoroutine(Despawn(healSpawnPosition, obj));
+        obj.transform.localScale = spawnPoint.localScale;
+        obj.GetComponent<LoadingZone>().spawnPlatform = spawnPoint.gameObject;
+        StartCoroutine(Despawn(spawnPoint, obj));
         NetworkServer.Spawn(obj.gameObject);
     }
 
@@ -92,6 +93,6 @@ public class EnergyZoneSystem : NetworkBehaviour
 		yield return new WaitForSeconds(lifetime);
 		NetworkServer.UnSpawn (obj);
 		Destroy (obj);
-        StartCoroutine(SpawnHeals());
+        StartCoroutine(SpawnZone());
     }
 }

@@ -23,31 +23,33 @@ public class SetEffectColor : MonoBehaviour {
 
     private void UpdateColor()
     {
-        var particleTrail = GetComponentsInChildren<RFX4_ParticleTrail>(true);
-        foreach(var trail in particleTrail)
-        {
-            var keys = trail.ColorOverLifeTime.colorKeys;
-            keys[0].color = Color;
-            trail.ColorOverLifeTime.SetKeys(keys, trail.ColorOverLifeTime.alphaKeys);
-        }
+        //var particleTrail = GetComponentsInChildren<RFX4_ParticleTrail>(true);
+        //foreach(var trail in particleTrail)
+        //{
+        //    var keys = trail.ColorOverLifeTime.colorKeys;
+        //    keys[0].color = Color;
+        //    trail.ColorOverLifeTime.SetKeys(keys, trail.ColorOverLifeTime.alphaKeys);
+        //}
 
-        var particleSystems = GetComponentsInChildren<ParticleSystem>(true);
-        foreach (var system in particleSystems)
-        {
-            ParticleSystem.MinMaxGradient color = new ParticleSystem.MinMaxGradient();
-            color.mode = ParticleSystemGradientMode.Color;
-            color.color = Color;
+        //var particleSystems = GetComponentsInChildren<ParticleSystem>(true);
+        //foreach (var system in particleSystems)
+        //{
+        //    ParticleSystem.MinMaxGradient color = new ParticleSystem.MinMaxGradient();
+        //    color.mode = ParticleSystemGradientMode.Color;
+        //    color.color = Color;
 
-            //Assign the color to your particle
-            ParticleSystem.MainModule main = system.main;
-            main.startColor = color;
-        }
+        //    //Assign the color to your particle
+        //    ParticleSystem.MainModule main = system.main;
+        //    main.startColor = color;
+        //}
 
-        var lights = GetComponentsInChildren<Light>(true);
-        foreach (var light in lights)
-        {
-            light.color = Color;
-        }
+        //var lights = GetComponentsInChildren<Light>(true);
+        //foreach (var light in lights)
+        //{
+        //    light.color = Color;
+        //}
+
+        RFX4_ColorHelper.ChangeObjectColorByHUE(gameObject, RFX4_ColorHelper.ColorToHSV(Color).H);
 
         previousColor = Color;
     }

@@ -221,8 +221,7 @@ Shader "Shader Forge/Spires" {
                 indirectDiffuse += gi.indirect.diffuse;
                 float3 diffuse = (directDiffuse + indirectDiffuse) * diffuseColor;
 ////// Emissive:
-                float2 node_694 = Time( _X , _Y );
-                float2 node_8239 = (node_694+i.uv0);
+                float2 node_8239 = (Time( _X , _Y )+i.uv0);
                 float4 _EmissionMap_var = tex2D(_EmissionMap,TRANSFORM_TEX(node_8239, _EmissionMap));
                 float2 node_9580 = (Function_node_4910( _NoiseY )+i.uv0);
                 float4 _Noise_var = tex2D(_Noise,TRANSFORM_TEX(node_9580, _Noise));
@@ -450,8 +449,7 @@ Shader "Shader Forge/Spires" {
                 UnityMetaInput o;
                 UNITY_INITIALIZE_OUTPUT( UnityMetaInput, o );
                 
-                float2 node_694 = Time( _X , _Y );
-                float2 node_8239 = (node_694+i.uv0);
+                float2 node_8239 = (Time( _X , _Y )+i.uv0);
                 float4 _EmissionMap_var = tex2D(_EmissionMap,TRANSFORM_TEX(node_8239, _EmissionMap));
                 float2 node_9580 = (Function_node_4910( _NoiseY )+i.uv0);
                 float4 _Noise_var = tex2D(_Noise,TRANSFORM_TEX(node_9580, _Noise));

@@ -4838,7 +4838,7 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 722328398
+  randomSeed: 1767602595
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -9821,11 +9821,6 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 114973350284306172, guid: d4a7025127c441d4aa9a572c6d8041fd,
-        type: 2}
-      propertyPath: spawnables.Array.size
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 4475230516373896, guid: d4a7025127c441d4aa9a572c6d8041fd, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -9860,56 +9855,9 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 114973350284306172, guid: d4a7025127c441d4aa9a572c6d8041fd,
         type: 2}
-      propertyPath: EnergyZones
-      value: 
-      objectReference: {fileID: 82973678}
-    - target: {fileID: 114973350284306172, guid: d4a7025127c441d4aa9a572c6d8041fd,
-        type: 2}
-      propertyPath: spawnZones.Array.data[0].spawnDelay
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 114973350284306172, guid: d4a7025127c441d4aa9a572c6d8041fd,
-        type: 2}
-      propertyPath: spawnZones.Array.data[1].spawnDelay
-      value: 35
-      objectReference: {fileID: 0}
-    - target: {fileID: 114973350284306172, guid: d4a7025127c441d4aa9a572c6d8041fd,
-        type: 2}
-      propertyPath: spawnZones.Array.data[2].spawnDelay
-      value: 35
-      objectReference: {fileID: 0}
-    - target: {fileID: 114973350284306172, guid: d4a7025127c441d4aa9a572c6d8041fd,
-        type: 2}
-      propertyPath: spawnables.Array.data[0]
-      value: 
-      objectReference: {fileID: 1619450679201972, guid: acd46b4d248498f4faba4e8ff9c23a2a,
-        type: 2}
-    - target: {fileID: 114973350284306172, guid: d4a7025127c441d4aa9a572c6d8041fd,
-        type: 2}
-      propertyPath: spawnables.Array.data[1]
-      value: 
-      objectReference: {fileID: 1760997120296002, guid: 0d759efa0770fc54aa68de32c1ba8519,
-        type: 2}
-    - target: {fileID: 114973350284306172, guid: d4a7025127c441d4aa9a572c6d8041fd,
-        type: 2}
       propertyPath: spawnpointsParent
       value: 
       objectReference: {fileID: 82973678}
-    - target: {fileID: 114973350284306172, guid: d4a7025127c441d4aa9a572c6d8041fd,
-        type: 2}
-      propertyPath: initialDelay
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114973350284306172, guid: d4a7025127c441d4aa9a572c6d8041fd,
-        type: 2}
-      propertyPath: lifetime
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 114973350284306172, guid: d4a7025127c441d4aa9a572c6d8041fd,
-        type: 2}
-      propertyPath: gapBetweenSpawns
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d4a7025127c441d4aa9a572c6d8041fd, type: 2}
   m_IsPrefabParent: 0

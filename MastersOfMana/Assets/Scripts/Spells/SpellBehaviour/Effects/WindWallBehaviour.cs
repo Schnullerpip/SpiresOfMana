@@ -14,6 +14,8 @@ public class WindWallBehaviour : A_SummoningBehaviour
     [SerializeField]
     private float mCenterDistance;
 
+    public float lifeTime = 1.0f;
+
     private Vector3 force;
     private Vector3 center;
 
@@ -73,7 +75,7 @@ public class WindWallBehaviour : A_SummoningBehaviour
 
     IEnumerator UnspawnWindwall(GameObject obj)
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(lifeTime);
         obj.SetActive(false);
         NetworkServer.UnSpawn(obj);
     }

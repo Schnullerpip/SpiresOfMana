@@ -66,7 +66,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
         caster.SetColliderIgnoreRaycast(true);
 		if(Physics.SphereCast(caster.handTransform.position, ballRadius, aimDirection, out hit))
 		{
-            preview.instance.MoveAndRotate(hit.point + hit.normal * ballRadius, Quaternion.LookRotation(hit.normal));
+            preview.instance.MoveAndRotate(hit.point + hit.normal * ballRadius, caster.aim.currentLookRotation);
 		}
 		else
 		{

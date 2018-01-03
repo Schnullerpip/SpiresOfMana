@@ -18,7 +18,6 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
     {
         base.Preview(caster);
 
-        preview.instance.SetAvailability(caster.CurrentSpellReady());
         preview.instance.MoveAndRotate(caster.movement.mRigidbody.worldCenterOfMass + GetAimClient(caster) * initialDistanceToCaster, 
                                        Quaternion.LookRotation(GetAimClient(caster)));
     }

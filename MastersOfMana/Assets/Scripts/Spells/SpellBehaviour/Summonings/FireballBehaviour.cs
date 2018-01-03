@@ -45,8 +45,6 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 	{
 		base.Preview(caster);
 
-        preview.instance.SetAvailability(caster.CurrentSpellReady());
-
 		RaycastHit hit;
 		if(caster.HandTransformIsObscured(out hit))
 		{

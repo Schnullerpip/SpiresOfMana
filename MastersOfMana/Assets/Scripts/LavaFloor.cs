@@ -20,6 +20,9 @@ public class LavaFloor : NetworkBehaviour
     public float emissionAmplifier = 4;
     public float rampTime = 0.5f;
 
+    [SyncVar(hook = "EmissionHook")]
+    private float emissionEval;
+
     private Renderer mRenderer;
     private float mEmissionStart;
     private int mEmissionID;
@@ -154,21 +157,26 @@ public class LavaFloor : NetworkBehaviour
             newTransformPosition.y = evaluation + mStartHeight;
             transform.position = newTransformPosition;
 
-            float emissionEval = emission.Evaluate(mRunTime);
+            emissionEval = emission.Evaluate(mRunTime);
 
             if(mNextOutbreakIndex < emission.length && mRunTime > emission.keys[mNextOutbreakIndex].time)
             {
                 mNextOutbreakIndex += 4;
-                Outbreak();
+                RpcOutbreak();
             }
-
-            mRenderer.material.SetFloat(mEmissionID, mEmissionStart + emissionEval * emissionAmplifier);
 
             mRunTime += Time.fixedDeltaTime;
         }
     }
 
-    private void Outbreak()
+    private void EmissionHook(float emissionValue)
+    {
+        this.emissionEval = emissionValue;
+        mRenderer.material.SetFloat(mEmissionID, mEmissionStart + emissionEval * emissionAmplifier);
+    }
+
+    [ClientRpc]
+    private void RpcOutbreak()
     {
         outbreakSource.Play();
     }

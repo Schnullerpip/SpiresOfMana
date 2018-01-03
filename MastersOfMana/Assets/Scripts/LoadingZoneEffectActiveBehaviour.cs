@@ -14,6 +14,12 @@ public class LoadingZoneEffectActiveBehaviour : MonoBehaviour {
     private void OnEnable()
     {
         mIsDestroyingItself = false;
+
+        foreach (var ps in listOfParticleSystems)
+        {
+            var em = ps.emission;//emission is read-only
+            em.enabled = true;//no reassigning required, because reference
+        }
     }
 
     public void SetObjectToTrack(GameObject go)
@@ -33,12 +39,6 @@ public class LoadingZoneEffectActiveBehaviour : MonoBehaviour {
 
     public void Selfdestruct(DestructionMode dm)
     {
-        if(gameObject == null)
-        {
-            Debug.Log("oooookay, gameObject is destroyed...");
-            return;
-        }
-
         mIsDestroyingItself = true;
 
         //Debug.Log(gameObject.name + " destruction called!");

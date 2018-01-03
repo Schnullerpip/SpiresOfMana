@@ -111,7 +111,6 @@ public class DashBehaviour : A_EffectBehaviour
 
 		Vector3 newPosition = GetNewPosition(caster, direction, out hit);
 
-        preview.instance.SetAvailability(caster.CurrentSpellReady());
         preview.instance.MoveAndRotate(newPosition, caster.transform.rotation);
 	}
 

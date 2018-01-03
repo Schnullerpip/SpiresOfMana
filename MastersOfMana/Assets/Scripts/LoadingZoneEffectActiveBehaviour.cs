@@ -33,9 +33,15 @@ public class LoadingZoneEffectActiveBehaviour : MonoBehaviour {
 
     public void Selfdestruct(DestructionMode dm)
     {
+        if(gameObject == null)
+        {
+            Debug.Log("oooookay, gameObject is destroyed...");
+            return;
+        }
+
         mIsDestroyingItself = true;
 
-        Debug.Log(gameObject.name + " destruction called!");
+        //Debug.Log(gameObject.name + " destruction called!");
         foreach(var ps in listOfParticleSystems)
         {
             var em = ps.emission;//emission is read-only
@@ -55,7 +61,7 @@ public class LoadingZoneEffectActiveBehaviour : MonoBehaviour {
         }
         else if (dm == DestructionMode.DEACTIVATE)
         {
-            Debug.Log(gameObject.name + " deactivated!");
+            //Debug.Log(gameObject.name + " deactivated!");
             gameObject.SetActive(false);
         }
         else

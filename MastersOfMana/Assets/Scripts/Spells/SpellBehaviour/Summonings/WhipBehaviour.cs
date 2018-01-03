@@ -49,8 +49,6 @@ public class WhipBehaviour : A_SummoningBehaviour
 		RaycastHit hit;
 		Ray ray = caster.aim.GetCameraRig().GetCenterRay();
 
-        preview.instance.SetAvailability(caster.CurrentSpellReady());
-
         Vector3 hitPlayerPos;
 
         PlayerScript hitPlayer = HitAPlayer(caster, hitRadius, maxDistance, out hitPlayerPos, false);

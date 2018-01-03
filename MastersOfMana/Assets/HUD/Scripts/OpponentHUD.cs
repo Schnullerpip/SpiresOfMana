@@ -31,7 +31,7 @@ public class OpponentHUD : MonoBehaviour {
 
         damageTextSystem = GetComponent<FloatingDamageTextSystem>();
         damageTextSystem.player = player;
-        damageTextSystem.Init();
+        damageTextSystem.Init(player.transform);
 
         GameManager.OnLocalPlayerDead += localPlayerDead;
     }

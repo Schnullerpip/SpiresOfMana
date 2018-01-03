@@ -72,7 +72,7 @@ public class PlayerScript : NetworkBehaviour
 	[SyncVar] public string playerName;
     [SyncVar] public Color playerColor;
 
-	public Renderer rendererToColor;
+    public ARecolorSingleColor[] recolors;
 
     public PlayerHealthScript healthScript;
 
@@ -85,6 +85,8 @@ public class PlayerScript : NetworkBehaviour
 	public LayerMask ignoreLayer;
 
 	private ColliderPack mColliderPack;
+
+    private Coroutine specatorCoroutine;
 
     /// <summary>
     /// Is the provided collider part of the players whole compound collider?
@@ -99,6 +101,7 @@ public class PlayerScript : NetworkBehaviour
 	void Awake()
 	{
         mPlayerSpells = GetComponent<PlayerSpells>();
+        GameManager.OnRoundEnded += RoundEnded;
 	}
 
     private void OnDisable()
@@ -112,6 +115,7 @@ public class PlayerScript : NetworkBehaviour
     public void OnDestroy()
     {
         GameManager.instance.PlayerDisconnected();
+        GameManager.OnRoundEnded -= RoundEnded;
     }
 
     // Use this for initialization
@@ -180,7 +184,10 @@ public class PlayerScript : NetworkBehaviour
 	public override void OnStartClient ()
 	{
 		base.OnStartClient ();
-		rendererToColor.material.color = playerColor;
+        foreach (var r in recolors)
+        {
+            r.ChangeColorTo(playerColor);
+        }
 	}
 
     //Statechanging ----------------------------------------
@@ -240,7 +247,7 @@ public class PlayerScript : NetworkBehaviour
     /// </summary>
     public void SpawnSpectator()
     {
-        StartCoroutine(DramaticDeathPause());
+        specatorCoroutine = StartCoroutine(DramaticDeathPause());
         this.enabled = false;
     }
 
@@ -298,6 +305,14 @@ public class PlayerScript : NetworkBehaviour
 			mColliderPack.RestoreOriginalLayer();
 		}
 	}
+
+    private void RoundEnded()
+    {
+        if (specatorCoroutine != null)
+        {
+            StopCoroutine(specatorCoroutine);
+        }
+    }
 
 	void LateUpdate()
 	{

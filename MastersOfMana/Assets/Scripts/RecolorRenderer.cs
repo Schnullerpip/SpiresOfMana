@@ -23,10 +23,10 @@ public class RecolorRenderer : ARecolorSingleColor
 
         for (int i = 0; i < rendererProperties.Length; ++i)
         {
-            rendererProperties[i] = new RendererProperty();
-            rendererProperties[i].renderer = renderers[i];
-
-            rendererProperties[i].Validate();
+            rendererProperties[i] = new RendererProperty
+            {
+                renderer = renderers[i]
+            };
         }
     }
 
@@ -62,40 +62,34 @@ public class RecolorRenderer : ARecolorSingleColor
         }
     }
 
-    private void OnValidate()
-    {
-        for (int i = 0; i < rendererProperties.Length; ++i)
-        {
-            rendererProperties[i].Validate();
-        }
-    }
-
     [System.Serializable]
     public class RendererProperty
     {
         public Renderer renderer;
-        public string propertyName;
+        public string propertyName = "_Color";
 
-        [ReadOnly]
-        public int propertyId;
-
-        internal void Validate()
+        public int propertyID
         {
-            if (string.IsNullOrEmpty(propertyName))
+            get
             {
-                propertyName = "_Color";
+                if(mPropertyID == null)
+                {
+                    mPropertyID = Shader.PropertyToID(propertyName);
+                }
+                return mPropertyID.Value;
             }
-            propertyId = Shader.PropertyToID(propertyName);
         }
+
+        private int? mPropertyID;
 
         public Color GetColor()
         {
-            return renderer.material.GetColor(propertyId);
+            return renderer.material.GetColor(propertyID);
         }
 
         public void SetColor(Color col)
         {
-            renderer.material.SetColor(propertyId, col);
+            renderer.material.SetColor(propertyID, col);
         }
     }
 }

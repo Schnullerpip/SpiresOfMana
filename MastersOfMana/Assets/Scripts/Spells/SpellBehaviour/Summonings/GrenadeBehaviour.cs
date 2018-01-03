@@ -54,7 +54,6 @@ public class GrenadeBehaviour : A_ServerMoveableSummoning
 
 		Vector3 vel = GetAimClient(caster) * throwForce;
 
-        preview.instance.SetAvailability(caster.CurrentSpellReady());
         (preview.instance as PreviewSpellTrajectory).VisualizeTrajectory(caster.handTransform.position, vel, sRigidMass.Value);
 	}
 

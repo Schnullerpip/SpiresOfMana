@@ -41,8 +41,6 @@ public class ParalysisBehaviour : A_EffectBehaviour
 	{
 		base.Preview(caster);
 
-        preview.instance.SetAvailability(caster.CurrentSpellReady());
-
         Vector3 hitPlayerPos;
         PlayerScript hitPlayer = HitAPlayer(caster, mHitRadius, mHitRange, out hitPlayerPos, false);
 

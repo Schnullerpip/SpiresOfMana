@@ -15,6 +15,10 @@ public class HealthHUD : MonoBehaviour
     public Image filling;
     public float scrollingSpeed = 2;
 
+    public FloatingDamageTextSystem floatingDamageTextSystem;
+
+    private int mCurrentHealth;
+
     // Use this for initialization
     void OnEnable()
     {
@@ -22,12 +26,40 @@ public class HealthHUD : MonoBehaviour
         if(!isInitialized)
         {
             Init();
+
+            floatingDamageTextSystem.player = GameManager.instance.localPlayer;
+            floatingDamageTextSystem.Init();
+
+            //unsubscribe so we dont get the event twice
+            floatingDamageTextSystem.UnsubscribeFromEvents();
+
+            //subscribe to round start and end to attach the floating damage system to the health scripts
+            //this is necessary so the restart "heal" is not displayed and to reset the health bar instantly
+            GameManager.OnRoundStarted += RoundStart;
+            GameManager.OnRoundEnded += RoundEnd;
         }
+
         // Get notified whenever health is changed
         localPlayerHealthScript.OnHealthChanged += SetHealth;
+    }
 
+    private void RoundStart()
+    {
         //when enabled, set the hud to the maximum instantly, this should avoid the bar filling on a restart from 0
         SetHealthInstant(localPlayerHealthScript.GetMaxHealth());
+        floatingDamageTextSystem.SubscribeToEvents();
+    }
+
+    private void RoundEnd()
+    {
+        gameObject.SetActive(false);
+        floatingDamageTextSystem.UnsubscribeFromEvents();
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.OnRoundStarted -= RoundStart;
+        GameManager.OnRoundEnded -= RoundEnd;
     }
 
     public void Init()
@@ -35,14 +67,8 @@ public class HealthHUD : MonoBehaviour
         isInitialized = true;
         localPlayerHealthScript = GameManager.instance.localPlayer.healthScript;
         //Create one floating damge text system per non-local player so we can cache the transform
-        foreach (PlayerScript player in FindObjectsOfType<PlayerScript>())
+        foreach (PlayerScript player in GameManager.instance.GetNonLocalPlayers())
         {
-            //Don't create a system for the local player
-            if (player.netId == GameManager.instance.localPlayer.netId)
-            {
-                continue;
-            }
-
             OpponentHUD oponnentHUD = Instantiate(opponentHUDPrefab);
             oponnentHUD.player = player;
             oponnentHUD.Init();
@@ -59,8 +85,6 @@ public class HealthHUD : MonoBehaviour
             localPlayerHealthScript.OnHealthChanged -= SetHealth;
         }
     }
-
-    private int mCurrentHealth;
 
     /// <summary>
     /// Sets the health in the HUD over time.

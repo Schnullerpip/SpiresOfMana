@@ -341,4 +341,9 @@ public class GameManager : MonoBehaviour
         }
         return opponents;
     }
+
+    public List<PlayerScript> GetNonLocalPlayers()
+    {
+        return GetOpponents(localPlayer);
+    }
 }

@@ -13,6 +13,25 @@ public class FloatingDamageTextSystem : MonoBehaviour {
     private int mCurrentObj = 0;
     private List<FloatingDamageText> mTextPool = new List<FloatingDamageText>();
 
+    /// <summary>
+    /// Initializes the Floating Damage Text System. Also repositions and reparents the object if a parent is provided.
+    /// </summary>
+    /// <returns>The init.</returns>
+    /// <param name="parent">Parent.</param>
+    public void Init(Transform parent)
+    {
+        Init();
+
+        if (parent != null)
+        {
+            transform.Translate(parent.position);
+        }
+        transform.SetParent(parent, true);
+    }
+
+    /// <summary>
+    /// Initializes the Floating Damage Text System.
+    /// </summary>
     public void Init()
     {
         for(int i = 0; i < numberOfPooledTexts; i++)
@@ -22,23 +41,32 @@ public class FloatingDamageTextSystem : MonoBehaviour {
             text.transform.SetParent(canvas.transform, false);
             mTextPool.Add(text);
         }
+        SubscribeToEvents();
+    }
+
+    public void SubscribeToEvents()
+    {
         player.healthScript.OnDamageTaken += CreateDamageText;
         player.healthScript.OnHealTaken += CreateHealText;
-        transform.Translate(player.transform.position);
-        transform.SetParent(player.transform,true);
+    }
+
+    public void UnsubscribeFromEvents()
+    {
+        player.healthScript.OnDamageTaken -= CreateDamageText;
+        player.healthScript.OnHealTaken -= CreateHealText;
     }
 
     public void CreateDamageText(int damage)
     {
-        createText(damage, damageColor);
+        CreateText(damage, damageColor);
     }
 
     public void CreateHealText(int heal)
     {
-        createText(heal, healColor);
+        CreateText(heal, healColor);
     }
 
-    public void createText(int number, Color color)
+    public void CreateText(int number, Color color)
     {
         FloatingDamageText text = GetText();
         text.gameObject.SetActive(true);

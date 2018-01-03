@@ -71,11 +71,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68797316d3d0347ffaba7bda286bbb0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  secondaryColor: {r: 0.147, g: 0.147, b: 0.147, a: 0.5}
+  secondaryColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   rendererProperties:
   - renderer: {fileID: 120509795566080850}
-    propertyName: _TintColor
-    propertyId: 83
+    propertyName: _Color
 --- !u!120 &120509795566080850
 LineRenderer:
   m_ObjectHideFlags: 1
@@ -89,7 +88,7 @@ LineRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9da86e3af56ed174782494ea16590fee, type: 2}
+  - {fileID: 2100000, guid: 18eebc2772c2a477b8ef43d6d99d075f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -175,10 +174,10 @@ LineRenderer:
       m_Mode: 0
       m_NumColorKeys: 4
       m_NumAlphaKeys: 2
-    numCornerVertices: 0
+    numCornerVertices: 1
     numCapVertices: 5
     alignment: 0
-    textureMode: 2
+    textureMode: 1
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0

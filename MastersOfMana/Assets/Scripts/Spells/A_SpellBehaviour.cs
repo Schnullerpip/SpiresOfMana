@@ -14,7 +14,10 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 
     public PreviewSpell preview;
 
-	public virtual void Preview(PlayerScript caster) {}
+	public virtual void Preview(PlayerScript caster) 
+    {
+        preview.instance.SetAvailability(caster.CurrentSpellReady());
+    }
 
 	public virtual void StopPreview(PlayerScript caster) {}
 

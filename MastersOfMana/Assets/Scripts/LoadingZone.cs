@@ -69,7 +69,7 @@ public abstract class LoadingZone : NetworkBehaviour
                 //handle effects locally
                 var newEffect = PoolRegistry.GetInstance(SpawnWhenEntered.gameObject, transform.position, transform.rotation, 2, 4);
                 //var newEffect = Instantiate<GameObject>(SpawnWhenEntered.gameObject, transform.position, transform.rotation);
-                //newEffect.SetActive(false);
+                newEffect.SetActive(false);
                 newEffect.transform.localScale = transform.localScale;
                 //Debug.Log("spawned new loadingZoneEffect with localScale of " + transform.localScale);
                 var zone = newEffect.GetComponent<LoadingZoneEffectActiveBehaviour>();
@@ -105,7 +105,7 @@ public abstract class LoadingZone : NetworkBehaviour
                     if (ps.getTrackedObject() == player.gameObject)
                     {
                         indexToRemove = i;
-                        ps.Selfdestruct(LoadingZoneEffectActiveBehaviour.DestructionMode.DESTRUCT);
+                        ps.Selfdestruct(LoadingZoneEffectActiveBehaviour.DestructionMode.DEACTIVATE);
                         break;
                     }
                 }

@@ -14,8 +14,6 @@ public class WindWallBehaviour : A_SummoningBehaviour
     [SerializeField]
     private float mCenterDistance;
 
-    public float lifeTime = 1.0f;
-
     private Vector3 force;
     private Vector3 center;
 
@@ -35,8 +33,8 @@ public class WindWallBehaviour : A_SummoningBehaviour
 	public override void Preview (PlayerScript caster)
 	{
 		base.Preview (caster);
-
-        preview.instance.Move(caster.transform.position + GetAimClient(caster) * mCenterDistance);
+        preview.SetAvailability(caster.CurrentSpellReady());
+        preview.instance.MoveAndRotate(caster.transform.position + GetAimClient(caster) * mCenterDistance, caster.aim.currentLookRotation);
 	}
 
 	public override void StopPreview (PlayerScript caster)
@@ -75,7 +73,7 @@ public class WindWallBehaviour : A_SummoningBehaviour
 
     IEnumerator UnspawnWindwall(GameObject obj)
     {
-        yield return new WaitForSeconds(lifeTime);
+        yield return new WaitForSeconds(4.0f);
         obj.SetActive(false);
         NetworkServer.UnSpawn(obj);
     }

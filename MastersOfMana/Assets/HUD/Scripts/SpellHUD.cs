@@ -56,13 +56,13 @@ public class SpellHUD : MonoBehaviour
     {
         float CooldownPercentage = 0;
         // Calc how much of the cooldown has passed if the Spellcooldown is not 0
-        if (SpellSlot.spell.coolDownInSeconds != 0)
+        if (SpellSlot.spell.coolDownInSeconds > float.Epsilon)
         {
             CooldownPercentage = SpellSlot.cooldown / SpellSlot.spell.coolDownInSeconds;
         }
 
         // Did we just finish our Cooldown? --> check if fillAmount will be set to 0 this frame (and wasn't zero before)
-        if(spellCooldowns[SpellSlotID].fillAmount > 0 && CooldownPercentage == 0)
+        if(spellCooldowns[SpellSlotID].fillAmount > 0 && CooldownPercentage <= float.Epsilon)
         {
             if(OnCooldownFinished != null)
             {
@@ -86,8 +86,17 @@ public class SpellHUD : MonoBehaviour
         spellHighlights[displayedCurrentSpell].GetComponent<Image>().enabled = true;
     }
 
+    private float mLastUlitEnergy = 0.0f;
+    public UniformScaler ultiScaler;
+
     public void UpdateSlider(float ultimateEnergyPoints, float maximumUltimateEnergyPoints)
     {
+        if(ultimateEnergyPoints > mLastUlitEnergy)
+        {
+            ultiScaler.PlayOnce();
+        }
+		mLastUlitEnergy = ultimateEnergyPoints;
+
         if(ultimateEnergyPoints < maximumUltimateEnergyPoints)
         {
             ultimateEnergyProgess.color = ultimateEnergyDefaultColor;

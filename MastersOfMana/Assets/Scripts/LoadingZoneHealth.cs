@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class HealPack : LoadingZone
+public class LoadingZoneHealth : LoadingZone
 {
     public int healPerTick = 2;
     public float tickDuration = 0.5f;

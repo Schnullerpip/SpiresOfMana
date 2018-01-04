@@ -7,12 +7,16 @@ public class LoadingZoneEffectActiveBehaviour : MonoBehaviour {
 
     public float secondsToDelayDestruction = 1;
     public ParticleSystem[] listOfParticleSystems;
+    //public Vector3 spawnScale = new Vector3(1.0f, 1.0f, 1.0f);
 
     private GameObject mObjectToTrack;
     private bool mIsDestroyingItself = false;
 
     private void OnEnable()
     {
+        //Debug.Log(name + "'s spawnScale = " + spawnScale);
+        //transform.localScale = spawnScale;
+
         mIsDestroyingItself = false;
 
         foreach (var ps in listOfParticleSystems)
@@ -24,6 +28,7 @@ public class LoadingZoneEffectActiveBehaviour : MonoBehaviour {
 
     public void SetObjectToTrack(GameObject go)
     {
+        //Debug.Log(name + "'s target is set to " + go);
         mObjectToTrack = go;
 
         foreach(var ps in listOfParticleSystems)
@@ -42,10 +47,18 @@ public class LoadingZoneEffectActiveBehaviour : MonoBehaviour {
         mIsDestroyingItself = true;
 
         //Debug.Log(gameObject.name + " destruction called!");
-        foreach(var ps in listOfParticleSystems)
+        foreach (var ps in listOfParticleSystems)
         {
-            var em = ps.emission;//emission is read-only
-            em.enabled = false;//no reassigning required, because reference
+            if (ps != null)
+            {
+                var em = ps.emission;//emission is read-only
+                em.enabled = false;//no reassigning required, because reference
+            }
+            else
+            {
+                //Debug.LogError("Dafuq! How can an element in a foreach loop be NULL?");
+                return;
+            }
         }
 
         StartCoroutine(DestroyAfterDelay(dm));

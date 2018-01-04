@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class UltimateLoadingZone : LoadingZone
+public class LoadingZoneUltimate : LoadingZone
 {
     public float ultimateEnergyPerSecond = 1;
 	public float tickDuration = 1;

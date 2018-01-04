@@ -190,9 +190,9 @@ GameObject:
   m_Component:
   - component: {fileID: 224005446441478974}
   - component: {fileID: 222139180173687484}
-  - component: {fileID: 114610568253769452}
+  - component: {fileID: 114308768939277834}
   m_Layer: 5
-  m_Name: SpellBorder
+  m_Name: Load
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -296,6 +296,7 @@ GameObject:
   - component: {fileID: 222017623518742130}
   - component: {fileID: 114908972837858936}
   - component: {fileID: 114663805324689918}
+  - component: {fileID: 114153626438205668}
   m_Layer: 5
   m_Name: Spellslot 4
   m_TagString: Untagged
@@ -383,6 +384,23 @@ GameObject:
   - component: {fileID: 114725343193738940}
   m_Layer: 5
   m_Name: Spellslot 2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1834675525088892
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 224200079257756292}
+  - component: {fileID: 222016490821485256}
+  - component: {fileID: 114610568253769452}
+  m_Layer: 5
+  m_Name: SpellBorder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -580,6 +598,101 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114153626438205668
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1706956612453304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d5ee06388c9e4a85bf587039ccdba7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  x:
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0
+        inSlope: 0.046555106
+        outSlope: 0.046555106
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 0.5
+        value: 1
+        inSlope: -0.019554105
+        outSlope: -0.019554105
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 1
+      m_PostInfinity: 1
+      m_RotationOrder: 0
+    amplitude: 1
+    frequence: 1
+    offset: 0
+  y:
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0
+        inSlope: 0.046555106
+        outSlope: 0.046555106
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 0.5
+        value: 1
+        inSlope: -0.019554105
+        outSlope: -0.019554105
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 1
+      m_PostInfinity: 1
+      m_RotationOrder: 0
+    amplitude: 1
+    frequence: 1
+    offset: 0
+  z:
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0
+        inSlope: 0.046555106
+        outSlope: 0.046555106
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 0.5
+        value: 1
+        inSlope: -0.019554105
+        outSlope: -0.019554105
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 1
+      m_PostInfinity: 1
+      m_RotationOrder: 0
+    amplitude: 1
+    frequence: 1
+    offset: 0
 --- !u!114 &114160476518855880
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -680,7 +793,49 @@ MonoBehaviour:
   ultimateEnergyProgess: {fileID: 114716356749661424}
   ultimateEnergyDefaultColor: {r: 0.40715683, g: 0.058931667, b: 0.8014706, a: 1}
   ultimateEnergyFullColor: {r: 1, g: 0.87058824, b: 0, a: 1}
-  target: {fileID: 0}
+  ultiScaler: {fileID: 114308768939277834}
+--- !u!114 &114308768939277834
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1360667585265030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acc83a1afb4e043789c131be2f35c447, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  curve:
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0
+        inSlope: 10.339281
+        outSlope: 10.339281
+        tangentMode: 34
+      - serializedVersion: 2
+        time: 0.09671852
+        value: 1
+        inSlope: 0.066567704
+        outSlope: 0.066567704
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 1
+        value: 0
+        inSlope: -1.1070746
+        outSlope: -1.1070746
+        tangentMode: 34
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+    amplitude: 0.17
+    frequence: 1
+    offset: 0
+  loop: 0
+  playOnEnable: 0
+  mode: 0
 --- !u!114 &114360009052992042
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -781,7 +936,7 @@ MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1360667585265030}
+  m_GameObject: {fileID: 1834675525088892}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
@@ -1364,6 +1519,12 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!222 &222016490821485256
+CanvasRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1834675525088892}
 --- !u!222 &222017623518742130
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -1529,9 +1690,11 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 224112619195597620}
+  - {fileID: 224200079257756292}
   m_Father: {fileID: 224485603550045968}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1549,7 +1712,7 @@ RectTransform:
   m_LocalScale: {x: 0.99999434, y: 0.99999434, z: 0.99999434}
   m_Children: []
   m_Father: {fileID: 224485603550045968}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -1566,8 +1729,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 224485603550045968}
-  m_RootOrder: 1
+  m_Father: {fileID: 224005446441478974}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1614,6 +1777,24 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -20, y: 20}
   m_SizeDelta: {x: 30, y: 30}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!224 &224200079257756292
+RectTransform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1834675525088892}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 224005446441478974}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 220, y: 220}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224217674009801782
 RectTransform:
@@ -1756,7 +1937,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 224448309547178798}
-  - {fileID: 224112619195597620}
   - {fileID: 224005446441478974}
   - {fileID: 224788955790772912}
   - {fileID: 224976036532560878}
@@ -1835,7 +2015,7 @@ RectTransform:
   m_LocalScale: {x: 0.99999434, y: 0.99999434, z: 0.99999434}
   m_Children: []
   m_Father: {fileID: 224485603550045968}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -1889,7 +2069,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 224485603550045968}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2025,7 +2205,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 224485603550045968}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

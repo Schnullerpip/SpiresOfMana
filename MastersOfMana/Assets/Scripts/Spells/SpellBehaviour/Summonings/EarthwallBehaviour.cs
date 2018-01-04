@@ -10,7 +10,6 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
 
     public float initialDistanceToCaster = 2;
 
-    public EarthWallHealthScript health;
     public AudioSource loopSource;
     public FloatRange volumeOverLife;
     [SerializeField] private GameObject mCollisionReactionEffect;
@@ -107,6 +106,7 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
             ServerMoveable sm = rigid.GetComponent<ServerMoveable>();
             if (sm && mAlreadyCaught.ContainsKey(sm))
             {
+                //remove one if no more left - the object must be outside
                 if (--mAlreadyCaught[sm] <= 0)
                 {
                     mAlreadyCaught.Remove(sm);
@@ -144,11 +144,17 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
             else if (isServer)
             {
                 sm = rigid.GetComponentInParent<ServerMoveable>();
-                if (sm && !mAlreadyCaught.ContainsKey(sm))
+                if (sm)
                 {
-                    //remember the servermoveable
-                    mAlreadyCaught.Add(sm, 1);
-
+                    if (!mAlreadyCaught.ContainsKey(sm))
+                    {
+                        //remember the servermoveable
+                        mAlreadyCaught.Add(sm, 1);
+                    }
+                    else
+                    {
+                        mAlreadyCaught[sm] += 1;
+                    }
                     //reflect the server moveable
                     sm.RpcInvertVelocity();
                 }
@@ -212,7 +218,7 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
             mPendingContactEffect = false;
             SpawnContactEffect();
         }
-        loopSource.volume = volumeOverLife.Lerp(health.GetCurrentHealth() * 1.0f / health.GetMaxHealth() * 1.0f);
+        loopSource.volume = volumeOverLife.Lerp(mHealthScript.GetCurrentHealth() * 1.0f / mHealthScript.GetMaxHealth() * 1.0f);
 
         transform.localScale = mOriginalScale*spawnScale.Evaluate(mScaleCount);
         ScaleCountAddRoutine();
@@ -223,7 +229,7 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
             if (mDamageCount > 1.0f)
             {
                mDamageCount = 0;
-               health.TakeDamage(damagePerSecond, GetType());
+               mHealthScript.TakeDamage(damagePerSecond, GetType());
             }
 
             if (mScaleCount <= 0)

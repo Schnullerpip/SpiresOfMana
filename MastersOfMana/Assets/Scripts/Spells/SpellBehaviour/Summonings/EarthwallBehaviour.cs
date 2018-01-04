@@ -29,24 +29,42 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
         mOriginalScale = transform.lossyScale;
     }
 
+	public override void Preview (PlayerScript caster)
+	{
+		base.Preview(caster);
 
-    public override void Preview(PlayerScript caster)
-    {
-        base.Preview(caster);
-
-        preview.instance.transform.localScale = mOriginalScale;
         preview.instance.SetAvailability(caster.CurrentSpellReady());
 
+        Vector3 position;
+        Quaternion rotation;
+        GetSpawnPositionAndRotation(caster, out position, out rotation, true);
+        preview.instance.MoveAndRotate(position, rotation);
+	}
 
-        RaycastHit hit;
+    private void GetSpawnPositionAndRotation(PlayerScript caster, out Vector3 position, out Quaternion rotation, bool isClientCall)
+    {
+		RaycastHit hit;
 		if(caster.HandTransformIsObscured(out hit))
 		{
-            preview.instance.MoveAndRotate(hit.point, caster.aim.currentLookRotation);
+            position = hit.point;
+            rotation = caster.aim.currentLookRotation;
 			return;
 		}
+	
+		caster.SetColliderIgnoreRaycast(true);
+		if(Physics.CheckSphere(caster.handTransform.position, 1.0f))
+		{
+			//this is only reset here, because the aimdirection will also set the ignore layer
+			caster.SetColliderIgnoreRaycast(false);
+            position = caster.handTransform.position;
+            rotation = caster.aim.currentLookRotation;
+			return ;
+		}
 
-        preview.instance.MoveAndRotate(caster.movement.mRigidbody.worldCenterOfMass + GetAimClient(caster) * initialDistanceToCaster, 
-                                       Quaternion.LookRotation(GetAimClient(caster)));
+		Vector3 aimDirection = isClientCall ? GetAimClient(caster, out hit) : GetAimServer(caster, out hit);
+
+        position = caster.movement.mRigidbody.worldCenterOfMass + aimDirection * initialDistanceToCaster;
+        rotation = Quaternion.LookRotation(aimDirection);
     }
 
     public override void StopPreview(PlayerScript caster)
@@ -57,13 +75,16 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
 
     public override void Execute(PlayerScript caster)
     {
-        EarthwallBehaviour wall =
-            PoolRegistry.GetInstance(gameObject,
-                caster.movement.mRigidbody.worldCenterOfMass + GetAimServer(caster)*initialDistanceToCaster,
-                Quaternion.LookRotation(GetAimServer(caster)), 4, 4).GetComponent<EarthwallBehaviour>();
+        EarthwallBehaviour wall = PoolRegistry.GetInstance(gameObject, 1, 1).GetComponent<EarthwallBehaviour>();
         wall.gameObject.SetActive(true);
         wall.casterObject = caster.gameObject;
         wall.caster = caster;
+
+        Vector3 position;
+        Quaternion rotation;
+        GetSpawnPositionAndRotation(caster, out position, out rotation, false);
+        wall.transform.position = position;
+        wall.transform.rotation = rotation;
         NetworkServer.Spawn(wall.gameObject);
 
 

@@ -34,7 +34,8 @@ public class WindWallBehaviour : A_SummoningBehaviour
 	{
 		base.Preview (caster);
         preview.SetAvailability(caster.CurrentSpellReady());
-        preview.instance.Move(caster.transform.position + GetAimClient(caster) * mCenterDistance);
+        preview.instance.MoveAndRotate(caster.transform.position + GetAimClient(caster) * mCenterDistance, caster.aim.currentLookRotation);
+        Debug.Log("current look rotation: " + caster.aim.currentLookRotation);
 	}
 
 	public override void StopPreview (PlayerScript caster)
@@ -46,7 +47,7 @@ public class WindWallBehaviour : A_SummoningBehaviour
     public override void Execute(PlayerScript caster)
     {
         //GameObject ww = PoolRegistry.WindWallPool.Get();
-        GameObject ww = PoolRegistry.GetInstance(this.gameObject, 4, 4);
+        GameObject ww = PoolRegistry.GetInstance(this.gameObject, 1, 1);
         WindWallBehaviour windwall = ww.GetComponent<WindWallBehaviour>();
 
 		Vector3 direction =	GetAimServer(caster);

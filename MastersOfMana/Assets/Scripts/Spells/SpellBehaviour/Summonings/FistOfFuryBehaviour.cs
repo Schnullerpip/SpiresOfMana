@@ -108,7 +108,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     [ClientRpc]
     void RpcExplosion(Vector3 position)
     {
-        GameObject explosion = /*PoolRegistry.*/Instantiate(explosionPrefab);
+        GameObject explosion = PoolRegistry.GetInstance(explosionPrefab, 4, 4);
         explosion.transform.position = position;
         //explosion.transform.localScale = new Vector3(explosionAmplitude, explosionAmplitude, explosionAmplitude);
         explosion.SetActive(true);

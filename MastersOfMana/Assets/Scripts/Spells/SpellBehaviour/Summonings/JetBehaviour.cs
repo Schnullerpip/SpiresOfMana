@@ -43,6 +43,20 @@ public class JetBehaviour : A_SummoningBehaviour
         }
     }
 
+	public override void Preview (PlayerScript caster)
+	{
+		base.Preview (caster);
+
+        preview.SetAvailability(caster.CurrentSpellReady());
+        preview.instance.Move(caster.transform.position + GetAimClient(caster) * mOffsetToCaster);
+	}
+
+	public override void StopPreview (PlayerScript caster)
+	{
+		base.StopPreview (caster);
+        preview.instance.Deactivate();
+	}
+
     void Start()
     {
         if (mAffecting == null)

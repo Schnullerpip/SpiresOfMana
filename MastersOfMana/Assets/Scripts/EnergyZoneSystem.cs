@@ -72,10 +72,10 @@ public class EnergyZoneSystem : NetworkBehaviour
         Quaternion rotation = spawnPoint.rotation;
         //Instantiate and spawn
         GameObject obj = Instantiate(spawnables.RandomElement(), position, rotation);
-        obj.transform.localScale = spawnPoint.localScale;
-        obj.GetComponent<LoadingZone>().spawnPlatform = spawnPoint.gameObject;
+        //obj.transform.localScale = spawnPoint.localScale;
+        obj.GetComponent<LoadingZone>().spawnScale = spawnPoint.localScale;
         StartCoroutine(Despawn(spawnPoint, obj, platform));
-        NetworkServer.Spawn(obj.gameObject);
+        NetworkServer.Spawn(obj);
 
         platform.RpcActivate(obj.GetComponent<SetEffectColor>().Color);
     }

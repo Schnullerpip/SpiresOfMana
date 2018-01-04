@@ -48,7 +48,7 @@ public class JetBehaviour : A_SummoningBehaviour
 		base.Preview (caster);
 
         preview.SetAvailability(caster.CurrentSpellReady());
-        preview.instance.Move(caster.transform.position + GetAimClient(caster) * mOffsetToCaster);
+        preview.instance.MoveAndRotate(caster.transform.position + GetAimClient(caster) * mOffsetToCaster, Quaternion.identity);
 	}
 
 	public override void StopPreview (PlayerScript caster)

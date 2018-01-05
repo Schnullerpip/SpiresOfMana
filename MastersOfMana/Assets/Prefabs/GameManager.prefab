@@ -54,6 +54,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4352911368931666}
   - component: {fileID: 114558257401688750}
+  - component: {fileID: 114902295109031624}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -163,11 +164,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b80e17390ca09145b74e1c74a565016, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mPlayers: []
+  players: []
   winnerID: 0
   localPlayer: {fileID: 0}
   eventSystem: {fileID: 1566325945482672}
   isUltimateActive: 0
+  currentlyCastUltiSpell: {fileID: 0}
+  numOfActiveMenus: 0
+  gameRunning: 0
+  cameraSystem: {fileID: 114902295109031624}
 --- !u!114 &114830869772096972
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1521,3 +1526,17 @@ MonoBehaviour:
     customControllerIdCounter: 1
   _controllerDataFiles: {fileID: 11400000, guid: d21d2b20df8369642b76aafbb2576ba7,
     type: 2}
+--- !u!114 &114902295109031624
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1997745783768698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80bcf8be7438f254d9931df85724c86d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerCamera: {fileID: 0}
+  cinematicCamera: {fileID: 0}
+  spectatorCamera: {fileID: 0}

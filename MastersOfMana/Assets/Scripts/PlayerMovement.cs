@@ -22,8 +22,6 @@ public class PlayerMovement : ServerMoveable
 
     public float mMaxVelocityMagnitude;
 
-	public float hurtSlowdown = 0.5f;
-
 	[Range(0,1)]
 	public float inputVelocityInfluence = 0.75f;
 
@@ -34,8 +32,6 @@ public class PlayerMovement : ServerMoveable
 	private bool mIsFalling = false;
 	private Vector3 mMoveInput;
 	private bool mFocusActive;
-
-    private bool mHurtSlowdownActive;
 
 	private Vector3 mDeltaPos;
 	private Vector3 mLastPos;
@@ -64,13 +60,6 @@ public class PlayerMovement : ServerMoveable
         mMoveInput = Vector3.zero;
     }
 
-	public void SetMoveInputHurt(Vector3 input)
-	{
-		mHurtSlowdownActive = true;
-		//clamp it to prevent faster diagonal movement
-		mMoveInput = Vector3.ClampMagnitude(input,1);
-	}
-
 	public void SetFocusActive(bool value){
 		mFocusActive = value;
 	}
@@ -94,7 +83,6 @@ public class PlayerMovement : ServerMoveable
         movement *= speed;
 
 		movement *= mFocusActive ? focusSpeedSlowdown : 1;
-		movement *= mHurtSlowdownActive ? hurtSlowdown : 1;
 
 		Vector2 movementXZ = movement.xz();
 
@@ -163,8 +151,6 @@ public class PlayerMovement : ServerMoveable
 		}
 
 		mIsFalling = mRigidbody.velocity.y <= -fallingDamageThreshold;
-
-		mHurtSlowdownActive = false;
 
 		mDeltaPos = mRigidbody.position - mLastPos;
 		mLastPos = mRigidbody.position;

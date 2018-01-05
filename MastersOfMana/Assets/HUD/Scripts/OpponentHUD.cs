@@ -33,12 +33,10 @@ public class OpponentHUD : MonoBehaviour {
         damageTextSystem.player = player;
         damageTextSystem.Init(player.transform);
 
-        GameManager.OnLocalPlayerDead += localPlayerDead;
-    }
+        player.healthScript.OnHealthChanged += HealthChanged;
 
-    public void OnEnable()
-    {
-        GameManager.OnLocalPlayerDead -= localPlayerDead;
+        GameManager.OnLocalPlayerDead += localPlayerDead;
+        GameManager.OnRoundStarted += RoundStarted;
     }
 
     public void Update()
@@ -63,6 +61,27 @@ public class OpponentHUD : MonoBehaviour {
 
     private void localPlayerDead()
     {
-        mCamera = Camera.main;
+        mCamera = GameManager.instance.cameraSystem.GetCameraObject(CameraSystem.Cameras.SpectatorCamera).GetComponent<Camera>();
+    }
+
+    private void HealthChanged(int newHealth)
+    {
+        if(newHealth <= 0)
+        {
+            gameObject.SetActive(false);
+        }
+    }
+
+    private void RoundStarted()
+    {
+        gameObject.SetActive(true);
+        mCamera = GameManager.instance.cameraSystem.GetCameraObject(CameraSystem.Cameras.PlayerCamera).GetComponentInChildren<Camera>();
+    }
+
+    private void OnDestroy()
+    {
+        player.healthScript.OnHealthChanged -= HealthChanged;
+        GameManager.OnRoundStarted -= RoundStarted;
+        GameManager.OnLocalPlayerDead -= localPlayerDead;
     }
 }

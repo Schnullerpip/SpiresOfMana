@@ -143,6 +143,13 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
                     }
                     //reflect the server moveable
                     sm.RpcInvertVelocity(1.0f);
+
+                    //make sure reflected spells can hit/affect their casters
+                    A_SpellBehaviour sb = sm.GetComponent<A_SpellBehaviour>();
+                    if (sb && sb.GetCaster() != caster)
+                    {
+                        sb.SetCaster(caster);
+                    }
                 }
             }
         }

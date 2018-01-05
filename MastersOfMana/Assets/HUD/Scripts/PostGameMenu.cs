@@ -7,11 +7,6 @@ public class PostGameMenu : MonoBehaviour
     public Text text;
     public Button resumeButton;
 
-    public void GoToMainMenu()
-    {
-        Prototype.NetworkLobby.LobbyManager.s_Singleton.GoBackButton();
-    }
-
     public void Start()
     {
         HUD hud = GetComponentInParent<HUD>();

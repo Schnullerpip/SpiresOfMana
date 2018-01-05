@@ -5,8 +5,10 @@ using UnityEngine.Networking;
 
 public abstract class LoadingZone : NetworkBehaviour
 {
-    public LoadingZoneEffectActiveBehaviour SpawnWhenEntered;
-    public GameObject spawnPlatform;
+    public GameObject spawnWhenEntered;
+    //public GameObject spawnPlatform;
+    [SyncVar]
+    public Vector3 spawnScale;
 
     protected Dictionary<NetworkInstanceId, Coroutine> mInstanceCoroutineDictionary = new Dictionary<NetworkInstanceId, Coroutine>();
 
@@ -16,6 +18,9 @@ public abstract class LoadingZone : NetworkBehaviour
 
     public void OnEnable()
     {
+        //transform.localScale = spawnScale;
+        //Debug.Log("spawned new loadingZone with localScale of " + transform.localScale);
+
         GameManager.OnRoundEnded += RoundEnded;
 
         mInstancedActiveEffects.Clear();
@@ -60,11 +65,17 @@ public abstract class LoadingZone : NetworkBehaviour
                     mInstanceCoroutineDictionary.Add(player.netId, StartCoroutine(LoadingZoneEffect(player)));
                 }
 
+
                 //handle effects locally
-                var newEffect = PoolRegistry.GetInstance(SpawnWhenEntered.gameObject, transform.position, transform.rotation, 2, 4);
+                //Debug.Log("spawnWhenEntered = " + spawnWhenEntered);
+                var newEffect = PoolRegistry.GetInstance(spawnWhenEntered, transform.position, transform.rotation, 2, 4);
+                //var newEffect = Instantiate<GameObject>(spawnWhenEntered, transform.position, transform.rotation);
+                newEffect.SetActive(false);
                 newEffect.transform.localScale = transform.localScale;
+                //Debug.Log("spawned new loadingZoneEffect with localScale of " + transform.localScale);
                 var zone = newEffect.GetComponent<LoadingZoneEffectActiveBehaviour>();
                 zone.SetObjectToTrack(player.gameObject);
+                //zone.spawnScale = transform.localScale;
                 newEffect.SetActive(true);
                 mInstancedActiveEffects.Add(zone);
                 //playersInside++;
@@ -103,6 +114,15 @@ public abstract class LoadingZone : NetworkBehaviour
                 mInstancedActiveEffects.RemoveAt(indexToRemove);
                 //playersInside--;
             }
+        }
+    }
+
+    private void Update()
+    {
+        if(spawnScale != transform.localScale)
+        {
+            transform.localScale = spawnScale;
+            //Debug.Log(name + " rescaled to " + transform.localScale);
         }
     }
 

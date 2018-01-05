@@ -10,19 +10,18 @@ public class IngameLobby : MonoBehaviour
     public GameObject lobby;
     public GameObject cineCamPrefab;
 
-    private GameObject mCineCam;
-
     private void Awake()
     {
-        mCineCam = Instantiate(cineCamPrefab);
-    }
-
-    void OnEnable()
-    {
+        GameObject cinematicCamera = Instantiate(cineCamPrefab);
+        GameManager.instance.cameraSystem.RegisterCameraObject(CameraSystem.Cameras.CinematicCamera, cinematicCamera.gameObject);
         GameManager.OnRoundStarted += RoundStarted;
+    }   
+
+    public void OnEnable()
+    {
         spellselectionPanel.SetActive(true);
         lobby.gameObject.SetActive(false);
-        mCineCam.SetActive(true);
+        GameManager.instance.cameraSystem.ActivateCamera(CameraSystem.Cameras.CinematicCamera);
     }
 
     void RoundStarted()
@@ -38,12 +37,8 @@ public class IngameLobby : MonoBehaviour
         GameManager.instance.localPlayer.playerLobby.CmdSetReady(true);
     }
 
-    public void OnDisable()
+    public void OnDestroy()
     {
         GameManager.OnRoundStarted -= RoundStarted;
-        if (mCineCam)
-        {
-            mCineCam.SetActive(false);
-        }
     }
 }

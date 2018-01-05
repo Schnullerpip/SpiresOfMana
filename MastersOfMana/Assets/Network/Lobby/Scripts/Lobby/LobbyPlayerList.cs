@@ -27,6 +27,7 @@ namespace Prototype.NetworkLobby
         {
             //Only the Server can Start the game!
             startButton.gameObject.SetActive(LobbyManager.s_Singleton.isHost);
+            startButton.interactable = true;
             waitingText.gameObject.SetActive(!LobbyManager.s_Singleton.isHost);
             LobbyManager.s_Singleton.SetCancelDelegate(GoBack);
             _instance = this;
@@ -40,6 +41,7 @@ namespace Prototype.NetworkLobby
 
         public void OnStartClicked()
         {
+            startButton.interactable = false;
             foreach (LobbyPlayer player in _players)
             {
                 player.RpcSetPlayerReady();

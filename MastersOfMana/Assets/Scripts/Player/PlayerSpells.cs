@@ -206,6 +206,11 @@ public class PlayerSpells : NetworkBehaviour {
 			return false;
 		}
 
+        public void ResetCooldown()
+        {
+            cooldown = spell.coolDownInSeconds;
+        }
+
         /// <summary>
         /// casts the spell inside the slot and also adjusts the cooldown accordingly
         /// This automatically assumes, that the overlaying PlayerScript's update routine decreases the spellslot's cooldown continuously

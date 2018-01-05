@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     public A_SpellBehaviour currentlyCastUltiSpell = null;
     public int numOfActiveMenus = 0;
     public bool gameRunning = false;
+    public CameraSystem cameraSystem;
 
     public AudioListener listener;
 

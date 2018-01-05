@@ -12,19 +12,19 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
 
     public AudioSource loopSource;
     public FloatRange volumeOverLife;
-    [SerializeField] private GameObject mCollisionReactionEffect;
+    public GameObject mCollisionReactionEffect;
     public AnimationCurve spawnScale;
     public Vector3 mOriginalScale;
     private HealthScript mHealthScript;
     public int damagePerSecond;
-    private Dictionary<ServerMoveable, int> mAlreadyCaught;
+    protected Dictionary<ServerMoveable, int> mAlreadyCaught;
     public float instantEffectTriggerThreshold;
     public float dotProductThreshold;
     [SyncVar]
     private bool mPendingContactEffect = false;
 
     //defines the loss factor with wich players bounce off of the shield
-    public float trampolineVelocityLossFactor;
+    public float VelocityLossFactor;
 
     void OnValidate()
     {
@@ -97,7 +97,7 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
         if (y < 0 && Mathf.Abs(y) >= instantEffectTriggerThreshold && dot >= dotProductThreshold)
         {
             wall.mPendingContactEffect = true;
-            caster.movement.RpcInvertVelocity(trampolineVelocityLossFactor);
+            caster.movement.RpcInvertVelocity(VelocityLossFactor);
         }
     }
 
@@ -118,6 +118,7 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
         }
     }
 
+
     new void OnTriggerEnter(Collider collider)
     {
         //if its a server moveable - invert its velocity (deflect/trampoline effect)
@@ -125,26 +126,8 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
         ServerMoveable sm = null;
         if (rigid)
         {
-            //handle local effect -> local player bouncing (cause of local authority on players)
-            PlayerScript player = rigid.GetComponent<PlayerScript>();
-            //if its the local player, then move it locally
-            if (player)
-            {
-                if (player.isLocalPlayer)
-                {
-                    if (!mAlreadyCaught.ContainsKey(player.movement))
-                    {
-                        mAlreadyCaught.Add(player.movement, 1);
-                        player.movement.mRigidbody.velocity *= -1 * trampolineVelocityLossFactor;
-                    }
-                    else
-                    {
-                        mAlreadyCaught[player.movement] += 1;
-                    }
-                }
-            }
             //else check whether it is allowed to move the object by server authority
-            else if (isServer)
+            if (isServer)
             {
                 sm = rigid.GetComponentInParent<ServerMoveable>();
                 if (sm)
@@ -174,6 +157,60 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
         }
     }
 
+    public void CollisionRoutine(Collision collision)
+    {
+        //if its a server moveable - invert its velocity (deflect/trampoline effect)
+        Rigidbody rigid = collision.collider.attachedRigidbody;
+        ServerMoveable sm = null;
+        if (rigid)
+        {
+            //handle local effect -> local player bouncing (cause of local authority on players)
+            PlayerScript player = rigid.GetComponent<PlayerScript>();
+            //if its the local player, then move it locally
+            if (player)
+            {
+                if (player.isLocalPlayer)
+                {
+                    if (!mAlreadyCaught.ContainsKey(player.movement))
+                    {
+                        mAlreadyCaught.Add(player.movement, 1);
+                        player.movement.mRigidbody.velocity = -1 * collision.relativeVelocity * VelocityLossFactor;
+                    }
+                    else
+                    {
+                        mAlreadyCaught[player.movement] += 1;
+                    }
+                }
+            }
+
+            //contact reaction
+            //create a contatreaction effect object
+            SpawnContactEffect();
+            //make sure the client reacts upon even, if the lag lets the clientside think no collision hapened
+            if (isServer && sm)
+            {
+                RpcSpawnContactEffect(sm.gameObject);
+            }
+        }
+    }
+
+    public void CollisionExitRoutine(Collision collision)
+    {
+        Rigidbody rigid = collision.collider.attachedRigidbody;
+        if (rigid)
+        {
+            ServerMoveable sm = rigid.GetComponent<ServerMoveable>();
+            if (sm && mAlreadyCaught.ContainsKey(sm))
+            {
+                //remove one if no more left - the object must be outside
+                if (--mAlreadyCaught[sm] <= 0)
+                {
+                    mAlreadyCaught.Remove(sm);
+                }
+            }
+        }
+    }
+
     [ClientRpc]
     private void RpcSpawnContactEffect(GameObject collidingObject)
     {
@@ -186,11 +223,11 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
 
     private void SpawnContactEffect()
     {
-            GameObject go = PoolRegistry.GetInstance(mCollisionReactionEffect, 4, 4);
-            go.transform.rotation = transform.rotation;
-            go.transform.position = transform.position;
-            go.SetActive(true);
-            caster.StartCoroutine(DeactivateContactEffect(go));
+        GameObject go = PoolRegistry.GetInstance(mCollisionReactionEffect, 4, 4);
+        go.transform.rotation = transform.rotation;
+        go.transform.position = transform.position;
+        go.SetActive(true);
+        caster.StartCoroutine(DeactivateContactEffect(go));
     }
 
     IEnumerator DeactivateContactEffect(GameObject go)

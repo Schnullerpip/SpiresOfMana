@@ -60,6 +60,7 @@ public class PlayerScript : NetworkBehaviour
 	public PlayerAim aim;
 	public PlayerCamera cameraRigPrefab;
     private PlayerCamera mPlayerCamera;
+    private SpectatorCamera mSpectatorCamera;
     public Transform handTransform;
     public PlayerLobby playerLobby;
 
@@ -171,14 +172,13 @@ public class PlayerScript : NetworkBehaviour
         GameManager.instance.localPlayer = this;
         CmdGiveGo();
         mPlayerCamera = Instantiate(cameraRigPrefab);
+        GameManager.instance.cameraSystem.RegisterCameraObject(CameraSystem.Cameras.PlayerCamera, mPlayerCamera.gameObject);
         mPlayerCamera.followTarget = this;
 		aim.SetCameraRig(mPlayerCamera);
-        SetCameraActive(false);
-    }
-
-    public void SetCameraActive(bool active)
-    {
-        mPlayerCamera.gameObject.SetActive(active);
+        mPlayerCamera.gameObject.SetActive(false);
+        mSpectatorCamera = Instantiate(specCamPrefab);
+        mSpectatorCamera.gameObject.SetActive(false);
+        GameManager.instance.cameraSystem.RegisterCameraObject(CameraSystem.Cameras.SpectatorCamera, mSpectatorCamera.gameObject);
     }
 
 	public override void OnStartClient ()
@@ -264,8 +264,8 @@ public class PlayerScript : NetworkBehaviour
         {
             yield break;
         }
-        (Instantiate(specCamPrefab) as SpectatorCamera).Setup(aim.GetCameraRig().GetCamera());
-        aim.GetCameraRig().gameObject.SetActive(false);
+        mSpectatorCamera.Setup(aim.GetCameraRig().GetCamera());
+        GameManager.instance.cameraSystem.ActivateCamera(CameraSystem.Cameras.SpectatorCamera);
     }
 
     // Update is called once per frame

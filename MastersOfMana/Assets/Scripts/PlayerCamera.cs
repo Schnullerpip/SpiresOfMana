@@ -45,31 +45,14 @@ public class PlayerCamera : MonoBehaviour {
         GameManager.OnRoundStarted += RoundStarted;
     }
 
-    public void OnEnable()
-    {
-        GameManager.OnRoundEnded += RoundEnded;
-        GameManager.OnRoundStarted += RoundStarted;
-    }
-
-    public void OnDisable()
-    {
-        GameManager.OnRoundEnded -= RoundEnded;
-        GameManager.OnRoundStarted -= RoundStarted;
-    }
-
     public void OnDestroy()
     {
         GameManager.OnRoundStarted -= RoundStarted;
     }
 
-    private void RoundEnded()
-    {
-        gameObject.SetActive(false);
-    }
-
     void RoundStarted()
     {
-        gameObject.SetActive(true);
+        GameManager.instance.cameraSystem.ActivateCamera(CameraSystem.Cameras.PlayerCamera);
     }
 
 	void Start()

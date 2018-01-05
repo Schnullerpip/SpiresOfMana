@@ -15,21 +15,6 @@ public class SpectatorCamera : MonoBehaviour
 
     private Camera mCam;
 
-    public void OnEnable()
-    {
-        GameManager.OnRoundEnded += RoundEnded;
-    }
-
-    public void OnDisable()
-    {
-        GameManager.OnRoundEnded -= RoundEnded;
-    }
-
-    private void RoundEnded()
-    {
-        Destroy(gameObject);
-    }
-
     public void Setup(Camera copyCam)
     {
         transform.position = copyCam.transform.position;

@@ -32,6 +32,10 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
     {
         return caster;
     }
+    public void SetCaster(PlayerScript newCaster)
+    {
+        caster = newCaster;
+    }
     /// <summary>
     /// This is only used for initializing the caster reference on clientside!
     /// GameObjects (or rather their networkID can be passed down via syncvar and OnStartClient guarantees, to be called after the syncvars have been synchronized,

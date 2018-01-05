@@ -8,16 +8,13 @@ public class EarthWallHealthScript : HealthScript
 
     public int damagePerSecond = 1;
 
-    private float counter = 0;
-
-    void Start()
+    new void Start()
     {
         mEarthWall = GetComponent<EarthwallBehaviour>();
     }
 
     private void OnEnable()
     {
-        counter = 0;
         ResetObject();
     }
 

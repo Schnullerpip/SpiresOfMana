@@ -10,7 +10,6 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
 
     public float initialDistanceToCaster = 2;
 
-    public EarthWallHealthScript health;
     public AudioSource loopSource;
     public FloatRange volumeOverLife;
     [SerializeField] private GameObject mCollisionReactionEffect;
@@ -212,7 +211,7 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
             mPendingContactEffect = false;
             SpawnContactEffect();
         }
-        loopSource.volume = volumeOverLife.Lerp(health.GetCurrentHealth() * 1.0f / health.GetMaxHealth() * 1.0f);
+        loopSource.volume = volumeOverLife.Lerp(mHealthScript.GetCurrentHealth() * 1.0f / mHealthScript.GetMaxHealth() * 1.0f);
 
         transform.localScale = mOriginalScale*spawnScale.Evaluate(mScaleCount);
         ScaleCountAddRoutine();
@@ -223,7 +222,7 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
             if (mDamageCount > 1.0f)
             {
                mDamageCount = 0;
-               health.TakeDamage(damagePerSecond, GetType());
+               mHealthScript.TakeDamage(damagePerSecond, GetType());
             }
 
             if (mScaleCount <= 0)

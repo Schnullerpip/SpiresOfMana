@@ -22,8 +22,6 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
 		base.Preview (caster);
 		RaycastHit hit;
 
-        preview.instance.SetAvailability(caster.CurrentSpellReady());
-
 		if(Physics.Raycast(caster.transform.position + Vector3.up * 0.2f, Vector3.down, out hit))
 		{
             preview.instance.Move(hit.point);
@@ -108,7 +106,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     [ClientRpc]
     void RpcExplosion(Vector3 position)
     {
-        GameObject explosion = /*PoolRegistry.*/Instantiate(explosionPrefab);
+        GameObject explosion = PoolRegistry.GetInstance(explosionPrefab, 4, 4);
         explosion.transform.position = position;
         //explosion.transform.localScale = new Vector3(explosionAmplitude, explosionAmplitude, explosionAmplitude);
         explosion.SetActive(true);

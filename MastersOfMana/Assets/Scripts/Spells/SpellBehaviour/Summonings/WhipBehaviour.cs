@@ -49,8 +49,6 @@ public class WhipBehaviour : A_SummoningBehaviour
 		RaycastHit hit;
 		Ray ray = caster.aim.GetCameraRig().GetCenterRay();
 
-        preview.instance.SetAvailability(caster.CurrentSpellReady());
-
         Vector3 hitPlayerPos;
 
         PlayerScript hitPlayer = HitAPlayer(caster, hitRadius, maxDistance, out hitPlayerPos, false);
@@ -75,16 +73,24 @@ public class WhipBehaviour : A_SummoningBehaviour
         preview.instance.Deactivate();
 	}
 
-
-
     public override void Execute(PlayerScript caster)
     {
-		WhipBehaviour whipBehaviour = PoolRegistry.GetInstance(this.gameObject, 4, 4).GetComponent<WhipBehaviour>();
+        WhipBehaviour whipBehaviour = PoolRegistry.GetInstance(this.gameObject, caster.transform, 4, 4).GetComponent<WhipBehaviour>();
 
         whipBehaviour.caster = caster;
+        whipBehaviour.casterObject = caster.gameObject;
+        whipBehaviour.Init();
 
+        whipBehaviour.gameObject.SetActive(true);
+        NetworkServer.Spawn(whipBehaviour.gameObject, whipBehaviour.GetComponent<NetworkIdentity>().assetId);
+
+        whipBehaviour.StartCoroutine(whipBehaviour.DelayedUnspawn());
+    }
+
+    private void Init()
+    {
         //initialize the linepoint
-        whipBehaviour.linePoint0 = caster.handTransform.position;
+        linePoint0 = caster.handTransform.position;
 
         //check for a hit
         Vector3 hitPlayerPos;
@@ -96,30 +102,25 @@ public class WhipBehaviour : A_SummoningBehaviour
         //case 1: hit the player
         if (hitPlayer)
         {
-            whipBehaviour.linePoint1 = hitPlayerPos;
+            linePoint1 = hitPlayerPos;
             Vector3 aimDirection = Vector3.Normalize(hitPlayerPos - caster.handTransform.position);
-            Vector3 force = -aimDirection*pullForce + Vector3.up*UpForce;
+            Vector3 force = -aimDirection * pullForce + Vector3.up * UpForce;
             hitPlayer.movement.RpcAddForce(force, ForceMode.VelocityChange);
             hitPlayer.healthScript.TakeDamage(0, GetType());
         }
         //case 2: hit geometry
         else if (RayCast(caster, new Ray(caster.GetCameraPosition(), caster.GetCameraLookDirection()), out hit) && hit.distance <= maxDistance)
         {
-            whipBehaviour.linePoint1 = hit.point;
-            Vector3 aimDirection = Vector3.Normalize(whipBehaviour.linePoint1 - caster.transform.position);
+            linePoint1 = hit.point;
+            Vector3 aimDirection = Vector3.Normalize(linePoint1 - caster.transform.position);
             Vector3 forceVector = aimDirection * pullForce + Vector3.up * UpForce;
             caster.movement.RpcAddForce(forceVector, ForceMode.VelocityChange);
         }
         //case 3: hit nothing
-        else 
+        else
         {
-            whipBehaviour.linePoint1 = caster.handTransform.position + caster.GetCameraLookDirection() * maxDistance;
+            linePoint1 = caster.handTransform.position + caster.GetCameraLookDirection() * maxDistance;
         }
-
-        whipBehaviour.gameObject.SetActive(true);
-		NetworkServer.Spawn(whipBehaviour.gameObject, whipBehaviour.GetComponent<NetworkIdentity>().assetId);
-
-		whipBehaviour.StartCoroutine(whipBehaviour.DelayedUnspawn());
     }
 
     public IEnumerator DelayedUnspawn()

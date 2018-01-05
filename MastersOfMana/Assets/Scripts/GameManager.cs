@@ -25,6 +25,8 @@ public class GameManager : MonoBehaviour
     public bool gameRunning = false;
     public CameraSystem cameraSystem;
 
+    public AudioListener listener;
+
     public delegate void GameStarted();
     public static event GameStarted OnGameStarted;
 
@@ -170,7 +172,7 @@ public class GameManager : MonoBehaviour
     public void TriggerRoundEnded()
     {
         gameRunning = false;
-
+        listener.enabled = true;
         if (OnRoundEnded != null)
         {
             OnRoundEnded();
@@ -308,6 +310,7 @@ public class GameManager : MonoBehaviour
         gameRunning = true;
         OnApplicationFocus(true);
         ResetGame();
+        listener.enabled = false;
         if (OnRoundStarted != null)
         {
             OnRoundStarted();

@@ -52,6 +52,15 @@ public class ServerMoveable : NetworkBehaviour
         mRigidbody.AddForce(force, mode);
     }
 
+    /// <summary>
+    /// method to invert the current velocity
+    /// </summary>
+    [ClientRpc]
+    public void RpcInvertVelocity()
+    {
+        mRigidbody.velocity *= -1;
+    }
+
 	[ClientRpc]
 	public void RpcSetVelocity(Vector3 velocity)
 	{

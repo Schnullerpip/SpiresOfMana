@@ -33,8 +33,8 @@ public class WindWallBehaviour : A_SummoningBehaviour
 	public override void Preview (PlayerScript caster)
 	{
 		base.Preview (caster);
-
-        preview.instance.Move(caster.transform.position + GetAimClient(caster) * mCenterDistance);
+        preview.SetAvailability(caster.CurrentSpellReady());
+        preview.instance.MoveAndRotate(caster.transform.position + GetAimClient(caster) * mCenterDistance, caster.aim.currentLookRotation);
 	}
 
 	public override void StopPreview (PlayerScript caster)
@@ -73,7 +73,7 @@ public class WindWallBehaviour : A_SummoningBehaviour
 
     IEnumerator UnspawnWindwall(GameObject obj)
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(4.0f);
         obj.SetActive(false);
         NetworkServer.UnSpawn(obj);
     }

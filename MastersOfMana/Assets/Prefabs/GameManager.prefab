@@ -54,7 +54,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4352911368931666}
   - component: {fileID: 114558257401688750}
-  - component: {fileID: 114902295109031624}
+  - component: {fileID: 81183261056800710}
+  - component: {fileID: 114122250558550910}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -103,6 +104,13 @@ Transform:
   m_Father: {fileID: 4352911368931666}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!81 &81183261056800710
+AudioListener:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1997745783768698}
+  m_Enabled: 1
 --- !u!114 &114078098719225204
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -112,6 +120,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 1327945023, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114122250558550910
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1997745783768698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80bcf8be7438f254d9931df85724c86d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &114301063919453054
@@ -172,7 +191,8 @@ MonoBehaviour:
   currentlyCastUltiSpell: {fileID: 0}
   numOfActiveMenus: 0
   gameRunning: 0
-  cameraSystem: {fileID: 114902295109031624}
+  cameraSystem: {fileID: 114122250558550910}
+  listener: {fileID: 81183261056800710}
 --- !u!114 &114830869772096972
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1526,17 +1546,3 @@ MonoBehaviour:
     customControllerIdCounter: 1
   _controllerDataFiles: {fileID: 11400000, guid: d21d2b20df8369642b76aafbb2576ba7,
     type: 2}
---- !u!114 &114902295109031624
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1997745783768698}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80bcf8be7438f254d9931df85724c86d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerCamera: {fileID: 0}
-  cinematicCamera: {fileID: 0}
-  spectatorCamera: {fileID: 0}

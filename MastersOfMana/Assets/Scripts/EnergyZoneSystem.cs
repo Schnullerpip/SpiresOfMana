@@ -18,7 +18,7 @@ public class EnergyZoneSystem : NetworkBehaviour
 	//	public GameObject spawnObject;
 	//}
 
-    private List<Transform> mSpawnpoints = new List<Transform>();
+    private List<PlatformSpiresEffect> mSpawnpoints = new List<PlatformSpiresEffect>();
     private LavaFloor mLavaFloor;
 
     public void Start()
@@ -47,10 +47,10 @@ public class EnergyZoneSystem : NetworkBehaviour
         {
             Transform child = spawnpointsParent.GetChild(i);
             if (child.gameObject.activeSelf)
-                mSpawnpoints.Add(child);
+                mSpawnpoints.Add(child.GetComponent<PlatformSpiresEffect>());
         }
 
-        StartCoroutine(SpawnHeals(true));
+        StartCoroutine(SpawnZone(true));
 	}
 
 	void RoundEnded()
@@ -58,7 +58,7 @@ public class EnergyZoneSystem : NetworkBehaviour
 		StopAllCoroutines();
 	}
 
-    private IEnumerator SpawnHeals(bool init = false)
+    private IEnumerator SpawnZone(bool init = false)
     {
         if(init)
             yield return new WaitForSeconds(initialDelay);//to skip initial spawn; is 1 frame "too late"
@@ -66,32 +66,39 @@ public class EnergyZoneSystem : NetworkBehaviour
             yield return new WaitForSeconds(gapBetweenSpawns);
 
         //Get a random spawn position
-        Transform healSpawnPosition = GetRandomSpawnPosition();
-        Vector3 position = healSpawnPosition.position;
-        Quaternion rotation = healSpawnPosition.rotation;
+        PlatformSpiresEffect platform = GetRandomPlatform();
+        Transform spawnPoint = platform.transform;
+        Vector3 position = spawnPoint.position;
+        Quaternion rotation = spawnPoint.rotation;
         //Instantiate and spawn
         GameObject obj = Instantiate(spawnables.RandomElement(), position, rotation);
-        obj.transform.localScale = healSpawnPosition.localScale;
-        StartCoroutine(Despawn(healSpawnPosition, obj));
-        NetworkServer.Spawn(obj.gameObject);
+        //obj.transform.localScale = spawnPoint.localScale;
+        obj.GetComponent<LoadingZone>().spawnScale = spawnPoint.localScale;
+        StartCoroutine(Despawn(spawnPoint, obj, platform));
+        NetworkServer.Spawn(obj);
+
+        platform.RpcActivate(obj.GetComponent<SetEffectColor>().Color);
     }
 
-    private Transform GetRandomSpawnPosition()
+    private PlatformSpiresEffect GetRandomPlatform()
     {
-        Transform healSpawnPosition = mSpawnpoints.RandomElement();
-        if(healSpawnPosition.position.y < mLavaFloor.transform.position.y)
+        PlatformSpiresEffect healSpawnPlatform = mSpawnpoints.RandomElement();
+
+        if (healSpawnPlatform.transform.position.y < mLavaFloor.transform.position.y)
         {
-            mSpawnpoints.Remove(healSpawnPosition);
-            healSpawnPosition = GetRandomSpawnPosition();
+            mSpawnpoints.Remove(healSpawnPlatform);
+            healSpawnPlatform = GetRandomPlatform();
         }
-        return healSpawnPosition;
+        return healSpawnPlatform;
     }
 
-    private IEnumerator Despawn(Transform trans, GameObject obj)
+    private IEnumerator Despawn(Transform trans, GameObject obj, PlatformSpiresEffect platform)
     {
 		yield return new WaitForSeconds(lifetime);
 		NetworkServer.UnSpawn (obj);
 		Destroy (obj);
-        StartCoroutine(SpawnHeals());
+        StartCoroutine(SpawnZone());
+
+        platform.RpcDeactivate();
     }
 }

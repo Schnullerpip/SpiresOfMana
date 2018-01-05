@@ -45,8 +45,6 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 	{
 		base.Preview(caster);
 
-        preview.instance.SetAvailability(caster.CurrentSpellReady());
-
 		RaycastHit hit;
 		if(caster.HandTransformIsObscured(out hit))
 		{
@@ -68,7 +66,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
         caster.SetColliderIgnoreRaycast(true);
 		if(Physics.SphereCast(caster.handTransform.position, ballRadius, aimDirection, out hit))
 		{
-            preview.instance.MoveAndRotate(hit.point + hit.normal * ballRadius, Quaternion.LookRotation(hit.normal));
+            preview.instance.MoveAndRotate(hit.point + hit.normal * ballRadius, caster.aim.currentLookRotation);
 		}
 		else
 		{
@@ -110,7 +108,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 		}
 			
         //Get a fireballinstance out of the pool
-		FireballBehaviour fireballBehaviour = PoolRegistry.GetInstance(gameObject, initPos, caster.transform.rotation, 5, 5).GetComponent<FireballBehaviour>();
+		FireballBehaviour fireballBehaviour = PoolRegistry.GetInstance(gameObject, initPos, caster.transform.rotation, 7, 5).GetComponent<FireballBehaviour>();
 		fireballBehaviour.caster = caster;
 		fireballBehaviour.mLastPosition = initPos;
 

@@ -15,7 +15,7 @@ public class IngameLobby : MonoBehaviour
         GameObject cinematicCamera = Instantiate(cineCamPrefab);
         GameManager.instance.cameraSystem.RegisterCameraObject(CameraSystem.Cameras.CinematicCamera, cinematicCamera.gameObject);
         GameManager.OnRoundStarted += RoundStarted;
-    }
+    }   
 
     public void OnEnable()
     {

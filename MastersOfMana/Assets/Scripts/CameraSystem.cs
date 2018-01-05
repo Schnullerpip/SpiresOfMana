@@ -14,9 +14,12 @@ public class CameraSystem : MonoBehaviour {
     }
     private Dictionary<Cameras, GameObject> registeredCameraObjects= new Dictionary<Cameras, GameObject>();
 
-
     public void RegisterCameraObject(Cameras cameraName, GameObject cameraObject)
     {
+        if(registeredCameraObjects.ContainsKey(cameraName))
+        {
+            registeredCameraObjects.Remove(cameraName);
+        }
         registeredCameraObjects.Add(cameraName, cameraObject);
     }
 

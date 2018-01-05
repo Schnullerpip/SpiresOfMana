@@ -13,10 +13,12 @@ public class AnimateUVOffset : MonoBehaviour
     private Vector2 mUV = new Vector2(0,0);
 
     private int mPropertyId;
+    private Vector3 mStartOffset;
 
     private void Awake()
     {
         mPropertyId = Shader.PropertyToID(propertyName);
+        mStartOffset = material.GetTextureOffset(mPropertyId);
     }
 
     void Update () 
@@ -39,6 +41,6 @@ public class AnimateUVOffset : MonoBehaviour
 
     void Revert()
     {
-        material.SetTextureOffset(mPropertyId, Vector2.zero);
+        material.SetTextureOffset(mPropertyId, mStartOffset);
     }
 }

@@ -108,6 +108,12 @@ NavMeshSettings:
     tileSize: 256
     accuratePlacement: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &355004241 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11484364, guid: c0978251ff7b10d4fb954a4b56acd9f0,
+    type: 2}
+  m_PrefabInternal: {fileID: 1891481569}
+  m_Script: {fileID: 575553740, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
 --- !u!224 &560370123 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 22459552, guid: c0978251ff7b10d4fb954a4b56acd9f0,
@@ -579,6 +585,10 @@ Prefab:
       propertyPath: m_Name
       value: MainMenu
       objectReference: {fileID: 0}
+    - target: {fileID: 11484364, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
+      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 355004241}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
   m_IsPrefabParent: 0

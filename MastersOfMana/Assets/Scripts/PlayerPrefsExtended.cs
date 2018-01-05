@@ -20,4 +20,32 @@ public class PlayerPrefsExtended : MonoBehaviour {
         float a = PlayerPrefs.GetFloat(name + "a", defaultCol.a);
         return new Color(r, g, b, a);
     }
+
+    public static void SetResolution(string name, Resolution resolution)
+    {
+        PlayerPrefs.SetInt(name + "width", resolution.width);
+        PlayerPrefs.SetInt(name + "height", resolution.height);
+    }
+
+    public static Resolution GetResolution(string name, Resolution defaultResolution)
+    {
+        Resolution res = new Resolution();
+        res.width = PlayerPrefs.GetInt(name + "width", defaultResolution.width);
+        res.height = PlayerPrefs.GetInt(name + "height", defaultResolution.height);
+        return res;
+    }
+
+    public static void SetBool(string name, bool value)
+    {
+        PlayerPrefs.SetInt(name, value ? 1 : 0);
+    }
+
+    public static bool GetBool(string name, bool defaultValue)
+    {
+        if (PlayerPrefs.HasKey(name))
+        {
+            return PlayerPrefs.GetInt(name) == 1;
+        }
+        return defaultValue;
+    }
 }

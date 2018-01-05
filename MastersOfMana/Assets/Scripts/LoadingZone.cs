@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 
 public abstract class LoadingZone : NetworkBehaviour
 {
-    public LoadingZoneEffectActiveBehaviour SpawnWhenEntered;
+    public GameObject spawnWhenEntered;
     //public GameObject spawnPlatform;
     [SyncVar]
     public Vector3 spawnScale;
@@ -65,10 +65,11 @@ public abstract class LoadingZone : NetworkBehaviour
                     mInstanceCoroutineDictionary.Add(player.netId, StartCoroutine(LoadingZoneEffect(player)));
                 }
 
-                
+
                 //handle effects locally
-                var newEffect = PoolRegistry.GetInstance(SpawnWhenEntered.gameObject, transform.position, transform.rotation, 2, 4);
-                //var newEffect = Instantiate<GameObject>(SpawnWhenEntered.gameObject, transform.position, transform.rotation);
+                //Debug.Log("spawnWhenEntered = " + spawnWhenEntered);
+                var newEffect = PoolRegistry.GetInstance(spawnWhenEntered, transform.position, transform.rotation, 2, 4);
+                //var newEffect = Instantiate<GameObject>(spawnWhenEntered, transform.position, transform.rotation);
                 newEffect.SetActive(false);
                 newEffect.transform.localScale = transform.localScale;
                 //Debug.Log("spawned new loadingZoneEffect with localScale of " + transform.localScale);

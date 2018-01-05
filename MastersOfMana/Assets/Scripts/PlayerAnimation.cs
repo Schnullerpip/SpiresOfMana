@@ -8,8 +8,20 @@ public class PlayerAnimation : NetworkBehaviour {
 	public Animator animator;
 	private PlayerScript mPlayer;
 
-	void Start()
+    private int movementSpeedHash, speedRightHash, speedForwardHash, groundedHash, jumpHash, isDeadHash, isCastingHash, castAnimationHash, isResolvingHash;
+
+    void Start()
 	{
+        castAnimationHash = Animator.StringToHash("castAnimation");
+        isResolvingHash = Animator.StringToHash("isResolving");
+        movementSpeedHash = Animator.StringToHash("movementSpeed");
+        speedRightHash = Animator.StringToHash("speed_right");
+        speedForwardHash = Animator.StringToHash("speed_forward");
+        groundedHash = Animator.StringToHash("grounded");
+        jumpHash = Animator.StringToHash("jump");
+        isDeadHash = Animator.StringToHash("isDead");
+        isCastingHash = Animator.StringToHash("isCasting");
+
 		if(!isLocalPlayer)
 		{
 			enabled = false;
@@ -25,35 +37,36 @@ public class PlayerAnimation : NetworkBehaviour {
 
     void UpdateMovement(float movementSpeed, Vector2 direction, bool isGrounded)
 	{
-		animator.SetFloat("movementSpeed",movementSpeed / mPlayer.movement.speed );
+		animator.SetFloat(movementSpeedHash, movementSpeed / mPlayer.movement.speed );
 
-        animator.SetFloat("speed_right",direction.x / mPlayer.movement.speed);
-        animator.SetFloat("speed_forward",direction.y / mPlayer.movement.speed);
+        animator.SetFloat(speedRightHash, direction.x / mPlayer.movement.speed);
+        animator.SetFloat(speedForwardHash ,direction.y / mPlayer.movement.speed);
 	
-		animator.SetBool("grounded",isGrounded);
+        animator.SetBool(groundedHash,isGrounded);
 	}
 
 	void Jump()
 	{
-		animator.SetTrigger("jump");
+		animator.SetTrigger(jumpHash);
 	}
 
 	void TookDamage(int damage)
 	{
 		if(!mPlayer.healthScript.IsAlive())
 		{
-			animator.SetBool("isDead", true);
+			animator.SetBool(isDeadHash, true);
 		}
 	}
 
 	public void HoldingSpell(bool value)
 	{
-		animator.SetBool("isCasting",value);
+		animator.SetBool(isCastingHash, value);
 	}
 
-	public void Cast()
+	public void Cast(int castAnimationID)
 	{
-		animator.SetBool("isResolving",true);
+        animator.SetInteger(castAnimationHash, castAnimationID);
+        animator.SetBool(isResolvingHash, true);
 		//the bool is reset inside the animation state. a trigger is not used, since it is buggy with the network animation component
 
 		//force an update to avoid a 1 to 2 frame delay
@@ -67,7 +80,6 @@ public class PlayerAnimation : NetworkBehaviour {
 
     void ResetState()
     {
-        animator.SetBool("isDead", false);
+        animator.SetBool(isDeadHash, false);
     }
-
 }

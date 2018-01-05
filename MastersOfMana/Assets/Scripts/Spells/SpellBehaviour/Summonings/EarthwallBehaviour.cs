@@ -23,6 +23,9 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
     [SyncVar]
     private bool mPendingContactEffect = false;
 
+    //defines the loss factor with wich players bounce off of the shield
+    public float trampolineVelocityLossFactor;
+
     void OnValidate()
     {
         mOriginalScale = transform.lossyScale;
@@ -94,7 +97,7 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
         if (y < 0 && Mathf.Abs(y) >= instantEffectTriggerThreshold && dot >= dotProductThreshold)
         {
             wall.mPendingContactEffect = true;
-            caster.movement.RpcInvertVelocity();
+            caster.movement.RpcInvertVelocity(trampolineVelocityLossFactor);
         }
     }
 
@@ -132,7 +135,7 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
                     if (!mAlreadyCaught.ContainsKey(player.movement))
                     {
                         mAlreadyCaught.Add(player.movement, 1);
-                        player.movement.mRigidbody.velocity *= -1;
+                        player.movement.mRigidbody.velocity *= -1 * trampolineVelocityLossFactor;
                     }
                     else
                     {
@@ -156,7 +159,7 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
                         mAlreadyCaught[sm] += 1;
                     }
                     //reflect the server moveable
-                    sm.RpcInvertVelocity();
+                    sm.RpcInvertVelocity(1.0f);
                 }
             }
         }
@@ -213,6 +216,7 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
     private float mScaleCount, mDamageCount;
     private void Update()
     {
+        //only relevant for visuals
         if (mPendingContactEffect)
         {
             mPendingContactEffect = false;

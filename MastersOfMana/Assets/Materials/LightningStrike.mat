@@ -7,12 +7,12 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: LightningStrike
-  m_Shader: {fileID: 4800000, guid: d42f8b2e947658c4896a7d6238a1ed6d, type: 3}
+  m_Shader: {fileID: 4800000, guid: 4126b5ca0c2d1475baa6f44dffaaae1e, type: 3}
   m_ShaderKeywords: BlendAdd Clip_OFF FrameBlend_OFF SoftParticles_OFF VertLight_OFF
   m_LightmapFlags: 5
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
+  m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
@@ -84,6 +84,7 @@ Material:
     - _MaskPow: 0
     - _Metallic: 0
     - _Mode: 0
+    - _MovementSpeed: 0.5
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _Scale: 1

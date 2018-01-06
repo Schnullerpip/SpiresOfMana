@@ -62,7 +62,11 @@ public class EnergyZoneSystem : NetworkBehaviour
 
 	void RoundEnded()
 	{
-		StopAllCoroutines();
+        for (int i = 0; i < mSpawnpoints.Count; ++i)
+        {
+            mSpawnpoints[i].RpcDeactivate();
+        }
+        StopAllCoroutines();
 	}
 
     private IEnumerator SpawnZone(bool init = false)

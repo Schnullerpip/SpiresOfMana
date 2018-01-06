@@ -14,6 +14,12 @@ public class LoadingZoneEffectActiveBehaviour : MonoBehaviour {
 
     private void OnEnable()
     {
+        //***   DEBUG   ***
+        //var player = FindObjectOfType<PlayerScript>();
+        //if (player)
+        //    SetObjectToTrack(player.gameObject);
+        //***   DEBUG   ***
+
         //Debug.Log(name + "'s spawnScale = " + spawnScale);
         //transform.localScale = spawnScale;
 
@@ -33,7 +39,7 @@ public class LoadingZoneEffectActiveBehaviour : MonoBehaviour {
 
         foreach(var ps in listOfParticleSystems)
         {
-            ps.GetComponent<RFX4_ParticleTrail>().Target = mObjectToTrack;
+            ps.GetComponent<RFX4_ParticleTrail_SoM>().Target = mObjectToTrack;
         }
     }
 

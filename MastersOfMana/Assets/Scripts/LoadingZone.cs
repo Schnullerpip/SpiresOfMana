@@ -70,11 +70,9 @@ public abstract class LoadingZone : NetworkBehaviour
                 var newEffect = PoolRegistry.GetInstance(spawnWhenEntered, transform.position, transform.rotation, 2, 4);
                 //var newEffect = Instantiate<GameObject>(spawnWhenEntered, transform.position, transform.rotation);
                 newEffect.SetActive(false);
-                newEffect.transform.localScale = transform.localScale;
-                //Debug.Log("spawned new loadingZoneEffect with localScale of " + transform.localScale);
+                newEffect.transform.localScale = spawnScale;
                 var zone = newEffect.GetComponent<LoadingZoneEffectActiveBehaviour>();
                 zone.SetObjectToTrack(player.gameObject);
-                //zone.spawnScale = transform.localScale;
                 newEffect.SetActive(true);
                 mInstancedActiveEffects.Add(zone);
                 //playersInside++;

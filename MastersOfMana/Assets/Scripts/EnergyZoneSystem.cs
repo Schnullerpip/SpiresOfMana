@@ -21,13 +21,10 @@ public class EnergyZoneSystem : NetworkBehaviour
     }
 
     private List<PlatformSpiresEffect> mSpawnpoints = new List<PlatformSpiresEffect>();
-    private LavaFloor mLavaFloor;
     private float factorSum;
 
     public void Start()
     {
-        mLavaFloor = FindObjectOfType<LavaFloor>();
-
         spawnables.Sort((s1, s2) => s1.randomFactor.CompareTo(s2.randomFactor));//sorts the list so the object with the lowest random factor is first
         factorSum = 0.0f;
         foreach (var s in spawnables)
@@ -114,7 +111,7 @@ public class EnergyZoneSystem : NetworkBehaviour
     {
         PlatformSpiresEffect spawnPlatform = mSpawnpoints.RandomElement();
 
-        if (spawnPlatform.transform.position.y < mLavaFloor.transform.position.y)
+        if (spawnPlatform.transform.position.y < GameManager.instance.GetLavaFloorHeight())
         {
             mSpawnpoints.Remove(spawnPlatform);
             spawnPlatform = GetRandomPlatform();

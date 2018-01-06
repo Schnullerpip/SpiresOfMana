@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
     public int numOfActiveMenus = 0;
     public bool gameRunning = false;
     public CameraSystem cameraSystem;
+    private LavaFloor mLavaFloor;
 
     public AudioListener listener;
 
@@ -72,6 +73,7 @@ public class GameManager : MonoBehaviour
         mNumberOfGoMessages = 0;
         mNumberOfDeadPlayers = 0;
         mNumOfReadyPlayers = 0;
+        mLavaFloor = FindObjectOfType<LavaFloor>();
         //end ultispells, that are currently running
         if (isUltimateActive)
         {
@@ -363,5 +365,15 @@ public class GameManager : MonoBehaviour
     public List<PlayerScript> GetNonLocalPlayers()
     {
         return GetOpponents(localPlayer);
+    }
+
+    public float GetLavaFloorHeight()
+    {
+        return mLavaFloor.transform.position.y;
+    }
+
+    public LavaFloor GetLavaFloor()
+    {
+        return mLavaFloor;
     }
 }

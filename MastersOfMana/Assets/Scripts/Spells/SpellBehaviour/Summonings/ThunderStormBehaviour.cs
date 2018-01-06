@@ -21,6 +21,8 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
 
 	public LightningStrike strikePrefab;
 
+    public ParticleSystem clouds;
+
 	private PlayerScript[] mOpponents;
 
     private bool mIsActive;
@@ -76,9 +78,10 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
         yield return new WaitForSeconds(duration);
 
         mIsActive = false;
+        clouds.Stop();
 
         //wait additional time to make the effect not look so abrupt
-        yield return new WaitForSeconds(strikePrefab.anticipationTime * 2 + strikePrefab.lifetime);
+        yield return new WaitForSeconds(Mathf.Max(strikePrefab.anticipationTime * 2 + strikePrefab.lifetime, clouds.main.startLifetime.constantMax));
 
 	    if (gameObject.activeSelf && GameManager.instance.isUltimateActive)
 	    {

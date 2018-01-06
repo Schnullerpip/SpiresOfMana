@@ -26,16 +26,23 @@ public class LightningStrike : NetworkBehaviour
 
     public FloatRange predictionTime = new FloatRange(0.2f, 1);
 
+    public GameObject contactPrefab;
+
     [Tooltip("How much time of the anticipation should be dedicated to following the target")]
     [Range(0, 1)]
     public float followPercentage = 0.9f;
 
     public float strikeRadius = 1;
+    public float shakeRadius = 10;
     public int damage = 10;
     public LayerMask hittingMasks;
 
     public AnimationCurve curve;
 	public PlayerScript target;
+
+    [Header("SFX")]
+    public PitchingAudioClip[] clips;
+    public AudioSource strikeSource;
 
 	[SyncVar]
 	private float mCurrentLifetime;
@@ -43,11 +50,17 @@ public class LightningStrike : NetworkBehaviour
  
     private Vector3 mRandomWander;
 
+    private int mLerpProperyID;
+
     private void Awake()
     {
         //create a new material instance for every strike, 
         //because projectors dont create them on their own, like e.g. meshrenderer
         blobShadow.material = new Material(blobShadow.material);
+
+        hits = new RaycastHit[5];
+
+        mLerpProperyID = Shader.PropertyToID("_Lerp");
     }
 
     void LifeTimeEvaluation()
@@ -56,26 +69,26 @@ public class LightningStrike : NetworkBehaviour
 
         if(f > followPercentage)
         {
-            blobShadow.material.SetFloat("_Lerp", 1);
+            blobShadow.material.SetFloat(mLerpProperyID, 1);
         }
         else
         {
-            blobShadow.material.SetFloat("_Lerp", 0);
+            blobShadow.material.SetFloat(mLerpProperyID, 0);
         }
 
         f = curve.Evaluate(f);
 
         blobShadow.orthographicSize = 1-f;
-
-
-
         //blobShadow.material.SetFloat("_Lerp", f);
-
     }
 
     void OnEnable()
 	{
         vel = Vector3.zero;
+
+        //to counteract the fact that all strikes have the same material and look the same at the same time
+		line.transform.SetPosition(y: Random.Range(0.0f,-5.0f));
+
         line.SetActive(false);
         blobShadow.orthographicSize = 0;
         blobShadow.gameObject.SetActive(true);
@@ -152,23 +165,64 @@ public class LightningStrike : NetworkBehaviour
         LifeTimeEvaluation();
     }
 
+    private RaycastHit[] hits;
+    int hitAmount;
+
     void Damage()
     {
         target = null;
 
-        Collider[] colls = Physics.OverlapCapsule(transform.position, transform.position + Vector3.up * 40, strikeRadius, hittingMasks);
+        Collider[] overlaps = Physics.OverlapCapsule(transform.position, transform.position + Vector3.up * 40, shakeRadius, hittingMasks);
 
         //caching to avoid hitting the player multiple times. this is due to the fact the player has more than one collider
         List<HealthScript> cachedHealth = new List<HealthScript>();
 
-        foreach (var c in colls)
+        Vector3 temp;
+
+        foreach (var coll in overlaps)
         {
-            HealthScript health = c.GetComponentInParent<HealthScript>();
+            HealthScript health = coll.GetComponentInParent<HealthScript>();
             if(health && !cachedHealth.Contains(health))
             {
-                cachedHealth.Add(health);
-                health.TakeDamage(damage, this.GetType());
+                temp = coll.transform.position;
+                temp.y = 0;
+
+                temp -= transform.position;
+
+                //within the damage zone
+                if (temp.sqrMagnitude < strikeRadius * strikeRadius)
+                {
+                    cachedHealth.Add(health);
+                    health.TakeDamage(damage, this.GetType());
+                }
+                //the outer zone gets a camera shake
+                else
+                {
+                    if (coll.attachedRigidbody.CompareTag("Player"))
+                    {
+                        //normalize the distance
+                        temp /= shakeRadius;
+                        //shake amount is defined as half the damage with a square falloff
+                        float shake = (1 - temp.sqrMagnitude) * damage * 0.5f;
+                        coll.attachedRigidbody.GetComponent<PlayerScript>().RpcShockPlayer(shake);
+                    }
+                }
             }
+        }
+
+        hitAmount = Physics.RaycastNonAlloc(transform.position + Vector3.up * 40, Vector3.down, hits, 40, Physics.DefaultRaycastLayers);
+
+        for (int i = 0; i < hitAmount; ++i)
+        {
+            if(hits[i].point.y <= 0.1f)
+            {
+                //skip everything beneath the lava
+                continue;
+            }
+
+            GameObject decal = PoolRegistry.GetInstance(contactPrefab, 20, 10);
+            decal.transform.SetPositionAndRotation(hits[i].point, Quaternion.Euler(hits[i].normal));
+            decal.SetActive(true);
         }
     }
 
@@ -176,17 +230,32 @@ public class LightningStrike : NetworkBehaviour
     void RpcFlash()
     {
         StartCoroutine(Flash());
+
+        strikeSource.transform.SetPosition(y: GameManager.instance.localPlayer.transform.position.y);
+
+        PitchingAudioClip randomClip = clips.RandomElement();
+
+        strikeSource.pitch = randomClip.GetRandomPitch();
+        strikeSource.clip = randomClip.audioClip;
+        strikeSource.Play();
     }
 
-	IEnumerator Flash()
-	{
-		blobShadow.gameObject.SetActive(false);
-		line.SetActive(true);
+    IEnumerator Flash()
+    {
+        blobShadow.gameObject.SetActive(false);
+        line.SetActive(true);
 
-		yield return new WaitForSeconds(lifetime);
+        yield return new WaitForSeconds(lifetime);
 
-		line.SetActive(false);
+        line.SetActive(false);
 
+        float soundDuration = strikeSource.clip.length;
+
+        if (soundDuration > lifetime)
+        {
+			yield return new WaitForSeconds(lifetime - soundDuration);
+        }
+		
 		NetworkServer.UnSpawn(this.gameObject);
 		this.gameObject.SetActive(false);
 	}

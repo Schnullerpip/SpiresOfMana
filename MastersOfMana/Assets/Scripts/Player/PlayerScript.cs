@@ -321,6 +321,18 @@ public class PlayerScript : NetworkBehaviour
 		headJoint.localRotation = Quaternion.AngleAxis(aim.GetYAngle(), Vector3.right); 
 	}
 
+    public delegate void Shock(float shock);
+    public event Shock OnShock;
+
+    [ClientRpc]
+    public void RpcShockPlayer(float shock)
+    {
+        if(OnShock != null)
+        {
+            OnShock(shock);
+        }
+    }
+
 	public bool HandTransformIsObscured(out RaycastHit hit)
 	{
 		return Physics.Linecast(handTransform.parent.position, handTransform.position, out hit);

@@ -87,8 +87,9 @@ public class StormBlastBehaviour : A_EffectBehaviour
     IEnumerator UnspawnStormblastAfterSeconds(StormBlastBehaviour sbb, float seconds)
     {
         yield return new WaitForSeconds(seconds);
-        if (sbb.gameObject.activeSelf && mIsActive)
+        if (sbb.gameObject.activeSelf && sbb.mIsActive)
         {
+            Debug.Log("aha");
             sbb.EndSpell();
         }
     }

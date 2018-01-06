@@ -78,6 +78,7 @@ public class GameManager : MonoBehaviour
         if (isUltimateActive)
         {
             isUltimateActive = false;
+            mSun.RpcFade(true);
             currentlyCastUltiSpell.EndSpell();
         }
     }

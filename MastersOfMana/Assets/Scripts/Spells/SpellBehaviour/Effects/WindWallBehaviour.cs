@@ -1,9 +1,8 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class WindWallBehaviour : A_SummoningBehaviour
+public class WindWallBehaviour : A_EffectBehaviour
 {
     [SerializeField]
     private Vector3 mWindForceDirection;
@@ -14,16 +13,8 @@ public class WindWallBehaviour : A_SummoningBehaviour
     [SerializeField]
     private float mCenterDistance;
 
-    private Vector3 force;
-    private Vector3 center;
-
-    //prevent players from getting forces of the windwall for each collider they have
-    private List<GameObject> mAlreadyAffected;
-
-    public void OnEnable()
-    {
-        mAlreadyAffected = new List<GameObject>();
-    }
+    [SerializeField]
+    private GameObject mEindWallEffect;
 
     public void OnValidate()
     {
@@ -46,61 +37,63 @@ public class WindWallBehaviour : A_SummoningBehaviour
     public override void Execute(PlayerScript caster)
     {
         //GameObject ww = PoolRegistry.WindWallPool.Get();
-        GameObject ww = PoolRegistry.GetInstance(this.gameObject, 4, 4);
-        WindWallBehaviour windwall = ww.GetComponent<WindWallBehaviour>();
 
 		Vector3 direction =	GetAimServer(caster);
 
         //put the center of the windbox infront of the caster
-		windwall.center = caster.handTransform.position + direction * mCenterDistance;
+		Vector3 center = caster.handTransform.position + direction * mCenterDistance;
 
-		windwall.force = mWindforceStrength*(caster.transform.rotation*mWindForceDirection);
+        Quaternion rotation = caster.transform.rotation;
 
-        windwall.transform.rotation = caster.aim.currentLookRotation;
+		Vector3 force = mWindforceStrength*(rotation*mWindForceDirection);
 
-        windwall.transform.position = windwall.center;
-        windwall.caster = caster;
-
-        Rigidbody rigid = ww.GetComponent<Rigidbody>();
-		rigid.velocity = caster.movement.GetVelocity();
-
-        ww.SetActive(true);
-        NetworkServer.Spawn(ww);
-
-        //make sure to unspawn the windwall
-        caster.StartCoroutine(UnspawnWindwall(ww));
-    }
-
-    IEnumerator UnspawnWindwall(GameObject obj)
-    {
-        yield return new WaitForSeconds(4.0f);
-        obj.SetActive(false);
-        NetworkServer.UnSpawn(obj);
-    }
-
-    protected override void ExecuteCollision_Host(Collision collision) { }
-
-    protected override void ExecuteTriggerEnter_Host(Collider other)
-    { 
-        Rigidbody rigid = other.attachedRigidbody;
-
-        if(rigid && !mAlreadyAffected.Contains(other.gameObject))
+        //the effect----------------------------------------------
+        foreach (var other in Physics.OverlapBox(center, new Vector3(5, 4, 4)))
         {
-            mAlreadyAffected.Add(other.gameObject);
-            PlayerScript opponent = rigid.GetComponent<PlayerScript>();
-            
-            if (opponent)
+            Rigidbody rigid = other.attachedRigidbody;
+
+            if(rigid)
             {
-                if (opponent != caster )
+                ServerMoveable hitObject = rigid.GetComponentInParent<ServerMoveable>();
+
+                if (hitObject)
                 {
-                    opponent.movement.RpcSetVelocity(force);
-                    opponent.healthScript.TakeDamage(0, GetType());
+
+                    PlayerScript ps = hitObject.GetComponent<PlayerScript>();
+                    if (ps)
+                    {
+                        if (ps != caster)
+                        {
+                            ps.movement.RpcSetVelocity(force);
+                        }
+                    }
+                    else
+                    {
+                        ps.movement.RpcSetVelocity(force);
+                    }
+                }
+                else
+                {
+                    //in any other case its just some rigid body that is local only - so move it locally
+                    rigid.velocity = force;
                 }
             }
-            else
-            {
-                rigid.velocity = force;
-            }	
         }
+        //--------------------------------------------------------
+
+        //visuals
+        GameObject visual = PoolRegistry.GetInstance(mEindWallEffect, center, rotation, 3, 3);
+        visual.SetActive(true);
+        NetworkServer.Spawn(visual);
+
+        //make sure to unspawn the windwall visual
+        caster.StartCoroutine(UnspawnWindwallVisual(visual, 3));
+    }
+
+    IEnumerator UnspawnWindwallVisual(GameObject obj, float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        obj.SetActive(false);
+        NetworkServer.UnSpawn(obj);
     }
 }

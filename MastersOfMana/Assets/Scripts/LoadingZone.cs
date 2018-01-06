@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 public abstract class LoadingZone : NetworkBehaviour
 {
     public GameObject spawnWhenEntered;
+    [HideInInspector]
     [SyncVar]
     public Vector3 spawnScale;
 

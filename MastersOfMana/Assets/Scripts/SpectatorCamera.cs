@@ -42,7 +42,9 @@ public class SpectatorCamera : MonoBehaviour
         mEuler.x = Mathf.Clamp(mEuler.x, -maxYAngle, maxYAngle);
         transform.rotation = Quaternion.Euler(mEuler);
 
-        Vector3 moveDirection = transform.TransformVector(moveInput.x, 0, moveInput.y);
+        float up = player.GetAxis("SpectatorUpDown") * Time.deltaTime * movementSpeed;
+
+        Vector3 moveDirection = transform.TransformVector(moveInput.x, up, moveInput.y);
 
         RaycastHit hit;
 

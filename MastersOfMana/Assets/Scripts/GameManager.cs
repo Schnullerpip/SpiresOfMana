@@ -150,8 +150,17 @@ public class GameManager : MonoBehaviour
         ResetLocalGameState();
     }
 
+    private AnimateLightIntensity mSun;
+
     public void RegisterUltiSpell(A_SpellBehaviour ultiSpell)
     {
+        if(!mSun)
+        {
+            mSun = GameObject.FindGameObjectWithTag("Sun").GetComponent<AnimateLightIntensity>();
+        }
+
+        mSun.RpcFade(false);
+
         isUltimateActive = true;
         currentlyCastUltiSpell = ultiSpell;
     }
@@ -160,12 +169,13 @@ public class GameManager : MonoBehaviour
     {
         if (isUltimateActive && currentlyCastUltiSpell == ultiSpell)
         {
+            mSun.RpcFade(true);
             isUltimateActive = false;
             currentlyCastUltiSpell = null;
         }
         else
         {
-            Debug.Log("Trying to unregister an ultiSpell, that is not registered!");
+            Debug.LogWarning("Trying to unregister an ultiSpell, that is not registered!");
         }
     }
 

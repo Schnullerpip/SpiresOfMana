@@ -32,6 +32,13 @@ public class PlayerCamera : MonoBehaviour {
 	private CamSlider mSlider;
     private float mBobbingFactor;
 
+    private CameraShaker mShaker;
+
+    public CameraShaker GetShaker()
+    {
+        return mShaker;
+    }
+
 	public Camera GetCamera()
 	{
 		return mCamera;
@@ -42,6 +49,7 @@ public class PlayerCamera : MonoBehaviour {
 		mCamera = GetComponentInChildren<Camera>();
 		mStartFOV = mCamera.fieldOfView;
 		mSlider = GetComponentInChildren<CamSlider>();
+		mShaker = GetComponentInChildren<CameraShaker>();
         GameManager.OnRoundStarted += RoundStarted;
     }
 
@@ -66,6 +74,7 @@ public class PlayerCamera : MonoBehaviour {
 			mSlider.SetPlayer(followTarget);
 			followTarget.healthScript.OnDamageTaken += GetComponentInChildren<CameraShaker>().ShakeByDamage;
             followTarget.movement.onMovement += HeadBobbing;
+            followTarget.OnShock += mShaker.ShakeByDamage;
 		}
 	}
 

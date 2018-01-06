@@ -5765,7 +5765,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   preview: {fileID: 114481800111717746, guid: 47ba008a314007c4f8cb9e3c4bc36976, type: 2}
   mHitRadius: 1.2
-  mHitRange: 100
+  mHitRange: 30
   mReductionIntervalInSeconds: 2
   mLifeTime: 3
   mLifetimeAfterShatter: 4
@@ -5844,6 +5844,8 @@ MonoBehaviour:
   - {fileID: 1783582293231996}
   - {fileID: 1332981740039766}
   - {fileID: 1892056626217706}
+  mNonHitEffect: {fileID: 1794378090699984, guid: 38f95367875ea9a40adcd087582de33d,
+    type: 2}
 --- !u!136 &136013939397025880
 CapsuleCollider:
   m_ObjectHideFlags: 1

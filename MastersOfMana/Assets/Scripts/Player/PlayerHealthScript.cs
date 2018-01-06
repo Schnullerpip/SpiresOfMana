@@ -67,4 +67,10 @@ public class PlayerHealthScript : HealthScript
     {
 		base.HealthChangedHook(newHealth);
     }
+
+    [Command]
+    public void CmdTakeLocalLavaDamage(int amount)
+    {
+        TakeDamage(amount, typeof(LavaFloor));
+    }
 }

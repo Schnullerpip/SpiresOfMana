@@ -52,6 +52,7 @@ public class LavaFloor : NetworkBehaviour
     {
         GameManager.OnRoundStarted += RoundStarted;
         GameManager.OnRoundEnded += RoundEnded;
+        mInstanceCoroutineDictionary = new Dictionary<HealthScript, Coroutine>();
     }
 
     public void OnDisable()
@@ -64,18 +65,28 @@ public class LavaFloor : NetworkBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        if(!isServer)
+        //due to performance reasons (specifically lag) - we should treat the local player locally (players have local authority of their movement)
+
+        //is it the local player?
+        PlayerScript ps = other.GetComponentInParent<PlayerScript>();
+        if (ps && GameManager.instance.localPlayer == ps && !mInstanceCoroutineDictionary.ContainsKey(ps.healthScript))
         {
-            return;
+            //it is the local player! move it! damage will be applied by the server!
+            mInstanceCoroutineDictionary.Add(ps.healthScript, StartCoroutine(LavaEffectLocal(ps)));	
         }
-        //Check if collision with player
-        //Check FeetCollider to only trigger once per player
-        HealthScript health = other.GetComponentInParent<HealthScript>();
-        if (health && health.IsAlive() && !mInstanceCoroutineDictionary.ContainsKey(health))
+        //if it is not a player handle it on the server only!
+        else 
         {
-            ServerMoveable sm = other.GetComponentInParent<ServerMoveable>();
-            //Remember which player this coroutine belongs to
-            mInstanceCoroutineDictionary.Add(health, StartCoroutine(DealDamage(health, sm)));	
+            if (isServer)
+            {
+                HealthScript health = other.GetComponentInParent<HealthScript>();
+                if (health && health.IsAlive() && !mInstanceCoroutineDictionary.ContainsKey(health))
+                {
+                    ServerMoveable sm = other.GetComponentInParent<ServerMoveable>();
+                    //Remember which server moveable this coroutine belongs to
+                    mInstanceCoroutineDictionary.Add(health, StartCoroutine(LavaEffectServer(health, sm)));
+                }
+            }
         }
     }
 
@@ -93,15 +104,10 @@ public class LavaFloor : NetworkBehaviour
         newTrans.y = mStartHeight;
         transform.position = newTrans;
         mRenderer.material.SetFloat(mEmissionID, mEmissionStart);
-
     }
 
     public void OnTriggerExit(Collider other)
     {
-        if (!isServer)
-        {
-            return;
-        }
         //Check Healthscript to only trigger once per player
         HealthScript health = other.GetComponentInParent<HealthScript>();
         if (health && mInstanceCoroutineDictionary.ContainsKey(health))
@@ -111,7 +117,38 @@ public class LavaFloor : NetworkBehaviour
         }
     }
 
-    public IEnumerator DealDamage(HealthScript health, ServerMoveable sm = null)
+    public IEnumerator LavaEffectLocal(PlayerScript player)
+    {
+        while (enabled)
+        {
+            if (!player.healthScript.IsAlive() && mInstanceCoroutineDictionary.ContainsKey(player.healthScript))
+            {
+                StopCoroutine(mInstanceCoroutineDictionary[player.healthScript]);
+                mInstanceCoroutineDictionary.Remove(player.healthScript);
+                yield break;
+            }
+
+            if (isServer)
+            {
+                player.healthScript.TakeDamage(damagePerSecond, GetType());
+            }
+            else
+            {
+                player.healthScript.CmdTakeLocalLavaDamage(damagePerSecond);
+            }
+
+            PlayDamageSound(player.transform.position);
+
+            //shoot the moveable into the sky to make it jump mario-ayayayayay-style
+            Vector3 vel = player.movement.mRigidbody.velocity;
+            vel.y = repelForce;
+            player.movement.mRigidbody.velocity = vel;
+
+            yield return new WaitForSeconds(1f);
+        }
+    }
+
+    public IEnumerator LavaEffectServer(HealthScript health, ServerMoveable sm = null)
     {
         while (enabled)
         {
@@ -136,6 +173,11 @@ public class LavaFloor : NetworkBehaviour
 
     [ClientRpc]
     private void RpcPlayDamageSound(Vector3 position)
+    {
+        PlayDamageSound(position);
+    }
+
+    private void PlayDamageSound(Vector3 position)
     {
         burnSource.transform.position = position;
         PitchingAudioClip clip = burnClips.RandomElement();

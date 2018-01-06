@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
     public int numOfActiveMenus = 0;
     public bool gameRunning = false;
     public CameraSystem cameraSystem;
+    private LavaFloor mLavaFloor;
 
     public AudioListener listener;
 
@@ -72,6 +73,7 @@ public class GameManager : MonoBehaviour
         mNumberOfGoMessages = 0;
         mNumberOfDeadPlayers = 0;
         mNumOfReadyPlayers = 0;
+        mLavaFloor = FindObjectOfType<LavaFloor>();
         //end ultispells, that are currently running
         if (isUltimateActive)
         {
@@ -150,8 +152,17 @@ public class GameManager : MonoBehaviour
         ResetLocalGameState();
     }
 
+    private AnimateLightIntensity mSun;
+
     public void RegisterUltiSpell(A_SpellBehaviour ultiSpell)
     {
+        if(!mSun)
+        {
+            mSun = GameObject.FindGameObjectWithTag("Sun").GetComponent<AnimateLightIntensity>();
+        }
+
+        mSun.RpcFade(false);
+
         isUltimateActive = true;
         currentlyCastUltiSpell = ultiSpell;
     }
@@ -160,17 +171,22 @@ public class GameManager : MonoBehaviour
     {
         if (isUltimateActive && currentlyCastUltiSpell == ultiSpell)
         {
+            mSun.RpcFade(true);
             isUltimateActive = false;
             currentlyCastUltiSpell = null;
         }
         else
         {
-            Debug.Log("Trying to unregister an ultiSpell, that is not registered!");
+            Debug.LogWarning("Trying to unregister an ultiSpell, that is not registered!");
         }
     }
 
     public void TriggerRoundEnded()
     {
+        //make sure the preview is ended whenever the current round has ended
+        localPlayer.GetPlayerSpells().StopPreview();
+        localPlayer.inputStateSystem.current.SetPreview(false);
+
         gameRunning = false;
         listener.enabled = true;
         if (OnRoundEnded != null)
@@ -349,5 +365,15 @@ public class GameManager : MonoBehaviour
     public List<PlayerScript> GetNonLocalPlayers()
     {
         return GetOpponents(localPlayer);
+    }
+
+    public float GetLavaFloorHeight()
+    {
+        return mLavaFloor.transform.position.y;
+    }
+
+    public LavaFloor GetLavaFloor()
+    {
+        return mLavaFloor;
     }
 }

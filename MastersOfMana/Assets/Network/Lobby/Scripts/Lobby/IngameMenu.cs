@@ -1,37 +1,40 @@
 ﻿using UnityEngine;
 using Rewired;
 
-public class IngameMenu : MonoBehaviour {
+public class IngameMenu : MonoBehaviour
+{
 
     public Prototype.NetworkLobby.LobbyManager lobbyManager;
     public Canvas canvas;
     protected Rewired.Player mRewiredPlayer;
     public MultipleMenuInput menuInput;
+    public RectTransform ConfirmationPanel;
 
-	public UnityEngine.UI.Selectable defaultSelected;
+    public UnityEngine.UI.Selectable defaultSelected;
 
     public void ToggleVisibility()
     {
-		canvas.enabled = !canvas.enabled;
+        canvas.enabled = !canvas.enabled;
         //Small hack to use the OnDisable/OnEnable functionality of the MultipleMenuInput script
         menuInput.enabled = canvas.enabled;
 
-		if(GameManager.instance.numOfActiveMenus > 0 && lobbyManager)
-		{
-			if(defaultSelected != null)
-			{
-				defaultSelected.Select();
-			}
+        if (GameManager.instance.numOfActiveMenus > 0 && lobbyManager)
+        {
+            if (defaultSelected != null)
+            {
+                defaultSelected.Select();
+            }
             lobbyManager.SetCancelDelegate(null);
-		}
+        }
     }
 
     public void Resume()
     {
-        if(lobbyManager)
+        if (lobbyManager)
         {
             lobbyManager.RemoveLastCancelDelegate();
         }
+        ConfirmationPanel.gameObject.SetActive(false);
         ToggleVisibility();
     }
 
@@ -61,7 +64,7 @@ public class IngameMenu : MonoBehaviour {
 
     public void GoToMainMenu()
     {
-        if(NetManager.instance.amIServer())
+        if (NetManager.instance.amIServer())
         {
             lobbyManager.StopHostClbk();
         }
@@ -69,6 +72,11 @@ public class IngameMenu : MonoBehaviour {
         {
             lobbyManager.StopClientClbk();
         }
+    }
+
+    public void OpenConfirmationPanel()
+    {
+        ConfirmationPanel.gameObject.SetActive(true);
     }
 
     //This makes sure that we set GameRunning to false in any case where we change the game scene

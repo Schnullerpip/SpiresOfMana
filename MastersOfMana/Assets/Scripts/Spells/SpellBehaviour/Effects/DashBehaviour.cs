@@ -130,26 +130,17 @@ public class DashBehaviour : A_EffectBehaviour
 
         Vector3 newPosition = GetNewPosition(caster, direction, out hit);
 
-        //TODO should direct hit be stronger? else the collective push force handles this later in IterateCollidersAndApply
-		//if (hit.collider != null)
-  //      {
-            //PlayerScript opponent = hit.collider.GetComponentInParent<PlayerScript>();
-            //if (opponent && opponent != caster)
-            //{
-                //Vector3 pushVector = opponent.movement.mRigidbody.worldCenterOfMass - newPosition;
-                //Vector3 pushDirection = Vector3.Normalize(pushVector);
-                //opponent.healthScript.TakeDamage(0, this.GetType());
-                //opponent.movement.RpcSetVelocityAndMovePosition(pushDirection * pushForce, newPosition + pushVector - opponent.movement.mRigidbody.centerOfMass);
-            //}
-        //}
-
         //cast a trail or something so the enemy does not recognize the dash as a glitch
-        GameObject ds = PoolRegistry.GetInstance(dashEffectPrefab, 4, 4);
+        GameObject ds = PoolRegistry.GetInstance(dashEffectPrefab, 1, 1);
+        DashEffectScript des = ds.GetComponent<DashEffectScript>();
+        des.from = caster.transform.position;
+        des.to = newPosition;
+        des.to.y += 1.0f;
         //position the trail
         Vector3 pos = caster.transform.position;
         pos.y += 1;
         ds.transform.position = pos;
-        ds.transform.rotation = caster.headJoint.transform.rotation;
+        ds.transform.rotation = caster.aim.currentLookRotation;
 
         //activate the trail on all clients
         ds.SetActive(true);
@@ -182,14 +173,15 @@ public class DashBehaviour : A_EffectBehaviour
         NetworkServer.Spawn(pe.gameObject);
 
         //make the trail disappear after one second
-        caster.StartCoroutine(Unspawn(ds, pe));
+        caster.StartCoroutine(Unspawn(ds, des.Lifetime, pe, 1.0f));
     }
 
-    public IEnumerator Unspawn(GameObject trail, GameObject blastEffect)
+    public IEnumerator Unspawn(GameObject trail, float lifetime, GameObject blastEffect, float blast_lifetime)
     {
-        yield return new WaitForSeconds(1);
-        trail.SetActive(false);
+        yield return new WaitForSeconds(blast_lifetime);
         blastEffect.SetActive(false);
+        yield return new WaitForSeconds(lifetime);
+        trail.SetActive(false);
 
         NetworkServer.UnSpawn(trail);
         NetworkServer.UnSpawn(blastEffect);

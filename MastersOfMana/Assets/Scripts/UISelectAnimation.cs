@@ -54,11 +54,13 @@ public class UISelectAnimation : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
         Vector3 size = transform.localScale;
 
-        while(timer < 1)
+        while(timer <= 1)
         {
             transform.localScale = Vector3.LerpUnclamped(size, desiredScale, curve.Evaluate(timer));
             timer += Time.deltaTime * speed;
             yield return null;
         }
+
+        transform.localScale = Vector3.LerpUnclamped(size, desiredScale, curve.Evaluate(1));
     }
 }

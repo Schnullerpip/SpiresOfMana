@@ -11,6 +11,9 @@ public class SpectatorCamera : MonoBehaviour
     public float movementSpeed = 20;
     public float aimSpeed = 40;
 
+    public float zoomSpeed = 10;
+    public float zoomOutFOV = 100;
+
     private Vector3 mEuler;
 
     private Camera mCam;
@@ -21,14 +24,27 @@ public class SpectatorCamera : MonoBehaviour
         transform.rotation = copyCam.transform.rotation;
 
         mCam = GetComponent<Camera>();
-
-        mCam.fieldOfView = copyCam.fieldOfView;
-        mCam.nearClipPlane = copyCam.nearClipPlane;
-        mCam.farClipPlane = copyCam.farClipPlane;
+		mCam.CopyFrom(copyCam);
 
         mEuler = transform.rotation.eulerAngles;
         player = Rewired.ReInput.players.GetPlayer(0);
+    }
 
+    private void OnEnable()
+    {
+        if(mCam != null)
+        {
+			StartCoroutine(ZoomOut());
+        }
+    }
+
+    private IEnumerator ZoomOut()
+    {
+        while(mCam.fieldOfView < zoomOutFOV)
+        {
+            mCam.fieldOfView = Mathf.Lerp(mCam.fieldOfView, zoomOutFOV, Time.deltaTime * zoomSpeed);
+            yield return null;
+        }
     }
 
     private void Update()
@@ -48,7 +64,7 @@ public class SpectatorCamera : MonoBehaviour
 
         RaycastHit hit;
 
-        if (Physics.SphereCast(transform.position, 0.5f, moveDirection, out hit, 1))
+        if (Physics.SphereCast(transform.position, 1f, moveDirection, out hit, 1))
         {
             transform.position += Vector3.ProjectOnPlane(moveDirection, -hit.normal);
         }
@@ -56,5 +72,8 @@ public class SpectatorCamera : MonoBehaviour
         {
             transform.position += moveDirection;
         }
+
+        //dont let the player fly too far away
+        transform.position = Vector3.ClampMagnitude(transform.position, 75);
     }
 }

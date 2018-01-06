@@ -228,13 +228,25 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
         }
     }
 
+    //caches the timestamp for the last effect, so the next one can be invoked in away, that doesnt trash up the screen
+    private float mTimeAtLastEffect;
+    public float EffectIntervalInSeconds;
+    private bool mFirstEffect;
+
     private void SpawnContactEffect()
     {
-        GameObject go = PoolRegistry.GetInstance(mCollisionReactionEffect, 4, 4);
-        go.transform.rotation = transform.rotation;
-        go.transform.position = transform.position;
-        go.SetActive(true);
-        caster.StartCoroutine(DeactivateContactEffect(go));
+        var currentTimeStamp = Time.time;
+        if (mFirstEffect || (currentTimeStamp - mTimeAtLastEffect >= EffectIntervalInSeconds))
+        {
+            mFirstEffect = false;
+            GameObject go = PoolRegistry.GetInstance(mCollisionReactionEffect, 4, 4);
+            go.transform.rotation = transform.rotation;
+            go.transform.position = transform.position;
+            go.SetActive(true);
+            caster.StartCoroutine(DeactivateContactEffect(go));
+
+            mTimeAtLastEffect = currentTimeStamp;
+        }
     }
 
     IEnumerator DeactivateContactEffect(GameObject go)
@@ -252,6 +264,8 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
     {
         mAlreadyCaught = new Dictionary<ServerMoveable, int>();
         mScaleCount = 0;
+        mFirstEffect = true;
+        mTimeAtLastEffect = 0;
         mDamageCount = 0;
         ScaleCountAddRoutine = Add;
         transform.localScale = mOriginalScale*spawnScale.Evaluate(mScaleCount);

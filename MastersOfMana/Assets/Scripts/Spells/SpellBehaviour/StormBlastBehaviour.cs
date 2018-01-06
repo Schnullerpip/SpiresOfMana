@@ -89,7 +89,6 @@ public class StormBlastBehaviour : A_EffectBehaviour
         yield return new WaitForSeconds(seconds);
         if (sbb.gameObject.activeSelf && sbb.mIsActive)
         {
-            Debug.Log("aha");
             sbb.EndSpell();
         }
     }

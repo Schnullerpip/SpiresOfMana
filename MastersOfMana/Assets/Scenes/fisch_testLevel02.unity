@@ -4457,7 +4457,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!82 &1255611577
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5009,7 +5009,7 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 1041086997
+  randomSeed: 995899690
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -10100,43 +10100,6 @@ Prefab:
       propertyPath: spawnpointsParent
       value: 
       objectReference: {fileID: 82973678}
-    - target: {fileID: 114973350284306172, guid: d4a7025127c441d4aa9a572c6d8041fd,
-        type: 2}
-      propertyPath: spawnables.Array.data[0].randomFactor
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 114973350284306172, guid: d4a7025127c441d4aa9a572c6d8041fd,
-        type: 2}
-      propertyPath: spawnables.Array.data[1].randomFactor
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114973350284306172, guid: d4a7025127c441d4aa9a572c6d8041fd,
-        type: 2}
-      propertyPath: spawnables.Array.data[0].prefab
-      value: 
-      objectReference: {fileID: 1619450679201972, guid: acd46b4d248498f4faba4e8ff9c23a2a,
-        type: 2}
-    - target: {fileID: 114973350284306172, guid: d4a7025127c441d4aa9a572c6d8041fd,
-        type: 2}
-      propertyPath: spawnables.Array.data[1].prefab
-      value: 
-      objectReference: {fileID: 1760997120296002, guid: 0d759efa0770fc54aa68de32c1ba8519,
-        type: 2}
-    - target: {fileID: 114973350284306172, guid: d4a7025127c441d4aa9a572c6d8041fd,
-        type: 2}
-      propertyPath: initialDelay
-      value: 25
-      objectReference: {fileID: 0}
-    - target: {fileID: 114973350284306172, guid: d4a7025127c441d4aa9a572c6d8041fd,
-        type: 2}
-      propertyPath: lifetime
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 114973350284306172, guid: d4a7025127c441d4aa9a572c6d8041fd,
-        type: 2}
-      propertyPath: gapBetweenSpawns
-      value: 25
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d4a7025127c441d4aa9a572c6d8041fd, type: 2}
   m_IsPrefabParent: 0
@@ -10260,33 +10223,6 @@ Prefab:
     - target: {fileID: 4144710273872866, guid: 7b13270c78cfdcd419ee053a78a3ad25, type: 2}
       propertyPath: m_RootOrder
       value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 114050070967546050, guid: 7b13270c78cfdcd419ee053a78a3ad25,
-        type: 2}
-      propertyPath: poolShouldGrow
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114050070967546050, guid: 7b13270c78cfdcd419ee053a78a3ad25,
-        type: 2}
-      propertyPath: defaultPoolSize
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1164052453046962, guid: 7b13270c78cfdcd419ee053a78a3ad25, type: 2}
-      propertyPath: m_Name
-      value: PoolRegistry
-      objectReference: {fileID: 0}
-    - target: {fileID: 1164052453046962, guid: 7b13270c78cfdcd419ee053a78a3ad25, type: 2}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1164052453046962, guid: 7b13270c78cfdcd419ee053a78a3ad25, type: 2}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
-      objectReference: {fileID: 0}
-    - target: {fileID: 114621654819490072, guid: 7b13270c78cfdcd419ee053a78a3ad25,
-        type: 2}
-      propertyPath: m_ServerOnly
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7b13270c78cfdcd419ee053a78a3ad25, type: 2}

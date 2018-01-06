@@ -8,7 +8,6 @@ public class InputStateNormal : A_InputState
 
     public override void UpdateLocal()
     {
-
         base.UpdateLocal();
 
 		#region Spell Selection

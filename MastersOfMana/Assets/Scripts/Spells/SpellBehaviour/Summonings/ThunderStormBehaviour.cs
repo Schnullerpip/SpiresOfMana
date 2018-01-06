@@ -47,13 +47,7 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
     public override void EndSpell()
     {
 	    caster.healthScript.OnInstanceDied -= EndSpell;
-        mIsActive = false;
-
-        //reset the flag so a new ultimate can be started
-        GameManager.instance.UnregisterUltiSpell(this);
-
-        NetworkServer.UnSpawn(this.gameObject);
-        gameObject.SetActive(false);
+        StartCoroutine(EndEffect());
     }
 	#endregion
 
@@ -77,6 +71,11 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
 
         yield return new WaitForSeconds(duration);
 
+        StartCoroutine(EndEffect());
+    }
+
+    private IEnumerator EndEffect()
+    {
         mIsActive = false;
         clouds.Stop();
 

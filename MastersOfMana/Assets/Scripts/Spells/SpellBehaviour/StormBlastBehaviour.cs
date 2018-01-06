@@ -10,7 +10,7 @@ public class StormBlastBehaviour : A_EffectBehaviour
     [SerializeField] private float mForce = 10;
     [SerializeField] private float mInterval = 10;
     [SerializeField] private float mLifeTime = 10;
-    [SerializeField] private ParticleSystem mBlastEffect;
+    [SerializeField] private GameObject mBlastEffect;
     private bool mIsActive = false;
 
     void OnEnable()
@@ -31,7 +31,8 @@ public class StormBlastBehaviour : A_EffectBehaviour
             mTimeCount = 0;
 
             //activate the particle system
-            mBlastEffect.Play();
+            mBlastEffect.SetActive(false);
+            mBlastEffect.SetActive(true);
 
 	        if (isServer)
 	        {

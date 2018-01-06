@@ -183,6 +183,10 @@ public class GameManager : MonoBehaviour
 
     public void TriggerRoundEnded()
     {
+        //make sure the preview is ended whenever the current round has ended
+        localPlayer.GetPlayerSpells().StopPreview();
+        localPlayer.inputStateSystem.current.SetPreview(false);
+
         gameRunning = false;
         listener.enabled = true;
         if (OnRoundEnded != null)

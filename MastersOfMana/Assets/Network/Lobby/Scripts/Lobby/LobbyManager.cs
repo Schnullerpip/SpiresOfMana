@@ -24,6 +24,7 @@ namespace Prototype.NetworkLobby
         protected RectTransform currentPanel;
 
         public LobbyMainMenu mainMenu;
+        public RectTransform disconnectedMenu;
 
         public bool isInGame = false;
         public bool isHost = false;
@@ -192,8 +193,7 @@ namespace Prototype.NetworkLobby
             {
                 StopHost();
             }
-
-            
+ 
             ChangeTo(mainMenu.mainMenuPanel);
         }
 
@@ -476,8 +476,17 @@ namespace Prototype.NetworkLobby
         public override void OnClientDisconnect(NetworkConnection conn)
         {
             StopClientClbk();
+            disconnectedMenu.gameObject.SetActive(true);
+            mainMenu.gameObject.SetActive(false);
             //base.OnClientDisconnect(conn);
             //ChangeTo(mainMenu.mainMenuPanel);
+        }
+
+        public void OnDisconnectedMenuReturn()
+        {
+            disconnectedMenu.gameObject.SetActive(false);
+            mainMenu.mainMenuPanel.gameObject.SetActive(true);
+
         }
 
         public override void OnClientError(NetworkConnection conn, int errorCode)

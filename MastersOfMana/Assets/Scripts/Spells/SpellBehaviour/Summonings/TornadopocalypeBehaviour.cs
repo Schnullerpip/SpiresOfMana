@@ -13,6 +13,9 @@ public class TornadopocalypeBehaviour : A_SummoningBehaviour
 	public float maxHeightCheck = 20;
 	public FloatRange initalOffsetToPlayer = new FloatRange(3, 10);
 
+    [Range(0, 10)]
+    public float anticipation = 1;
+
 	public TornadoMinion tornadoMinionPrefab;
 
 	private PlayerScript[] mOpponents;
@@ -67,7 +70,7 @@ public class TornadopocalypeBehaviour : A_SummoningBehaviour
 		{
 			Vector3 initPos;
 			//check if the current position of the player is a valid navmesh position
-			if(!TornadoMinion.GetPositionOnMesh(target.transform.position, maxHeightCheck, out initPos))
+			if(!TornadoMinion.GetPositionOnMesh(target.transform.position + Vector3.up, maxHeightCheck, out initPos))
 			{
 				//if not, skip this iteration
 				yield return new WaitForSeconds(interval.Random());
@@ -75,31 +78,22 @@ public class TornadopocalypeBehaviour : A_SummoningBehaviour
 			}
 
 			//instatiate the minion at the players position
-
 		    TornadoMinion tornado =
 		        PoolRegistry.GetInstance(tornadoMinionPrefab.gameObject, initPos, target.transform.rotation, 7, 4).GetComponent<TornadoMinion>();
 
-            Vector3 pos = target.movement.GetAnticipationPosition(2) //take movement into account		
-				+ Random.insideUnitCircle.normalized.ToVector3xz() * initalOffsetToPlayer.Random(); //random around the players position
+			tornado.SetTarget(target);
+			tornado.gameObject.SetActive(true);
+			
+            Vector3 offset = target.movement.GetCurrentMovementVector() * anticipation //take movement into account 
+                + Vector3.up //plus a little offset up so the position is not in or under the navmesh
+                + Random.insideUnitCircle.normalized.ToVector3xz() * initalOffsetToPlayer.Random(); //random around the players position
 
-			//move afterwards to make sure the validation of the position is calculated from the targets position. 
-			//this is especially important for the brigdes, so that the tornados dont spawn below
-			tornado.transform.position = pos;
+            //move afterwards to make sure the validation of the position is calculated from the targets position. 
+            //this is especially important for the brigdes, so that the tornados dont spawn below
+            tornado.AdjustPosition(offset);
 
-			Vector3 clientAdjustment;
+            NetworkServer.Spawn(tornado.gameObject);
 
-			//since the client didnt yet initialized the navmeshagents, we have to adjust again
-			if(TornadoMinion.GetPositionOnMesh(pos, maxHeightCheck, out clientAdjustment))
-			{
-				tornado.transform.position = clientAdjustment;
-				tornado.SetTarget(target);
-				tornado.gameObject.SetActive(true);
-				NetworkServer.Spawn(tornado.gameObject);
-			}
-			else
-			{
-				tornado.gameObject.SetActive(false);
-			}
             mTornadoMinions.Add(tornado);
 
             yield return new WaitForSeconds(interval.Random());

@@ -35,7 +35,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4961514470493612}
-  - component: {fileID: 114530018702685370}
+  - component: {fileID: 114391420305972444}
   m_Layer: 0
   m_Name: FistOfFury_Explosion
   m_TagString: Untagged
@@ -230,7 +230,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1673527774532090}
-  m_LocalRotation: {x: 0.15251097, y: 0.6904639, z: -0.690464, w: 0.15251096}
+  m_LocalRotation: {x: 0.15251096, y: 0.69046384, z: -0.69046396, w: 0.15251094}
   m_LocalPosition: {x: 0, y: 0.69, z: 0}
   m_LocalScale: {x: 5, y: 5, z: 1}
   m_Children: []
@@ -686,6 +686,18 @@ MonoBehaviour:
   GraphIntensityMultiplier: 1
   IsLoop: 0
   UseSharedMaterial: 0
+--- !u!114 &114391420305972444
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1233248937701180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8410750655a2d2f489c642c14c30aaec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DeactivateTime: 5
 --- !u!114 &114399828769155324
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -723,18 +735,6 @@ MonoBehaviour:
     m_RotationOrder: 0
   GraphTimeMultiplier: 3
   IsLoop: 0
---- !u!114 &114530018702685370
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1233248937701180}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 794cff72f2dbc47f286e6190fffb795e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lifetime: 5
 --- !u!114 &114569235193594034
 MonoBehaviour:
   m_ObjectHideFlags: 1

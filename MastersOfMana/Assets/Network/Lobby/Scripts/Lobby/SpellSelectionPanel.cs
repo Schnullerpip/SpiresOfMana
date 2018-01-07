@@ -26,7 +26,7 @@ public class SpellSelectionPanel : MonoBehaviour {
     private void OnEnable()
     {
         Init();
-        spellButtons[0].OnSelect(null);
+        //spellButtons[0].OnSelect(null);
     }
 
     private void Awake()

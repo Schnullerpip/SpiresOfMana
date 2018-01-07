@@ -84,16 +84,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af63172eaba2746bbb4e9fc831fac7b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  preview: {fileID: 0}
   bounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 50, y: 0, z: 50}
   interval:
-    min: 0.7
-    max: 1.2
+    min: 1.2
+    max: 1.5
   duration: 15
   maxHeightCheck: 20
   initalOffsetToPlayer:
     min: 3
-    max: 10
+    max: 5
+  anticipation: 2
   tornadoMinionPrefab: {fileID: 114041953709513262, guid: 4a38a64ae02ee4ea1bd8796ea7f71a32,
     type: 2}

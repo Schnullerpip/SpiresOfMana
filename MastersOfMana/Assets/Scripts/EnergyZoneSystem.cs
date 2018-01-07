@@ -8,22 +8,29 @@ public class EnergyZoneSystem : NetworkBehaviour
     public float initialDelay = 10;
 	public float lifetime = 20;
     public float gapBetweenSpawns = 10;
-    public List<GameObject> spawnables;
+    //public List<GameObject> spawnables;
+    public List<spawnZone> spawnables;
     public Transform spawnpointsParent;
 
-	//[System.Serializable]
-	//public struct spawnZone
- //   {
-	//	public float spawnDelay;
-	//	public GameObject spawnObject;
-	//}
+    [System.Serializable]
+    public struct spawnZone
+    {
+        public GameObject prefab;
+        [Range(0.0f, 1.0f)]
+        public float randomFactor;
+    }
 
     private List<PlatformSpiresEffect> mSpawnpoints = new List<PlatformSpiresEffect>();
-    private LavaFloor mLavaFloor;
+    private float factorSum;
 
     public void Start()
     {
-        mLavaFloor = FindObjectOfType<LavaFloor>();
+        spawnables.Sort((s1, s2) => s1.randomFactor.CompareTo(s2.randomFactor));//sorts the list so the object with the lowest random factor is first
+        factorSum = 0.0f;
+        foreach (var s in spawnables)
+        {
+            factorSum += s.randomFactor;
+        }
     }
 
     public void OnEnable()
@@ -55,7 +62,11 @@ public class EnergyZoneSystem : NetworkBehaviour
 
 	void RoundEnded()
 	{
-		StopAllCoroutines();
+        for (int i = 0; i < mSpawnpoints.Count; ++i)
+        {
+            mSpawnpoints[i].RpcDeactivate();
+        }
+        StopAllCoroutines();
 	}
 
     private IEnumerator SpawnZone(bool init = false)
@@ -70,8 +81,28 @@ public class EnergyZoneSystem : NetworkBehaviour
         Transform spawnPoint = platform.transform;
         Vector3 position = spawnPoint.position;
         Quaternion rotation = spawnPoint.rotation;
+
+        GameObject objToSpawn = null;
+        float r = Random.value,
+              rCnt = 0.0f;
+        foreach(var s in spawnables)
+        {
+            rCnt += s.randomFactor / factorSum;
+            if (r < rCnt)
+            {
+                objToSpawn = s.prefab;
+                break;
+            }
+        }
+
+        if(objToSpawn == null)
+        {
+            Debug.LogError("Couldn't spawn loading zone, because it was impossible to determine which should get spawned.");
+            yield break;
+        }
+
         //Instantiate and spawn
-        GameObject obj = Instantiate(spawnables.RandomElement(), position, rotation);
+        GameObject obj = Instantiate(objToSpawn, position, rotation);
         //obj.transform.localScale = spawnPoint.localScale;
         obj.GetComponent<LoadingZone>().spawnScale = spawnPoint.localScale;
         StartCoroutine(Despawn(spawnPoint, obj, platform));
@@ -82,14 +113,14 @@ public class EnergyZoneSystem : NetworkBehaviour
 
     private PlatformSpiresEffect GetRandomPlatform()
     {
-        PlatformSpiresEffect healSpawnPlatform = mSpawnpoints.RandomElement();
+        PlatformSpiresEffect spawnPlatform = mSpawnpoints.RandomElement();
 
-        if (healSpawnPlatform.transform.position.y < mLavaFloor.transform.position.y)
+        if (spawnPlatform.transform.position.y < GameManager.instance.GetLavaFloorHeight())
         {
-            mSpawnpoints.Remove(healSpawnPlatform);
-            healSpawnPlatform = GetRandomPlatform();
+            mSpawnpoints.Remove(spawnPlatform);
+            spawnPlatform = GetRandomPlatform();
         }
-        return healSpawnPlatform;
+        return spawnPlatform;
     }
 
     private IEnumerator Despawn(Transform trans, GameObject obj, PlatformSpiresEffect platform)

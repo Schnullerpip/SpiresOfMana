@@ -24,10 +24,20 @@ public class TornadoMinion : NetworkBehaviour {
 	public static bool GetPositionOnMesh(Vector3 sourcePos, float maxDistance, out Vector3 navPosition)
 	{
 		NavMeshHit navHit;
-		bool returnValue = NavMesh.SamplePosition(sourcePos, out navHit, maxDistance, NavMesh.AllAreas);
+		NavMesh.SamplePosition(sourcePos, out navHit, maxDistance, NavMesh.AllAreas);
 		navPosition = navHit.position;
-		return returnValue;
+
+        Debug.DrawRay(sourcePos + new Vector3(-.2f,0,-.2f), new Vector3(.4f, 0, .4f), Color.red, 10);
+        Debug.DrawRay(sourcePos + new Vector3(-.2f, 0, .2f), new Vector3(.4f, 0, -.4f), Color.red, 10);
+        Debug.DrawLine(sourcePos, navPosition, Color.red, 10);
+
+		return navHit.hit;
 	}
+
+    public void AdjustPosition(Vector3 offset)
+    {
+        mAgent.Move(offset);
+    }
 
 	public bool IsOnNavMesh()
 	{
@@ -73,13 +83,13 @@ public class TornadoMinion : NetworkBehaviour {
     private void Awake()
     {
         mInitalScale = transform.localScale;
+        mAgent = GetComponent<NavMeshAgent>();
     }
 
     public override void OnStartClient()
 	{
 		Appear();
 
-		mAgent = GetComponent<NavMeshAgent>();
 
         if(!isServer)
         {
@@ -134,7 +144,7 @@ public class TornadoMinion : NetworkBehaviour {
 			return;
 		}
 
-		if(mTarget)
+		if(mTarget && IsOnNavMesh())
 		{
 			mAgent.SetDestination(mTarget.transform.position);
 		}

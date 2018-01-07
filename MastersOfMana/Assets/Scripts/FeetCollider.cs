@@ -13,10 +13,10 @@ public class FeetCollider : MonoBehaviour
 	/// <summary>
 	/// Did the feet have contact with the ground this frame?
 	/// </summary>
-	private bool mContactThisFrame = false;
-	private bool mContactLastFrame = false;
+	private bool mContactThisFrame = true;
+	private bool mContactLastFrame = true;
 	private bool mIsGrounded = false;
-	private Vector3 mGroundNormal;
+	private Vector3 mGroundNormal = Vector3.up;
 	private SphereCollider sphereCollider;
 
 	public delegate void OnLanding();

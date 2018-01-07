@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -112,11 +112,11 @@ NavMeshSettings:
 RectTransform:
   m_PrefabParentObject: {fileID: 22459552, guid: c0978251ff7b10d4fb954a4b56acd9f0,
     type: 2}
-  m_PrefabInternal: {fileID: 2082218201}
+  m_PrefabInternal: {fileID: 2115040217}
 --- !u!1 &570293380 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 115900, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
-  m_PrefabInternal: {fileID: 2082218201}
+  m_PrefabInternal: {fileID: 2115040217}
 --- !u!1001 &665017916
 Prefab:
   m_ObjectHideFlags: 0
@@ -229,6 +229,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!224 &1268421082 stripped
+RectTransform:
+  m_PrefabParentObject: {fileID: 224111511102823924, guid: c0978251ff7b10d4fb954a4b56acd9f0,
+    type: 2}
+  m_PrefabInternal: {fileID: 2115040217}
 --- !u!1 &1321811816
 GameObject:
   m_ObjectHideFlags: 0
@@ -297,6 +302,9 @@ MonoBehaviour:
   - {fileID: 1653259717257784, guid: 486ea5d688386bf46a55ddd616e4a457, type: 2}
   - {fileID: 1679527539424384, guid: 405c847a688227f439dc739133dab0da, type: 2}
   - {fileID: 1019098708853560, guid: 9ed67b18f32bff948b23a43e2d59fc81, type: 2}
+  - {fileID: 1171774870737118, guid: 83763df6623bec248b48769ddaf87f0e, type: 2}
+  - {fileID: 1794378090699984, guid: 38f95367875ea9a40adcd087582de33d, type: 2}
+  - {fileID: 1373831901795182, guid: 6eca4adc8c23e6c4e84f8579830bc1a9, type: 2}
   m_CustomConfig: 1
   m_MaxConnections: 4
   m_ConnectionConfig:
@@ -366,6 +374,7 @@ MonoBehaviour:
   netManager: {fileID: 1087798453436564, guid: 734e4f3c64c54d14ea8f928f17542f12, type: 2}
   prematchCountdown: 1
   mainMenu: {fileID: 1600317358}
+  disconnectedMenu: {fileID: 1268421082}
   isInGame: 0
   isHost: 0
   playerNumber: 0
@@ -481,13 +490,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1514469264 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114435271918700610, guid: c0978251ff7b10d4fb954a4b56acd9f0,
+    type: 2}
+  m_PrefabInternal: {fileID: 2115040217}
+  m_Script: {fileID: 2109663825, guid: f70555f144d8491a825f0804e09c671c, type: 3}
 --- !u!114 &1600317358 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 114907993927819114, guid: c0978251ff7b10d4fb954a4b56acd9f0,
     type: 2}
-  m_PrefabInternal: {fileID: 2082218201}
+  m_PrefabInternal: {fileID: 2115040217}
   m_Script: {fileID: 11500000, guid: 9a0312403f252434c912587ebde8fb96, type: 3}
---- !u!1001 &2082218201
+--- !u!1001 &2115040217
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -566,24 +581,34 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 155310, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
-      propertyPath: m_Name
-      value: MainMenu
-      objectReference: {fileID: 0}
+    - target: {fileID: 114490360761040098, guid: c0978251ff7b10d4fb954a4b56acd9f0,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1321811817}
     - target: {fileID: 11478224, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
       propertyPath: lobbyManager
       value: 
       objectReference: {fileID: 1321811817}
+    - target: {fileID: 155310, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
+      propertyPath: m_Name
+      value: MainMenu
+      objectReference: {fileID: 0}
     - target: {fileID: 114907993927819114, guid: c0978251ff7b10d4fb954a4b56acd9f0,
         type: 2}
       propertyPath: lobbyManager
       value: 
       objectReference: {fileID: 1321811817}
-    - target: {fileID: 224939798035969162, guid: c0978251ff7b10d4fb954a4b56acd9f0,
+    - target: {fileID: 114435271918700610, guid: c0978251ff7b10d4fb954a4b56acd9f0,
         type: 2}
-      propertyPath: m_SizeDelta.y
-      value: 55
+      propertyPath: m_IsOn
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114853585259231036, guid: c0978251ff7b10d4fb954a4b56acd9f0,
+        type: 2}
+      propertyPath: fullscreenToggle
+      value: 
+      objectReference: {fileID: 1514469264}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
   m_IsPrefabParent: 0

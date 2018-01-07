@@ -23,11 +23,6 @@ public class PlayerHealthScript : HealthScript
         int actualDamage = mPlayer.effectStateSystem.current.CalculateDamage(amount, typeOfDamageDealer);
         base.TakeDamage(actualDamage, typeOfDamageDealer);
         if (!IsAlive() && hasBeenAlive) {
-
-            //if the player was casting a spell - stop its preview
-            mPlayer.GetPlayerSpells().StopPreview();
-            mPlayer.inputStateSystem.current.SetPreview(false);
-
             //this mPlayer is dead!!! tell the Gamemanager, that one is down
             GameManager.instance.PlayerDown();
             //Show the postGame screen for this player
@@ -45,6 +40,10 @@ public class PlayerHealthScript : HealthScript
     [ClientRpc]
     void RpcPlayerDead()
     {
+        //if the player was casting a spell - stop its preview
+        mPlayer.GetPlayerSpells().StopPreview();
+        mPlayer.inputStateSystem.current.SetPreview(false);
+
         if(isLocalPlayer)
         {
             GameManager.instance.localPlayerDead();
@@ -67,5 +66,11 @@ public class PlayerHealthScript : HealthScript
     public override void HealthChangedHook(int newHealth)
     {
 		base.HealthChangedHook(newHealth);
+    }
+
+    [Command]
+    public void CmdTakeLocalLavaDamage(int amount)
+    {
+        TakeDamage(amount, typeof(LavaFloor));
     }
 }

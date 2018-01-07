@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerPrefsExtended : MonoBehaviour {
+public class PlayerPrefsExtended : MonoBehaviour
+{
 
-	public static void SetColor(string name, Color col)
+    public static void SetColor(string name, Color col)
     {
         PlayerPrefs.SetFloat(name + "r", col.r);
         PlayerPrefs.SetFloat(name + "g", col.g);

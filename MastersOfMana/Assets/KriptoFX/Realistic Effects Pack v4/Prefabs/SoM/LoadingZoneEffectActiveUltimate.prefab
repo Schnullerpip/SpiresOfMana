@@ -40,6 +40,7 @@ GameObject:
   - component: {fileID: 199089194597415294}
   - component: {fileID: 114911071758362138}
   - component: {fileID: 114602968558436800}
+  - component: {fileID: 114583874595245282}
   m_Layer: 0
   m_Name: Trail (2)
   m_TagString: Untagged
@@ -77,6 +78,7 @@ GameObject:
   - component: {fileID: 199244319148624556}
   - component: {fileID: 114396743449007320}
   - component: {fileID: 114290353975809788}
+  - component: {fileID: 114905640361025028}
   m_Layer: 0
   m_Name: Trail (3)
   m_TagString: Untagged
@@ -145,6 +147,7 @@ GameObject:
   - component: {fileID: 199290714279515178}
   - component: {fileID: 114755444913037958}
   - component: {fileID: 114816262594783986}
+  - component: {fileID: 114340768056042988}
   m_Layer: 0
   m_Name: Trail (1)
   m_TagString: Untagged
@@ -172,7 +175,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1024362622710652}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.6647148, y: 7.084595, z: 7.378418}
+  m_LocalPosition: {x: -28.132008, y: 21.82977, z: 2.693096}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4672888348427616}
@@ -271,10 +274,11 @@ AudioSource:
   m_GameObject: {fileID: 1252835016975800}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: b1b358c2dfdc57e47b1489ad3f0bd0c8, type: 3}
+  OutputAudioMixerGroup: {fileID: 243260064957582752, guid: 75146e90f04cc459f82a15f9cccbe71c,
+    type: 2}
+  m_audioClip: {fileID: 8300000, guid: 7328c89dcd8fe71459beb905d60f42ab, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.7
+  m_Volume: 0.354
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -351,10 +355,11 @@ AudioSource:
   m_GameObject: {fileID: 1464185722820872}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 243260064957582752, guid: 75146e90f04cc459f82a15f9cccbe71c,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: 1df45eb77b03e0a4fa699638d6a3b8f1, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 0.221
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -431,10 +436,11 @@ AudioSource:
   m_GameObject: {fileID: 1465527252954348}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 243260064957582752, guid: 75146e90f04cc459f82a15f9cccbe71c,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: 1df45eb77b03e0a4fa699638d6a3b8f1, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 0.221
   m_Pitch: 0.85
   Loop: 1
   Mute: 0
@@ -543,13 +549,104 @@ MonoBehaviour:
   DestroyAfterDisabling: 1
   HUE: -1
   CollidedInstances: []
+--- !u!114 &114340768056042988
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1652888030765194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a70734bf3d0028644adbb8eaa24c2765, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Target: {fileID: 0}
+  targetOffset: {x: 0, y: 1, z: 0}
+  DefaultSizeMultiplayer: {x: 1, y: 1}
+  VertexLifeTime: 0.5
+  TrailLifeTime: 0.5
+  UseShaderMaterial: 0
+  TrailMaterial: {fileID: 2100000, guid: 1b66b90265115a042bc74038e3dea70a, type: 2}
+  UseColorOverLifeTime: 1
+  ColorOverLifeTime:
+    serializedVersion: 2
+    key0: {r: 1, g: 1, b: 1, a: 0}
+    key1: {r: 1, g: 1, b: 1, a: 0}
+    key2: {r: 0, g: 0, b: 0, a: 1}
+    key3: {r: 0, g: 0, b: 0, a: 1}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 963
+    atime2: 1789
+    atime3: 32240
+    atime4: 46916
+    atime5: 65535
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 6
+  ColorLifeTime: 1.8
+  UseUvAnimation: 0
+  TilesX: 4
+  TilesY: 4
+  FPS: 30
+  IsLoop: 1
+  MinVertexDistance: 0.1
+  GetVelocityFromParticleSystem: 0
+  Gravity: 0
+  Force: {x: 0, y: 0.01, z: 0}
+  InheritVelocity: 0
+  Drag: 3
+  Frequency: 1
+  OffsetSpeed: 2
+  RandomTurbulenceOffset: 1
+  Amplitude: 2
+  TurbulenceStrength: 0.1
+  VelocityByDistance:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: -0.0009841919
+      value: 0.94992065
+      inSlope: 0.1250994
+      outSlope: 0.1250994
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.5
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0.94973755
+      inSlope: -0.13225804
+      outSlope: -0.13225804
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  AproximatedFlyDistance: 4
+  SmoothCurves: 1
 --- !u!114 &114396743449007320
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1287949789124110}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a29c5aa9247408e48b920347673345ba, type: 3}
   m_Name: 
@@ -633,6 +730,97 @@ MonoBehaviour:
     m_RotationOrder: 0
   AproximatedFlyDistance: 4
   SmoothCurves: 1
+--- !u!114 &114583874595245282
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1070315404682762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a70734bf3d0028644adbb8eaa24c2765, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Target: {fileID: 0}
+  targetOffset: {x: 0, y: 1, z: 0}
+  DefaultSizeMultiplayer: {x: 1, y: 1}
+  VertexLifeTime: 0.5
+  TrailLifeTime: 0.5
+  UseShaderMaterial: 0
+  TrailMaterial: {fileID: 2100000, guid: 1b66b90265115a042bc74038e3dea70a, type: 2}
+  UseColorOverLifeTime: 1
+  ColorOverLifeTime:
+    serializedVersion: 2
+    key0: {r: 1, g: 1, b: 1, a: 0}
+    key1: {r: 1, g: 1, b: 1, a: 0}
+    key2: {r: 0, g: 0, b: 0, a: 1}
+    key3: {r: 0, g: 0, b: 0, a: 1}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 963
+    atime2: 1789
+    atime3: 32240
+    atime4: 46916
+    atime5: 65535
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 6
+  ColorLifeTime: 1.8
+  UseUvAnimation: 0
+  TilesX: 4
+  TilesY: 4
+  FPS: 30
+  IsLoop: 1
+  MinVertexDistance: 0.1
+  GetVelocityFromParticleSystem: 0
+  Gravity: 0
+  Force: {x: 0, y: 0.01, z: 0}
+  InheritVelocity: 0
+  Drag: 3
+  Frequency: 1
+  OffsetSpeed: 2
+  RandomTurbulenceOffset: 1
+  Amplitude: 2
+  TurbulenceStrength: 0.1
+  VelocityByDistance:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: -0.0009841919
+      value: 0.94992065
+      inSlope: 0.1250994
+      outSlope: 0.1250994
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.5
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0.94973755
+      inSlope: -0.13225804
+      outSlope: -0.13225804
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  AproximatedFlyDistance: 4
+  SmoothCurves: 1
 --- !u!114 &114590967953932206
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -699,14 +887,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec565e0977d741e4c9ed97f3c5bb0268, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Color: {r: 0.57241344, g: 0, b: 1, a: 1}
+  Color: {r: 0.53772783, g: 0.2205882, b: 1, a: 1}
 --- !u!114 &114755444913037958
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1652888030765194}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a29c5aa9247408e48b920347673345ba, type: 3}
   m_Name: 
@@ -845,13 +1033,104 @@ MonoBehaviour:
     m_RotationOrder: 4
   GraphTimeMultiplier: 1
   IsLoop: 0
+--- !u!114 &114905640361025028
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1287949789124110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a70734bf3d0028644adbb8eaa24c2765, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Target: {fileID: 0}
+  targetOffset: {x: 0, y: 1, z: 0}
+  DefaultSizeMultiplayer: {x: 1, y: 1}
+  VertexLifeTime: 0.5
+  TrailLifeTime: 0.5
+  UseShaderMaterial: 0
+  TrailMaterial: {fileID: 2100000, guid: 1b66b90265115a042bc74038e3dea70a, type: 2}
+  UseColorOverLifeTime: 1
+  ColorOverLifeTime:
+    serializedVersion: 2
+    key0: {r: 1, g: 1, b: 1, a: 0}
+    key1: {r: 1, g: 1, b: 1, a: 0}
+    key2: {r: 0, g: 0, b: 0, a: 1}
+    key3: {r: 0, g: 0, b: 0, a: 1}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 963
+    atime2: 1789
+    atime3: 32240
+    atime4: 46916
+    atime5: 65535
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 6
+  ColorLifeTime: 1.8
+  UseUvAnimation: 0
+  TilesX: 4
+  TilesY: 4
+  FPS: 30
+  IsLoop: 1
+  MinVertexDistance: 0.1
+  GetVelocityFromParticleSystem: 0
+  Gravity: 0
+  Force: {x: 0, y: 0.01, z: 0}
+  InheritVelocity: 0
+  Drag: 3
+  Frequency: 1
+  OffsetSpeed: 2
+  RandomTurbulenceOffset: 1
+  Amplitude: 2
+  TurbulenceStrength: 0.1
+  VelocityByDistance:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: -0.0009841919
+      value: 0.94992065
+      inSlope: 0.1250994
+      outSlope: 0.1250994
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.5
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0.94973755
+      inSlope: -0.13225804
+      outSlope: -0.13225804
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  AproximatedFlyDistance: 4
+  SmoothCurves: 1
 --- !u!114 &114911071758362138
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1070315404682762}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a29c5aa9247408e48b920347673345ba, type: 3}
   m_Name: 
@@ -987,7 +1266,7 @@ ParticleSystem:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1287949789124110}
   serializedVersion: 5
-  lengthInSec: 2
+  lengthInSec: 0.5
   simulationSpeed: 1
   looping: 1
   prewarm: 0
@@ -1039,14 +1318,14 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 1540954858
+  randomSeed: 708413815
   InitialModule:
     serializedVersion: 3
     enabled: 1
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.1
+      scalar: 0.5
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -1087,7 +1366,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 5
+      scalar: 10
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -1563,7 +1842,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 2
+      scalar: 4
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -4201,7 +4480,7 @@ ParticleSystem:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1652888030765194}
   serializedVersion: 5
-  lengthInSec: 2
+  lengthInSec: 0.5
   simulationSpeed: 1
   looping: 1
   prewarm: 0
@@ -4253,14 +4532,14 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 1299987660
+  randomSeed: 2082267795
   InitialModule:
     serializedVersion: 3
     enabled: 1
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.1
+      scalar: 0.5
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -4301,7 +4580,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 5
+      scalar: 10
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -4777,7 +5056,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 2
+      scalar: 4
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -7415,7 +7694,7 @@ ParticleSystem:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1070315404682762}
   serializedVersion: 5
-  lengthInSec: 2
+  lengthInSec: 0.5
   simulationSpeed: 1
   looping: 1
   prewarm: 0
@@ -7467,14 +7746,14 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -135282041
+  randomSeed: -2028780623
   InitialModule:
     serializedVersion: 3
     enabled: 1
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.1
+      scalar: 0.5
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -7515,7 +7794,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 5
+      scalar: 10
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -7991,7 +8270,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 2
+      scalar: 4
       minScalar: 0
       maxCurve:
         serializedVersion: 2

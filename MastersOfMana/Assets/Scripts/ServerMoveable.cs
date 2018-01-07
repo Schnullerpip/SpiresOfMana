@@ -56,9 +56,9 @@ public class ServerMoveable : NetworkBehaviour
     /// method to invert the current velocity
     /// </summary>
     [ClientRpc]
-    public void RpcInvertVelocity()
+    public void RpcInvertVelocity(float lossFactor)
     {
-        mRigidbody.velocity *= -1;
+        mRigidbody.velocity *= -1 * lossFactor;
     }
 
 	[ClientRpc]

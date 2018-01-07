@@ -5,9 +5,10 @@ using UnityEngine.Networking;
 
 public class LightningAuraBehaviour : A_SummoningBehaviour
 {
-    [SerializeField] private float mDuration = 50;
+    [SerializeField] private float mDuration = 5;
     [SerializeField] private float mCountTilDamage = 1.0f;
     [SerializeField] private int mDamage = 1;
+    [SerializeField] private bool mInflictSelfDamage = false;
     private float mEnergyLevel;
 
     [SerializeField]
@@ -124,7 +125,7 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
         }
 
         //damage the caster as a penalty
-        if (isServer && (mSelfInflictDamageTimeCount += Time.deltaTime) >= 2.0f)
+        if(mInflictSelfDamage && isServer && (mSelfInflictDamageTimeCount += Time.deltaTime) >= 2.0f)
         {
             mSelfInflictDamageTimeCount = 0;
             caster.healthScript.TakeDamage(1, GetType());

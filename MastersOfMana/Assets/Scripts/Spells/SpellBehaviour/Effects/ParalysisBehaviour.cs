@@ -34,6 +34,9 @@ public class ParalysisBehaviour : A_EffectBehaviour
     //cache all the fragments
     [SerializeField] private GameObject[] fragments;
 
+    //the effect original (to copy) whenever nothing was hit
+    [SerializeField] private GameObject mNonHitEffect;
+
     [SyncVar] private GameObject mAffectedPlayerObject;
     private PlayerScript mAffectedPlayer;
 
@@ -54,16 +57,17 @@ public class ParalysisBehaviour : A_EffectBehaviour
         caster.SetColliderIgnoreRaycast(true);
 		Ray ray = caster.aim.GetCameraRig().GetCenterRay();
 		RaycastHit hit;
-        if(Physics.Raycast(ray, out hit))
+        bool hitSomething = Physics.Raycast(ray, out hit);
+        if(!hitSomething || hit.distance > mHitRange)
 		{
-			preview.instance.Move(hit.point); 
-		}
-		else
-		{
+            //we will hit nothing
             preview.instance.Deactivate();
 		}
+        else
+        {
+            preview.instance.Move(hit.point);
+        }
         caster.SetColliderIgnoreRaycast(true);
-
 	}
 
 	public override void StopPreview (PlayerScript caster)
@@ -84,7 +88,7 @@ public class ParalysisBehaviour : A_EffectBehaviour
                 ConfirmedHitServer(p.transform.position, caster, mHitRadius, mHitRange) ||
                 ConfirmedHitServer(p.movement.mRigidbody.worldCenterOfMass, caster, mHitRadius, mHitRange))
             {
-                //create an icecrystal
+                //player was hit -> create an icecrystalsurrounding him/her
                 ParalysisBehaviour pb = PoolRegistry.GetInstance(gameObject, p.transform.position, caster.transform.rotation, 1, 1) .GetComponent<ParalysisBehaviour>();
 
                 pb.gameObject.layer = LayerMask.NameToLayer("IgnorePlayer");
@@ -106,9 +110,16 @@ public class ParalysisBehaviour : A_EffectBehaviour
             caster.SetColliderIgnoreRaycast(true);
             bool hitSomething = Physics.Raycast(new Ray(caster.GetCameraPosition(), caster.GetCameraLookDirection()), out hit);
             caster.SetColliderIgnoreRaycast(false);
-            if (hitSomething)
+            if (!hitSomething || hit.distance > mHitRange) //not hitting anything
             {
-                //whatever it is its not a player - get its normal and create an iceCrystal with the hit points normal as rotation
+                //we hit nothing in range -> spawn empty ice-ish explosion
+                GameObject nonHitEffect = PoolRegistry.GetInstance(mNonHitEffect, 2, 2, Pool.PoolingStrategy.OnMissRoundRobin, Pool.Activation.ReturnActivated);
+                nonHitEffect.transform.position = caster.GetCameraPosition() + caster.GetCameraLookDirection() * mHitRange;
+                NetworkServer.Spawn(nonHitEffect);
+            }
+            else //hit geometry
+            {
+                //get its normal and create an iceCrystal with the hit points normal as rotation
                 ParalysisBehaviour pb = PoolRegistry.GetInstance(gameObject, hit.point, Quaternion.LookRotation(Vector3.forward, hit.normal), 1, 1).GetComponent<ParalysisBehaviour>();
                 pb.gameObject.layer = LayerMask.NameToLayer("Default");
                 pb.Init(null);

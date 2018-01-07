@@ -13,6 +13,6 @@ public class InputStateHurt : A_InputState
 		Vector3 moveForce = World2DToLocal3D (input, player.transform);
 
 		//override moveForce in player script
-		player.movement.SetMoveInputHurt(moveForce);
+		player.movement.SetMoveInput(moveForce);
 	}
 }

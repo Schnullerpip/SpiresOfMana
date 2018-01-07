@@ -21,6 +21,8 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
 
 	public LightningStrike strikePrefab;
 
+    public ParticleSystem clouds;
+
 	private PlayerScript[] mOpponents;
 
     private bool mIsActive;
@@ -45,13 +47,7 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
     public override void EndSpell()
     {
 	    caster.healthScript.OnInstanceDied -= EndSpell;
-        mIsActive = false;
-
-        //reset the flag so a new ultimate can be started
-        GameManager.instance.UnregisterUltiSpell(this);
-
-        NetworkServer.UnSpawn(this.gameObject);
-        gameObject.SetActive(false);
+        StartCoroutine(EndEffect());
     }
 	#endregion
 
@@ -75,10 +71,16 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
 
         yield return new WaitForSeconds(duration);
 
+        StartCoroutine(EndEffect());
+    }
+
+    private IEnumerator EndEffect()
+    {
         mIsActive = false;
+        clouds.Stop();
 
         //wait additional time to make the effect not look so abrupt
-        yield return new WaitForSeconds(strikePrefab.anticipationTime * 2 + strikePrefab.lifetime);
+        yield return new WaitForSeconds(Mathf.Max(strikePrefab.anticipationTime * 2 + strikePrefab.lifetime, clouds.main.startLifetime.constantMax));
 
 	    if (gameObject.activeSelf && GameManager.instance.isUltimateActive)
 	    {

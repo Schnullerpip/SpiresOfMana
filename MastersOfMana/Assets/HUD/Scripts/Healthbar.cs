@@ -17,7 +17,7 @@ public class Healthbar : MonoBehaviour {
         mPlayerMaxHealth = player.healthScript.GetMaxHealth();
     }
 
-    public void OnDisable()
+    public void OnDestroy()
     {
         player.healthScript.OnHealthChanged -= UpdateHealthbar;
     }

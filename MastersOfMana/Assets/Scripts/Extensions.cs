@@ -123,6 +123,11 @@ public static class Extensions
 		}		
 	}
 
+    public static void SetPosition(this Transform trans, float? x = null, float? y = null, float? z = null)
+    {
+        trans.position = new Vector3(x ?? trans.position.x, y ?? trans.position.y, z ?? trans.position.z);
+    }
+
 	#endregion
 
 	#region Rigidbody

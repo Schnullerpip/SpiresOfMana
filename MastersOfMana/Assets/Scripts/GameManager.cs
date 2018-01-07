@@ -43,6 +43,9 @@ public class GameManager : MonoBehaviour
     public delegate void RoundEnded();
     public static event RoundEnded OnRoundEnded;
 
+    public delegate void HostEndedRound();
+    public static event HostEndedRound OnHostEndedRound;
+
     private int mNumOfReadyPlayers = 0;
     private StartPoints mStartPoints;
     private Player mRewiredPlayer;
@@ -191,7 +194,6 @@ public class GameManager : MonoBehaviour
         localPlayer.inputStateSystem.current.SetPreview(false);
 
         gameRunning = false;
-        listener.enabled = true;
         if (OnRoundEnded != null)
         {
             OnRoundEnded();
@@ -378,5 +380,13 @@ public class GameManager : MonoBehaviour
     public LavaFloor GetLavaFloor()
     {
         return mLavaFloor;
+    }
+
+    public void TriggerHostEndedRound()
+    {
+        if (OnHostEndedRound!=null)
+        {
+            OnHostEndedRound();
+        }
     }
 }

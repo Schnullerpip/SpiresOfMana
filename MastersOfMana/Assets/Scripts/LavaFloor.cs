@@ -51,6 +51,7 @@ public class LavaFloor : NetworkBehaviour
     public void OnEnable()
     {
         GameManager.OnRoundStarted += RoundStarted;
+        GameManager.OnHostEndedRound += HostRoundEnded;
         GameManager.OnRoundEnded += RoundEnded;
         mInstanceCoroutineDictionary = new Dictionary<HealthScript, Coroutine>();
     }
@@ -58,7 +59,8 @@ public class LavaFloor : NetworkBehaviour
     public void OnDisable()
     {
         GameManager.OnRoundStarted -= RoundStarted;
-        GameManager.OnRoundEnded -= RoundEnded;
+        GameManager.OnHostEndedRound -= HostRoundEnded;
+        GameManager.OnRoundEnded += RoundEnded;
     }
 
     private static Dictionary<HealthScript, Coroutine> mInstanceCoroutineDictionary = new Dictionary<HealthScript, Coroutine>();
@@ -93,16 +95,24 @@ public class LavaFloor : NetworkBehaviour
     void RoundStarted()
     {
         mLavaActive = true;
-        mRunTime = 0;
         mNextOutbreakIndex = 1;
+    }
+
+    void HostRoundEnded()
+    {
+        mRunTime = 0;
+        Vector3 newTransformPosition = transform.position;
+        float evaluation = lavaFlow.Evaluate(mRunTime);
+        newTransformPosition.y = evaluation + mStartHeight;
+        transform.position = newTransformPosition;
     }
 
     void RoundEnded()
     {
         mLavaActive = false;
-        Vector3 newTrans = transform.position;
-        newTrans.y = mStartHeight;
-        transform.position = newTrans;
+        //Vector3 newTrans = transform.position;
+        //newTrans.y = mStartHeight;
+        //transform.position = newTrans;
         mRenderer.material.SetFloat(mEmissionID, mEmissionStart);
     }
 
@@ -125,7 +135,7 @@ public class LavaFloor : NetworkBehaviour
 
     public IEnumerator LavaEffectLocal(PlayerScript player)
     {
-        while (player.healthScript.IsAlive())
+        while (player.healthScript.IsAlive() && mLavaActive)
         {
             //if (!player.healthScript.IsAlive())
             //{
@@ -159,7 +169,7 @@ public class LavaFloor : NetworkBehaviour
 
     public IEnumerator LavaEffectServer(HealthScript health, ServerMoveable sm = null)
     {
-        while (enabled)
+        while (enabled && mLavaActive)
         {
             if (!health.IsAlive())
             {
@@ -200,7 +210,8 @@ public class LavaFloor : NetworkBehaviour
         {
             if(Input.GetKeyDown(KeyCode.L))
             {
-                RoundEnded();
+                mLavaActive = true;
+                HostRoundEnded();
             }
 
             Vector3 newTransformPosition = transform.position;

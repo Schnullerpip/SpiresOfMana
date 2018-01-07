@@ -19,8 +19,6 @@ namespace Prototype.NetworkLobby
         private Dictionary<int, Resolution> mResolutionDropdownMatch = new Dictionary<int, Resolution>();
         private Dictionary<string, int> mReverseResolutionDropdownMatch = new Dictionary<string,int>();
         private bool isInitialized = false;
-        private bool initialIsMuted;
-        private float initialVolume;
         private bool valuesSaved = false;
 
         /// <summary>
@@ -102,7 +100,6 @@ namespace Prototype.NetworkLobby
             {
                 LobbyManager.s_Singleton.SimpleBackClbk();
             }
-            AudioListener.volume = initialIsMuted ? 0 : initialVolume;
         }
 
         public void OnMusicSliderChanged()

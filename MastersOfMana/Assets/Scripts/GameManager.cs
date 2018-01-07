@@ -59,6 +59,8 @@ public class GameManager : MonoBehaviour
             instance = this;
             eventSystem.SetActive(true);
             DontDestroyOnLoad(this);
+
+            Application.targetFrameRate = 300;
         }
     }
 

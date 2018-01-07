@@ -148,6 +148,8 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 
     protected override void ExecuteTriggerEnter_Host(Collider collider)
     {
+        Debug.Log(collider);
+
 		if(!mTriggerEnabled)
 		{
 			return;
@@ -168,6 +170,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 		{
 			//technically the normal is not correct, but it looks fine and is only really wrong when the angle is super flat
 			mRigid.position = adjustmentHit.point - (mRigid.position - mLastPosition) * ballRadius;
+            mRigid.rotation = Quaternion.FromToRotation(Vector3.zero, adjustmentHit.normal);
 		}
 		
 		RpcExplosion(mRigid.position, mRigid.rotation);

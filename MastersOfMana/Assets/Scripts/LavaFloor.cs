@@ -145,10 +145,13 @@ public class LavaFloor : NetworkBehaviour
 
             PlayDamageSound(player.transform.position);
 
-            //shoot the moveable into the sky to make it jump mario-ayayayayay-style
-            Vector3 vel = player.movement.mRigidbody.velocity;
-            vel.y = repelForce;
-            player.movement.mRigidbody.velocity = vel;
+            if (player.healthScript.IsAlive())
+            {
+                //shoot the moveable into the sky to make it jump mario-ayayayayay-style
+                Vector3 vel = player.movement.mRigidbody.velocity;
+                vel.y = repelForce;
+                player.movement.mRigidbody.velocity = vel;
+            }
 
             yield return new WaitForSeconds(1f);
         }

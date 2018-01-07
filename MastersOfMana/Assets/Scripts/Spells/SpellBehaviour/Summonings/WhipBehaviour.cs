@@ -22,6 +22,8 @@ public class WhipBehaviour : A_SummoningBehaviour
 	[SyncVar(hook = "SetLinePoint1")]
 	private Vector3 linePoint1;
 
+    public Vector3 WhipStartOffset;
+
     [SyncVar]
     private GameObject mAffectedPlayerObject;
     private PlayerScript mAffectedPlayer;
@@ -79,7 +81,7 @@ public class WhipBehaviour : A_SummoningBehaviour
 
     public override void Execute(PlayerScript caster)
     {
-        WhipBehaviour whipBehaviour = PoolRegistry.GetInstance(this.gameObject, caster.transform, 4, 4).GetComponent<WhipBehaviour>();
+        WhipBehaviour whipBehaviour = PoolRegistry.GetInstance(this.gameObject, caster.transform, 1, 1).GetComponent<WhipBehaviour>();
 
         whipBehaviour.caster = caster;
         whipBehaviour.casterObject = caster.gameObject;
@@ -98,7 +100,9 @@ public class WhipBehaviour : A_SummoningBehaviour
         mAffectedPlayer = null;
 
         //initialize the linepoint
-        linePoint0 = caster.handTransform.position;
+        Vector3 casterPosition = caster.handTransform.position;
+        casterPosition += WhipStartOffset;
+        linePoint0 = casterPosition;
 
         //check for a hit
         Vector3 hitPlayerPos;
@@ -160,7 +164,9 @@ public class WhipBehaviour : A_SummoningBehaviour
 
     void Update()
     {
-        lineRenderer.SetPosition(0, caster.handTransform.position);
+        Vector3 casterPosition = caster.handTransform.position;
+        casterPosition += WhipStartOffset;
+        lineRenderer.SetPosition(0, casterPosition);
 
         //if(mAffectedPlayerObject)
         //{

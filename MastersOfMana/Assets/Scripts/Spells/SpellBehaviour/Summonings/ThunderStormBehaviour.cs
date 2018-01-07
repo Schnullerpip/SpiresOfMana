@@ -77,19 +77,28 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
     private IEnumerator EndEffect()
     {
         mIsActive = false;
-        clouds.Stop();
+        RpcCloudsStop();
 
         //wait additional time to make the effect not look so abrupt
         yield return new WaitForSeconds(Mathf.Max(strikePrefab.anticipationTime * 2 + strikePrefab.lifetime, clouds.main.startLifetime.constantMax));
 
-	    if (gameObject.activeSelf && GameManager.instance.isUltimateActive)
+	    if (gameObject.activeSelf)
 	    {
-            //reset the flag so a new ultimate can be started
-            GameManager.instance.UnregisterUltiSpell(this);
+            if(GameManager.instance.isUltimateActive)
+            {
+				//reset the flag so a new ultimate can be started
+				GameManager.instance.UnregisterUltiSpell(this);
+            }
 
             NetworkServer.UnSpawn(this.gameObject);
             this.gameObject.SetActive(false);
 	    }
+    }
+
+    [ClientRpc]
+    private void RpcCloudsStop()
+    {
+        clouds.Stop();
     }
 
     private IEnumerator RepeatedStrike(PlayerScript playerScript)

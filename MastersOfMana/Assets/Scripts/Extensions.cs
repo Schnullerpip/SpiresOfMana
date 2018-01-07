@@ -202,5 +202,25 @@ public static class Extensions
 	{
 		return SmoothDamp(current, target, ref currentDerivative, smoothTime, Time.deltaTime);
 	}
+    #region HelperFunctions
+    /// <summary>
+    /// Converts from a normalized linear value (from 0 to 1) to a decibel value (from -80dB to 0dB)
+    /// </summary>
+    /// <returns>The decibel value.</returns>
+    /// <param name="linear">Linear value.</param>
+    public static float LinearToDecibel(float linear)
+    {
+        return linear > Mathf.Epsilon ? 20.0f * Mathf.Log10(linear) : -80.0f;
+    }
+
+    /// <summary>
+    /// Converts from decibel (from -80dB to 0dB) to a normalized linear value (from 0 to 1)
+    /// </summary>
+    /// <returns>The linear value.</returns>
+    /// <param name="dB">Decibel value.</param>
+    public static float DecibelToLinear(float dB)
+    {
+        return Mathf.Pow(10.0f, dB / 20.0f);
+    }
     #endregion
 }

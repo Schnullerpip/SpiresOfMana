@@ -42,7 +42,7 @@ public class StormBlastBehaviour : A_EffectBehaviour
 	                Rigidbody rigid = c.attachedRigidbody;
 	                ServerMoveable sm;
 	                //is collider a serverMoveable?
-	                if (rigid && (sm = rigid.GetComponentInParent<ServerMoveable>()))
+	                if (rigid && (sm = rigid.GetComponentInParent<ServerMoveable>()) && sm != caster.movement)
 	                {
 	                    //move it according to the force
 	                    Vector3 velocity = (sm.transform.position - caster.transform.position).normalized*mForce;

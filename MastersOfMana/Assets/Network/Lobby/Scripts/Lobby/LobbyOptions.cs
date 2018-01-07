@@ -14,6 +14,9 @@ namespace Prototype.NetworkLobby
         private Dictionary<int, Resolution> mResolutionDropdownMatch = new Dictionary<int, Resolution>();
         private Dictionary<Resolution, int> mReverseResolutionDropdownMatch = new Dictionary<Resolution,int>();
         private bool isInitialized = false;
+        private bool initialIsMuted;
+        private float initialVolume;
+        private bool valuesSaved = false;
 
         public void Init()
         {
@@ -36,12 +39,13 @@ namespace Prototype.NetworkLobby
             }
             resolutionDropdown.value = mReverseResolutionDropdownMatch[Screen.currentResolution];
             fullscreenToggle.isOn = Screen.fullScreen;
-            volumeSlider.value = PlayerPrefs.GetFloat("Volume", 1);
-            mutedToggle.isOn = PlayerPrefsExtended.GetBool("muted", false);
+            initialVolume = volumeSlider.value = PlayerPrefs.GetFloat("Volume", 1);
+            initialIsMuted = mutedToggle.isOn = PlayerPrefsExtended.GetBool("muted", false);
         }
 
         public void OnSave()
         {
+            valuesSaved = true;
             Resolution resolution = mResolutionDropdownMatch[resolutionDropdown.value];
             Screen.SetResolution(resolution.width, resolution.height, fullscreenToggle.isOn);
             PlayerPrefsExtended.SetResolution("resolution", resolution);
@@ -49,7 +53,27 @@ namespace Prototype.NetworkLobby
             PlayerPrefs.SetFloat("Volume", volumeSlider.value);
             PlayerPrefsExtended.SetBool("muted", mutedToggle.isOn);
             PlayerPrefs.Save();
-            LobbyManager.s_Singleton.SimpleBackClbk();
+            if (GameManager.instance.localPlayer)
+            {
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                LobbyManager.s_Singleton.SimpleBackClbk();
+            }
+        }
+
+        public void OnBack()
+        {
+            if(GameManager.instance.localPlayer)
+            {
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                LobbyManager.s_Singleton.SimpleBackClbk();
+            }
+            AudioListener.volume = initialIsMuted ? 0 : initialVolume;
         }
 
         public void OnVolumeSliderChanged()
@@ -63,6 +87,15 @@ namespace Prototype.NetworkLobby
         public void OnAudioMutedChanged()
         {
             AudioListener.volume = mutedToggle.isOn ? 0 : volumeSlider.value;
+        }
+
+        void OnDisable()
+        {
+            //Revert back to initial values!
+            if(!valuesSaved)
+            {
+                OnBack();
+            }
         }
     }
 }

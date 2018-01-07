@@ -22,6 +22,7 @@ public class WhipBehaviour : A_SummoningBehaviour
 	[SyncVar(hook = "SetLinePoint1")]
 	private Vector3 linePoint1;
 
+
     public Vector3 WhipStartOffset;
 
     [SyncVar]
@@ -88,7 +89,7 @@ public class WhipBehaviour : A_SummoningBehaviour
         whipBehaviour.Init();
 
         whipBehaviour.gameObject.SetActive(true);
-        NetworkServer.Spawn(whipBehaviour.gameObject, whipBehaviour.GetComponent<NetworkIdentity>().assetId);
+        NetworkServer.Spawn(whipBehaviour.gameObject);
 
         whipBehaviour.StartCoroutine(whipBehaviour.DelayedUnspawn());
     }
@@ -159,19 +160,17 @@ public class WhipBehaviour : A_SummoningBehaviour
             mAffectedPlayer = mAffectedPlayerObject.GetComponent<PlayerScript>();
             transform.parent = mAffectedPlayer.transform;
         }
-
     }
 
     void Update()
     {
-        Vector3 casterPosition = caster.handTransform.position;
-        casterPosition += WhipStartOffset;
-        lineRenderer.SetPosition(0, casterPosition);
+        if (caster)
+        {
+            Vector3 casterPosition = caster.handTransform.position;
+            casterPosition += WhipStartOffset;
+            lineRenderer.SetPosition(0, casterPosition);
+        }
 
-        //if(mAffectedPlayerObject)
-        //{
-        //    lineRenderer.SetPosition(1, mAffectedPlayer.transform.position);
-        //}
         lineRenderer.SetPosition(1, transform.position);
     }
 }

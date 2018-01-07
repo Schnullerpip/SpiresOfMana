@@ -624,12 +624,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   preview: {fileID: 114879560510636316, guid: 3deca10ba12068b47906dfb677554e93, type: 2}
   mDuration: 5
-  mCountTilDamage: 0.25
-  mDamage: 1
+  mCountTilDamage: 0.5
+  mDamage: 2
+  mInflictSelfDamage: 0
   mStaticPotential: {fileID: 198975284805952996}
   mLightningProjectile: {fileID: 198504703758112080}
   mAudioSource: {fileID: 82544458144263344}
-  EffectClip: {fileID: 8300000, guid: 258c0bd998368544a9d6ee546f91d593, type: 3}
+  CastEffectClip: {fileID: 8300000, guid: d047a38f51f8c2648b63a55f5e82942e, type: 3}
   StaticEnergyLoop: {fileID: 8300000, guid: b1b358c2dfdc57e47b1489ad3f0bd0c8, type: 3}
   AttackSound: {fileID: 8300000, guid: 1df45eb77b03e0a4fa699638d6a3b8f1, type: 3}
   mDecectionTrigger: {fileID: 135246191822953554}

@@ -202,6 +202,8 @@ public static class Extensions
 	{
 		return SmoothDamp(current, target, ref currentDerivative, smoothTime, Time.deltaTime);
 	}
+    #endregion
+
     #region HelperFunctions
     /// <summary>
     /// Converts from a normalized linear value (from 0 to 1) to a decibel value (from -80dB to 0dB)

@@ -8,7 +8,8 @@ public class IngameMenu : MonoBehaviour
     public Canvas canvas;
     protected Rewired.Player mRewiredPlayer;
     public MultipleMenuInput menuInput;
-    public RectTransform ConfirmationPanel;
+    public RectTransform confirmationPanel;
+    public RectTransform optionsPanel;
 
     public UnityEngine.UI.Selectable defaultSelected;
 
@@ -34,7 +35,7 @@ public class IngameMenu : MonoBehaviour
         {
             lobbyManager.RemoveLastCancelDelegate();
         }
-        ConfirmationPanel.gameObject.SetActive(false);
+        confirmationPanel.gameObject.SetActive(false);
         ToggleVisibility();
     }
 
@@ -74,9 +75,14 @@ public class IngameMenu : MonoBehaviour
         }
     }
 
+    public void GoToOptionsMenu()
+    {
+        optionsPanel.gameObject.SetActive(true);
+    }
+
     public void OpenConfirmationPanel()
     {
-        ConfirmationPanel.gameObject.SetActive(true);
+        confirmationPanel.gameObject.SetActive(true);
     }
 
     //This makes sure that we set GameRunning to false in any case where we change the game scene

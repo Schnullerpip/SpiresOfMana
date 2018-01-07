@@ -17,8 +17,11 @@ namespace Prototype.NetworkLobby
         public AudioSource sfxSampler;
 
         private Dictionary<int, Resolution> mResolutionDropdownMatch = new Dictionary<int, Resolution>();
-        private Dictionary<Resolution, int> mReverseResolutionDropdownMatch = new Dictionary<Resolution,int>();
+        private Dictionary<string, int> mReverseResolutionDropdownMatch = new Dictionary<string,int>();
         private bool isInitialized = false;
+        private bool initialIsMuted;
+        private float initialVolume;
+        private bool valuesSaved = false;
 
         /// <summary>
         /// Applies the audio settings. 
@@ -36,11 +39,19 @@ namespace Prototype.NetworkLobby
         public void Init()
         {
             List<string> screenResolutions = new List<string>();
+            int dropdownIndex = 0;
+
             for (int i = 0; i < Screen.resolutions.Length; i++)
             {
-                screenResolutions.Add(Screen.resolutions[i].ToString());
-                mResolutionDropdownMatch.Add(i, Screen.resolutions[i]);
-                mReverseResolutionDropdownMatch.Add(Screen.resolutions[i], i);
+                string resolution = Screen.resolutions[i].ToString();
+                resolution = resolution.Remove(resolution.LastIndexOf('@')-1);
+                if(!mReverseResolutionDropdownMatch.ContainsKey(resolution))
+                {
+                    screenResolutions.Add(resolution);
+                    mReverseResolutionDropdownMatch.Add(resolution, dropdownIndex);
+                    mResolutionDropdownMatch.Add(dropdownIndex, Screen.resolutions[i]);
+                    dropdownIndex++;
+                }
             }
             resolutionDropdown.AddOptions(screenResolutions);
         }
@@ -52,12 +63,17 @@ namespace Prototype.NetworkLobby
                 isInitialized = true;
                 Init();
             }
-            resolutionDropdown.value = mReverseResolutionDropdownMatch[Screen.currentResolution];
+            string resolution = Screen.width + " x " + Screen.height; // We need this resolution because Screen.currentResolution only works for fullscreen
+            if (mReverseResolutionDropdownMatch.ContainsKey(resolution))
+            {
+                resolutionDropdown.value = mReverseResolutionDropdownMatch[Screen.width + " x " + Screen.height];
+            }
             fullscreenToggle.isOn = Screen.fullScreen;
         }
 
         public void OnSave()
         {
+            valuesSaved = true;
             Resolution resolution = mResolutionDropdownMatch[resolutionDropdown.value];
             Screen.SetResolution(resolution.width, resolution.height, fullscreenToggle.isOn);
             PlayerPrefsExtended.SetResolution("resolution", resolution);
@@ -66,7 +82,27 @@ namespace Prototype.NetworkLobby
             PlayerPrefs.SetFloat("sfxVol", sfxSlider.value);
             PlayerPrefsExtended.SetBool("muted", mutedToggle.isOn);
             PlayerPrefs.Save();
-            LobbyManager.s_Singleton.SimpleBackClbk();
+            if (GameManager.instance.localPlayer)
+            {
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                LobbyManager.s_Singleton.SimpleBackClbk();
+            }
+        }
+
+        public void OnBack()
+        {
+            if(GameManager.instance.localPlayer)
+            {
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                LobbyManager.s_Singleton.SimpleBackClbk();
+            }
+            AudioListener.volume = initialIsMuted ? 0 : initialVolume;
         }
 
         public void OnMusicSliderChanged()
@@ -103,6 +139,15 @@ namespace Prototype.NetworkLobby
         {
             sfxSampler.Stop();
             sfxSampler.Play();
+        }
+
+        void OnDisable()
+        {
+            //Revert back to initial values!
+            if(!valuesSaved)
+            {
+                OnBack();
+            }
         }
     }
 }

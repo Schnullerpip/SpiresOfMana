@@ -22,6 +22,10 @@ public class WhipBehaviour : A_SummoningBehaviour
 	[SyncVar(hook = "SetLinePoint1")]
 	private Vector3 linePoint1;
 
+    [SyncVar]
+    private GameObject mAffectedPlayerObject;
+    private PlayerScript mAffectedPlayer;
+
 	private void SetLinePoint0(Vector3 vec)
 	{
 		linePoint0 = vec;
@@ -89,6 +93,10 @@ public class WhipBehaviour : A_SummoningBehaviour
 
     private void Init()
     {
+        //standard Initializations
+        mAffectedPlayerObject = null;
+        mAffectedPlayer = null;
+
         //initialize the linepoint
         linePoint0 = caster.handTransform.position;
 
@@ -107,11 +115,18 @@ public class WhipBehaviour : A_SummoningBehaviour
             Vector3 force = -aimDirection * pullForce + Vector3.up * UpForce;
             hitPlayer.movement.RpcAddForce(force, ForceMode.VelocityChange);
             hitPlayer.healthScript.TakeDamage(0, GetType());
+
+            //cache the hitplayer and sync it down to the client
+            mAffectedPlayerObject = hitPlayer.gameObject;
+            mAffectedPlayer = hitPlayer;
+            //also cache the hitPlayerPos, so we can readjust the linerenderer through parenting
+            transform.position = hitPlayerPos;
+            transform.parent = hitPlayer.transform;
         }
         //case 2: hit geometry
         else if (RayCast(caster, new Ray(caster.GetCameraPosition(), caster.GetCameraLookDirection()), out hit) && hit.distance <= maxDistance)
         {
-            linePoint1 = hit.point;
+            transform.position = linePoint1 = hit.point;
             Vector3 aimDirection = Vector3.Normalize(linePoint1 - caster.transform.position);
             Vector3 forceVector = aimDirection * pullForce + Vector3.up * UpForce;
             caster.movement.RpcAddForce(forceVector, ForceMode.VelocityChange);
@@ -119,7 +134,7 @@ public class WhipBehaviour : A_SummoningBehaviour
         //case 3: hit nothing
         else
         {
-            linePoint1 = caster.handTransform.position + caster.GetCameraLookDirection() * maxDistance;
+            transform.position = linePoint1 = caster.handTransform.position + caster.GetCameraLookDirection() * maxDistance;
         }
     }
 
@@ -130,4 +145,27 @@ public class WhipBehaviour : A_SummoningBehaviour
 		gameObject.SetActive(false);
 		NetworkServer.UnSpawn(gameObject);
 	}
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+
+        if (mAffectedPlayerObject)
+        {
+            mAffectedPlayer = mAffectedPlayerObject.GetComponent<PlayerScript>();
+            transform.parent = mAffectedPlayer.transform;
+        }
+
+    }
+
+    void Update()
+    {
+        lineRenderer.SetPosition(0, caster.handTransform.position);
+
+        //if(mAffectedPlayerObject)
+        //{
+        //    lineRenderer.SetPosition(1, mAffectedPlayer.transform.position);
+        //}
+        lineRenderer.SetPosition(1, transform.position);
+    }
 }

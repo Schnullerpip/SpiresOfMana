@@ -9,8 +9,13 @@ namespace Prototype.NetworkLobby
     {
         public Dropdown resolutionDropdown;
         public Toggle fullscreenToggle;
-        public Slider volumeSlider;
+
+        public UnityEngine.Audio.AudioMixer mixer;
+        public Slider musicSlider;
+        public Slider sfxSlider;
         public Toggle mutedToggle;
+        public AudioSource sfxSampler;
+
         private Dictionary<int, Resolution> mResolutionDropdownMatch = new Dictionary<int, Resolution>();
         private Dictionary<string, int> mReverseResolutionDropdownMatch = new Dictionary<string,int>();
         private bool isInitialized = false;
@@ -18,10 +23,24 @@ namespace Prototype.NetworkLobby
         private float initialVolume;
         private bool valuesSaved = false;
 
+        /// <summary>
+        /// Applies the audio settings. 
+        /// This should be called on game startup in order to ensure that the players preferences are applied before the first sound
+        /// </summary>
+        public void ApplyAudioSettings()
+        {
+            musicSlider.value = PlayerPrefs.GetFloat("musicVol", 1);
+            sfxSlider.value = PlayerPrefs.GetFloat("sfxVol", 1);
+            mutedToggle.isOn = PlayerPrefsExtended.GetBool("muted", false);
+
+            OnAudioMutedChanged();
+        }
+
         public void Init()
         {
-             List<string> screenResolutions = new List<string>();
+            List<string> screenResolutions = new List<string>();
             int dropdownIndex = 0;
+
             for (int i = 0; i < Screen.resolutions.Length; i++)
             {
                 string resolution = Screen.resolutions[i].ToString();
@@ -50,8 +69,6 @@ namespace Prototype.NetworkLobby
                 resolutionDropdown.value = mReverseResolutionDropdownMatch[Screen.width + " x " + Screen.height];
             }
             fullscreenToggle.isOn = Screen.fullScreen;
-            initialVolume = volumeSlider.value = PlayerPrefs.GetFloat("Volume", 1);
-            initialIsMuted = mutedToggle.isOn = PlayerPrefsExtended.GetBool("muted", false);
         }
 
         public void OnSave()
@@ -61,7 +78,8 @@ namespace Prototype.NetworkLobby
             Screen.SetResolution(resolution.width, resolution.height, fullscreenToggle.isOn);
             PlayerPrefsExtended.SetResolution("resolution", resolution);
             PlayerPrefsExtended.SetBool("fullscreen", fullscreenToggle.isOn);
-            PlayerPrefs.SetFloat("Volume", volumeSlider.value);
+            PlayerPrefs.SetFloat("musicVol", musicSlider.value);
+            PlayerPrefs.SetFloat("sfxVol", sfxSlider.value);
             PlayerPrefsExtended.SetBool("muted", mutedToggle.isOn);
             PlayerPrefs.Save();
             if (GameManager.instance.localPlayer)
@@ -87,17 +105,40 @@ namespace Prototype.NetworkLobby
             AudioListener.volume = initialIsMuted ? 0 : initialVolume;
         }
 
-        public void OnVolumeSliderChanged()
+        public void OnMusicSliderChanged()
         {
             if (!mutedToggle.isOn)
             {
-                AudioListener.volume = volumeSlider.value;
+                mixer.SetFloat("musicVol", Extensions.LinearToDecibel(musicSlider.value));
+            }
+        }
+
+        public void OnSfxSliderChanged()
+        {
+            if (!mutedToggle.isOn)
+            {
+                mixer.SetFloat("sfxVol", Extensions.LinearToDecibel(sfxSlider.value));
             }
         }
 
         public void OnAudioMutedChanged()
         {
-            AudioListener.volume = mutedToggle.isOn ? 0 : volumeSlider.value;
+            mixer.SetFloat("musicVol", Extensions.LinearToDecibel(mutedToggle.isOn ? 0 : musicSlider.value));
+            mixer.SetFloat("sfxVol", Extensions.LinearToDecibel(mutedToggle.isOn ? 0 : sfxSlider.value));
+        }
+
+        public void ContinousSampleSFX()
+        {
+            if (!sfxSampler.isPlaying)
+            {
+                SampleSFX();
+            }
+        }
+
+		public void SampleSFX()
+        {
+            sfxSampler.Stop();
+            sfxSampler.Play();
         }
 
         void OnDisable()

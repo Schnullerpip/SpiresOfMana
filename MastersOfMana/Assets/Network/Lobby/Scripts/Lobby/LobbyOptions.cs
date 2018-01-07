@@ -12,7 +12,7 @@ namespace Prototype.NetworkLobby
         public Slider volumeSlider;
         public Toggle mutedToggle;
         private Dictionary<int, Resolution> mResolutionDropdownMatch = new Dictionary<int, Resolution>();
-        private Dictionary<Resolution, int> mReverseResolutionDropdownMatch = new Dictionary<Resolution,int>();
+        private Dictionary<string, int> mReverseResolutionDropdownMatch = new Dictionary<string,int>();
         private bool isInitialized = false;
         private bool initialIsMuted;
         private float initialVolume;
@@ -21,11 +21,18 @@ namespace Prototype.NetworkLobby
         public void Init()
         {
              List<string> screenResolutions = new List<string>();
+            int dropdownIndex = 0;
             for (int i = 0; i < Screen.resolutions.Length; i++)
             {
-                screenResolutions.Add(Screen.resolutions[i].ToString());
-                mResolutionDropdownMatch.Add(i, Screen.resolutions[i]);
-                mReverseResolutionDropdownMatch.Add(Screen.resolutions[i], i);
+                string resolution = Screen.resolutions[i].ToString();
+                resolution = resolution.Remove(resolution.LastIndexOf('@')-1);
+                if(!mReverseResolutionDropdownMatch.ContainsKey(resolution))
+                {
+                    screenResolutions.Add(resolution);
+                    mReverseResolutionDropdownMatch.Add(resolution, dropdownIndex);
+                    mResolutionDropdownMatch.Add(dropdownIndex, Screen.resolutions[i]);
+                    dropdownIndex++;
+                }
             }
             resolutionDropdown.AddOptions(screenResolutions);
         }
@@ -37,7 +44,11 @@ namespace Prototype.NetworkLobby
                 isInitialized = true;
                 Init();
             }
-            resolutionDropdown.value = mReverseResolutionDropdownMatch[Screen.currentResolution];
+            string resolution = Screen.width + " x " + Screen.height; // We need this resolution because Screen.currentResolution only works for fullscreen
+            if (mReverseResolutionDropdownMatch.ContainsKey(resolution))
+            {
+                resolutionDropdown.value = mReverseResolutionDropdownMatch[Screen.width + " x " + Screen.height];
+            }
             fullscreenToggle.isOn = Screen.fullScreen;
             initialVolume = volumeSlider.value = PlayerPrefs.GetFloat("Volume", 1);
             initialIsMuted = mutedToggle.isOn = PlayerPrefsExtended.GetBool("muted", false);

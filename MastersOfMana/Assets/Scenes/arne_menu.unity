@@ -490,6 +490,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1514469264 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114435271918700610, guid: c0978251ff7b10d4fb954a4b56acd9f0,
+    type: 2}
+  m_PrefabInternal: {fileID: 2115040217}
+  m_Script: {fileID: 2109663825, guid: f70555f144d8491a825f0804e09c671c, type: 3}
 --- !u!114 &1600317358 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 114907993927819114, guid: c0978251ff7b10d4fb954a4b56acd9f0,
@@ -593,6 +599,16 @@ Prefab:
       propertyPath: lobbyManager
       value: 
       objectReference: {fileID: 1321811817}
+    - target: {fileID: 114435271918700610, guid: c0978251ff7b10d4fb954a4b56acd9f0,
+        type: 2}
+      propertyPath: m_IsOn
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114853585259231036, guid: c0978251ff7b10d4fb954a4b56acd9f0,
+        type: 2}
+      propertyPath: fullscreenToggle
+      value: 
+      objectReference: {fileID: 1514469264}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
   m_IsPrefabParent: 0

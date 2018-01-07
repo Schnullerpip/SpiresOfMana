@@ -61,7 +61,7 @@ public class LavaFloor : NetworkBehaviour
         GameManager.OnRoundEnded -= RoundEnded;
     }
 
-    private Dictionary<HealthScript, Coroutine> mInstanceCoroutineDictionary = new Dictionary<HealthScript, Coroutine>();
+    private static Dictionary<HealthScript, Coroutine> mInstanceCoroutineDictionary = new Dictionary<HealthScript, Coroutine>();
 
     public void OnTriggerEnter(Collider other)
     {
@@ -112,21 +112,27 @@ public class LavaFloor : NetworkBehaviour
         HealthScript health = other.GetComponentInParent<HealthScript>();
         if (health && mInstanceCoroutineDictionary.ContainsKey(health))
         {
-            StopCoroutine(mInstanceCoroutineDictionary[health]);
+            //the coroutine might have stopped itself already - check that, else stop it
+            Coroutine coR;
+            mInstanceCoroutineDictionary.TryGetValue(health, out coR);
+            if (coR != null)
+            {
+                StopCoroutine(coR);
+            }
             mInstanceCoroutineDictionary.Remove(health);
         }
     }
 
     public IEnumerator LavaEffectLocal(PlayerScript player)
     {
-        while (enabled)
+        while (player.healthScript.IsAlive())
         {
-            if (!player.healthScript.IsAlive() && mInstanceCoroutineDictionary.ContainsKey(player.healthScript))
-            {
-                StopCoroutine(mInstanceCoroutineDictionary[player.healthScript]);
-                mInstanceCoroutineDictionary.Remove(player.healthScript);
-                yield break;
-            }
+            //if (!player.healthScript.IsAlive())
+            //{
+            //    StopCoroutine(mInstanceCoroutineDictionary[player.healthScript]);
+            //    mInstanceCoroutineDictionary.Remove(player.healthScript);
+            //    yield break;
+            //}
 
             if (isServer)
             {
@@ -139,10 +145,13 @@ public class LavaFloor : NetworkBehaviour
 
             PlayDamageSound(player.transform.position);
 
-            //shoot the moveable into the sky to make it jump mario-ayayayayay-style
-            Vector3 vel = player.movement.mRigidbody.velocity;
-            vel.y = repelForce;
-            player.movement.mRigidbody.velocity = vel;
+            if (player.healthScript.IsAlive())
+            {
+                //shoot the moveable into the sky to make it jump mario-ayayayayay-style
+                Vector3 vel = player.movement.mRigidbody.velocity;
+                vel.y = repelForce;
+                player.movement.mRigidbody.velocity = vel;
+            }
 
             yield return new WaitForSeconds(1f);
         }

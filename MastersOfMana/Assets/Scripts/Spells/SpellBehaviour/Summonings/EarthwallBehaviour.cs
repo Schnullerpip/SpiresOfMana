@@ -22,6 +22,7 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
     public float dotProductThreshold;
     [SyncVar]
     private bool mPendingContactEffect = false;
+    public float mOriginalVolume;
 
     //defines the loss factor with wich players bounce off of the shield
     public float VelocityLossFactor;
@@ -280,7 +281,8 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
             mPendingContactEffect = false;
             SpawnContactEffect();
         }
-        loopSource.volume = volumeOverLife.Lerp(mHealthScript.GetCurrentHealth() * 1.0f / mHealthScript.GetMaxHealth() * 1.0f);
+        float factor = volumeOverLife.Lerp(mHealthScript.GetCurrentHealth() * 1.0f / mHealthScript.GetMaxHealth() * 1.0f);
+        loopSource.volume = mOriginalVolume * factor;
 
         transform.localScale = mOriginalScale*spawnScale.Evaluate(mScaleCount);
         ScaleCountAddRoutine();

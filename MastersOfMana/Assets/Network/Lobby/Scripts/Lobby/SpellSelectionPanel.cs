@@ -26,7 +26,7 @@ public class SpellSelectionPanel : MonoBehaviour {
     private void OnEnable()
     {
         Init();
-        spellButtons[0].OnSelect(null);
+        //spellButtons[0].OnSelect(null);
     }
 
     private void Awake()
@@ -57,6 +57,7 @@ public class SpellSelectionPanel : MonoBehaviour {
         {
             A_Spell spell = spells[i];
             Button spellButton = GameObject.Instantiate(spellButtonPrefab);
+            spellButton.name += " " + spell.name;
             Image image = spellButton.transform.GetChild(0).GetComponent<Image>();
             if (image)
             {

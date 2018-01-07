@@ -41,13 +41,18 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
     /// GameObjects (or rather their networkID can be passed down via syncvar and OnStartClient guarantees, to be called after the syncvars have been synchronized,
     /// so inside OnStartClient caster can be set by getting the respective Component from the casterobject
     /// </summary>
-    [SyncVar]
+    [SyncVar(hook="GetPlayerComponent")]
     protected GameObject casterObject;
+
+    private void GetPlayerComponent(GameObject co)
+    {
+        caster = co.GetComponent<PlayerScript>();
+    }
 
     public override void OnStartClient()
     {
         //initialize the caster - serverSpell's casters can and should be set in the Execute routine, so we're only interested in Clientside calls
-        if (!isServer && casterObject)
+        if (!isServer && casterObject && !caster)
         {
             caster = casterObject.GetComponent<PlayerScript>();
         }

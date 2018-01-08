@@ -8,7 +8,9 @@ public class PlayerAnimation : NetworkBehaviour {
 	public Animator animator;
 	private PlayerScript mPlayer;
 
-    private int movementSpeedHash, speedRightHash, speedForwardHash, groundedHash, jumpHash, isDeadHash, isCastingHash, castAnimationHash;//, isResolvingHash;
+    private int movementSpeedHash, speedRightHash, speedForwardHash, groundedHash, 
+    //jumpHash, 
+    isDeadHash, isCastingHash, castAnimationHash;//, isResolvingHash;
 
     void Start()
 	{
@@ -18,7 +20,7 @@ public class PlayerAnimation : NetworkBehaviour {
         speedRightHash = Animator.StringToHash("speed_right");
         speedForwardHash = Animator.StringToHash("speed_forward");
         groundedHash = Animator.StringToHash("grounded");
-        jumpHash = Animator.StringToHash("jump");
+        //jumpHash = Animator.StringToHash("jump");
         isDeadHash = Animator.StringToHash("isDead");
         isCastingHash = Animator.StringToHash("isCasting");
 
@@ -30,7 +32,7 @@ public class PlayerAnimation : NetworkBehaviour {
 
 		mPlayer = GetComponent<PlayerScript>();
 		mPlayer.movement.onMovement += UpdateMovement;
-		mPlayer.movement.onJumping += Jump;
+		//mPlayer.movement.onJumping += Jump;
 		mPlayer.healthScript.OnDamageTaken += TookDamage;
         GameManager.OnRoundStarted += ResetState;
     }
@@ -45,10 +47,10 @@ public class PlayerAnimation : NetworkBehaviour {
         animator.SetBool(groundedHash,isGrounded);
 	}
 
-	void Jump()
-	{
-		animator.SetTrigger(jumpHash);
-	}
+	//void Jump()
+	//{
+	//	animator.SetTrigger(jumpHash);
+	//}
 
 	void TookDamage(int damage)
 	{

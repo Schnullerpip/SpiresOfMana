@@ -19,7 +19,53 @@ public class SpellHUD : MonoBehaviour
     public delegate void CooldownFinished();
     public event CooldownFinished OnCooldownFinished;
 
+    public InputImage[] inputImages;
+
     private int displayedCurrentSpell;
+
+    private static readonly System.Guid guid_PS4 = new System.Guid("cd9718bf-a87a-44bc-8716-60a0def28a9f");
+    private static readonly System.Guid guid_PS3 = new System.Guid("71dfe6c8-9e81-428f-a58e-c7e664b7fbed");
+    //private static readonly System.Guid guid_XB360 = new System.Guid("d74a350e-fe8b-4e9e-bbcd-efff16d34115");
+    //private static readonly System.Guid guid_XB1 = new System.Guid("19002688-7406-4f4a-8340-8d25335406c8");
+
+    //private Rewired.Player mRewired;
+
+    private void Awake()
+    {
+        //mRewired = Rewired.ReInput.players.GetPlayer(0);
+        Rewired.ActiveControllerChangedDelegate onControllerChangedDelegate = OnControllerChanged;
+        Rewired.ReInput.controllers.AddLastActiveControllerChangedDelegate(onControllerChangedDelegate);
+    }
+
+
+    void OnControllerChanged(Rewired.Controller controller)
+    {
+        if (controller.type == Rewired.ControllerType.Mouse || controller.type == Rewired.ControllerType.Keyboard)
+        {
+            foreach (var img in inputImages)
+            {
+                img.image.sprite = img.mouseAndKeyboardSprite;
+            }
+        }
+        else if (controller.type == Rewired.ControllerType.Joystick)
+        {
+            System.Guid guid = Rewired.ReInput.controllers.GetJoystick(controller.id).hardwareTypeGuid;
+            if(guid == guid_PS3 || guid == guid_PS4)
+            {
+                foreach (var img in inputImages)
+                {
+                    img.image.sprite = img.psControllerSprite;
+                }
+            }
+            else
+            {
+                foreach (var img in inputImages)
+                {
+                    img.image.sprite = img.genericControllerSprite;
+                }           
+            }
+        }
+    }
 
     // Use this for initialization
     void OnEnable ()
@@ -134,5 +180,14 @@ public class SpellHUD : MonoBehaviour
     private void LocalPlayerDead()
     {
         gameObject.SetActive(false);
+    }
+
+    [System.Serializable]
+    public struct InputImage
+    {
+        public Image image;
+        public Sprite mouseAndKeyboardSprite;
+        public Sprite genericControllerSprite;
+        public Sprite psControllerSprite;
     }
 }

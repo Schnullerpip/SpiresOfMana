@@ -22,10 +22,23 @@ public class SpellDescription : MonoBehaviour {
         SetIndicator(cooldownIndicator, description.cooldown);
         SetIndicator(forceIndicator, description.force);
         SetSpellName(description.spellName);
-
         mStartFrame = description.beginFrame;
         mEndFrame = description.endFrame;
-        previewPlayer.frame = mStartFrame;
+        if (!previewPlayer.isPlaying)
+        {
+            previewPlayer.Play();
+            previewPlayer.prepareCompleted += SetFirstFrame;
+        }
+        else
+        { 
+            previewPlayer.frame = mStartFrame;
+        }
+    }
+
+    private void SetFirstFrame(VideoPlayer vPlayer)
+    {
+        vPlayer.frame = mStartFrame;
+        previewPlayer.prepareCompleted -= SetFirstFrame;
     }
 
     public void SetIndicator(Transform indicator, int level)

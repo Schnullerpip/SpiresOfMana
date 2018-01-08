@@ -208,7 +208,7 @@ public class LavaFloor : NetworkBehaviour
     {
         if (isServer && mLavaActive)
         {
-            if(Input.GetKeyDown(KeyCode.L))
+            if(Input.GetKeyDown(KeyCode.L) && Input.GetKey(KeyCode.LeftShift))
             {
                 mLavaActive = false;
                 HostRoundEnded();

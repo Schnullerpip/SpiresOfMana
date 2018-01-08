@@ -98,11 +98,11 @@ public class InputStateNormal : A_InputState
 			player.aim.GetCameraRig().SwapShoulder();
 		}
 
-		//propergate various inputs to the statesystems
-		if(playerInput.GetButtonDown("Jump"))
-		{
-			player.movement.Jump();
-		}
+		////propergate various inputs to the statesystems
+		//if(playerInput.GetButtonDown("Jump"))
+		//{
+		//	player.movement.Jump();
+		//}
 			
 		if(playerInput.GetButtonDown("Focus"))
 		{

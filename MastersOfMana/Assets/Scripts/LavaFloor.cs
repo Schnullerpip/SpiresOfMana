@@ -243,6 +243,11 @@ public class LavaFloor : NetworkBehaviour
         outbreakSource.Play();
     }
 
+    public float GetHeightNormalized()
+    {
+        return (transform.position.y - mStartHeight) / lavaFlow.keys.LastElement().value;
+    }
+
     private void OnValidate()
     {
         AnimationCurve temp = new AnimationCurve();

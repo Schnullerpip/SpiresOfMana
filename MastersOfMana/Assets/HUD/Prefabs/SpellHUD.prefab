@@ -645,7 +645,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 21300000, guid: 4c2bc6903e15d4f27a075befd24e0bde, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -697,6 +697,35 @@ MonoBehaviour:
   ultimateEnergyProgess: {fileID: 114716356749661424}
   ultimateEnergyDefaultColor: {r: 0.40715683, g: 0.058931667, b: 0.8014706, a: 1}
   ultimateEnergyFullColor: {r: 1, g: 0.87058824, b: 0, a: 1}
+  inputImages:
+  - image: {fileID: 114251852775358866}
+    mouseAndKeyboardSprite: {fileID: 21300000, guid: 4c2bc6903e15d4f27a075befd24e0bde,
+      type: 3}
+    genericControllerSprite: {fileID: 21300000, guid: 010ad54de81eb4ce8b0d2466137cc51a,
+      type: 3}
+    psControllerSprite: {fileID: 21300000, guid: 0e0f5a4f985044229b24bf4ce9862a65,
+      type: 3}
+  - image: {fileID: 114360009052992042}
+    mouseAndKeyboardSprite: {fileID: 21300000, guid: db4740072adef4b29bd1a1570c5cd095,
+      type: 3}
+    genericControllerSprite: {fileID: 21300000, guid: 330af0cedfaeb4657aa7746c64be78d1,
+      type: 3}
+    psControllerSprite: {fileID: 21300000, guid: 81e8b3c18b80e40bf871f2057ae8308d,
+      type: 3}
+  - image: {fileID: 114146151672686996}
+    mouseAndKeyboardSprite: {fileID: 21300000, guid: f9c123d1b6b394a43afae5689ad8d5f7,
+      type: 3}
+    genericControllerSprite: {fileID: 21300000, guid: 90c800ac272594b7788adbd05ec8aac4,
+      type: 3}
+    psControllerSprite: {fileID: 21300000, guid: 6c79127458bc8474aaf99b30db60f730,
+      type: 3}
+  - image: {fileID: 114445343563468514}
+    mouseAndKeyboardSprite: {fileID: 21300000, guid: 46f28796803604f09943fcba43e8b5c1,
+      type: 3}
+    genericControllerSprite: {fileID: 21300000, guid: 0ec084644df9148d7a1f9ae89a7c5261,
+      type: 3}
+    psControllerSprite: {fileID: 21300000, guid: 5523d60b9411e47adb454e99d9bafce2,
+      type: 3}
   ultiScaler: {fileID: 114308768939277834}
 --- !u!114 &114308768939277834
 MonoBehaviour:
@@ -773,7 +802,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 21300000, guid: db4740072adef4b29bd1a1570c5cd095, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -827,7 +856,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 21300000, guid: 46f28796803604f09943fcba43e8b5c1, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -1768,7 +1797,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -18, y: 11.5}
-  m_SizeDelta: {x: 50, y: 50}
+  m_SizeDelta: {x: 75, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224330027332663230
 RectTransform:
@@ -1786,7 +1815,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -17.999985, y: 11.5000305}
-  m_SizeDelta: {x: 72.96, y: 72.96}
+  m_SizeDelta: {x: 75, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224342917025414550
 RectTransform:
@@ -1918,7 +1947,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -17.999985, y: 11.500027}
-  m_SizeDelta: {x: 50, y: 50}
+  m_SizeDelta: {x: 75, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224653085099016928
 RectTransform:
@@ -1936,7 +1965,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -67.999985, y: 61.500027}
-  m_SizeDelta: {x: 50, y: 50}
+  m_SizeDelta: {x: 75, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224734948284503316
 RectTransform:

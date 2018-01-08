@@ -65,7 +65,7 @@ public class HurtIndicator : MonoBehaviour {
     {
 		GameManager.OnLocalPlayerDead -= localPlayerDead;
         GameManager.OnRoundStarted -= RoundStarted;
-        GameManager.OnRoundEnded += localPlayerDead;
+        GameManager.OnRoundEnded -= localPlayerDead;
     }
 
     private void Update()

@@ -14,13 +14,18 @@ public class SpellDescription : MonoBehaviour {
 
     private string defaultStats;
 
+    private int mStartFrame, mEndFrame;
+
     public void SetDescription(A_Spell.SpellDescription description)
     {
         SetIndicator(damageIndicator, description.damage);
         SetIndicator(cooldownIndicator, description.cooldown);
         SetIndicator(forceIndicator, description.force);
         SetSpellName(description.spellName);
-        previewPlayer.clip = description.video;
+
+        mStartFrame = description.beginFrame;
+        mEndFrame = description.endFrame;
+        previewPlayer.frame = mStartFrame;
     }
 
     public void SetIndicator(Transform indicator, int level)
@@ -34,5 +39,13 @@ public class SpellDescription : MonoBehaviour {
     public void SetSpellName(string name)
     {
         spellName.text = name;
+    }
+
+    private void Update()
+    {
+        if(previewPlayer.frame >= mEndFrame)
+        {
+            previewPlayer.frame = mStartFrame;
+        }
     }
 }

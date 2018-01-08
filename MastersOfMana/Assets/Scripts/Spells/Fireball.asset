@@ -15,12 +15,14 @@ MonoBehaviour:
   coolDownInSeconds: 3
   castDurationInSeconds: 0
   resolveDurationInSeconds: 0
+  castAnimationID: 0
   spellDescription:
     damage: 1
     force: 1
     cooldown: 1
     spellName: Fireball
-    video: {fileID: 32900000, guid: 79c6e140bc1047645a5819c0e08485ae, type: 3}
+    beginFrame: 116
+    endFrame: 199
   spellID: 0
   SpellBehaviours:
   - {fileID: 114261153593763400, guid: 184b117c165eb62478ca66015ed29b21, type: 2}

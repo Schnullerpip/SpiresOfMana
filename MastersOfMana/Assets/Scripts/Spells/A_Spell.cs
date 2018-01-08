@@ -23,7 +23,10 @@ public abstract class A_Spell : ScriptableObject
         public int force;
         public int cooldown;
         public string spellName;
-        public UnityEngine.Video.VideoClip video;
+
+        [Header("Video")]
+        public int beginFrame;
+        public int endFrame;
     }
     public SpellDescription spellDescription;
 

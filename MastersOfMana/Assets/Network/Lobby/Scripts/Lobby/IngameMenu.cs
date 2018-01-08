@@ -14,7 +14,7 @@ public class IngameMenu : MonoBehaviour
 
     private void Awake()
     {
-        optionsPanel.GetComponent<LobbyOptions>().ApplyAudioSettings();
+        optionsPanel.GetComponent<LobbyOptions>().ApplySettings();
     }
 
     public void ToggleVisibility()

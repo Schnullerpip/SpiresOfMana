@@ -148,8 +148,6 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 
     protected override void ExecuteTriggerEnter_Host(Collider collider)
     {
-        Debug.Log(collider);
-
 		if(!mTriggerEnabled)
 		{
 			return;

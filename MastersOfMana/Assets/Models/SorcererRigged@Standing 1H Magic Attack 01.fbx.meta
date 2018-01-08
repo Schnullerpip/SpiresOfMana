@@ -38,6 +38,7 @@ ModelImporter:
     100060: toe.R_end
     100062: upper_arm.L
     100064: upper_arm.R
+    100066: Rig
     400000: foot.L
     400002: foot.R
     400004: forearm.L
@@ -71,6 +72,7 @@ ModelImporter:
     400060: toe.R_end
     400062: upper_arm.L
     400064: upper_arm.R
+    400066: Rig
     7400000: mixamo.com
     9500000: //RootNode
   materials:
@@ -117,14 +119,14 @@ ModelImporter:
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
-    useFileScale: 1
+    useFileScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
   importAnimation: 1
-  copyAvatar: 0
+  copyAvatar: 1
   humanDescription:
     serializedVersion: 2
     human: []
@@ -139,9 +141,10 @@ ModelImporter:
     rootMotionBoneName: 
     rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
-    hasExtraRoot: 0
+    hasExtraRoot: 1
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: f507266f9158d40b5810d9da01f9027c,
+    type: 3}
   animationType: 2
   humanoidOversampling: 1
   additionalBone: 0

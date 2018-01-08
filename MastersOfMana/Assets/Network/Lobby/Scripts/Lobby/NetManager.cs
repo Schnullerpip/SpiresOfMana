@@ -64,7 +64,10 @@ public class NetManager : NetworkBehaviour {
     [ClientRpc]
     public void RpcHostEndedRound()
     {
-        mHud.ExitPostGameScreen();
-        GameManager.instance.TriggerHostEndedRound();
+		if (!isServer) 
+		{
+        	mHud.ExitPostGameScreen();
+		}
+		GameManager.instance.TriggerHostEndedRound ();
     }
 }

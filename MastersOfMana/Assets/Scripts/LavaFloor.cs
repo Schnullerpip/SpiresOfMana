@@ -60,7 +60,7 @@ public class LavaFloor : NetworkBehaviour
     {
         GameManager.OnRoundStarted -= RoundStarted;
         GameManager.OnHostEndedRound -= HostRoundEnded;
-        GameManager.OnRoundEnded += RoundEnded;
+        GameManager.OnRoundEnded -= RoundEnded;
     }
 
     private static Dictionary<HealthScript, Coroutine> mInstanceCoroutineDictionary = new Dictionary<HealthScript, Coroutine>();
@@ -210,7 +210,7 @@ public class LavaFloor : NetworkBehaviour
         {
             if(Input.GetKeyDown(KeyCode.L))
             {
-                mLavaActive = true;
+                mLavaActive = false;
                 HostRoundEnded();
             }
 
@@ -241,6 +241,11 @@ public class LavaFloor : NetworkBehaviour
     private void RpcOutbreak()
     {
         outbreakSource.Play();
+    }
+
+    public float GetHeightNormalized()
+    {
+        return (transform.position.y - mStartHeight) / lavaFlow.keys.LastElement().value;
     }
 
     private void OnValidate()

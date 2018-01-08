@@ -206,7 +206,11 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
     public void Update()
     {
         //if we dont have a caster anymore - disappear (disconnected or player is dead)
-        if (!caster || !caster.healthScript.IsAlive())
+        if (!caster)
+        {
+            return;
+        }
+        if (!caster.healthScript.IsAlive() && isServer)
         {
             Explode();
             return;

@@ -9,7 +9,7 @@ public class PlayerMovement : ServerMoveable
 	public float speed = 4;  
 	[Range(0,1)]
 	public float focusSpeedSlowdown = .25f;
-	public float jumpStrength = 5;
+	//public float jumpStrength = 5;
 	public float additionalFallGravityMultiplier = 1f;
 	[Tooltip("How much slower is the player when he/she walks backwards? 0 = no slowdown, 1 = fullstop")]
 	[Range(0.0f,1.0f)]
@@ -184,33 +184,33 @@ public class PlayerMovement : ServerMoveable
         soundEffects.PlayLandingSFX();
 	}
 
-	/// <summary>
-	/// Let's the character jump with the default jumpStength
-	/// </summary>
-	public void Jump(bool onlyIfGrounded = true)
-	{
-		Jump(jumpStrength, onlyIfGrounded);
-	}
+	///// <summary>
+	///// Let's the character jump with the default jumpStength
+	///// </summary>
+	//public void Jump(bool onlyIfGrounded = true)
+	//{
+	//	Jump(jumpStrength, onlyIfGrounded);
+	//}
 
-	public delegate void OnJumping();
-	public OnJumping onJumping;
+	//public delegate void OnJumping();
+	//public OnJumping onJumping;
 
-	/// <summary>
-	/// Let's the character jump with a specified jumpStrength
-	/// </summary>
-	/// <SpellslotLambda name="jumpForce">Jump force.</SpellslotLambda>
-	public void Jump(float jumpStrength, bool onlyIfGrounded)
-	{
-		if(feet.IsGrounded() || !onlyIfGrounded)
-		{
-			mRigidbody.SetVelocityY(jumpStrength);
+	///// <summary>
+	///// Let's the character jump with a specified jumpStrength
+	///// </summary>
+	///// <SpellslotLambda name="jumpForce">Jump force.</SpellslotLambda>
+	//public void Jump(float jumpStrength, bool onlyIfGrounded)
+	//{
+	//	if(feet.IsGrounded() || !onlyIfGrounded)
+	//	{
+	//		mRigidbody.SetVelocityY(jumpStrength);
 			
-			if(onJumping != null)
-			{
-				onJumping();
-			}
-		}
-	}
+	//		if(onJumping != null)
+	//		{
+	//			onJumping();
+	//		}
+	//	}
+	//}
 
     /// <summary>
     /// Gets the anticipated position in n-seconds if the player keeps his current speed and direction.

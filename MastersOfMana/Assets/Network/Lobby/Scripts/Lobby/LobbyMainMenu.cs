@@ -35,7 +35,7 @@ namespace Prototype.NetworkLobby
 
         private void Awake()
         {
-            optionsPanel.GetComponent<LobbyOptions>().ApplyAudioSettings();
+            optionsPanel.GetComponent<LobbyOptions>().ApplySettings();
         }
 
         public void OnEnable()

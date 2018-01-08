@@ -210,7 +210,7 @@ public class LavaFloor : NetworkBehaviour
         {
             if(Input.GetKeyDown(KeyCode.L))
             {
-                mLavaActive = true;
+                mLavaActive = false;
                 HostRoundEnded();
             }
 

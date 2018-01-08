@@ -60,7 +60,7 @@ public class LavaFloor : NetworkBehaviour
     {
         GameManager.OnRoundStarted -= RoundStarted;
         GameManager.OnHostEndedRound -= HostRoundEnded;
-        GameManager.OnRoundEnded += RoundEnded;
+        GameManager.OnRoundEnded -= RoundEnded;
     }
 
     private static Dictionary<HealthScript, Coroutine> mInstanceCoroutineDictionary = new Dictionary<HealthScript, Coroutine>();

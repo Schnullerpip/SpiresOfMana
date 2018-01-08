@@ -34,10 +34,19 @@ public class PlayerAim : NetworkBehaviour {
 	private bool mFocusActive = false;
 	private Collider mFocusedTarget = null;
 
+    private float mStartSpeed;
+
 	void Awake()
 	{
+        mStartSpeed = aimSpeed;
 //		lookDirection = transform.forward;
+        SetSensitivity(PlayerPrefs.GetFloat("mouse", 1));
 	}
+
+    public void SetSensitivity(float sensitivity)
+    {
+        aimSpeed = mStartSpeed * sensitivity;
+    }
 
 	void OnDisable()
 	{

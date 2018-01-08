@@ -15,6 +15,8 @@ public class LobbyOptions : MonoBehaviour
     public Toggle mutedToggle;
     public AudioSource sfxSampler;
 
+    public Slider mouseSensitivity;
+
     private Dictionary<int, Resolution> mResolutionDropdownMatch = new Dictionary<int, Resolution>();
     private Dictionary<string, int> mReverseResolutionDropdownMatch = new Dictionary<string,int>();
     private bool isInitialized = false;
@@ -24,13 +26,23 @@ public class LobbyOptions : MonoBehaviour
     /// Applies the audio settings. 
     /// This should be called on game startup in order to ensure that the players preferences are applied before the first sound
     /// </summary>
-    public void ApplyAudioSettings()
+    public void ApplySettings()
     {
         musicSlider.value = PlayerPrefs.GetFloat("musicVol", 1);
         sfxSlider.value = PlayerPrefs.GetFloat("sfxVol", 1);
         mutedToggle.isOn = PlayerPrefsExtended.GetBool("muted", false);
+        mouseSensitivity.value = PlayerPrefs.GetFloat("mouse", 0.5f);
 
         OnAudioMutedChanged();
+    }
+
+    public void SetPlayerMouseSensitivity()
+    {
+        PlayerPrefs.SetFloat("mouse", mouseSensitivity.value);
+        if(GameManager.instance.localPlayer)
+        {
+            GameManager.instance.localPlayer.aim.SetSensitivity(mouseSensitivity.value);
+        }
     }
 
     public void Init()

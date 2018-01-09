@@ -94,7 +94,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
             caster.SetColliderIgnoreRaycast(true);
 
             //apply Explosion force and damage
-            ExplosionDamage(caster.transform.position + Vector3.up * 0.8f/*so the terrain is not hit*/, mExplosionRadius, mExplosionFalloff, new List<HealthScript>(), resultingHeightFactor);
+            ExplosionDamage(caster.transform.position + Vector3.up * 0.8f/*so the terrain is not hit*/, mExplosionRadius, mExplosionFalloff, new List<HealthScript>(), resultingHeightFactor, 1 + resultingHeightFactor);
 
             caster.SetColliderIgnoreRaycast(false);
 

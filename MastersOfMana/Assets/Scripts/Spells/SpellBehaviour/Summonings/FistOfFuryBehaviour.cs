@@ -8,23 +8,24 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
 {
     [Header("Effect on caster")]
     [SerializeField] private float mPushDownForce;
-    [Header("Damage/Force")]
+    [Header("Damage/Force-Relevant")]
+    //will store the transform.position of the caster when he casted - the difference between that and he collisionpoint will be a factor to the resulting damage
+    [SyncVar]
+    private Vector3 castPosition;
     [SerializeField] private float mExplosionForce;
     [SerializeField] private ExplosionFalloff mExplosionFalloff;
     [SerializeField] private float mExplosionRadius;
     [SerializeField] private float mMaxDistance;
 
-    //-----------visuals-------------
     [Header("Visuals")]
     [SerializeField] private GameObject explosionPrefab;
     [SerializeField] private GameObject decalPrefab;
     [SerializeField] private GameObject brutalityPrefab;
-    [SerializeField] private float EffectQuantum1, EffectQuantum2; 
-    //-------------------------------
+    [SerializeField] private GameObject flamesPrefab;
+    [SerializeField] private float EffectQuantum1;
+    [SerializeField] private float EffectQuantum2; 
+    [SerializeField] private float EffectQuantum3; 
 
-    //will store the transform.position of the caster when he casted - the difference between that and he collisionpoint will be a factor to the resulting damage
-    [SyncVar]
-    private Vector3 castPosition;
 
 	public override void Preview (PlayerScript caster)
 	{
@@ -127,8 +128,6 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
             explosion.SetActive(true);
         }
 
-        Debug.Log("height: " + height);
-
         if (height > EffectQuantum1)
         {
             GameObject decal = PoolRegistry.GetInstance(decalPrefab, 1, 1);
@@ -140,6 +139,12 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
             GameObject brutality = PoolRegistry.GetInstance(brutalityPrefab, 1, 1);
             brutality.transform.position = position;
             brutality.SetActive(true);
+        }
+        if (height > EffectQuantum3)
+        {
+            GameObject flames = PoolRegistry.GetInstance(flamesPrefab, 1, 1);
+            flames.transform.position = position;
+            flames.SetActive(true);
         }
     }
 

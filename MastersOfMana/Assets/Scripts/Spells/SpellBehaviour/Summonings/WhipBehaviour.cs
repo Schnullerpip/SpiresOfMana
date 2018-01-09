@@ -147,6 +147,8 @@ public class WhipBehaviour : A_SummoningBehaviour
 	{
 		yield return new WaitForSeconds(disappearTimer);
 
+	    caster = null;
+	    casterObject = null;
 		gameObject.SetActive(false);
 		NetworkServer.UnSpawn(gameObject);
 	}

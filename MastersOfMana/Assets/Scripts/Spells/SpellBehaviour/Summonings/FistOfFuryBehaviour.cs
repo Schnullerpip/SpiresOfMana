@@ -6,15 +6,24 @@ using UnityEngine.Networking;
 [RequireComponent(typeof(Collider))]
 public class FistOfFuryBehaviour : A_SummoningBehaviour
 {
-    [SerializeField] private float mExplosionForce;
+    [Header("Effect on caster")]
     [SerializeField] private float mPushDownForce;
-    [SerializeField] private GameObject explosionPrefab;
-
+    [Header("Damage/Force")]
+    [SerializeField] private float mExplosionForce;
     [SerializeField] private ExplosionFalloff mExplosionFalloff;
     [SerializeField] private float mExplosionRadius;
     [SerializeField] private float mMaxDistance;
 
+    //-----------visuals-------------
+    [Header("Visuals")]
+    [SerializeField] private GameObject explosionPrefab;
+    [SerializeField] private GameObject decalPrefab;
+    [SerializeField] private GameObject brutalityPrefab;
+    [SerializeField] private float EffectQuantum1, EffectQuantum2; 
+    //-------------------------------
+
     //will store the transform.position of the caster when he casted - the difference between that and he collisionpoint will be a factor to the resulting damage
+    [SyncVar]
     private Vector3 castPosition;
 
 	public override void Preview (PlayerScript caster)
@@ -64,35 +73,36 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         transform.parent = caster.transform;
     }
 
-    protected override void ExecuteTriggerEnter_Host(Collider collider)
+    private new void OnTriggerEnter(Collider collider)
     {
         if (collider.isTrigger) return;
-
-        GetComponent<Collider>().enabled = false;
-
-        //spawn an explosion
-        RpcExplosion(caster.transform.position);
-
-        //unparent it
-        transform.parent = null;
 
         Vector3 distanceVector = caster.transform.position - castPosition;
         float distance = Mathf.Clamp(Vector3.Magnitude(distanceVector), 3.0f, mMaxDistance); //so there will ALWAYS be a little damage at least
         float resultingHeightFactor = distance/mMaxDistance;
         resultingHeightFactor = Mathf.Clamp(resultingHeightFactor, 0.0f, 1.0f); // if the maxDistance was topped, dont let the damage escalate
 
-        caster.SetColliderIgnoreRaycast(true);
+        //spawn an explosion
+        Explosion(caster.transform.position, resultingHeightFactor);
 
-        //apply Explosion force and damage
-		ExplosionDamage(caster.transform.position + Vector3.up * 0.8f/*so the terrain is not hit*/, mExplosionRadius, mExplosionFalloff, new List<HealthScript>(), resultingHeightFactor);
+        if (isServer)
+        {
+            GetComponent<Collider>().enabled = false;
+            //unparent it
+            transform.parent = null;
+            caster.SetColliderIgnoreRaycast(true);
 
-        caster.SetColliderIgnoreRaycast(false);
+            //apply Explosion force and damage
+            ExplosionDamage(caster.transform.position + Vector3.up * 0.8f/*so the terrain is not hit*/, mExplosionRadius, mExplosionFalloff, new List<HealthScript>(), resultingHeightFactor);
 
-        //remove the fistoffury object on all clients
-        StartCoroutine(DestroyNextFrame());
+            caster.SetColliderIgnoreRaycast(false);
 
-        //Set state of player to normal
-        caster.RpcSetEffectState(EffectStateSystem.EffectStateID.Normal);
+            //remove the fistoffury object on all clients
+            StartCoroutine(DestroyNextFrame());
+
+            //Set state of player to normal
+            caster.RpcSetEffectState(EffectStateSystem.EffectStateID.Normal);
+        }
     }
 
     public IEnumerator DestroyNextFrame()
@@ -104,13 +114,33 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     }
 
     [ClientRpc]
-    void RpcExplosion(Vector3 position)
+    void RpcExplosion(Vector3 position, float height)
     {
-        GameObject explosion = PoolRegistry.GetInstance(explosionPrefab, 4, 4);
-        explosion.transform.position = position;
-        //explosion.transform.localScale = new Vector3(explosionAmplitude, explosionAmplitude, explosionAmplitude);
-        explosion.SetActive(true);
-        //NetworkServer.Spawn(explosion);
+        Explosion(position, height);
+    }
+
+    private void Explosion(Vector3 position, float height)
+    {
+        {
+            GameObject explosion = PoolRegistry.GetInstance(explosionPrefab, 2, 2);
+            explosion.transform.position = position;
+            explosion.SetActive(true);
+        }
+
+        Debug.Log("height: " + height);
+
+        if (height > EffectQuantum1)
+        {
+            GameObject decal = PoolRegistry.GetInstance(decalPrefab, 1, 1);
+            decal.transform.position = position;
+            decal.SetActive(true);
+        }
+        if (height > EffectQuantum2)
+        {
+            GameObject brutality = PoolRegistry.GetInstance(brutalityPrefab, 1, 1);
+            brutality.transform.position = position;
+            brutality.SetActive(true);
+        }
     }
 
     protected override void ExecuteCollision_Host(Collision collision) { }

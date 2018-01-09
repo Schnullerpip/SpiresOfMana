@@ -14,16 +14,24 @@ public class SpellDescription : MonoBehaviour {
 
     private string defaultStats;
 
+    private A_Spell.SpellDescription mCurrentDescription;
     private int mStartFrame, mEndFrame;
 
     public void SetDescription(A_Spell.SpellDescription description)
     {
-        SetIndicator(damageIndicator, description.damage);
-        SetIndicator(cooldownIndicator, description.cooldown);
-        SetIndicator(forceIndicator, description.force);
-        SetSpellName(description.spellName);
-        mStartFrame = description.beginFrame;
-        mEndFrame = description.endFrame;
+        if(description.Equals(mCurrentDescription))
+        {
+            return;
+        }
+
+        mCurrentDescription = description;
+
+        SetIndicator(damageIndicator, mCurrentDescription.damage);
+        SetIndicator(cooldownIndicator, mCurrentDescription.cooldown);
+        SetIndicator(forceIndicator, mCurrentDescription.force);
+        SetSpellName(mCurrentDescription.spellName);
+        mStartFrame = mCurrentDescription.beginFrame;
+        mEndFrame = mCurrentDescription.endFrame;
         if (!previewPlayer.isPlaying)
         {
             previewPlayer.Play();
@@ -37,7 +45,7 @@ public class SpellDescription : MonoBehaviour {
 
     private void SetFirstFrame(VideoPlayer vPlayer)
     {
-        vPlayer.frame = mStartFrame;
+        previewPlayer.frame = mStartFrame;
         previewPlayer.prepareCompleted -= SetFirstFrame;
     }
 

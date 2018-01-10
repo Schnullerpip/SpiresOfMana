@@ -43,6 +43,12 @@ public class SpellDescription : MonoBehaviour {
         }
     }
 
+    private void OnDisable()
+    {
+        //reset description so its updated again on a restart
+        mCurrentDescription = new A_Spell.SpellDescription();
+    }
+
     private void SetFirstFrame(VideoPlayer vPlayer)
     {
         previewPlayer.frame = mStartFrame;

@@ -1103,6 +1103,25 @@ MonoBehaviour:
   spellDescription: {fileID: 114736633083059548}
   spellHudAnchor: {fileID: 224686864604433972}
   showUltimates: 0
+  scaleUpCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 1
+      inSlope: 2.91274
+      outSlope: 2.91274
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  scaleSpeed: 4
 --- !u!114 &114540258581145810
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2493,16 +2512,16 @@ RectTransform:
   m_GameObject: {fileID: 1980507993532430}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 224061651762251760}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 267, y: -240}
+  m_AnchoredPosition: {x: 267.00055, y: -265.62}
   m_SizeDelta: {x: 610, y: -427}
-  m_Pivot: {x: 0, y: 1}
+  m_Pivot: {x: 0, y: 1.06}
 --- !u!224 &224767590282195694
 RectTransform:
   m_ObjectHideFlags: 1

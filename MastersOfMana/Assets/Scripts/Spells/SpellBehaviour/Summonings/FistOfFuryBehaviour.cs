@@ -22,6 +22,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     [SerializeField] private GameObject decalPrefab;
     [SerializeField] private GameObject brutalityPrefab;
     [SerializeField] private GameObject flamesPrefab;
+    [SerializeField] private GameObject spawnExplosionIfAirborn;
     [SerializeField] private float EffectQuantum1;
     [SerializeField] private float EffectQuantum2; 
     [SerializeField] private float EffectQuantum3; 
@@ -48,13 +49,14 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     {
         //get a fistoffury object
         //FistOfFuryBehaviour fof = PoolRegistry.FistOfFuryPool.Get(Pool.Activation.ReturnActivated).GetComponent<FistOfFuryBehaviour>();
-        FistOfFuryBehaviour fof = PoolRegistry.GetInstance(this.gameObject, 4, 4).GetComponent<FistOfFuryBehaviour>();
+        FistOfFuryBehaviour fof = PoolRegistry.GetInstance(this.gameObject, 1, 1).GetComponent<FistOfFuryBehaviour>();
         fof.caster = caster;
         fof.casterObject = caster.gameObject;
         fof.transform.position = fof.castPosition = caster.transform.position;
         fof.transform.parent = caster.transform;
         fof.GetComponent<Collider>().enabled = true;
         fof.gameObject.SetActive(true);
+
         //spawn it on all clients
         NetworkServer.Spawn(fof.gameObject);
 
@@ -64,6 +66,10 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
             //set caster's state so he or she doesnt get falldamage
             caster.SetEffectState(EffectStateSystem.EffectStateID.NoFallDamage);
             caster.movement.RpcAddForce(Vector3.down * mPushDownForce, ForceMode.VelocityChange);
+
+            //activate initial spawneffect
+            GameObject spawnExplosion = PoolRegistry.GetInstance(spawnExplosionIfAirborn, caster.transform.position, Quaternion.identity, 2, 2, Pool.PoolingStrategy.OnMissSubjoinElements, Pool.Activation.ReturnActivated);
+            NetworkServer.Spawn(spawnExplosion);
         }
     }
 
@@ -89,6 +95,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         if (isServer)
         {
             GetComponent<Collider>().enabled = false;
+
             //unparent it
             transform.parent = null;
             caster.SetColliderIgnoreRaycast(true);

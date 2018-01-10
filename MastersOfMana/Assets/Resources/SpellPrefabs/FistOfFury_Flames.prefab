@@ -25,7 +25,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1127222055799724
 GameObject:
   m_ObjectHideFlags: 1
@@ -246,7 +246,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1991802561253404}
   m_LocalRotation: {x: -0.00000014901161, y: 0.000000029802322, z: -0.71966857, w: -0.6943178}
-  m_LocalPosition: {x: 0.26, y: -0.36, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4482048200381454}
@@ -286,7 +286,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1134667562612386}
   m_LocalRotation: {x: 0.37792665, y: -0.5976383, z: 0.59763825, w: 0.3779265}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4386198891526402}
@@ -672,7 +672,7 @@ Projector:
   m_Enabled: 1
   serializedVersion: 2
   m_NearClipPlane: 0.1
-  m_FarClipPlane: 2
+  m_FarClipPlane: 8
   m_FieldOfView: 60
   m_AspectRatio: 1.3
   m_Orthographic: 1

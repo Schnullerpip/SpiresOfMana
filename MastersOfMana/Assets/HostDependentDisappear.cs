@@ -9,7 +9,6 @@ public class HostDependentDisappear : NetworkBehaviour {
     [SerializeField]
     private float mLifeTime;
 
-
     private void OnEnable()
     {
         mTimeCount = 0;
@@ -20,7 +19,8 @@ public class HostDependentDisappear : NetworkBehaviour {
         mTimeCount += Time.deltaTime;
         if (mTimeCount > mLifeTime)
         {
-            if (isServer)
+
+            if (NetManager.instance.isServer)
             {
                 gameObject.SetActive(false);
             }

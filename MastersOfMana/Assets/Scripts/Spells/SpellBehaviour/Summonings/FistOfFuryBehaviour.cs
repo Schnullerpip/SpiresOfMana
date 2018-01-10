@@ -25,8 +25,13 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     [SerializeField] private GameObject spawnExplosionIfAirborn;
     [SerializeField] private float EffectQuantum1;
     [SerializeField] private float EffectQuantum2; 
-    [SerializeField] private float EffectQuantum3; 
+    [SerializeField] private float EffectQuantum3;
 
+    void OnEnable()
+    {
+        //on contact the collider is disabled, so no multiple explosions occure - so onEnable we need to make sure, that it is activated again
+        GetComponent<Collider>().enabled = true;
+    }
 
 	public override void Preview (PlayerScript caster)
 	{
@@ -94,6 +99,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
 
         if (isServer)
         {
+            //so no multiple explosions occure - remember to activate it again!!
             GetComponent<Collider>().enabled = false;
 
             //unparent it

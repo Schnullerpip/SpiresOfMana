@@ -19,6 +19,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4458668393063720}
+  - component: {fileID: 114228589925242220}
+  - component: {fileID: 114598188372836174}
   m_Layer: 0
   m_Name: FistOfFury_Flames
   m_TagString: Untagged
@@ -226,7 +228,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1355758299470152}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4458395292697422}
@@ -286,7 +288,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1134667562612386}
   m_LocalRotation: {x: 0.37792665, y: -0.5976383, z: 0.59763825, w: 0.3779265}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4386198891526402}
@@ -397,6 +399,38 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &114228589925242220
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1064705097968612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 197
+    i1: 251
+    i2: 56
+    i3: 238
+    i4: 185
+    i5: 195
+    i6: 216
+    i7: 148
+    i8: 202
+    i9: 239
+    i10: 227
+    i11: 215
+    i12: 123
+    i13: 107
+    i14: 237
+    i15: 62
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!114 &114303316274971626
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -462,6 +496,18 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   AproximatedFlyDistance: -1
+--- !u!114 &114598188372836174
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1064705097968612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97e4ce3f3a6438d4a9b8e9c2bd57e811, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mLifeTime: 5
 --- !u!114 &114626197578069268
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -10219,7 +10265,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 0
+  randomSeed: 1531240900
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -13468,7 +13514,7 @@ ParticleSystemRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_SelectedEditorRenderState: 3
+  m_SelectedEditorRenderState: 0
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89

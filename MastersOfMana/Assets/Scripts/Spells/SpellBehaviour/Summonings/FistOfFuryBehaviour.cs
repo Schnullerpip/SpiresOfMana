@@ -31,7 +31,6 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     {
         //on contact the collider is disabled, so no multiple explosions occure - so onEnable we need to make sure, that it is activated again
         GetComponent<Collider>().enabled = true;
-        disappearCount = 0;
     }
 
 	public override void Preview (PlayerScript caster)
@@ -84,6 +83,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         base.OnStartClient();
 
         transform.parent = caster.transform;
+        transform.localPosition = Vector3.zero;
     }
 
     private new void OnTriggerEnter(Collider collider)
@@ -98,11 +98,11 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         //spawn an explosion
         Explosion(caster.transform.position, resultingHeightFactor);
 
+        //so no multiple explosions occure - remember to activate it again!!
+        GetComponent<Collider>().enabled = false;
+
         if (isServer)
         {
-            //so no multiple explosions occure - remember to activate it again!!
-            GetComponent<Collider>().enabled = false;
-
             //unparent it
             transform.parent = null;
             caster.SetColliderIgnoreRaycast(true);
@@ -113,27 +113,17 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
             caster.SetColliderIgnoreRaycast(false);
 
             //remove the fistoffury object on all clients
-            StartCoroutine(DestroyNextFrame());
+            StartCoroutine(Disappear());
 
             //Set state of player to normal
             caster.RpcSetEffectState(EffectStateSystem.EffectStateID.Normal);
         }
     }
 
-    private int disappearCount;
-    [Command]
-    private void CmdDisappear()
-    {
-        if (++disappearCount == GameManager.instance.players.Count)
-        {
-            gameObject.SetActive(false);
-            NetworkServer.UnSpawn(gameObject);
-        }
-    }
 
-    public IEnumerator DestroyNextFrame()
+    public IEnumerator Disappear()
     {
-        yield return null;//wait 1 frame
+        yield return new WaitForSeconds(3.0f);//wait 1 frame
 
         NetworkServer.UnSpawn(gameObject);
         gameObject.SetActive(false);
@@ -170,12 +160,6 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
             GameObject flames = PoolRegistry.GetInstance(flamesPrefab, 1, 1);
             flames.transform.position = position;
             flames.SetActive(true);
-        }
-
-        if (!isServer)
-        {
-            //tell the server version that its safe now to disappear
-            CmdDisappear();
         }
     }
 

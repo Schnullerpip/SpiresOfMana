@@ -31,6 +31,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     {
         //on contact the collider is disabled, so no multiple explosions occure - so onEnable we need to make sure, that it is activated again
         GetComponent<Collider>().enabled = true;
+        disappearCount = 0;
     }
 
 	public override void Preview (PlayerScript caster)
@@ -119,6 +120,17 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         }
     }
 
+    private int disappearCount;
+    [Command]
+    private void CmdDisappear()
+    {
+        if (++disappearCount == GameManager.instance.players.Count)
+        {
+            gameObject.SetActive(false);
+            NetworkServer.UnSpawn(gameObject);
+        }
+    }
+
     public IEnumerator DestroyNextFrame()
     {
         yield return null;//wait 1 frame
@@ -158,6 +170,12 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
             GameObject flames = PoolRegistry.GetInstance(flamesPrefab, 1, 1);
             flames.transform.position = position;
             flames.SetActive(true);
+        }
+
+        if (!isServer)
+        {
+            //tell the server version that its safe now to disappear
+            CmdDisappear();
         }
     }
 

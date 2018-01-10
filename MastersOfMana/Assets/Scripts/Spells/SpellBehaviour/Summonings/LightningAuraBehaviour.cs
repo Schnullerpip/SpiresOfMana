@@ -23,7 +23,7 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
 
 
     //the list that captures which players are shot
-    private List<PlayerScript> mAlreadyCaught;
+    private List<HealthScript> mAlreadyCaught;
 
     [SerializeField] private SphereCollider mDecectionTrigger; 
 
@@ -44,7 +44,7 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
     void OnEnable()
     {
         mAudioSource.PlayOneShot(CastEffectClip);
-        mAlreadyCaught = new List<PlayerScript>();
+        mAlreadyCaught = new List<HealthScript>();
         mEnergyLevel = mDuration;
         mTimeCount = mCountTilDamage;
         mSelfInflictDamageTimeCount = 0;
@@ -64,38 +64,49 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
 
     public void OnTriggerStay(Collider other)
     {
-        PlayerScript ps = other.GetComponentInParent<PlayerScript>();
-        if (ps && ps != caster)
+        HealthScript hs = other.GetComponentInParent<HealthScript>();
+        if (hs && hs != caster.healthScript)
         {
+            PlayerScript ps = other.GetComponentInParent<PlayerScript>();
+
+            Vector3 position, direction;
+            position = caster.movement.mRigidbody.worldCenterOfMass;
+            if (ps)
+            {
+                direction = ps.movement.mRigidbody.worldCenterOfMass - caster.movement.mRigidbody.worldCenterOfMass;
+            }
+            else
+            {
+                direction = hs.transform.position - caster.movement.mRigidbody.worldCenterOfMass;
+            }
+            direction.Normalize();
+
             RaycastHit hit;
-            if (Physics.Raycast(
-                    new Ray(caster.movement.mRigidbody.worldCenterOfMass,
-                        (ps.movement.mRigidbody.worldCenterOfMass - caster.movement.mRigidbody.worldCenterOfMass)
-                            .normalized),
-                    out hit))
+
+            if (Physics.Raycast( new Ray(position, direction.normalized), out hit))
             {
                 if (hit.collider == other)
                 {
-                    if (!mAlreadyCaught.Contains(ps))
+                    if (!mAlreadyCaught.Contains(hs))
                     {
-                        mAlreadyCaught.Add(ps);
+                        mAlreadyCaught.Add(hs);
                     }
                 }
             }
             else
             {
-                mAlreadyCaught.Remove(ps);
+                mAlreadyCaught.Remove(hs);
             }
         }
     }
 
     public void OnTriggerExit(Collider other)
     {
-        PlayerScript ps = other.GetComponentInParent<PlayerScript>();
+        HealthScript hs = other.GetComponentInParent<HealthScript>();
 
-        if (ps)
+        if (hs)
         {
-            mAlreadyCaught.Remove(ps);
+            mAlreadyCaught.Remove(hs);
             if (mAlreadyCaught.Count == 0)
             {
                 ActivateStaticPotential();
@@ -145,7 +156,7 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
                 ActivateLightningProjectile();
             }
             //which opponent is nearest?
-            PlayerScript nearest = mAlreadyCaught[0];
+            HealthScript nearest = mAlreadyCaught[0];
 
             //if there are more than one opponents in reach, choose the nearest
             if (mAlreadyCaught.Count > 1)
@@ -163,13 +174,21 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
 
             //since mAlreadyCaught is not empty we assume, that mLightningProjectile is already active
             //shoot the lightning projectile at nearest opponent
-            mLightningProjectile.transform.LookAt(nearest.movement.mRigidbody.worldCenterOfMass);
+            ServerMoveable sm = nearest.GetComponent<ServerMoveable>();
+            if (sm)
+            {
+                mLightningProjectile.transform.LookAt(sm.mRigidbody.worldCenterOfMass);
+            }
+            else
+            {
+                mLightningProjectile.transform.LookAt(nearest.transform.position);
+            }
 
             //apply damage to nearest opponent
             if (isServer && ((mTimeCount+=Time.deltaTime) >= mCountTilDamage))
             {
                 mTimeCount = 0;
-                nearest.healthScript.TakeDamage(mDamage, this.GetType());
+                nearest.TakeDamage(mDamage, this.GetType());
             }
         }
 

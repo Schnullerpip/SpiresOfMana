@@ -22,6 +22,13 @@ public class WhipBehaviour : A_SummoningBehaviour
 	[SyncVar(hook = "SetLinePoint1")]
 	private Vector3 linePoint1;
 
+
+    public Vector3 WhipStartOffset;
+
+    [SyncVar]
+    private GameObject mAffectedPlayerObject;
+    private PlayerScript mAffectedPlayer;
+
 	private void SetLinePoint0(Vector3 vec)
 	{
 		linePoint0 = vec;
@@ -75,22 +82,28 @@ public class WhipBehaviour : A_SummoningBehaviour
 
     public override void Execute(PlayerScript caster)
     {
-        WhipBehaviour whipBehaviour = PoolRegistry.GetInstance(this.gameObject, caster.transform, 4, 4).GetComponent<WhipBehaviour>();
+        WhipBehaviour whipBehaviour = PoolRegistry.GetInstance(this.gameObject, caster.transform, 1, 1).GetComponent<WhipBehaviour>();
 
         whipBehaviour.caster = caster;
         whipBehaviour.casterObject = caster.gameObject;
         whipBehaviour.Init();
 
         whipBehaviour.gameObject.SetActive(true);
-        NetworkServer.Spawn(whipBehaviour.gameObject, whipBehaviour.GetComponent<NetworkIdentity>().assetId);
+        NetworkServer.Spawn(whipBehaviour.gameObject);
 
         whipBehaviour.StartCoroutine(whipBehaviour.DelayedUnspawn());
     }
 
     private void Init()
     {
+        //standard Initializations
+        mAffectedPlayerObject = null;
+        mAffectedPlayer = null;
+
         //initialize the linepoint
-        linePoint0 = caster.handTransform.position;
+        Vector3 casterPosition = caster.handTransform.position;
+        casterPosition += WhipStartOffset;
+        linePoint0 = casterPosition;
 
         //check for a hit
         Vector3 hitPlayerPos;
@@ -107,11 +120,18 @@ public class WhipBehaviour : A_SummoningBehaviour
             Vector3 force = -aimDirection * pullForce + Vector3.up * UpForce;
             hitPlayer.movement.RpcAddForce(force, ForceMode.VelocityChange);
             hitPlayer.healthScript.TakeDamage(0, GetType());
+
+            //cache the hitplayer and sync it down to the client
+            mAffectedPlayerObject = hitPlayer.gameObject;
+            mAffectedPlayer = hitPlayer;
+            //also cache the hitPlayerPos, so we can readjust the linerenderer through parenting
+            transform.position = hitPlayerPos;
+            transform.parent = hitPlayer.transform;
         }
         //case 2: hit geometry
         else if (RayCast(caster, new Ray(caster.GetCameraPosition(), caster.GetCameraLookDirection()), out hit) && hit.distance <= maxDistance)
         {
-            linePoint1 = hit.point;
+            transform.position = linePoint1 = hit.point;
             Vector3 aimDirection = Vector3.Normalize(linePoint1 - caster.transform.position);
             Vector3 forceVector = aimDirection * pullForce + Vector3.up * UpForce;
             caster.movement.RpcAddForce(forceVector, ForceMode.VelocityChange);
@@ -119,7 +139,7 @@ public class WhipBehaviour : A_SummoningBehaviour
         //case 3: hit nothing
         else
         {
-            linePoint1 = caster.handTransform.position + caster.GetCameraLookDirection() * maxDistance;
+            transform.position = linePoint1 = caster.handTransform.position + caster.GetCameraLookDirection() * maxDistance;
         }
     }
 
@@ -127,7 +147,32 @@ public class WhipBehaviour : A_SummoningBehaviour
 	{
 		yield return new WaitForSeconds(disappearTimer);
 
+	    caster = null;
+	    casterObject = null;
 		gameObject.SetActive(false);
 		NetworkServer.UnSpawn(gameObject);
 	}
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+
+        if (mAffectedPlayerObject)
+        {
+            mAffectedPlayer = mAffectedPlayerObject.GetComponent<PlayerScript>();
+            transform.parent = mAffectedPlayer.transform;
+        }
+    }
+
+    void Update()
+    {
+        if (caster)
+        {
+            Vector3 casterPosition = caster.handTransform.position;
+            casterPosition += WhipStartOffset;
+            lineRenderer.SetPosition(0, casterPosition);
+        }
+
+        lineRenderer.SetPosition(1, transform.position);
+    }
 }

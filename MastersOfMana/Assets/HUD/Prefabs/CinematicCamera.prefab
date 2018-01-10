@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 20880393442014814}
   - component: {fileID: 124824133387740230}
   - component: {fileID: 92287751330114376}
+  - component: {fileID: 114575940405546940}
   m_Layer: 0
   m_Name: CinematicCamera
   m_TagString: MainCamera
@@ -59,7 +60,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 2000
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -85,6 +86,20 @@ Behaviour:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1449320244650372}
   m_Enabled: 1
+--- !u!114 &114575940405546940
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1449320244650372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1e3e9efc10324a9d87697b2409a8287, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pivot: {x: 0, y: 0, z: 0}
+  axis: {x: 0, y: 1, z: 0}
+  speed: 5
 --- !u!124 &124824133387740230
 Behaviour:
   m_ObjectHideFlags: 1

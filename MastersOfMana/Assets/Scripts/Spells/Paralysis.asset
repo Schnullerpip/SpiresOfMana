@@ -15,12 +15,14 @@ MonoBehaviour:
   coolDownInSeconds: 13
   castDurationInSeconds: 0
   resolveDurationInSeconds: 0
+  castAnimationID: 0
   spellDescription:
     damage: 0
     force: 0
-    cooldown: 2
-    spellName: Iceshot
-    video: {fileID: 0}
+    cooldown: 1
+    spellName: Frost Prison
+    beginFrame: 2419
+    endFrame: 2639
   spellID: 11
   SpellBehaviours:
   - {fileID: 114753619271961028, guid: 405c847a688227f439dc739133dab0da, type: 2}

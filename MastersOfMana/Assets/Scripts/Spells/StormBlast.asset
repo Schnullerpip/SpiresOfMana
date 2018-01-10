@@ -15,12 +15,14 @@ MonoBehaviour:
   coolDownInSeconds: 0
   castDurationInSeconds: 0
   resolveDurationInSeconds: 0
+  castAnimationID: 0
   spellDescription:
     damage: 0
     force: 3
-    cooldown: 3
-    spellName: Storm Blast
-    video: {fileID: 0}
+    cooldown: 1
+    spellName: Arcane Blast
+    beginFrame: 855
+    endFrame: 1423
   spellID: 102
   SpellBehaviours:
   - {fileID: 114012930376191056, guid: 223b402b9bf598e4fa313ff4950f8b10, type: 2}

@@ -69,7 +69,7 @@ public class WindWallBehaviour : A_EffectBehaviour
                     }
                     else
                     {
-                        ps.movement.RpcSetVelocity(force);
+                        hitObject.RpcSetVelocity(force);
                     }
                 }
                 else

@@ -65,6 +65,10 @@ public class HUD : MonoBehaviour {
         ShowPostGameScreen(false);
         mLobby.gameObject.SetActive(true);
         mSpellHUD.gameObject.SetActive(true);
-        GameManager.instance.TriggerRoundEnded();
+        GameManager.instance.listener.enabled = true;
+        if (NetManager.instance.amIServer())
+        {
+            NetManager.instance.RpcHostEndedRound();
+        }
     }
 }

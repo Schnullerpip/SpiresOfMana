@@ -15,12 +15,14 @@ MonoBehaviour:
   coolDownInSeconds: 10
   castDurationInSeconds: 0
   resolveDurationInSeconds: 0
+  castAnimationID: 0
   spellDescription:
     damage: 0
     force: 3
-    cooldown: 2
+    cooldown: 1
     spellName: Jet
-    video: {fileID: 0}
+    beginFrame: 3387
+    endFrame: 3603
   spellID: 8
   SpellBehaviours:
   - {fileID: 114936674229906994, guid: ea9e802ddd4680843a8062f42b224dc4, type: 2}

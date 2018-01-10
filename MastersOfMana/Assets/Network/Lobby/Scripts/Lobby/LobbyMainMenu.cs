@@ -33,6 +33,11 @@ namespace Prototype.NetworkLobby
 			return rewiredPlayer;
 		}
 
+        private void Awake()
+        {
+            optionsPanel.GetComponent<LobbyOptions>().ApplySettings();
+        }
+
         public void OnEnable()
         {
             matchNameInput.onEndEdit.RemoveAllListeners();

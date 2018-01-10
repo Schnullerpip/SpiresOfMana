@@ -175,6 +175,7 @@ MonoBehaviour:
   hitRadius: 1.2
   disappearTimer: 1
   lineRenderer: {fileID: 120818958224146740}
+  WhipStartOffset: {x: 0, y: -0.4, z: 0}
 --- !u!120 &120818958224146740
 LineRenderer:
   m_ObjectHideFlags: 1
@@ -212,7 +213,7 @@ LineRenderer:
   - {x: 0, y: 0, z: 1}
   m_Parameters:
     serializedVersion: 2
-    widthMultiplier: 0.62
+    widthMultiplier: 0.3
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -255,7 +256,7 @@ LineRenderer:
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 0
-    numCapVertices: 10
+    numCapVertices: 0
     alignment: 0
     textureMode: 1
     generateLightingData: 0

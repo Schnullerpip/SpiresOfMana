@@ -209,21 +209,6 @@ public class LightningStrike : NetworkBehaviour
                 }
             }
         }
-
-        hitAmount = Physics.RaycastNonAlloc(transform.position + Vector3.up * 40, Vector3.down, hits, 40, Physics.DefaultRaycastLayers);
-
-        for (int i = 0; i < hitAmount; ++i)
-        {
-            if(hits[i].point.y <= 0.1f)
-            {
-                //skip everything beneath the lava
-                continue;
-            }
-
-            GameObject decal = PoolRegistry.GetInstance(contactPrefab, 20, 10);
-            decal.transform.SetPositionAndRotation(hits[i].point, Quaternion.Euler(hits[i].normal));
-            decal.SetActive(true);
-        }
     }
 
     [ClientRpc]
@@ -238,6 +223,25 @@ public class LightningStrike : NetworkBehaviour
         strikeSource.pitch = randomClip.GetRandomPitch();
         strikeSource.clip = randomClip.audioClip;
         strikeSource.Play();
+        SpawnStrikeContactDecals();
+    }
+
+    private void SpawnStrikeContactDecals()
+    {
+        hitAmount = Physics.RaycastNonAlloc(transform.position + Vector3.up * 40, Vector3.down, hits, 40, Physics.DefaultRaycastLayers);
+
+        for (int i = 0; i < hitAmount; ++i)
+        {
+            if (hits[i].point.y <= GameManager.instance.GetLavaFloorHeight())
+            {
+                //skip everything beneath the lava
+                continue;
+            }
+
+            GameObject decal = PoolRegistry.GetInstance(contactPrefab, 20, 10);
+            decal.transform.SetPositionAndRotation(hits[i].point, Quaternion.Euler(hits[i].normal));
+            decal.SetActive(true);
+        }
     }
 
     IEnumerator Flash()

@@ -15,12 +15,14 @@ MonoBehaviour:
   coolDownInSeconds: 0
   castDurationInSeconds: 0
   resolveDurationInSeconds: 0
+  castAnimationID: 0
   spellDescription:
     damage: 3
-    force: 2
-    cooldown: 3
+    force: 0
+    cooldown: 1
     spellName: ThunderStorm
-    video: {fileID: 0}
+    beginFrame: 2994
+    endFrame: 3383
   spellID: 100
   SpellBehaviours:
   - {fileID: 114868594900233886, guid: 358c82d2a1bdc4862bfaa11e7b5d88ce, type: 2}

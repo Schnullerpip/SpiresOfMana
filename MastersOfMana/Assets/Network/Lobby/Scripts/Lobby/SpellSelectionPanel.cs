@@ -57,6 +57,7 @@ public class SpellSelectionPanel : MonoBehaviour {
         {
             A_Spell spell = spells[i];
             Button spellButton = GameObject.Instantiate(spellButtonPrefab);
+            spellButton.name += " " + spell.name;
             Image image = spellButton.transform.GetChild(0).GetComponent<Image>();
             if (image)
             {
@@ -64,7 +65,15 @@ public class SpellSelectionPanel : MonoBehaviour {
             }
             spellButton.transform.SetParent(spellList);
             spellButton.transform.localScale = new Vector3(1, 1, 1);
+
             spellButton.onClick.AddListener(delegate { OnClickSpellButton(spell); });
+
+            EventTrigger trigger = spellButton.gameObject.AddComponent<EventTrigger>();
+            EventTrigger.Entry entry = new EventTrigger.Entry();
+            entry.eventID = EventTriggerType.PointerEnter;
+            entry.callback.AddListener((eventData) => { OnPointerEnterSpellButton(spell); });
+            trigger.triggers.Add(entry);
+
             spellButtons.Add(spellButton);
             mSpellButtonDictionary.Add(spell, spellButton);
         }
@@ -101,6 +110,10 @@ public class SpellSelectionPanel : MonoBehaviour {
     private void OnClickSpellButton(A_Spell spell)
     {
         tradeSpells(spell);
+    }
+
+    private void OnPointerEnterSpellButton(A_Spell spell)
+    {
         spellDescription.SetDescription(spell.spellDescription);
     }
 

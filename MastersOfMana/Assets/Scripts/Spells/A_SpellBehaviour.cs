@@ -47,7 +47,7 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
     public override void OnStartClient()
     {
         //initialize the caster - serverSpell's casters can and should be set in the Execute routine, so we're only interested in Clientside calls
-        if (!isServer && casterObject)
+        if (!isServer && casterObject && !caster)
         {
             caster = casterObject.GetComponent<PlayerScript>();
         }
@@ -195,7 +195,7 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 	/// <param name="radius">Radius.</param>
 	/// <param name="explFalloff">Explosion falloff.</param>
 	/// <param name="excluded">A list of Healthscript that should be skipped. eg these already got hit.</param>
-	protected void ExplosionDamage(Vector3 explosionOrigin, float radius, ExplosionFalloff explFalloff, List<HealthScript> excluded = null, float externalDamageFactor = 1.0f)
+	protected void ExplosionDamage(Vector3 explosionOrigin, float radius, ExplosionFalloff explFalloff, List<HealthScript> excluded = null, float externalDamageFactor = 1.0f, float externalForceFactor = 1.0f)
 	{
 
 		//overlap a sphere at the hit position
@@ -251,16 +251,17 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 				affect = 1 - forceVector.sqrMagnitude / radiusSqr;
 				
 				forceVector.Normalize();
-				forceVector *= explFalloff.EvaluateForce(affect);
+				forceVector *= explFalloff.EvaluateForce(affect) * externalForceFactor;
 
-				//check wheather or not we are handling a player or just some random rigidbody
-				if (c.attachedRigidbody.CompareTag("Player"))
+                //check wheather or not we are handling a ServerMoveable or just some random rigidbody
+                ServerMoveable sm = c.attachedRigidbody.GetComponent<ServerMoveable>();
+				if (sm)
 				{
-					PlayerScript ps = c.attachedRigidbody.GetComponent<PlayerScript>();
-					ps.movement.RpcAddForce(forceVector, ForceMode.VelocityChange);
+					sm.RpcAddForce(forceVector, ForceMode.VelocityChange);
 				}
 				else
 				{
+                    //its safe to move rigid bodies if they're not a server moveable since then it is only local objects, that should not affect the game anyway
 					c.attachedRigidbody.AddForce(forceVector, ForceMode.VelocityChange);
 				}
 			}

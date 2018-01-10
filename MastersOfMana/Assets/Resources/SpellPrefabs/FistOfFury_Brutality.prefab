@@ -303,6 +303,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4546780065177848}
   - component: {fileID: 114937587910870266}
+  - component: {fileID: 114906227643989154}
+  - component: {fileID: 114559454638309754}
   m_Layer: 11
   m_Name: FistOfFury_Brutality
   m_TagString: Untagged
@@ -2082,6 +2084,18 @@ MonoBehaviour:
   GraphIntensityMultiplier: 1
   IsLoop: 0
   UseSharedMaterial: 0
+--- !u!114 &114559454638309754
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1652243401414912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97e4ce3f3a6438d4a9b8e9c2bd57e811, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mLifeTime: 3
 --- !u!114 &114568043606289394
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2162,6 +2176,38 @@ MonoBehaviour:
   GraphIntensityMultiplier: 1
   IsLoop: 0
   UseSharedMaterial: 0
+--- !u!114 &114906227643989154
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1652243401414912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 239
+    i1: 140
+    i2: 81
+    i3: 178
+    i4: 218
+    i5: 27
+    i6: 16
+    i7: 196
+    i8: 75
+    i9: 164
+    i10: 138
+    i11: 175
+    i12: 5
+    i13: 247
+    i14: 114
+    i15: 163
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!114 &114919821178301508
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -8,23 +8,30 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
 {
     [Header("Effect on caster")]
     [SerializeField] private float mPushDownForce;
-    [Header("Damage/Force")]
+    [Header("Damage/Force-Relevant")]
+    //will store the transform.position of the caster when he casted - the difference between that and he collisionpoint will be a factor to the resulting damage
+    [SyncVar]
+    private Vector3 castPosition;
     [SerializeField] private float mExplosionForce;
     [SerializeField] private ExplosionFalloff mExplosionFalloff;
     [SerializeField] private float mExplosionRadius;
     [SerializeField] private float mMaxDistance;
 
-    //-----------visuals-------------
     [Header("Visuals")]
     [SerializeField] private GameObject explosionPrefab;
     [SerializeField] private GameObject decalPrefab;
     [SerializeField] private GameObject brutalityPrefab;
-    [SerializeField] private float EffectQuantum1, EffectQuantum2; 
-    //-------------------------------
+    [SerializeField] private GameObject flamesPrefab;
+    [SerializeField] private GameObject spawnExplosionIfAirborn;
+    [SerializeField] private float EffectQuantum1;
+    [SerializeField] private float EffectQuantum2; 
+    [SerializeField] private float EffectQuantum3;
 
-    //will store the transform.position of the caster when he casted - the difference between that and he collisionpoint will be a factor to the resulting damage
-    [SyncVar]
-    private Vector3 castPosition;
+    void OnEnable()
+    {
+        //on contact the collider is disabled, so no multiple explosions occure - so onEnable we need to make sure, that it is activated again
+        GetComponent<Collider>().enabled = true;
+    }
 
 	public override void Preview (PlayerScript caster)
 	{
@@ -47,13 +54,14 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     {
         //get a fistoffury object
         //FistOfFuryBehaviour fof = PoolRegistry.FistOfFuryPool.Get(Pool.Activation.ReturnActivated).GetComponent<FistOfFuryBehaviour>();
-        FistOfFuryBehaviour fof = PoolRegistry.GetInstance(this.gameObject, 4, 4).GetComponent<FistOfFuryBehaviour>();
+        FistOfFuryBehaviour fof = PoolRegistry.GetInstance(this.gameObject, 1, 1).GetComponent<FistOfFuryBehaviour>();
         fof.caster = caster;
         fof.casterObject = caster.gameObject;
         fof.transform.position = fof.castPosition = caster.transform.position;
         fof.transform.parent = caster.transform;
         fof.GetComponent<Collider>().enabled = true;
         fof.gameObject.SetActive(true);
+
         //spawn it on all clients
         NetworkServer.Spawn(fof.gameObject);
 
@@ -63,6 +71,10 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
             //set caster's state so he or she doesnt get falldamage
             caster.SetEffectState(EffectStateSystem.EffectStateID.NoFallDamage);
             caster.movement.RpcAddForce(Vector3.down * mPushDownForce, ForceMode.VelocityChange);
+
+            //activate initial spawneffect
+            GameObject spawnExplosion = PoolRegistry.GetInstance(spawnExplosionIfAirborn, caster.transform.position, Quaternion.identity, 2, 2, Pool.PoolingStrategy.OnMissSubjoinElements, Pool.Activation.ReturnActivated);
+            NetworkServer.Spawn(spawnExplosion);
         }
     }
 
@@ -87,13 +99,15 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
 
         if (isServer)
         {
+            //so no multiple explosions occure - remember to activate it again!!
             GetComponent<Collider>().enabled = false;
+
             //unparent it
             transform.parent = null;
             caster.SetColliderIgnoreRaycast(true);
 
             //apply Explosion force and damage
-            ExplosionDamage(caster.transform.position + Vector3.up * 0.8f/*so the terrain is not hit*/, mExplosionRadius, mExplosionFalloff, new List<HealthScript>(), resultingHeightFactor);
+            ExplosionDamage(caster.transform.position + Vector3.up * 0.8f/*so the terrain is not hit*/, mExplosionRadius, mExplosionFalloff, new List<HealthScript>(), resultingHeightFactor, 1 + resultingHeightFactor);
 
             caster.SetColliderIgnoreRaycast(false);
 
@@ -127,8 +141,6 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
             explosion.SetActive(true);
         }
 
-        Debug.Log("height: " + height);
-
         if (height > EffectQuantum1)
         {
             GameObject decal = PoolRegistry.GetInstance(decalPrefab, 1, 1);
@@ -140,6 +152,12 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
             GameObject brutality = PoolRegistry.GetInstance(brutalityPrefab, 1, 1);
             brutality.transform.position = position;
             brutality.SetActive(true);
+        }
+        if (height > EffectQuantum3)
+        {
+            GameObject flames = PoolRegistry.GetInstance(flamesPrefab, 1, 1);
+            flames.transform.position = position;
+            flames.SetActive(true);
         }
     }
 

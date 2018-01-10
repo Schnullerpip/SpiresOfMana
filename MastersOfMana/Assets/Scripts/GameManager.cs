@@ -319,7 +319,7 @@ public class GameManager : MonoBehaviour
 		List<Transform> startPositions = mStartPoints.GetRandomStartPositions();
 		for(int i = 0; i < players.Count; i++)
 		{
-			players[i].movement.RpcSetPosition(startPositions[i].position);
+			players[i].movement.RpcSetPositionAndRotation(startPositions[i].position, startPositions[i].rotation);
 			players[i].movement.RpcSetVelocity(Vector3.zero);
             players[i].RpcSetInputState(InputStateSystem.InputStateID.Normal);
 			players[i].enabled = true;

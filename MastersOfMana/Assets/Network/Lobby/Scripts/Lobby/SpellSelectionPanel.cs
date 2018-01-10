@@ -7,52 +7,37 @@ using UnityEngine.EventSystems;
 public class SpellSelectionPanel : MonoBehaviour {
 
     public SpellRegistry spellregistry;
-    public RectTransform spellList;
+    public RectTransform normalSpellList;
+    public RectTransform ultimateSpellList;
     public Button spellButtonPrefab;
     public SpellDescription spellDescription;
-    public Transform spellHudAnchor;
-    private Vector3 mSpellHudOriginalPosition;
-    private Transform mSpellHudTransform;
     private PlayerSpells mPlayerSpells;
     private List<A_Spell> mPlayerSpellList = new List<A_Spell>();
     private HUD mHUD;
-    public bool showUltimates = false;
-    private bool mShowUltimates = false;
-    private bool mUltimatesShown = false;
     private List<Button> spellButtons = new List<Button>();
     private Dictionary<A_Spell, Button> mSpellButtonDictionary = new Dictionary<A_Spell, Button>();
-    private int mHighlighted = -2;
 
-    private void OnEnable()
-    {
-        Init();
-        //spellButtons[0].OnSelect(null);
-    }
+    public PopupMenu popupMenu;
+
+    public RectTransform[] selectionHighlights;
 
     private void Awake()
     {
+        popupMenu.gameObject.SetActive(false);
+    }
+
+    private void Start()
+    {
         mPlayerSpells = GameManager.instance.localPlayer.GetPlayerSpells();
-        mPlayerSpellList = GetPlayerSpells();
+        mPlayerSpellList = GetPlayerSpellList();
         mHUD = GetComponentInParent<HUD>();
-        mSpellHudTransform = GameObject.FindObjectOfType<SpellHUD>().transform;
-        mSpellHudOriginalPosition = mSpellHudTransform.GetComponent<RectTransform>().position;
+        FillContainer(normalSpellList, spellregistry.spellList, (A_Spell spell) => { OnClickSpellButton(spell); });
+        FillContainer(ultimateSpellList, spellregistry.ultimateSpellList, (A_Spell spell) => { OnUltiSpellButton(spell); });
+        ValidateSpellSelection();
     }
 
-    public void Init()
+    private void FillContainer(RectTransform container, List<A_Spell> spells, System.Action<A_Spell> buttonClickCallback)
     {
-        fillList();
-        // This will make sure the first spell is highlighted when opening
-        mSpellHudTransform.GetComponent<RectTransform>().position = spellHudAnchor.transform.position;
-    }
-
-    private void fillList()
-    {
-        clearList();
-        List<A_Spell> spells = spellregistry.spellList;
-        if (mShowUltimates)
-        {
-            spells = spellregistry.ultimateSpellList;
-        }
         for (int i = 0; i < spells.Count; i++)
         {
             A_Spell spell = spells[i];
@@ -63,33 +48,29 @@ public class SpellSelectionPanel : MonoBehaviour {
             {
                 image.sprite = spell.icon;
             }
-            spellButton.transform.SetParent(spellList);
-            spellButton.transform.localScale = new Vector3(1, 1, 1);
+            spellButton.transform.SetParent(container);
+            spellButton.transform.localScale = Vector3.one;
 
-            spellButton.onClick.AddListener(delegate { OnClickSpellButton(spell); });
+            spellButton.onClick.AddListener(() => { if(buttonClickCallback != null) buttonClickCallback(spell); });
 
             EventTrigger trigger = spellButton.gameObject.AddComponent<EventTrigger>();
-            EventTrigger.Entry entry = new EventTrigger.Entry();
-            entry.eventID = EventTriggerType.PointerEnter;
-            entry.callback.AddListener((eventData) => { OnPointerEnterSpellButton(spell); });
-            trigger.triggers.Add(entry);
+
+            EventTrigger.Entry pointerEnterEntry = new EventTrigger.Entry();
+            pointerEnterEntry.eventID = EventTriggerType.PointerEnter;
+            pointerEnterEntry.callback.AddListener((eventData) => { OnPointerEnterSpellButton(spell); });
+            trigger.triggers.Add(pointerEnterEntry);
+
+            EventTrigger.Entry deselectEntry = new EventTrigger.Entry();
+            deselectEntry.eventID = EventTriggerType.Deselect;
+            deselectEntry.callback.AddListener(OnSpellButtonDeselect);
+            trigger.triggers.Add(deselectEntry);
 
             spellButtons.Add(spellButton);
             mSpellButtonDictionary.Add(spell, spellButton);
         }
     }
 
-    private void clearList()
-    {
-        mSpellButtonDictionary.Clear();
-        foreach (Button button in spellButtons)
-        {
-            Destroy(button.gameObject);
-        }
-        spellButtons.Clear();
-    }
-
-    private List<A_Spell> GetPlayerSpells()
+    private List<A_Spell> GetPlayerSpellList()
     {
         List<A_Spell> playerSpells = new List<A_Spell>();
         foreach(PlayerSpells.SpellSlot slot in mPlayerSpells.spellslot)
@@ -99,39 +80,72 @@ public class SpellSelectionPanel : MonoBehaviour {
         return playerSpells;
     }
 
-    private void SetPlayerSpells(List<A_Spell> spells)
+    private void OnClickSpellButton(A_Spell spell)
     {
-        for(int i = 0; i < spells.Count; i++)
+        if(popupMenu.GetIsActive() && popupMenu.GetParent() == mSpellButtonDictionary[spell].gameObject)
         {
-            mPlayerSpells.spellslot[i].spell = spells[i];
+            popupMenu.Close();
+        }
+        else
+        {
+            popupMenu.Open(mSpellButtonDictionary[spell].gameObject, (int inputIndex) => { PopupMenuClicked(spell, inputIndex); } );
+            popupMenu.transform.position = mSpellButtonDictionary[spell].transform.position;
         }
     }
 
-    private void OnClickSpellButton(A_Spell spell)
+    private void PopupMenuClicked(A_Spell spell, int inputIndex)
     {
-        tradeSpells(spell);
+        TradeSpells(spell, inputIndex);
+        popupMenu.Close();
     }
+
+    private void OnSpellButtonDeselect(BaseEventData eventData)
+    {
+        var derMaschine = ((Rewired.Integration.UnityUI.RewiredStandaloneInputModule)eventData.currentInputModule).pointerEventDataOnClick.pointerEnter;
+
+        if(derMaschine.transform != popupMenu.transform && derMaschine.transform.parent != popupMenu.transform)
+        {
+            popupMenu.Close();
+        }
+    }
+
+    private void OnUltiSpellButton(A_Spell spell)
+    {
+        TradeSpells(spell, 3);
+    }
+
+
 
     private void OnPointerEnterSpellButton(A_Spell spell)
     {
         spellDescription.SetDescription(spell.spellDescription);
     }
 
-    public void tradeSpells(A_Spell spell)
+    /// <summary>
+    /// Checks if chosen spell has already been selected and trades spellslot
+    /// </summary>
+    /// <param name="spell"></param>
+    /// <returns>
+    /// Returns Spell that has been traded with. Returns null if no spell was traded
+    /// </returns>
+    public A_Spell TradeSpells(A_Spell spell, int inputIndex)
     {
+        A_Spell tradedSpell = null;
         for (int i = 0; i < mPlayerSpellList.Count-1; i++)
         {
+            //TODO: Replcae mPlayerSpells.currentSpell with own index
             //Check if the chosen spell is already used
-            if (mPlayerSpellList[i] == spell && i != mPlayerSpells.currentSpell)
+            if (mPlayerSpellList[i] == spell && i != inputIndex)
             {
                 //If the spell is already used, just swap the spell to change with the old position of the new spell
-                mPlayerSpellList[i] = mPlayerSpellList[mPlayerSpells.currentSpell];
+                tradedSpell = mPlayerSpellList[inputIndex];
+                mPlayerSpellList[i] = tradedSpell;
                 break;
             }
         }
-        mPlayerSpellList[mPlayerSpells.currentSpell] = spell;
-        SetPlayerSpells(mPlayerSpellList);
+        mPlayerSpellList[inputIndex] = spell;
         ValidateSpellSelection();
+        return tradedSpell;
     }
 
     private void ValidateSpellSelection()
@@ -191,74 +205,11 @@ public class SpellSelectionPanel : MonoBehaviour {
             mPlayerSpellList[3] = spellregistry.ultimateSpellList[0];
         }
 
-        SetPlayerSpells(mPlayerSpellList);
-        mHUD.GetSpellHUD().UpdateSpellIcons();
-    }
-
-    public AnimationCurve scaleUpCurve;
-    public float scaleSpeed = 5f;
-
-    public void Update()
-    {
-        mShowUltimates = mPlayerSpells.currentSpell == 3;
-        if((mShowUltimates && !mUltimatesShown) || (!mShowUltimates && mUltimatesShown))
+        for (int i = 0; i < selectionHighlights.Length; i++)
         {
-            mUltimatesShown = mShowUltimates;
-            fillList();
+            selectionHighlights[i].SetParent(mSpellButtonDictionary[mPlayerSpellList[i]].transform, false);
+            selectionHighlights[i].anchoredPosition = Vector2.zero;
         }
-        if (mHighlighted != mPlayerSpells.currentSpell)// || EventSystem.current.currentSelectedGameObject == null)
-        {
-            if(mHighlighted != -1)
-			{
-				ScaleEffect(mPlayerSpells.currentSpell);
-            }
-
-            mHighlighted = mPlayerSpells.currentSpell;
-
-            A_Spell currentSpell = mPlayerSpells.GetCurrentspell().spell;
-            //EventSystem.current.SetSelectedGameObject(mSpellButtonDictionary[currentSpell].gameObject);
-            spellDescription.SetDescription(currentSpell.spellDescription);
-
-            mSpellButtonDictionary[currentSpell].Select();
-        }
-    }
-
-    private void ScaleEffect(int index)
-    {
-        StopAllCoroutines();
-        spellList.localScale = Vector3.one;
-
-        Vector3[] corners = new Vector3[4];
-        spellList.GetWorldCorners(corners);
-
-        Vector3 hudSpellIconPos = mSpellHudTransform.GetComponent<SpellHUD>().GetSpellIcon(index).transform.position;
-
-        Vector2 newPivot = new Vector2
-        (
-                Extensions.InverseLerpFullRange(corners[0].x, corners[2].x, hudSpellIconPos.x),
-                spellList.pivot.y
-        );
-
-        Vector2 pivotDiff = newPivot - spellList.pivot;
-
-        Vector2 prevPos = spellList.anchoredPosition;
-
-
-        spellList.pivot = newPivot;
-        spellList.anchoredPosition = prevPos + new Vector2(spellList.rect.width * pivotDiff.x, 0);
-
-        StartCoroutine(ScaleUp());
-    }
-
-    IEnumerator ScaleUp()
-    {
-        for (float f = 0; f < 1; f += Time.deltaTime * scaleSpeed)
-        {
-            spellList.localScale = Vector3.one * scaleUpCurve.Evaluate(f);
-            yield return null;
-        }
-
-        spellList.localScale = Vector3.one;
     }
 
     public enum OnSelectDirection
@@ -293,9 +244,7 @@ public class SpellSelectionPanel : MonoBehaviour {
     public void RandomizeSpells()
     {
         mPlayerSpellList = spellregistry.generateRandomSpells();
-        SetPlayerSpells(mPlayerSpellList);
-        mHUD.GetSpellHUD().UpdateSpellIcons();
-        mHighlighted = -1; //We need to artificially invalidate the highlighted spell, because this changes the spell in the current selected, but not the selected slot
+        //TODO: Change button assignments
     }
 
     public void OnReady()
@@ -308,11 +257,6 @@ public class SpellSelectionPanel : MonoBehaviour {
         PlayerPrefs.SetInt("SpellSlot3", mPlayerSpellList[3].spellID);
         PlayerPrefs.Save();
         mPlayerSpells.CmdUpdateSpells(mPlayerSpellList[0].spellID, mPlayerSpellList[1].spellID, mPlayerSpellList[2].spellID, mPlayerSpellList[3].spellID);
-    }
-
-    public void OnDisable()
-    {
-        clearList();
-        mSpellHudTransform.GetComponent<RectTransform>().position = mSpellHudOriginalPosition;
+        mHUD.GetSpellHUD().UpdateSpellIcons();
     }
 }

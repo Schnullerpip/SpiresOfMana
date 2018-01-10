@@ -63,14 +63,8 @@ public class SpellRegistry : MonoBehaviour {
         //And Shrink to size 3
         resultSpellList.RemoveRange(3, resultSpellList.Count - 3);
 
-        //Add random Ultimate
-        List<A_Spell> randomUltimateSpellList = new List<A_Spell>(ultimateSpellList);
-
-        //Randomize spellList
-        randomUltimateSpellList.Shuffle();
-
         //And add the first to the result list
-        resultSpellList.Add(randomUltimateSpellList[0]);
+        resultSpellList.Add(ultimateSpellList.RandomElement());
 
         return resultSpellList;
     }

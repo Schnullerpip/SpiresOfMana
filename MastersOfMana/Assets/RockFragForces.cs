@@ -17,6 +17,7 @@ public class RockFragForces : MonoBehaviour
             var rockDummy = rockDummies[i];
 
             rockFrag.transform.position = rockDummy.position;
+            rockFrag.transform.rotation = Random.rotation;
             rockFrag.velocity = (Vector3.Normalize(rockDummy.position - transform.position)+Vector3.up)*force;
         }
     }

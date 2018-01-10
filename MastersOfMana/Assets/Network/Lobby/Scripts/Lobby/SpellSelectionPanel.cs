@@ -21,7 +21,7 @@ public class SpellSelectionPanel : MonoBehaviour {
     private bool mUltimatesShown = false;
     private List<Button> spellButtons = new List<Button>();
     private Dictionary<A_Spell, Button> mSpellButtonDictionary = new Dictionary<A_Spell, Button>();
-    private int mHighlighted = -1;
+    private int mHighlighted = -2;
 
     private void OnEnable()
     {
@@ -195,6 +195,9 @@ public class SpellSelectionPanel : MonoBehaviour {
         mHUD.GetSpellHUD().UpdateSpellIcons();
     }
 
+    public AnimationCurve scaleUpCurve;
+    public float scaleSpeed = 5f;
+
     public void Update()
     {
         mShowUltimates = mPlayerSpells.currentSpell == 3;
@@ -203,13 +206,59 @@ public class SpellSelectionPanel : MonoBehaviour {
             mUltimatesShown = mShowUltimates;
             fillList();
         }
-        if (mHighlighted != mPlayerSpells.currentSpell || EventSystem.current.currentSelectedGameObject == null)
+        if (mHighlighted != mPlayerSpells.currentSpell)// || EventSystem.current.currentSelectedGameObject == null)
         {
+            if(mHighlighted != -1)
+			{
+				ScaleEffect(mPlayerSpells.currentSpell);
+            }
+
             mHighlighted = mPlayerSpells.currentSpell;
+
             A_Spell currentSpell = mPlayerSpells.GetCurrentspell().spell;
-            EventSystem.current.SetSelectedGameObject(mSpellButtonDictionary[currentSpell].gameObject);
+            //EventSystem.current.SetSelectedGameObject(mSpellButtonDictionary[currentSpell].gameObject);
             spellDescription.SetDescription(currentSpell.spellDescription);
+
+            mSpellButtonDictionary[currentSpell].Select();
         }
+    }
+
+    private void ScaleEffect(int index)
+    {
+        StopAllCoroutines();
+        spellList.localScale = Vector3.one;
+
+        Vector3[] corners = new Vector3[4];
+        spellList.GetWorldCorners(corners);
+
+        Vector3 hudSpellIconPos = mSpellHudTransform.GetComponent<SpellHUD>().GetSpellIcon(index).transform.position;
+
+        Vector2 newPivot = new Vector2
+        (
+                Extensions.InverseLerpFullRange(corners[0].x, corners[2].x, hudSpellIconPos.x),
+                spellList.pivot.y
+        );
+
+        Vector2 pivotDiff = newPivot - spellList.pivot;
+
+        Vector2 prevPos = spellList.anchoredPosition;
+
+
+        spellList.pivot = newPivot;
+        spellList.anchoredPosition = prevPos + new Vector2(spellList.rect.width * pivotDiff.x, 0);
+
+        StartCoroutine(ScaleUp());
+    }
+
+    IEnumerator ScaleUp()
+    {
+        for (float f = 0; f < 1; f += Time.deltaTime * scaleSpeed)
+        {
+            spellList.localScale = Vector3.one * scaleUpCurve.Evaluate(f);
+            yield return null;
+        }
+
+        spellList.localScale = Vector3.one;
     }
 
     public enum OnSelectDirection

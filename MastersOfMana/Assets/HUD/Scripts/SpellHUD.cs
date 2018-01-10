@@ -30,6 +30,11 @@ public class SpellHUD : MonoBehaviour
 
     //private Rewired.Player mRewired;
 
+    public Image GetSpellIcon(int index)
+    {
+        return spellIcons[index];
+    }
+
     private void Awake()
     {
         //mRewired = Rewired.ReInput.players.GetPlayer(0);

@@ -120,7 +120,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4182751182661430}
   - component: {fileID: 114825514344793228}
-  - component: {fileID: 114850779492821930}
+  - component: {fileID: 114580355802516804}
   m_Layer: 0
   m_Name: FistOfFury_Wave
   m_TagString: Untagged
@@ -610,6 +610,18 @@ MonoBehaviour:
     m_RotationOrder: 0
   GraphTimeMultiplier: 3
   IsLoop: 0
+--- !u!114 &114580355802516804
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1682363581096778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8410750655a2d2f489c642c14c30aaec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DeactivateTime: 3
 --- !u!114 &114825514344793228
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -642,18 +654,6 @@ MonoBehaviour:
     i15: 92
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
---- !u!114 &114850779492821930
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1682363581096778}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97e4ce3f3a6438d4a9b8e9c2bd57e811, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mLifeTime: 3
 --- !u!198 &198030825698566048
 ParticleSystem:
   m_ObjectHideFlags: 1

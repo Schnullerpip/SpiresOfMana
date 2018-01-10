@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4458668393063720}
   - component: {fileID: 114228589925242220}
-  - component: {fileID: 114598188372836174}
+  - component: {fileID: 114785461845590250}
   m_Layer: 0
   m_Name: FistOfFury_Flames
   m_TagString: Untagged
@@ -496,18 +496,6 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   AproximatedFlyDistance: -1
---- !u!114 &114598188372836174
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1064705097968612}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97e4ce3f3a6438d4a9b8e9c2bd57e811, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mLifeTime: 5
 --- !u!114 &114626197578069268
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -613,6 +601,18 @@ MonoBehaviour:
   UseSharedMaterial: 0
   HUE: -1
   canUpdate: 0
+--- !u!114 &114785461845590250
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1064705097968612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8410750655a2d2f489c642c14c30aaec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DeactivateTime: 4
 --- !u!114 &114830799404153564
 MonoBehaviour:
   m_ObjectHideFlags: 1

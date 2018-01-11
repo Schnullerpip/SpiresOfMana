@@ -90,6 +90,14 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
                     if (!mAlreadyCaught.Contains(hs))
                     {
                         mAlreadyCaught.Add(hs);
+
+                        HealthScript.Died hsOnOnInstanceDied = null;
+                        hsOnOnInstanceDied = () =>
+                        {
+                            RemoveInstanceFromList(hs);
+                            hs.OnInstanceDied -= hsOnOnInstanceDied;
+                        };
+                        hs.OnInstanceDied += hsOnOnInstanceDied;
                     }
                 }
             }
@@ -103,7 +111,11 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
     public void OnTriggerExit(Collider other)
     {
         HealthScript hs = other.GetComponentInParent<HealthScript>();
+        RemoveInstanceFromList(hs);
+    }
 
+    private void RemoveInstanceFromList(HealthScript hs)
+    {
         if (hs)
         {
             mAlreadyCaught.Remove(hs);
@@ -156,39 +168,52 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
                 ActivateLightningProjectile();
             }
             //which opponent is nearest?
-            HealthScript nearest = mAlreadyCaught[0];
+            HealthScript nearest = null;
+            float distance = 100000.0f;
 
             //if there are more than one opponents in reach, choose the nearest
-            if (mAlreadyCaught.Count > 1)
+            for (int i = 0; i < mAlreadyCaught.Count; ++i)
             {
-                float distance = Vector3.Distance(caster.transform.position, nearest.transform.position);
-                for (int i = 1; i < mAlreadyCaught.Count; ++i)
+                var hs = mAlreadyCaught[i];
+                if (hs == null)
                 {
-                    float dist = Vector3.Distance(mAlreadyCaught[i].transform.position, caster.transform.position);
-                    if (dist < distance)
-                    {
-                        nearest = mAlreadyCaught[i];
-                    }
+                    continue;
+                }
+                  
+                float dist = Vector3.Distance(hs.transform.position, caster.transform.position);
+                if (dist < distance)
+                {
+                    nearest = hs;
                 }
             }
 
-            //since mAlreadyCaught is not empty we assume, that mLightningProjectile is already active
-            //shoot the lightning projectile at nearest opponent
-            ServerMoveable sm = nearest.GetComponent<ServerMoveable>();
-            if (sm)
+            if (nearest)
             {
-                mLightningProjectile.transform.LookAt(sm.mRigidbody.worldCenterOfMass);
+                //since mAlreadyCaught is not empty we assume, that mLightningProjectile is already active
+                //shoot the lightning projectile at nearest opponent
+                ServerMoveable sm = nearest.GetComponent<ServerMoveable>();
+                if (sm)
+                {
+                    mLightningProjectile.transform.LookAt(sm.mRigidbody.worldCenterOfMass);
+                }
+                else
+                {
+                    mLightningProjectile.transform.LookAt(nearest.transform.position);
+                }
+
+                //apply damage to nearest opponent
+                if (isServer && ((mTimeCount += Time.deltaTime) >= mCountTilDamage))
+                {
+                    mTimeCount = 0;
+                    nearest.TakeDamage(mDamage, this.GetType());
+                }
             }
             else
             {
-                mLightningProjectile.transform.LookAt(nearest.transform.position);
-            }
-
-            //apply damage to nearest opponent
-            if (isServer && ((mTimeCount+=Time.deltaTime) >= mCountTilDamage))
-            {
-                mTimeCount = 0;
-                nearest.TakeDamage(mDamage, this.GetType());
+                if (!mStaticPotential.isPlaying)
+                {
+                    ActivateStaticPotential();
+                }
             }
         }
 

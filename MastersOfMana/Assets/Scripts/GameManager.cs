@@ -121,6 +121,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public static void ResetEvents()
+    {
+        OnGameStarted = null;
+        OnRoundStarted = null;
+        OnRoundEnded = null;
+        OnHostEndedRound = null;
+        OnLocalPlayerWon = null;
+        OnLocalPlayerDead = null;
+    }
+
     public void TriggerGameStarted()
     {
         ResetLocalGameState();

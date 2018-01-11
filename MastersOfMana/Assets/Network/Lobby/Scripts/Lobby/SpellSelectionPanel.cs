@@ -42,7 +42,11 @@ public class SpellSelectionPanel : MonoBehaviour {
             Button spellButton = GameObject.Instantiate(spellButtonPrefab);
             spellButton.name += " " + spell.name;
             UISpellButton spellButtonScript = spellButton.gameObject.AddComponent<UISpellButton>();
-            spellButtonScript.isUltimate = spells[i].spellID >= 100; //This relies on the fact, that all ultimates get an ID assigned by the spellregistry that's higher than 100!
+            if(spells[i].spellID >= 100) //This relies on the fact, that all ultimates get an ID assigned by the spellregistry that's higher than 100!
+            {
+                spellButtonScript.isUltimate = true;
+                spellButton.onClick.AddListener(()=>OnHoverClick(3, true));
+            }
             spellButtonScript.spell = spells[i];
             Image image = spellButton.transform.GetChild(0).GetComponent<Image>();
             if (image)

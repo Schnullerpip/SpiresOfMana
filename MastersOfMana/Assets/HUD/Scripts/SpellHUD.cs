@@ -20,8 +20,6 @@ public class SpellHUD : MonoBehaviour
 
     public InputImage[] inputImages;
 
-    private int displayedCurrentSpell;
-
     private static readonly System.Guid guid_PS4 = new System.Guid("cd9718bf-a87a-44bc-8716-60a0def28a9f");
     private static readonly System.Guid guid_PS3 = new System.Guid("71dfe6c8-9e81-428f-a58e-c7e664b7fbed");
     //private static readonly System.Guid guid_XB360 = new System.Guid("d74a350e-fe8b-4e9e-bbcd-efff16d34115");
@@ -105,10 +103,9 @@ public class SpellHUD : MonoBehaviour
             spellIcons[spellIcons.Count-1].sprite = localPlayerSpells.spellslot[spellIcons.Count-1].spell.icon;
         }
 
-        //set selected spell
-        displayedCurrentSpell = localPlayerSpells.GetCurrentspellslotID();
+
         gameObject.SetActive(false);
-    }
+	}
 
     public void UpdateSpellIcons()
     {

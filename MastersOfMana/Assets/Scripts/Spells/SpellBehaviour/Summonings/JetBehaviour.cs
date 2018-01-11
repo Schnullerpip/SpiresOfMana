@@ -150,6 +150,12 @@ public class JetBehaviour : A_SummoningBehaviour
 
         foreach (var sm in mAffecting)
         {
+            //if an affected object should be nullified suddenly (e.g. disconnect)
+            if (sm == null)
+            {
+                continue;
+            }
+
             Vector3 upforceIndividual = upforce;
             //we only wanna deal with the 
             Vector3 smPos = sm.transform.position;

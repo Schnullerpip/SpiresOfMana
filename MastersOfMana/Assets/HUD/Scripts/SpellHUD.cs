@@ -103,10 +103,9 @@ public class SpellHUD : MonoBehaviour
             spellIcons[spellIcons.Count-1].sprite = localPlayerSpells.spellslot[spellIcons.Count-1].spell.icon;
         }
 
-        //set selected spell
-        displayedCurrentSpell = localPlayerSpells.GetCurrentspellslotID();
+
         gameObject.SetActive(false);
-    }
+	}
 
     public void UpdateSpellIcons()
     {

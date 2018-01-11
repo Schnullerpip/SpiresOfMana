@@ -167,6 +167,14 @@ public class PlayerSpells : NetworkBehaviour {
         //}
     }
 
+    public void UpdateSpells(List<A_Spell> spells)
+    {
+        for(int i = 0; i < spells.Count; i++)
+        {
+            spellslot[i].spell = spells[i];
+        }
+    }
+
     ///// <summary>
     ///// Update spells on client side
     ///// </summary>

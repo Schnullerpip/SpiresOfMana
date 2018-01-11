@@ -13,7 +13,6 @@ public class SpellHUD : MonoBehaviour
     private PlayerSpells localPlayerSpells;
 
     private List<Image> spellIcons = new List<Image>();
-    private List<Image> spellHighlights = new List<Image>();
     private List<Image> spellCooldowns = new List<Image>();
 
     public delegate void CooldownFinished();
@@ -40,8 +39,25 @@ public class SpellHUD : MonoBehaviour
         //mRewired = Rewired.ReInput.players.GetPlayer(0);
         Rewired.ActiveControllerChangedDelegate onControllerChangedDelegate = OnControllerChanged;
         Rewired.ReInput.controllers.AddLastActiveControllerChangedDelegate(onControllerChangedDelegate);
+		GameManager.OnRoundStarted += RoundStarted;
+		GameManager.OnRoundEnded += RoundEnded;
     }
 
+	private void OnDestroy()
+	{
+		GameManager.OnRoundStarted -= RoundStarted;
+		GameManager.OnRoundEnded -= RoundEnded;
+	}
+
+	private void RoundStarted()
+	{
+		gameObject.SetActive (true);
+	}
+
+	private void RoundEnded()
+	{
+		gameObject.SetActive (false);
+	}
 
     void OnControllerChanged(Rewired.Controller controller)
     {
@@ -84,7 +100,6 @@ public class SpellHUD : MonoBehaviour
 
         foreach(SpellSlotHUD spellslot in spellSlots)
         {
-            spellHighlights.Add(spellslot.highlight);
             spellIcons.Add(spellslot.icon);
             spellCooldowns.Add(spellslot.cooldownImage);
             spellIcons[spellIcons.Count-1].sprite = localPlayerSpells.spellslot[spellIcons.Count-1].spell.icon;
@@ -92,7 +107,7 @@ public class SpellHUD : MonoBehaviour
 
         //set selected spell
         displayedCurrentSpell = localPlayerSpells.GetCurrentspellslotID();
-        spellHighlights[displayedCurrentSpell].GetComponent<Image>().enabled = true;
+        gameObject.SetActive(false);
     }
 
     public void UpdateSpellIcons()
@@ -123,19 +138,7 @@ public class SpellHUD : MonoBehaviour
         spellCooldowns[SpellSlotID].fillAmount = CooldownPercentage;
     }
 
-    public void SetCurrentSpell(int currentSpell)
-    {
-        if(currentSpell == displayedCurrentSpell)
-        {
-            return;
-        }
-        //disable old highlight
-        spellHighlights[displayedCurrentSpell].GetComponent<Image>().enabled = false;
-
-        //enable new highlight
-        displayedCurrentSpell = currentSpell;
-        spellHighlights[displayedCurrentSpell].GetComponent<Image>().enabled = true;
-    }
+  
 
     private float mLastUlitEnergy = 0.0f;
     public UniformScaler ultiScaler;
@@ -167,14 +170,8 @@ public class SpellHUD : MonoBehaviour
             SetCooldown(0, localPlayerSpells.spellslot[0]);
             SetCooldown(1, localPlayerSpells.spellslot[1]);
             SetCooldown(2, localPlayerSpells.spellslot[2]);
-            SetCurrentSpell(localPlayerSpells.GetCurrentspellslotID());
             UpdateSlider(localPlayerSpells.ultimateEnergy, localPlayerSpells.ultimateEnergyThreshold);
         }
-    }
-
-    public void OnSpellButtonClicked(int spellButton)
-    {
-        localPlayerSpells.SetCurrentSpellslotID(spellButton);
     }
 
     void OnDisable()

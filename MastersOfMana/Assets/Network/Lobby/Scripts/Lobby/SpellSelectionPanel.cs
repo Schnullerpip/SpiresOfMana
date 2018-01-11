@@ -9,7 +9,7 @@ public class SpellSelectionPanel : MonoBehaviour {
     public SpellRegistry spellregistry;
     public RectTransform normalSpellList;
     public RectTransform ultimateSpellList;
-    public Button spellButtonPrefab;
+    public UISpellButton spellButtonPrefab;
     public SpellDescription spellDescription;
     private PlayerSpells mPlayerSpells;
     private List<A_Spell> mPlayerSpellList = new List<A_Spell>();
@@ -32,6 +32,9 @@ public class SpellSelectionPanel : MonoBehaviour {
         FillContainer(normalSpellList, spellregistry.spellList);
         FillContainer(ultimateSpellList, spellregistry.ultimateSpellList);
         ValidateSpellSelection();
+
+        //display the player first spell
+        spellDescription.SetDescription(mPlayerSpells.spellslot[0].spell.spellDescription);
     }
 
     private void FillContainer(RectTransform container, List<A_Spell> spells)
@@ -39,16 +42,16 @@ public class SpellSelectionPanel : MonoBehaviour {
         for (int i = 0; i < spells.Count; i++)
         {
             A_Spell spell = spells[i];
-            Button spellButton = GameObject.Instantiate(spellButtonPrefab);
-            spellButton.name += " " + spell.name;
-            UISpellButton spellButtonScript = spellButton.gameObject.AddComponent<UISpellButton>();
+            UISpellButton spellButtonScript = GameObject.Instantiate(spellButtonPrefab);
+            Button spellButton = spellButtonScript.gameObject.GetComponent<Button>();
+			spellButton.name += " " + spell.name;
             if(spells[i].spellID >= 100) //This relies on the fact, that all ultimates get an ID assigned by the spellregistry that's higher than 100!
             {
                 spellButtonScript.isUltimate = true;
                 spellButton.onClick.AddListener(()=>OnHoverClick(3, true));
             }
             spellButtonScript.spell = spells[i];
-            Image image = spellButton.transform.GetChild(0).GetComponent<Image>();
+            Image image = spellButton.transform.GetChild(1).GetComponent<Image>();
             if (image)
             {
                 image.sprite = spell.icon;

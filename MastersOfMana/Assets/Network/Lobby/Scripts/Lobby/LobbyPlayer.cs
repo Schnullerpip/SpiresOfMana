@@ -275,6 +275,7 @@ namespace Prototype.NetworkLobby
         {
             if(isLocalPlayer)
             {
+                GameManager.ResetEvents();
                 SendReadyToBeginMessage();
             }
         }

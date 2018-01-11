@@ -148,7 +148,7 @@ namespace Prototype.NetworkLobby
         {
             var _this = this;
 
-            mainMenu.infoPanel.Display("Connecting...", "Cancel", () => { _this.backDelegate(); });
+            mainMenu.infoPanel.Display("Connecting...", "Cancel", StopHostClbk);
         }
 
         public void SetServerInfo(string status, string host)

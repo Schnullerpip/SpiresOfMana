@@ -23,11 +23,6 @@ public class SpellSelectionPanel : MonoBehaviour {
 
     private Rewired.Player playerInput;
 
-    private void Awake()
-    {
-        popupMenu.gameObject.SetActive(false);
-    }
-
     private void Start()
     {
         playerInput = GameManager.instance.localPlayer.GetRewired();
@@ -64,10 +59,10 @@ public class SpellSelectionPanel : MonoBehaviour {
             pointerEnterEntry.callback.AddListener((eventData) => { OnPointerEnterSpellButton(spellButtonScript); });
             trigger.triggers.Add(pointerEnterEntry);
 
-            EventTrigger.Entry deselectEntry = new EventTrigger.Entry();
-            deselectEntry.eventID = EventTriggerType.Deselect;
-            deselectEntry.callback.AddListener(OnSpellButtonDeselect);
-            trigger.triggers.Add(deselectEntry);
+            EventTrigger.Entry pointerExitEntry = new EventTrigger.Entry();
+            pointerExitEntry.eventID = EventTriggerType.PointerExit;
+            pointerExitEntry.callback.AddListener((eventData) => { OnPointerExitSpellButton(spellButtonScript); });
+            trigger.triggers.Add(pointerExitEntry);
 
             spellButtons.Add(spellButton);
             mSpellButtonDictionary.Add(spell, spellButton);
@@ -84,34 +79,7 @@ public class SpellSelectionPanel : MonoBehaviour {
         return playerSpells;
     }
 
-    private void OnClickSpellButton(A_Spell spell)
-    {
-        if(popupMenu.GetIsActive() && popupMenu.GetParent() == mSpellButtonDictionary[spell].gameObject)
-        {
-            popupMenu.Close();
-        }
-        else
-        {
-            popupMenu.Open(mSpellButtonDictionary[spell].gameObject, (int inputIndex) => { PopupMenuClicked(spell, inputIndex); } );
-            popupMenu.transform.position = mSpellButtonDictionary[spell].transform.position;
-        }
-    }
-
-    private void PopupMenuClicked(A_Spell spell, int inputIndex)
-    {
-        TradeSpells(spell, inputIndex);
-        popupMenu.Close();
-    }
-
-    private void OnSpellButtonDeselect(BaseEventData eventData)
-    {
-        var derMaschine = ((Rewired.Integration.UnityUI.RewiredStandaloneInputModule)eventData.currentInputModule).pointerEventDataOnClick.pointerEnter;
-
-        if(derMaschine.transform != popupMenu.transform && derMaschine.transform.parent != popupMenu.transform)
-        {
-            popupMenu.Close();
-        }
-    }
+	//var derMaschine = ((Rewired.Integration.UnityUI.RewiredStandaloneInputModule)eventData.currentInputModule).pointerEventDataOnClick.pointerEnter;
 
     private void OnUltiSpellButton(A_Spell spell)
     {
@@ -121,6 +89,12 @@ public class SpellSelectionPanel : MonoBehaviour {
     private void OnPointerEnterSpellButton(UISpellButton spellButton)
     {
         spellDescription.SetDescription(spellButton.spell.spellDescription);
+        popupMenu.Open(spellButton.isUltimate);
+    }
+
+    private void OnPointerExitSpellButton(UISpellButton spellButton)
+    {
+        popupMenu.Close();
     }
 
     /// <summary>

@@ -1,52 +1,59 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class PopupMenu : MonoBehaviour
 {
-    public Button[] buttons;
+    public float scaleSpeed = 20;
 
-    private System.Action<int> mCallback;
-
-    private GameObject mParent;
+    public GameObject normalPanel, ultiPanel;
 
     private bool mIsActive = false;
+
+    private void Awake()
+    {
+        transform.localScale = Vector3.zero;
+    }
 
     public bool GetIsActive()
     {
         return mIsActive;
     }
 
-    public GameObject GetParent()
+    public void Open(bool isUlti)
     {
-        return mParent;
-    }
+        normalPanel.SetActive(!isUlti);
+        ultiPanel.SetActive(isUlti);
 
-    private void Awake()
-    {
-        for (int i = 0; i < buttons.Length; ++i)
-        {
-            //necessary, otherwise the anonymous function will use the reference
-            int localI = i;
-            buttons[i].onClick.AddListener(() => { ButtonClick(localI); });
-        }
-    }
-
-    public void Open(GameObject parent, System.Action<int> callback)
-    {
-        mParent = parent;
         mIsActive = true;
-        gameObject.SetActive(mIsActive);
-        mCallback = callback;
-    }
-    
-    private void ButtonClick(int index)
-    {
-        mCallback(index);
+
+        //gameObject.SetActive(mIsActive);
+
+        StopAllCoroutines();
+        StartCoroutine(Scale(Vector3.one, scaleSpeed));
+
     }
 
     public void Close()
     {
         mIsActive = false;
-        gameObject.SetActive(mIsActive);
+        //gameObject.SetActive(mIsActive);
+
+        StopAllCoroutines();
+        StartCoroutine(Scale(Vector3.zero, scaleSpeed));
+    }
+
+    private void LateUpdate()
+    {
+        transform.position = Input.mousePosition;
+    }
+
+    IEnumerator Scale(Vector3 desiredSize, float speed)
+    {
+        while((transform.localScale - desiredSize).sqrMagnitude > float.Epsilon)
+        {
+            transform.localScale = Vector3.MoveTowards(transform.localScale, desiredSize, Time.deltaTime * speed);
+            yield return null;
+        }
     }
 }

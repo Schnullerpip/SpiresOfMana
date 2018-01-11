@@ -90,6 +90,14 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
                     if (!mAlreadyCaught.Contains(hs))
                     {
                         mAlreadyCaught.Add(hs);
+
+                        HealthScript.Died hsOnOnInstanceDied = null;
+                        hsOnOnInstanceDied = () =>
+                        {
+                            RemoveInstanceFromList(hs);
+                            hs.OnInstanceDied -= hsOnOnInstanceDied;
+                        };
+                        hs.OnInstanceDied += hsOnOnInstanceDied;
                     }
                 }
             }
@@ -103,7 +111,11 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
     public void OnTriggerExit(Collider other)
     {
         HealthScript hs = other.GetComponentInParent<HealthScript>();
+        RemoveInstanceFromList(hs);
+    }
 
+    private void RemoveInstanceFromList(HealthScript hs)
+    {
         if (hs)
         {
             mAlreadyCaught.Remove(hs);

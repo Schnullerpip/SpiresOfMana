@@ -233,6 +233,7 @@ public class SpellSelectionPanel : MonoBehaviour {
         PlayerPrefs.SetInt("SpellSlot3", mPlayerSpellList[3].spellID);
         PlayerPrefs.Save();
         mPlayerSpells.CmdUpdateSpells(mPlayerSpellList[0].spellID, mPlayerSpellList[1].spellID, mPlayerSpellList[2].spellID, mPlayerSpellList[3].spellID);
+        mPlayerSpells.UpdateSpells(mPlayerSpellList);
         mHUD.GetSpellHUD().UpdateSpellIcons();
     }
 

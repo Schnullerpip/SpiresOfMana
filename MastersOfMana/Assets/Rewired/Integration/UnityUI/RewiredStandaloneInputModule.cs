@@ -682,7 +682,7 @@ namespace Rewired.Integration.UnityUI {
             var mouseData = GetMousePointerEventData(id);
 #endif
             var leftButtonData = mouseData.GetButtonState(PointerEventData.InputButton.Left).eventData;
-
+            pointerEventDataOnClick = leftButtonData.buttonData;
             // Process the first mouse button fully
             ProcessMousePress(leftButtonData);
             ProcessMove(leftButtonData.buttonData);
@@ -802,8 +802,6 @@ namespace Rewired.Integration.UnityUI {
                     HandlePointerExitAndEnter(pointerEvent, currentOverGo);
                 }
             }
-
-            pointerEventDataOnClick = pointerEvent;
         }
 
         #region Rewired Methods

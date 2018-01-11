@@ -21,6 +21,8 @@ public class SpellSelectionPanel : MonoBehaviour {
 
     public RectTransform[] selectionHighlights;
 
+    private Rewired.Player playerInput;
+
     private void Awake()
     {
         popupMenu.gameObject.SetActive(false);
@@ -28,21 +30,25 @@ public class SpellSelectionPanel : MonoBehaviour {
 
     private void Start()
     {
+        playerInput = GameManager.instance.localPlayer.GetRewired();
         mPlayerSpells = GameManager.instance.localPlayer.GetPlayerSpells();
         mPlayerSpellList = GetPlayerSpellList();
         mHUD = GetComponentInParent<HUD>();
-        FillContainer(normalSpellList, spellregistry.spellList, (A_Spell spell) => { OnClickSpellButton(spell); });
-        FillContainer(ultimateSpellList, spellregistry.ultimateSpellList, (A_Spell spell) => { OnUltiSpellButton(spell); });
+        FillContainer(normalSpellList, spellregistry.spellList);
+        FillContainer(ultimateSpellList, spellregistry.ultimateSpellList);
         ValidateSpellSelection();
     }
 
-    private void FillContainer(RectTransform container, List<A_Spell> spells, System.Action<A_Spell> buttonClickCallback)
+    private void FillContainer(RectTransform container, List<A_Spell> spells)
     {
         for (int i = 0; i < spells.Count; i++)
         {
             A_Spell spell = spells[i];
             Button spellButton = GameObject.Instantiate(spellButtonPrefab);
             spellButton.name += " " + spell.name;
+            UISpellButton spellButtonScript = spellButton.gameObject.AddComponent<UISpellButton>();
+            spellButtonScript.isUltimate = spells[i].spellID >= 100; //This relies on the fact, that all ultimates get an ID assigned by the spellregistry that's higher than 100!
+            spellButtonScript.spell = spells[i];
             Image image = spellButton.transform.GetChild(0).GetComponent<Image>();
             if (image)
             {
@@ -51,13 +57,11 @@ public class SpellSelectionPanel : MonoBehaviour {
             spellButton.transform.SetParent(container);
             spellButton.transform.localScale = Vector3.one;
 
-            spellButton.onClick.AddListener(() => { if(buttonClickCallback != null) buttonClickCallback(spell); });
-
             EventTrigger trigger = spellButton.gameObject.AddComponent<EventTrigger>();
 
             EventTrigger.Entry pointerEnterEntry = new EventTrigger.Entry();
             pointerEnterEntry.eventID = EventTriggerType.PointerEnter;
-            pointerEnterEntry.callback.AddListener((eventData) => { OnPointerEnterSpellButton(spell); });
+            pointerEnterEntry.callback.AddListener((eventData) => { OnPointerEnterSpellButton(spellButtonScript); });
             trigger.triggers.Add(pointerEnterEntry);
 
             EventTrigger.Entry deselectEntry = new EventTrigger.Entry();
@@ -114,11 +118,9 @@ public class SpellSelectionPanel : MonoBehaviour {
         TradeSpells(spell, 3);
     }
 
-
-
-    private void OnPointerEnterSpellButton(A_Spell spell)
+    private void OnPointerEnterSpellButton(UISpellButton spellButton)
     {
-        spellDescription.SetDescription(spell.spellDescription);
+        spellDescription.SetDescription(spellButton.spell.spellDescription);
     }
 
     /// <summary>
@@ -244,7 +246,7 @@ public class SpellSelectionPanel : MonoBehaviour {
     public void RandomizeSpells()
     {
         mPlayerSpellList = spellregistry.generateRandomSpells();
-        //TODO: Change button assignments
+        ValidateSpellSelection();
     }
 
     public void OnReady()
@@ -258,5 +260,35 @@ public class SpellSelectionPanel : MonoBehaviour {
         PlayerPrefs.Save();
         mPlayerSpells.CmdUpdateSpells(mPlayerSpellList[0].spellID, mPlayerSpellList[1].spellID, mPlayerSpellList[2].spellID, mPlayerSpellList[3].spellID);
         mHUD.GetSpellHUD().UpdateSpellIcons();
+    }
+
+    private void Update()
+    {
+        if (playerInput.GetButtonDown("SpellSelection1"))
+        {
+            OnHoverClick(0, false);
+        }
+        if (playerInput.GetButtonDown("SpellSelection2"))
+        {
+            OnHoverClick(1, false);
+        }
+        if (playerInput.GetButtonDown("SpellSelection3"))
+        {
+            OnHoverClick(2, false);
+        }
+        if (playerInput.GetButtonDown("Ultimate"))
+        {
+            OnHoverClick(3, true);
+        }
+    }
+
+    private void OnHoverClick(int inputIndex, bool needsToBeUltimate)
+    {
+        var gameObjectHoveredOver = ((Rewired.Integration.UnityUI.RewiredStandaloneInputModule)EventSystem.current.currentInputModule).pointerEventDataOnClick.pointerEnter;
+        UISpellButton spellButtonScript = gameObjectHoveredOver.GetComponentInParent<UISpellButton>();
+        if (spellButtonScript && spellButtonScript.isUltimate == needsToBeUltimate)
+        {
+            TradeSpells(spellButtonScript.spell, inputIndex);
+        }
     }
 }

@@ -13,7 +13,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     [SyncVar]
     private Vector3 castPosition;
     [SerializeField] private float mExplosionForce;
-    [SerializeField] private ExplosionFalloff mExplosionFalloff;
+    [SerializeField] private ExplosionFalloffClampable mExplosionFalloff;
     [SerializeField] private float mExplosionRadius;
     [SerializeField] private float mMaxDistance;
 
@@ -105,11 +105,10 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         {
             //unparent it
             transform.parent = null;
-            caster.SetColliderIgnoreRaycast(true);
 
             //apply Explosion force and damage
-            ExplosionDamage(caster.transform.position + Vector3.up * 0.8f/*so the terrain is not hit*/, mExplosionRadius, mExplosionFalloff, new List<HealthScript>(), resultingHeightFactor, 1 + resultingHeightFactor);
-
+            caster.SetColliderIgnoreRaycast(true);
+            ExplosionDamage(caster.transform.position + Vector3.up * 0.3f/*so the terrain is not hit*/, mExplosionRadius, mExplosionFalloff, new List<HealthScript>(), resultingHeightFactor, 1 + resultingHeightFactor);
             caster.SetColliderIgnoreRaycast(false);
 
             //remove the fistoffury object on all clients

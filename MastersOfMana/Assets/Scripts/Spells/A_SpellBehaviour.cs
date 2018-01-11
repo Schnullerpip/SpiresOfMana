@@ -171,22 +171,40 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
     }
 
 	[System.Serializable]
-	public struct ExplosionFalloff
+	public class ExplosionFalloff
 	{
 		public float force;
 		public int damage;
 		public AnimationCurve falloff;
 
-		public float EvaluateForce(float t)
+		public virtual float EvaluateForce(float t)
 		{
 			return falloff.Evaluate(t) * force;
 		}
 
-		public int EvaluateDamage(float t)
+		public virtual int EvaluateDamage(float t)
 		{
 			return Mathf.RoundToInt(falloff.Evaluate(t) * damage);
 		}
 	}
+
+    [System.Serializable]
+    public class ExplosionFalloffClampable : ExplosionFalloff
+    {
+        public float min_force, max_force;
+        public int min_damage, max_damage;
+
+        public override float EvaluateForce(float t)
+        {
+            return Mathf.Clamp(falloff.Evaluate(t)*force, min_force, max_force);
+        }
+
+		public override int EvaluateDamage(float t)
+		{
+		    return Mathf.Clamp(Mathf.RoundToInt(falloff.Evaluate(t)*damage), min_damage, max_damage);
+		}
+
+    }
 
 	/// <summary>
 	/// Applies an explosion with the provided parameters.
@@ -291,9 +309,9 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 		}
 	
 		//this is done after the overlapshere loop, that way, walls and other obstacles where able to block the explosion before dying
-		for (int i = 0; i < cachedHealth.Count; i++) 
+		for (int i = 0; i < cachedHealth.Count; i++)
 		{
-			cachedHealth[i].TakeDamage(Mathf.RoundToInt(explFalloff.EvaluateDamage(affectFactors[i]) * externalDamageFactor), GetType());
+			cachedHealth[i].TakeDamage(Mathf.RoundToInt(explFalloff.EvaluateDamage(affectFactors[i])*externalDamageFactor), GetType());
 		}
 	}
 

@@ -13,7 +13,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     [SyncVar]
     private Vector3 castPosition;
     [SerializeField] private float mExplosionForce;
-    [SerializeField] private ExplosionFalloffClampable mExplosionFalloff;
+    [SerializeField] private ExplosionFalloff mExplosionFalloff;
     [SerializeField] private float mExplosionRadius;
     [SerializeField] private float mMaxDistance;
 

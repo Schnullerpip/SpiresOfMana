@@ -24,6 +24,7 @@ namespace Prototype.NetworkLobby
         public Image playerColor;
 
         public InputField matchNameInput;
+		public InputField ipInput;
         public Button backButton;
 
 		private Rewired.Player rewiredPlayer;
@@ -44,6 +45,9 @@ namespace Prototype.NetworkLobby
             matchNameInput.onEndEdit.AddListener(onEndEditGameName);
             backButton.onClick.RemoveAllListeners();
             backButton.onClick.AddListener(lobbyManager.GoBackButton);
+
+			ipInput.onEndEdit.RemoveAllListeners();
+			ipInput.onEndEdit.AddListener(onEndEditIP);
 
 			rewiredPlayer = ReInput.players.GetPlayer (0);
             string playername = PlayerPrefs.GetString("Playername", "DefaultName");

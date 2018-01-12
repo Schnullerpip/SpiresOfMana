@@ -89,6 +89,7 @@ namespace Prototype.NetworkLobby
             lobbyManager.isHost = false;
             lobbyManager.ChangeTo(lobbyPanel);
 
+            lobbyManager.networkAddress = ipInput.text;
             lobbyManager.StartClient();
 
             lobbyManager.backDelegate = lobbyManager.StopClientClbk;

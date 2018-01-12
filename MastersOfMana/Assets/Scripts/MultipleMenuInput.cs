@@ -45,7 +45,7 @@ public class MultipleMenuInput : MonoBehaviour {
 
     public void highlightFirstSelected()
     {
-        if (firstSelected && eventSystem != null && rewiredPlayer.controllers.GetLastActiveController().type == Rewired.ControllerType.Joystick)
+		if (firstSelected && eventSystem != null && rewiredPlayer.controllers.GetLastActiveController() != null && rewiredPlayer.controllers.GetLastActiveController().type == Rewired.ControllerType.Joystick)
         {
             eventSystem.SetSelectedGameObject(firstSelected);
         }

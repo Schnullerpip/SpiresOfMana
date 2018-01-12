@@ -79,11 +79,14 @@ namespace Prototype.NetworkLobby
 
         public void OnClickHost()
         {
+            lobbyManager.isHost = true;
+            lobbyManager.isLocalGame = true;
             lobbyManager.StartHost();
         }
 
         public void OnClickJoin()
         {
+            lobbyManager.isHost = false;
             lobbyManager.ChangeTo(lobbyPanel);
 
             lobbyManager.StartClient();
@@ -107,6 +110,7 @@ namespace Prototype.NetworkLobby
         public void OnClickCreateMatchmakingGame()
         {
             lobbyManager.isHost = true;
+            lobbyManager.isLocalGame = false;
             PlayerPrefsExtended.SetColor("Playercolor", playerColor.color);
             PlayerPrefs.Save();
             lobbyManager.StartMatchMaker();

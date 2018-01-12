@@ -109,7 +109,8 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
 
             //apply Explosion force and damage
             caster.SetColliderIgnoreRaycast(true);
-            ExplosionDamage(caster.transform.position + Vector3.up * 0.3f/*so the terrain is not hit*/, mExplosionRadius, mExplosionFalloff, new List<HealthScript>(), resultingHeightFactor, 1 + resultingHeightFactor, mMinDamage, mMaxDamage);
+            ExplosionDamage(caster.transform.position + Vector3.up * 0.3f/*so the terrain is not hit*/,
+                mExplosionRadius, mExplosionFalloff, new List<HealthScript>(), resultingHeightFactor, 1 + resultingHeightFactor, mMinDamage, mMaxDamage);
             caster.SetColliderIgnoreRaycast(false);
 
             //remove the fistoffury object on all clients

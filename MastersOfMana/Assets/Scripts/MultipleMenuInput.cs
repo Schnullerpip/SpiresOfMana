@@ -10,6 +10,7 @@ public class MultipleMenuInput : MonoBehaviour {
     private EventSystem eventSystem;
     public GameObject firstSelected;
     private Rewired.ControllerType prevControllerType;
+    private Rewired.Player rewiredPlayer;
 
     public void onControllerChanged(Rewired.Controller controller)
     {
@@ -30,6 +31,7 @@ public class MultipleMenuInput : MonoBehaviour {
     public void Start()
     {
         eventSystem = EventSystem.current;
+        rewiredPlayer = Rewired.ReInput.players.GetPlayer(0);
         highlightFirstSelected();
     }
 
@@ -43,7 +45,7 @@ public class MultipleMenuInput : MonoBehaviour {
 
     public void highlightFirstSelected()
     {
-        if (firstSelected && eventSystem != null)
+		if (firstSelected && eventSystem != null && rewiredPlayer.controllers.GetLastActiveController() != null && rewiredPlayer.controllers.GetLastActiveController().type == Rewired.ControllerType.Joystick)
         {
             eventSystem.SetSelectedGameObject(firstSelected);
         }

@@ -25,12 +25,13 @@ public class JetBehaviour : A_SummoningBehaviour
 
     public override void Execute(PlayerScript caster)
     {
-        RaycastHit hit;
-        if (Physics.Raycast( new Ray(caster.movement.mRigidbody.worldCenterOfMass + caster.transform.forward * mOffsetToCaster, Vector3.down), out hit, 100))
+
+        Vector3 spawnPosition = GetPosition(caster, mOffsetToCaster);
+        //if we actually hit something to spawn on
+        if (spawnPosition != OBLIVION)
         {
-            //GameObject jet = PoolRegistry.JetPool.Get();
-            JetBehaviour jet = PoolRegistry.GetInstance(this.gameObject, 4, 4).GetComponent<JetBehaviour>();
-            jet.transform.position = hit.point;
+            JetBehaviour jet = PoolRegistry.GetInstance(gameObject, 2, 1).GetComponent<JetBehaviour>();
+            jet.transform.position = spawnPosition;
             jet.caster = caster;
             jet.casterObject = caster.gameObject;
             jet.triggerPos = jet.trigger.transform.position;
@@ -43,12 +44,40 @@ public class JetBehaviour : A_SummoningBehaviour
         }
     }
 
+    /// <summary>
+    /// returns the position, the jet will spawn on OR OBLIVION if no valid position was found
+    /// </summary>
+    /// <param name="caster"></param>
+    /// <param name="standardOffset"></param>
+    /// <returns></returns>
+    private static Vector3 GetPosition(PlayerScript caster, float standardOffset)
+    {
+        RaycastHit hit;
+
+        //if we hi something right infront of us
+        if (Physics.Raycast(new Ray(caster.movement.mRigidbody.worldCenterOfMass, caster.transform.forward), out hit) && hit.distance <= standardOffset)
+        {
+            return hit.point;
+        }
+
+        //if nothigns infront of us and there is something below us to cast on
+        if(Physics.Raycast( new Ray(caster.movement.mRigidbody.worldCenterOfMass + caster.transform.forward*standardOffset, Vector3.down), out hit, 100))
+        {
+            return hit.point;
+        }
+        return OBLIVION;
+    }
+
 	public override void Preview (PlayerScript caster)
 	{
 		base.Preview (caster);
 
-        preview.SetAvailability(caster.CurrentSpellReady());
-        preview.instance.MoveAndRotate(caster.transform.position + GetAimClient(caster) * mOffsetToCaster, Quaternion.identity);
+	    Vector3 position = GetPosition(caster, mOffsetToCaster);
+	    if (position != OBLIVION)
+	    {
+	        preview.SetAvailability(caster.CurrentSpellReady());
+	        preview.instance.MoveAndRotate(position, Quaternion.identity);
+	    }
 	}
 
 	public override void StopPreview (PlayerScript caster)
@@ -121,6 +150,12 @@ public class JetBehaviour : A_SummoningBehaviour
 
         foreach (var sm in mAffecting)
         {
+            //if an affected object should be nullified suddenly (e.g. disconnect)
+            if (sm == null)
+            {
+                continue;
+            }
+
             Vector3 upforceIndividual = upforce;
             //we only wanna deal with the 
             Vector3 smPos = sm.transform.position;

@@ -725,7 +725,8 @@ AudioSource:
   m_GameObject: {fileID: 1611165502844238}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 243260064957582752, guid: 75146e90f04cc459f82a15f9cccbe71c,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: 6632b24a705d37d46863cddc8a84f80a, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.271
@@ -805,7 +806,8 @@ AudioSource:
   m_GameObject: {fileID: 1810031006593302}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 243260064957582752, guid: 75146e90f04cc459f82a15f9cccbe71c,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: 87a9c12497ab5c5459976a81d3ea1285, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.503
@@ -963,7 +965,7 @@ MonoBehaviour:
   spawnWhenEntered: {fileID: 1024362622710652, guid: fca19e9c51c84984aa6064ec3b3bb14f,
     type: 2}
   spawnScale: {x: 0, y: 0, z: 0}
-  ultimateEnergyPerSecond: 4
+  ultimateEnergyPerSecond: 5
   tickDuration: 1
 --- !u!114 &114065677455905632
 MonoBehaviour:

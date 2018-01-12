@@ -682,7 +682,7 @@ namespace Rewired.Integration.UnityUI {
             var mouseData = GetMousePointerEventData(id);
 #endif
             var leftButtonData = mouseData.GetButtonState(PointerEventData.InputButton.Left).eventData;
-
+            pointerEventDataOnClick = leftButtonData.buttonData;
             // Process the first mouse button fully
             ProcessMousePress(leftButtonData);
             ProcessMove(leftButtonData.buttonData);
@@ -708,6 +708,8 @@ namespace Rewired.Integration.UnityUI {
             ExecuteEvents.Execute(eventSystem.currentSelectedGameObject, data, ExecuteEvents.updateSelectedHandler);
             return data.used;
         }
+
+        public PointerEventData pointerEventDataOnClick;
 
         /// <summary>
         /// Process the current mouse press.

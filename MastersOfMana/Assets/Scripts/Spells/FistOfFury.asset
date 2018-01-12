@@ -15,13 +15,14 @@ MonoBehaviour:
   coolDownInSeconds: 12
   castDurationInSeconds: 0
   resolveDurationInSeconds: 0
-  castAnimationID: 1
+  castAnimationID: 0
   spellDescription:
     damage: 3
     force: 2
-    cooldown: 3
+    cooldown: 1
     spellName: Fist of Fury
-    video: {fileID: 32900000, guid: b3e6e3d9a0594486daf9cf008b7885dc, type: 3}
+    beginFrame: 2831
+    endFrame: 2991
   spellID: 7
   SpellBehaviours:
   - {fileID: 114742002225623834, guid: c4aee2d5f96e54642bdc12550558efef, type: 2}

@@ -8,17 +8,19 @@ public class PlayerAnimation : NetworkBehaviour {
 	public Animator animator;
 	private PlayerScript mPlayer;
 
-    private int movementSpeedHash, speedRightHash, speedForwardHash, groundedHash, jumpHash, isDeadHash, isCastingHash, castAnimationHash, isResolvingHash;
+    private int movementSpeedHash, speedRightHash, speedForwardHash, groundedHash, 
+    //jumpHash, 
+    isDeadHash, isCastingHash, castAnimationHash;//, isResolvingHash;
 
     void Start()
 	{
         castAnimationHash = Animator.StringToHash("castAnimation");
-        isResolvingHash = Animator.StringToHash("isResolving");
+        //isResolvingHash = Animator.StringToHash("isResolving");
         movementSpeedHash = Animator.StringToHash("movementSpeed");
         speedRightHash = Animator.StringToHash("speed_right");
         speedForwardHash = Animator.StringToHash("speed_forward");
         groundedHash = Animator.StringToHash("grounded");
-        jumpHash = Animator.StringToHash("jump");
+        //jumpHash = Animator.StringToHash("jump");
         isDeadHash = Animator.StringToHash("isDead");
         isCastingHash = Animator.StringToHash("isCasting");
 
@@ -30,7 +32,7 @@ public class PlayerAnimation : NetworkBehaviour {
 
 		mPlayer = GetComponent<PlayerScript>();
 		mPlayer.movement.onMovement += UpdateMovement;
-		mPlayer.movement.onJumping += Jump;
+		//mPlayer.movement.onJumping += Jump;
 		mPlayer.healthScript.OnDamageTaken += TookDamage;
         GameManager.OnRoundStarted += ResetState;
     }
@@ -45,10 +47,10 @@ public class PlayerAnimation : NetworkBehaviour {
         animator.SetBool(groundedHash,isGrounded);
 	}
 
-	void Jump()
-	{
-		animator.SetTrigger(jumpHash);
-	}
+	//void Jump()
+	//{
+	//	animator.SetTrigger(jumpHash);
+	//}
 
 	void TookDamage(int damage)
 	{
@@ -66,7 +68,7 @@ public class PlayerAnimation : NetworkBehaviour {
 	public void Cast(int castAnimationID)
 	{
         animator.SetInteger(castAnimationHash, castAnimationID);
-        animator.SetBool(isResolvingHash, true);
+        //animator.SetBool(isResolvingHash, true);
 		//the bool is reset inside the animation state. a trigger is not used, since it is buggy with the network animation component
 
 		//force an update to avoid a 1 to 2 frame delay

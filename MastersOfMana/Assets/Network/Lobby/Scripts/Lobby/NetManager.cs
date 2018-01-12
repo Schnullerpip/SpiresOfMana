@@ -5,6 +5,7 @@ using UnityEngine.Networking;
 public class NetManager : NetworkBehaviour {
     public static NetManager instance;
     public bool initialized = false;
+    private HUD mHud;
 
     private void Awake()
     {
@@ -18,6 +19,11 @@ public class NetManager : NetworkBehaviour {
         }
     }
 
+    void Start()
+    {
+        mHud = FindObjectOfType<HUD>();
+    }
+
     public bool amIServer()
     {
         return isServer;
@@ -26,9 +32,9 @@ public class NetManager : NetworkBehaviour {
     [ClientRpc]
     public void RpcRoundEnded(uint winner)
     {
-
         GameManager.instance.winnerID = winner;
         FindObjectOfType<HUD>().ShowPostGameScreen(true);
+        GameManager.instance.TriggerRoundEnded();
         if (GameManager.instance.winnerID == GameManager.instance.localPlayer.netId.Value)
         {
             GameManager.instance.TriggerOnLocalPlayerWon();
@@ -53,5 +59,15 @@ public class NetManager : NetworkBehaviour {
     public void RpcTriggerRoundStarted()
     {
         GameManager.instance.TriggerOnRoundStarted();
+    }
+
+    [ClientRpc]
+    public void RpcHostEndedRound()
+    {
+		if (!isServer) 
+		{
+        	mHud.ExitPostGameScreen();
+		}
+		GameManager.instance.TriggerHostEndedRound ();
     }
 }

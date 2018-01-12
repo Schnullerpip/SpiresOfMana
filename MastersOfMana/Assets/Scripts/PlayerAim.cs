@@ -32,12 +32,21 @@ public class PlayerAim : NetworkBehaviour {
 //	private Vector3 mAimRefinement;
 	private PlayerCamera mCameraRig;
 	private bool mFocusActive = false;
-	private Collider mFocusedTarget = null;
+	//private Collider mFocusedTarget = null;
+
+    private float mStartSpeed;
 
 	void Awake()
 	{
+        mStartSpeed = aimSpeed;
 //		lookDirection = transform.forward;
+        SetSensitivity(PlayerPrefs.GetFloat("mouse", 1));
 	}
+
+    public void SetSensitivity(float sensitivity)
+    {
+        aimSpeed = mStartSpeed * sensitivity;
+    }
 
 	void OnDisable()
 	{
@@ -81,14 +90,14 @@ public class PlayerAim : NetworkBehaviour {
 		}
 	}
 
-	/// <summary>
-	/// Determines whether this instance has a focus target.
-	/// </summary>
-	/// <returns><c>true</c> if this instance has focus target; otherwise, <c>false</c>.</returns>
-	public bool HasFocusTarget()
-	{
-		return mFocusedTarget != null;
-	}
+	///// <summary>
+	///// Determines whether this instance has a focus target.
+	///// </summary>
+	///// <returns><c>true</c> if this instance has focus target; otherwise, <c>false</c>.</returns>
+	//public bool HasFocusTarget()
+	//{
+	//	return mFocusedTarget != null;
+	//}
 
 //	/// <summary>
 //	/// Validates if the focus target is in view. Sets the FocusTarget to null if not in free view.
@@ -152,9 +161,9 @@ public class PlayerAim : NetworkBehaviour {
 //		mAimRefinement = Vector3.zero;
 //	}
 
-	public void LookAtFocusTarget(){
-		LookAt(mFocusedTarget.bounds.center);
-	}
+	//public void LookAtFocusTarget(){
+	//	LookAt(mFocusedTarget.bounds.center);
+	//}
 
 	/// <summary>
 	/// Rotates the player towards the focus target.
@@ -217,7 +226,7 @@ public class PlayerAim : NetworkBehaviour {
 	public void StartFocus(PlayerScript self)
 	{
 		mFocusActive = true;
-		mFocusedTarget = FocusAssistTarget(self);//, aimAssistInUnits);
+		//mFocusedTarget = FocusAssistTarget(self);//, aimAssistInUnits);
 	}
 
 	/// <summary>
@@ -226,95 +235,95 @@ public class PlayerAim : NetworkBehaviour {
 	public void StopFocus()
 	{
 		mFocusActive = false;
-		mFocusedTarget = null;
+		//mFocusedTarget = null;
 	}
 
-	/// <summary>
-	/// Returns a Collider thats within the specified 
-	/// maxAngle of the camera and that is not obstructed.	/// </summary>
-	/// <returns>The assist target.</returns>
-	/// <param name="maxUnitsOff">Max units off.</param>
-	private Collider FocusAssistTarget(PlayerScript self)//, float maxUnitsOff)
-	{
-		//shoot a raycast in the middle of the screen
-		RaycastHit hit;
-		self.SetColliderIgnoreRaycast(true);
+//	/// <summary>
+//	/// Returns a Collider thats within the specified 
+//	/// maxAngle of the camera and that is not obstructed.	/// </summary>
+//	/// <returns>The assist target.</returns>
+//	/// <param name="maxUnitsOff">Max units off.</param>
+//	private Collider FocusAssistTarget(PlayerScript self)//, float maxUnitsOff)
+//	{
+//		//shoot a raycast in the middle of the screen
+//		RaycastHit hit;
+//		self.SetColliderIgnoreRaycast(true);
 
-		if(mCameraRig.CenterRaycast(out hit))
-		{
-			self.SetColliderIgnoreRaycast(false);
-			//if we hit a healthscript, take that as our aim assist target
-			PlayerScript target = hit.collider.GetComponentInParent<PlayerScript>();
-			if(target != null && target.healthScript.IsAlive())
-			{
-				self.SetColliderIgnoreRaycast(false);
-				return hit.collider;
-			}
-		}
-		//otherwise look for the next best target
-
-		//TODO: cache this, maybe gamemanager?
-		List<PlayerScript> allPlayers = new List<PlayerScript>(FindObjectsOfType<PlayerScript>());
-
-//		//sort by distance 
-//		allHealthScripts.Sort(
-//			delegate(HealthScript a, HealthScript b) 
+//		if(mCameraRig.CenterRaycast(out hit))
+//		{
+//			self.SetColliderIgnoreRaycast(false);
+//			//if we hit a healthscript, take that as our aim assist target
+//			PlayerScript target = hit.collider.GetComponentInParent<PlayerScript>();
+//			if(target != null && target.healthScript.IsAlive())
 //			{
-//				return Vector3.Distance(transform.position,a.transform.position).CompareTo(Vector3.Distance(transform.position,b.transform.position));
+//				self.SetColliderIgnoreRaycast(false);
+//				return hit.collider;
+//			}
+//		}
+//		//otherwise look for the next best target
+
+//		//TODO: cache this, maybe gamemanager?
+//		List<PlayerScript> allPlayers = new List<PlayerScript>(FindObjectsOfType<PlayerScript>());
+
+////		//sort by distance 
+////		allHealthScripts.Sort(
+////			delegate(HealthScript a, HealthScript b) 
+////			{
+////				return Vector3.Distance(transform.position,a.transform.position).CompareTo(Vector3.Distance(transform.position,b.transform.position));
+////			}
+////		);
+
+//		//sort by angle
+//		allPlayers.Sort(
+//			delegate(PlayerScript a, PlayerScript b) 
+//			{
+//				var camPos = mCameraRig.GetCamera ().transform.position;
+//				var eulerAngles = currentLookRotation.eulerAngles;
+//				return Vector3.Angle(eulerAngles, a.transform.position - camPos)
+//					.CompareTo(Vector3.Angle (eulerAngles, b.transform.position - camPos));
 //			}
 //		);
 
-		//sort by angle
-		allPlayers.Sort(
-			delegate(PlayerScript a, PlayerScript b) 
-			{
-				var camPos = mCameraRig.GetCamera ().transform.position;
-				var eulerAngles = currentLookRotation.eulerAngles;
-				return Vector3.Angle(eulerAngles, a.transform.position - camPos)
-					.CompareTo(Vector3.Angle (eulerAngles, b.transform.position - camPos));
-			}
-		);
-
-		//iterate through all healthscripts
-		foreach (PlayerScript aPlayer in allPlayers) 
-		{
-			//skip player him/herself
-			if(aPlayer.gameObject == this.gameObject || !aPlayer.healthScript.IsAlive())
-			{
-				continue;
-			}
-				
-//			//skip if the target is behind the player
-//			if(transform.InverseTransformPoint(aHealthScript.transform.position).z < 0)
+//		//iterate through all healthscripts
+//		foreach (PlayerScript aPlayer in allPlayers) 
+//		{
+//			//skip player him/herself
+//			if(aPlayer.gameObject == this.gameObject || !aPlayer.healthScript.IsAlive())
 //			{
 //				continue;
 //			}
+				
+////			//skip if the target is behind the player
+////			if(transform.InverseTransformPoint(aHealthScript.transform.position).z < 0)
+////			{
+////				continue;
+////			}
 
-			Collider healthScriptCollider = aPlayer.GetComponentInChildren<Collider>();
+//			Collider healthScriptCollider = aPlayer.GetComponentInChildren<Collider>();
 
-			//get the vector to the target, from the position of the camera
-//			Vector3 dirToTarget = healthScriptCollider.bounds.center - cameraRig.GetCamera().transform.position;
+//			//get the vector to the target, from the position of the camera
+////			Vector3 dirToTarget = healthScriptCollider.bounds.center - cameraRig.GetCamera().transform.position;
 
-			//priject the direction vector to the target onto a plane, defined by the lookDirection
-			//this way it acts as if the target hat a kind of 2d hitbox (circle) that expands maxUnitsOff into every direciton 
-//			if(Vector3.ProjectOnPlane(dirToTarget, - lookDirection).sqrMagnitude < maxUnitsOff * maxUnitsOff)
-			{
-//				if(cameraRig.RaycastCheck(healthScriptCollider.bounds.center, out hit))
-//				Debug.DrawLine(mCameraRig.GetCamera().transform.position, healthScriptCollider.bounds.center, Color.red, 20);
-				if(Physics.Linecast(mCameraRig.GetCamera().transform.position, healthScriptCollider.bounds.center, out hit))
-				{
-					//TODO find a better method to varify target, perhabs tags?
-					if(hit.collider.GetComponentInParent<PlayerScript>() == aPlayer)
-					{
-						self.SetColliderIgnoreRaycast(false);
-						return hit.collider;
-					}
-				}
-			}
-		}
+//			//priject the direction vector to the target onto a plane, defined by the lookDirection
+//			//this way it acts as if the target hat a kind of 2d hitbox (circle) that expands maxUnitsOff into every direciton 
+////			if(Vector3.ProjectOnPlane(dirToTarget, - lookDirection).sqrMagnitude < maxUnitsOff * maxUnitsOff)
+//			{
+////				if(cameraRig.RaycastCheck(healthScriptCollider.bounds.center, out hit))
+////				Debug.DrawLine(mCameraRig.GetCamera().transform.position, healthScriptCollider.bounds.center, Color.red, 20);
+	//			if(Physics.Linecast(mCameraRig.GetCamera().transform.position, healthScriptCollider.bounds.center, out hit))
+	//			{
+	//				//TODO find a better method to varify target, perhabs tags?
+	//				if(hit.collider.GetComponentInParent<PlayerScript>() == aPlayer)
+	//				{
+	//					self.SetColliderIgnoreRaycast(false);
+	//					return hit.collider;
+	//				}
+	//			}
+	//		}
+	//	}
 
-		//nothing found
-		self.SetColliderIgnoreRaycast(false);
-		return null;
-	}
+	//	//nothing found
+	//	self.SetColliderIgnoreRaycast(false);
+	//	return null;
+	//}
 }

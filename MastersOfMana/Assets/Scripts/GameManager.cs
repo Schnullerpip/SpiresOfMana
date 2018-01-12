@@ -43,6 +43,9 @@ public class GameManager : MonoBehaviour
     public delegate void RoundEnded();
     public static event RoundEnded OnRoundEnded;
 
+    public delegate void HostEndedRound();
+    public static event HostEndedRound OnHostEndedRound;
+
     private int mNumOfReadyPlayers = 0;
     private StartPoints mStartPoints;
     private Player mRewiredPlayer;
@@ -118,6 +121,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public static void ResetEvents()
+    {
+        OnGameStarted = null;
+        OnRoundStarted = null;
+        OnRoundEnded = null;
+        OnHostEndedRound = null;
+        OnLocalPlayerWon = null;
+        OnLocalPlayerDead = null;
+    }
+
     public void TriggerGameStarted()
     {
         ResetLocalGameState();
@@ -191,7 +204,6 @@ public class GameManager : MonoBehaviour
         localPlayer.inputStateSystem.current.SetPreview(false);
 
         gameRunning = false;
-        listener.enabled = true;
         if (OnRoundEnded != null)
         {
             OnRoundEnded();
@@ -317,7 +329,7 @@ public class GameManager : MonoBehaviour
 		List<Transform> startPositions = mStartPoints.GetRandomStartPositions();
 		for(int i = 0; i < players.Count; i++)
 		{
-			players[i].movement.RpcSetPosition(startPositions[i].position);
+			players[i].movement.RpcSetPositionAndRotation(startPositions[i].position, startPositions[i].rotation);
 			players[i].movement.RpcSetVelocity(Vector3.zero);
             players[i].RpcSetInputState(InputStateSystem.InputStateID.Normal);
 			players[i].enabled = true;
@@ -378,5 +390,13 @@ public class GameManager : MonoBehaviour
     public LavaFloor GetLavaFloor()
     {
         return mLavaFloor;
+    }
+
+    public void TriggerHostEndedRound()
+    {
+        if (OnHostEndedRound!=null)
+        {
+            OnHostEndedRound();
+        }
     }
 }

@@ -117,13 +117,25 @@ public class ParalysisBehaviour : A_EffectBehaviour
                 nonHitEffect.transform.position = caster.GetCameraPosition() + caster.GetCameraLookDirection() * mHitRange;
                 NetworkServer.Spawn(nonHitEffect);
             }
-            else //hit geometry
+            else //hit some nonplayer object or terrain
             {
-                //get its normal and create an iceCrystal with the hit points normal as rotation
-                ParalysisBehaviour pb = PoolRegistry.GetInstance(gameObject, hit.point, Quaternion.LookRotation(Vector3.forward, hit.normal), 1, 1).GetComponent<ParalysisBehaviour>();
-                pb.gameObject.layer = LayerMask.NameToLayer("Default");
-                pb.Init(null);
-                NetworkServer.Spawn(pb.gameObject);
+
+                if (hit.transform.gameObject.isStatic)
+                {
+                    //its definitely terrain
+                    //get its normal and create an iceCrystal with the hit points normal as rotation
+                    ParalysisBehaviour pb = PoolRegistry.GetInstance(gameObject, hit.point, Quaternion.LookRotation(Vector3.forward, hit.normal), 1, 1) .GetComponent<ParalysisBehaviour>();
+                    pb.gameObject.layer = LayerMask.NameToLayer("Default");
+                    pb.Init(null);
+                    NetworkServer.Spawn(pb.gameObject);
+                }
+                else
+                {
+                    //we hit a nonterrain object - we would not want to spawn an icecrystal here (would just look strange to frost a flying grenade for example)
+                    GameObject nonHitEffect = PoolRegistry.GetInstance(mNonHitEffect, hit.point, Quaternion.identity, 2, 2, Pool.PoolingStrategy.OnMissRoundRobin, Pool.Activation.ReturnActivated);
+                    nonHitEffect.transform.position = hit.point;
+                    NetworkServer.Spawn(nonHitEffect);
+                }
             }
         }
     }
@@ -205,6 +217,7 @@ public class ParalysisBehaviour : A_EffectBehaviour
             mAffectedPlayer.movement.ClearMovementInput();
             mAffectedPlayer.movement.SetMovementAllowed(false);
 
+            mAffectedPlayer.GetPlayerSpells().StopPreview();
             mAffectedPlayer.inputStateSystem.current.SetPreview(false);
 
             //slow down/stop the affected player

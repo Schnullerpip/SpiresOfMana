@@ -177,6 +177,11 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         }
     }
 
+    private void OnDestroy()
+    {
+        GameManager.OnRoundEnded -= EndSpell;
+    }
+
     public override void OnStartClient()
     {
         base.OnStartClient();
@@ -206,7 +211,11 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
     public void Update()
     {
         //if we dont have a caster anymore - disappear (disconnected or player is dead)
-        if (!caster || !caster.healthScript.IsAlive())
+        if (!caster)
+        {
+            return;
+        }
+        if (!caster.healthScript.IsAlive() && isServer)
         {
             Explode();
             return;
@@ -278,17 +287,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
                         //set velocity to shoot towards enemy
                         Vector3 projectileVelocity = Vector3.Normalize(nearest.movement.mRigidbody.worldCenterOfMass - transform.position)*mRockVelocity;
 
-                        //shoot the rock! -> make sure the shoting order stays legit
-                        if (successor)
-                        {
-                            //if there is another instance after this one, inform it, that it is next
-                            successor.previous = null;
-                        }
-                        else
-                        {
-                            //there is no successor -> make sure the next cast will be handled correctly
-                            mShootingOrder.Remove(caster);
-                        }
+                        UnregisterFromShootingOrder();
 
                         trail.enabled = true;
                         RpcShoot(transform.position, projectileVelocity);
@@ -340,6 +339,22 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         Explode();
     }
 
+    private void UnregisterFromShootingOrder()
+    {
+        //shoot the rock! -> make sure the shoting order stays legit
+        if (successor)
+        {
+            //if there is another instance after this one, inform it, that it is next
+            successor.previous = null;
+        }
+        else
+        {
+            //there is no successor -> make sure the next cast will be handled correctly
+            mShootingOrder.Remove(caster);
+        }
+
+    }
+
     public override void EndSpell()
     {
         StopPreview(caster);
@@ -349,7 +364,10 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
 
     private void Explode()
     {
+        UnregisterFromShootingOrder();
+
         spawnTrail.enabled = false;
+        
 
         GameObject collisionExplosion = PoolRegistry.GetInstance(mCollisioinEffect, transform.position,
             transform.rotation, 1, 1, Pool.PoolingStrategy.OnMissSubjoinElements, Pool.Activation.ReturnActivated);

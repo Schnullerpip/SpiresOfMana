@@ -138,6 +138,29 @@ public class ServerMoveable : NetworkBehaviour
     }
 
     [ClientRpc]
+    public void RpcSetRotation(Quaternion quat)
+    {
+        if (!mMovementAllowed)
+        {
+            return;
+        }
+        mRigidbody.rotation = quat;
+    }
+
+    [ClientRpc]
+    public void RpcSetPositionAndRotation(Vector3 vec3, Quaternion quat)
+    {
+        if (!mMovementAllowed)
+        {
+            return;
+        }
+        mRigidbody.position = vec3;
+        mRigidbody.rotation = quat;
+    }
+
+
+
+    [ClientRpc]
     public void RpcMovePosition(Vector3 vec3)
     {
         if (!mMovementAllowed)

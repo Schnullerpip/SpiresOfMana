@@ -8,13 +8,13 @@ public class IngameMenu : MonoBehaviour
     protected Rewired.Player mRewiredPlayer;
     public MultipleMenuInput menuInput;
     public RectTransform confirmationPanel;
-    public RectTransform optionsPanel;
+	public LobbyOptions optionsPanel;
 
     public UnityEngine.UI.Selectable defaultSelected;
 
     private void Awake()
     {
-        optionsPanel.GetComponent<Prototype.NetworkLobby.LobbyOptions>().ApplyAudioSettings();
+        optionsPanel.GetComponent<LobbyOptions>().ApplySettings();
     }
 
     public void ToggleVisibility()
@@ -35,6 +35,10 @@ public class IngameMenu : MonoBehaviour
 
     public void Resume()
     {
+		if (optionsPanel.gameObject.activeSelf) 
+		{
+			optionsPanel.OnBack ();
+		}
         if (lobbyManager)
         {
             lobbyManager.RemoveLastCancelDelegate();

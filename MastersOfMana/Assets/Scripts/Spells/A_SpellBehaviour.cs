@@ -41,13 +41,8 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
     /// GameObjects (or rather their networkID can be passed down via syncvar and OnStartClient guarantees, to be called after the syncvars have been synchronized,
     /// so inside OnStartClient caster can be set by getting the respective Component from the casterobject
     /// </summary>
-    [SyncVar(hook="GetPlayerComponent")]
+    [SyncVar]
     protected GameObject casterObject;
-
-    private void GetPlayerComponent(GameObject co)
-    {
-        caster = co.GetComponent<PlayerScript>();
-    }
 
     public override void OnStartClient()
     {
@@ -176,22 +171,40 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
     }
 
 	[System.Serializable]
-	public struct ExplosionFalloff
+	public class ExplosionFalloff
 	{
 		public float force;
 		public int damage;
 		public AnimationCurve falloff;
 
-		public float EvaluateForce(float t)
+		public virtual float EvaluateForce(float t)
 		{
 			return falloff.Evaluate(t) * force;
 		}
 
-		public int EvaluateDamage(float t)
+		public virtual int EvaluateDamage(float t)
 		{
 			return Mathf.RoundToInt(falloff.Evaluate(t) * damage);
 		}
 	}
+
+    [System.Serializable]
+    public class ExplosionFalloffClampable : ExplosionFalloff
+    {
+        public float min_force, max_force;
+        public int min_damage, max_damage;
+
+        public override float EvaluateForce(float t)
+        {
+            return Mathf.Clamp(falloff.Evaluate(t)*force, min_force, max_force);
+        }
+
+		public override int EvaluateDamage(float t)
+		{
+		    return Mathf.Clamp(Mathf.RoundToInt(falloff.Evaluate(t)*damage), min_damage, max_damage);
+		}
+
+    }
 
 	/// <summary>
 	/// Applies an explosion with the provided parameters.
@@ -200,7 +213,7 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 	/// <param name="radius">Radius.</param>
 	/// <param name="explFalloff">Explosion falloff.</param>
 	/// <param name="excluded">A list of Healthscript that should be skipped. eg these already got hit.</param>
-	protected void ExplosionDamage(Vector3 explosionOrigin, float radius, ExplosionFalloff explFalloff, List<HealthScript> excluded = null, float externalDamageFactor = 1.0f)
+	protected void ExplosionDamage(Vector3 explosionOrigin, float radius, ExplosionFalloff explFalloff, List<HealthScript> excluded = null, float externalDamageFactor = 1.0f, float externalForceFactor = 1.0f)
 	{
 
 		//overlap a sphere at the hit position
@@ -256,16 +269,17 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 				affect = 1 - forceVector.sqrMagnitude / radiusSqr;
 				
 				forceVector.Normalize();
-				forceVector *= explFalloff.EvaluateForce(affect);
+				forceVector *= explFalloff.EvaluateForce(affect) * externalForceFactor;
 
-				//check wheather or not we are handling a player or just some random rigidbody
-				if (c.attachedRigidbody.CompareTag("Player"))
+                //check wheather or not we are handling a ServerMoveable or just some random rigidbody
+                ServerMoveable sm = c.attachedRigidbody.GetComponent<ServerMoveable>();
+				if (sm)
 				{
-					PlayerScript ps = c.attachedRigidbody.GetComponent<PlayerScript>();
-					ps.movement.RpcAddForce(forceVector, ForceMode.VelocityChange);
+					sm.RpcAddForce(forceVector, ForceMode.VelocityChange);
 				}
 				else
 				{
+                    //its safe to move rigid bodies if they're not a server moveable since then it is only local objects, that should not affect the game anyway
 					c.attachedRigidbody.AddForce(forceVector, ForceMode.VelocityChange);
 				}
 			}
@@ -295,9 +309,9 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 		}
 	
 		//this is done after the overlapshere loop, that way, walls and other obstacles where able to block the explosion before dying
-		for (int i = 0; i < cachedHealth.Count; i++) 
+		for (int i = 0; i < cachedHealth.Count; i++)
 		{
-			cachedHealth[i].TakeDamage(Mathf.RoundToInt(explFalloff.EvaluateDamage(affectFactors[i]) * externalDamageFactor), GetType());
+			cachedHealth[i].TakeDamage(Mathf.RoundToInt(explFalloff.EvaluateDamage(affectFactors[i])*externalDamageFactor), GetType());
 		}
 	}
 

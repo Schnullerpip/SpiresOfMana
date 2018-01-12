@@ -52,17 +52,19 @@ public abstract class A_InputState : A_State{
 	{
 //		player.aim.ValidateFocusTargetView();
 
-		if(player.aim.HasFocusTarget())
-		{
-			//TODO: get actual rewired controller type
-//			player.aim.RefineAim(aimInput, Rewired.ControllerType.Mouse);
-			player.aim.LookAtFocusTarget();
-		}
-		else
-		{
-//			player.aim.ResetRefinement();
-			player.aim.Aim(aimInput);
-		}
+//		if(player.aim.HasFocusTarget())
+//		{
+//			//TODO: get actual rewired controller type
+////			player.aim.RefineAim(aimInput, Rewired.ControllerType.Mouse);
+//			player.aim.LookAtFocusTarget();
+//		}
+//		else
+//		{
+////			player.aim.ResetRefinement();
+		//	player.aim.Aim(aimInput);
+		//}
+
+		player.aim.Aim(aimInput);
 	}
 
     public virtual void ChooseSpell(int idx)

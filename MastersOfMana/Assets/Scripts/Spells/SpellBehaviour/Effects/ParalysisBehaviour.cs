@@ -91,7 +91,7 @@ public class ParalysisBehaviour : A_EffectBehaviour
                 //player was hit -> create an icecrystalsurrounding him/her
                 ParalysisBehaviour pb = PoolRegistry.GetInstance(gameObject, p.transform.position, caster.transform.rotation, 1, 1) .GetComponent<ParalysisBehaviour>();
 
-                pb.gameObject.layer = LayerMask.NameToLayer("IgnorePlayer");
+                pb.gameObject.layer = LayerMask.NameToLayer("FrostPrison");
 
                 pb.Init(p.gameObject);
                 pb.mAffectedPlayer = p;
@@ -186,7 +186,7 @@ public class ParalysisBehaviour : A_EffectBehaviour
         if (mAffectedPlayerObject)
         {
             mAffectedPlayer = mAffectedPlayerObject.GetComponent<PlayerScript>();
-            gameObject.layer = LayerMask.NameToLayer("IgnorePlayer");
+            gameObject.layer = LayerMask.NameToLayer("FrostPrison");
 
             ApplyMaliciousEffect();
         }

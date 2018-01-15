@@ -45,8 +45,6 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 	{
 		base.Preview(caster);
 
-        preview.instance.SetAvailability(caster.CurrentSpellReady());
-
 		RaycastHit hit;
 		if(caster.HandTransformIsObscured(out hit))
 		{
@@ -68,7 +66,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
         caster.SetColliderIgnoreRaycast(true);
 		if(Physics.SphereCast(caster.handTransform.position, ballRadius, aimDirection, out hit))
 		{
-            preview.instance.MoveAndRotate(hit.point + hit.normal * ballRadius, Quaternion.LookRotation(hit.normal));
+            preview.instance.MoveAndRotate(hit.point + hit.normal * ballRadius, caster.aim.currentLookRotation);
 		}
 		else
 		{
@@ -110,7 +108,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 		}
 			
         //Get a fireballinstance out of the pool
-		FireballBehaviour fireballBehaviour = PoolRegistry.GetInstance(gameObject, initPos, caster.transform.rotation, 5, 5).GetComponent<FireballBehaviour>();
+		FireballBehaviour fireballBehaviour = PoolRegistry.GetInstance(gameObject, initPos, caster.transform.rotation, 7, 5).GetComponent<FireballBehaviour>();
 		fireballBehaviour.caster = caster;
 		fireballBehaviour.mLastPosition = initPos;
 
@@ -156,7 +154,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 		}
 
 		//skip trigger and the casters collision boxes
-        if (collider.isTrigger || caster.IsColliderPartOf(collider))
+        if (collider.isTrigger || (caster && caster.IsColliderPartOf(collider)))
         {
             return;
         }
@@ -170,6 +168,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 		{
 			//technically the normal is not correct, but it looks fine and is only really wrong when the angle is super flat
 			mRigid.position = adjustmentHit.point - (mRigid.position - mLastPosition) * ballRadius;
+            mRigid.rotation = Quaternion.FromToRotation(Vector3.zero, adjustmentHit.normal);
 		}
 		
 		RpcExplosion(mRigid.position, mRigid.rotation);

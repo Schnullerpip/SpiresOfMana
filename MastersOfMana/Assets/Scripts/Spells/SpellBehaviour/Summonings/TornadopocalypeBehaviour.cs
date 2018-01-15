@@ -13,61 +13,48 @@ public class TornadopocalypeBehaviour : A_SummoningBehaviour
 	public float maxHeightCheck = 20;
 	public FloatRange initalOffsetToPlayer = new FloatRange(3, 10);
 
+    [Range(0, 10)]
+    public float anticipation = 1;
+
 	public TornadoMinion tornadoMinionPrefab;
 
 	private PlayerScript[] mOpponents;
-	private PlayerScript mCaster;
+    private bool mIsActive = false;
 
-    private TornadoMinion[] tornadoMinions;
-    private int numOfTornados = 0;
+    private List<TornadoMinion> mTornadoMinions;
 
     #region implemented abstract members of A_SpellBehaviour
     public override void Execute (PlayerScript caster)
 	{
-		GameManager.instance.isUltimateActive = true;
 
         TornadopocalypeBehaviour tornadopocalypse = PoolRegistry.GetInstance(this.gameObject,1,1).GetComponent<TornadopocalypeBehaviour>();
 
-		tornadopocalypse.mCaster = caster;
+        tornadopocalypse.caster = caster;
 		tornadopocalypse.transform.position = transform.position;
 
+		GameManager.instance.RegisterUltiSpell(tornadopocalypse);
 		NetworkServer.Spawn(tornadopocalypse.gameObject, tornadopocalypse.GetComponent<NetworkIdentity>().assetId);
 		tornadopocalypse.gameObject.SetActive(true);
 
 		tornadopocalypse.Init();
-	}
+        caster.healthScript.OnInstanceDied += tornadopocalypse.EndSpell;
+    }
 	#endregion
-
-	PlayerScript[] GetOpponents ()
-	{
-		PlayerScript[] allPlayers = GetAllPlayers();
-		int j = 0;
-		PlayerScript[] opponents = new PlayerScript[allPlayers.Length - 1];
-		for (int i = 0; i < allPlayers.Length; ++i) 
-		{
-			if (allPlayers [i] == mCaster) {
-				continue;
-			}
-			opponents [j] = allPlayers [i];
-			++j;
-		}
-
-		return opponents;
-	}
-
-	//TODO: extract this to the gamemanager
-	PlayerScript[] GetAllPlayers()
-	{
-		return FindObjectsOfType<PlayerScript>();
-	}
 
 	private void Init()
 	{
-        //Calc the maximum number of tornados possible
-        numOfTornados = 0;
-        tornadoMinions = new TornadoMinion[Mathf.CeilToInt(duration * interval.min)];
-        mOpponents = GetOpponents();
-		mOpponents = GetAllPlayers();
+	    mIsActive = true;
+
+        if (mTornadoMinions == null)
+        {
+            mTornadoMinions = new List<TornadoMinion>();
+        }
+        else
+        {
+            mTornadoMinions.Clear();
+        }
+
+        mOpponents = GameManager.instance.GetOpponents(caster).ToArray();
 
 		for (int i = 0; i < mOpponents.Length; i++) 
 		{
@@ -83,7 +70,7 @@ public class TornadopocalypeBehaviour : A_SummoningBehaviour
 		{
 			Vector3 initPos;
 			//check if the current position of the player is a valid navmesh position
-			if(!TornadoMinion.GetPositionOnMesh(target.transform.position, maxHeightCheck, out initPos))
+			if(!TornadoMinion.GetPositionOnMesh(target.transform.position + Vector3.up, maxHeightCheck, out initPos))
 			{
 				//if not, skip this iteration
 				yield return new WaitForSeconds(interval.Random());
@@ -91,60 +78,59 @@ public class TornadopocalypeBehaviour : A_SummoningBehaviour
 			}
 
 			//instatiate the minion at the players position
+		    TornadoMinion tornado =
+		        PoolRegistry.GetInstance(tornadoMinionPrefab.gameObject, initPos, target.transform.rotation, 7, 4).GetComponent<TornadoMinion>();
 
-			//TODO: use our poolregistry
-			TornadoMinion tornado = Instantiate(tornadoMinionPrefab, initPos, target.transform.rotation);
-//			TornadoMinion tornado = PoolRegistry.Instantiate(tornadoMinionPrefab.gameObject, Pool.Activation.ReturnDeactivated).GetComponent<TornadoMinion>();
+			tornado.SetTarget(target);
+			tornado.gameObject.SetActive(true);
+			
+            Vector3 offset = target.movement.GetCurrentMovementVector() * anticipation //take movement into account 
+                + Vector3.up //plus a little offset up so the position is not in or under the navmesh
+                + Random.insideUnitCircle.normalized.ToVector3xz() * initalOffsetToPlayer.Random(); //random around the players position
 
-			Vector3 pos = target.transform.position 
-				+ target.movement.GetDeltaMovement() / Time.deltaTime //take movement into account			
-				+ Random.insideUnitCircle.normalized.ToVector3xz() * initalOffsetToPlayer.Random(); //random around the players position
+            //move afterwards to make sure the validation of the position is calculated from the targets position. 
+            //this is especially important for the brigdes, so that the tornados dont spawn below
+            tornado.AdjustPosition(offset);
 
-			//move afterwards to make sure the validation of the position is calculated from the targets position. 
-			//this is especially important for the brigdes, so that the tornados dont spawn below
-			tornado.transform.position = pos;
+            NetworkServer.Spawn(tornado.gameObject);
 
-			Vector3 clientAdjustment;
+            mTornadoMinions.Add(tornado);
 
-			//since the client didnt yet initialized the navmeshagents, we have to adjust again
-			if(TornadoMinion.GetPositionOnMesh(pos, maxHeightCheck, out clientAdjustment))
-			{
-				tornado.transform.position = clientAdjustment;
-				tornado.SetTarget(target);
-				tornado.gameObject.SetActive(true);
-				NetworkServer.Spawn(tornado.gameObject);
-			}
-			else
-			{
-				tornado.gameObject.SetActive(false);
-			}
-            tornadoMinions[numOfTornados] = tornado;
-            numOfTornados++; //make sure we start filling the array at 0
             yield return new WaitForSeconds(interval.Random());
 		}
 	}
+
+    public override void EndSpell()
+   {
+	    caster.healthScript.OnInstanceDied -= EndSpell;
+        mIsActive = false;
+		//reset the flag so a new ultimate can be started
+		GameManager.instance.UnregisterUltiSpell(this);
+
+		NetworkServer.UnSpawn(gameObject);
+		gameObject.SetActive(false);
+
+        for (int i = 0; i < mTornadoMinions.Count; i++)
+        {
+            var tornado = mTornadoMinions[i].gameObject;
+            NetworkServer.UnSpawn(tornado);
+            tornado.SetActive(false);
+        }
+    }
 
 	private IEnumerator DelayedStop(float time)
 	{
         yield return new WaitForSeconds(time);
 
-		//reset the flag so a new ultimate can be started
-		GameManager.instance.isUltimateActive = false;
+	    if (gameObject.activeSelf && mIsActive)
+	    {
+            caster.healthScript.OnInstanceDied -= EndSpell;
+            mIsActive = false;
+            //reset the flag so a new ultimate can be started
+            GameManager.instance.UnregisterUltiSpell(this);
 
-		NetworkServer.UnSpawn(this.gameObject);
-		this.gameObject.SetActive(false);
+            NetworkServer.UnSpawn(gameObject);
+            gameObject.SetActive(false);
+	    }
 	}
-
-    //public override void EndSpell()
-    //{
-    //    base.EndSpell();
-    //    if (isServer)
-    //    {
-    //        GameManager.instance.isUltimateActive = false;
-    //        for (int i = 0; i < numOfTornados; i++)
-    //        {
-    //            tornadoMinions[i].RpcDisappear();
-    //        }
-    //    }
-    //}
 }

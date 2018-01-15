@@ -32,4 +32,14 @@ public struct FloatRange
 	{
 		return Mathf.Lerp(min, max, t);
 	}
+
+    /// <summary>
+    /// Calculates the interpolated t that produces the provided value withing the range.
+    /// </summary>
+    /// <returns>The lerp.</returns>
+    /// <param name="value">Value.</param>
+    public float InverseLerp(float value)
+    {
+        return Mathf.InverseLerp(min, max, value);
+    }
 }

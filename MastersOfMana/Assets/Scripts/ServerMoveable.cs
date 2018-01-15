@@ -13,6 +13,7 @@ public class ServerMoveable : NetworkBehaviour
 
     //determines whether the instance allows movement or not
     [SyncVar] private bool mMovementAllowed = true;
+
     public void SetMovementAllowed(bool allowance)
     {
         mMovementAllowed = allowance;
@@ -49,6 +50,15 @@ public class ServerMoveable : NetworkBehaviour
             return;
         }
         mRigidbody.AddForce(force, mode);
+    }
+
+    /// <summary>
+    /// method to invert the current velocity
+    /// </summary>
+    [ClientRpc]
+    public void RpcInvertVelocity(float lossFactor)
+    {
+        mRigidbody.velocity *= -1 * lossFactor;
     }
 
 	[ClientRpc]
@@ -126,6 +136,29 @@ public class ServerMoveable : NetworkBehaviour
         } 
         mRigidbody.position = vec3;
     }
+
+    [ClientRpc]
+    public void RpcSetRotation(Quaternion quat)
+    {
+        if (!mMovementAllowed)
+        {
+            return;
+        }
+        mRigidbody.rotation = quat;
+    }
+
+    [ClientRpc]
+    public void RpcSetPositionAndRotation(Vector3 vec3, Quaternion quat)
+    {
+        if (!mMovementAllowed)
+        {
+            return;
+        }
+        mRigidbody.position = vec3;
+        mRigidbody.rotation = quat;
+    }
+
+
 
     [ClientRpc]
     public void RpcMovePosition(Vector3 vec3)

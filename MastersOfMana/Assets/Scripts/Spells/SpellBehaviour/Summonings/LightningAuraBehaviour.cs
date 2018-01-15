@@ -5,9 +5,10 @@ using UnityEngine.Networking;
 
 public class LightningAuraBehaviour : A_SummoningBehaviour
 {
-    [SerializeField] private float mDuration = 50;
-    [SerializeField] private float mCountTillDamage = 1.0f;
+    [SerializeField] private float mDuration = 5;
+    [SerializeField] private float mCountTilDamage = 1.0f;
     [SerializeField] private int mDamage = 1;
+    [SerializeField] private bool mInflictSelfDamage = false;
     private float mEnergyLevel;
 
     [SerializeField]
@@ -15,14 +16,38 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
     [SerializeField]
     private ParticleSystem mLightningProjectile;
 
+    public AudioSource mAudioSource;
+    public AudioClip CastEffectClip;
+    public AudioClip StaticEnergyLoop;
+    public AudioClip AttackSound;
+
+
     //the list that captures which players are shot
-    private List<PlayerScript> mAlreadyCaught;
+    private List<HealthScript> mAlreadyCaught;
+
+    [SerializeField] private SphereCollider mDecectionTrigger; 
+
+	public override void Preview (PlayerScript caster)
+	{
+		base.Preview (caster);
+
+	    preview.instance.transform.localScale = (mDecectionTrigger.radius * 2) * Vector3.one;
+        preview.instance.Move(caster.movement.mRigidbody.worldCenterOfMass);
+	}
+
+	public override void StopPreview (PlayerScript caster)
+	{
+		base.StopPreview (caster);
+        preview.instance.Deactivate();
+	}
 
     void OnEnable()
     {
-        mAlreadyCaught = new List<PlayerScript>();
+        mAudioSource.PlayOneShot(CastEffectClip);
+        mAlreadyCaught = new List<HealthScript>();
         mEnergyLevel = mDuration;
-        mTimeCount = mCountTillDamage;
+        mTimeCount = mCountTilDamage;
+        mSelfInflictDamageTimeCount = 0;
     }
 
     public override void Execute(PlayerScript caster)
@@ -39,38 +64,61 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
 
     public void OnTriggerStay(Collider other)
     {
-        PlayerScript ps = other.GetComponentInParent<PlayerScript>();
-        if (ps && ps != caster)
+        HealthScript hs = other.GetComponentInParent<HealthScript>();
+        if (hs && hs != caster.healthScript)
         {
+            PlayerScript ps = other.GetComponentInParent<PlayerScript>();
+
+            Vector3 position, direction;
+            position = caster.movement.mRigidbody.worldCenterOfMass;
+            if (ps)
+            {
+                direction = ps.movement.mRigidbody.worldCenterOfMass - caster.movement.mRigidbody.worldCenterOfMass;
+            }
+            else
+            {
+                direction = hs.transform.position - caster.movement.mRigidbody.worldCenterOfMass;
+            }
+            direction.Normalize();
+
             RaycastHit hit;
-            if (Physics.Raycast(
-                    new Ray(caster.movement.mRigidbody.worldCenterOfMass,
-                        (ps.movement.mRigidbody.worldCenterOfMass - caster.movement.mRigidbody.worldCenterOfMass)
-                            .normalized),
-                    out hit))
+
+            if (Physics.Raycast( new Ray(position, direction.normalized), out hit))
             {
                 if (hit.collider == other)
                 {
-                    if (!mAlreadyCaught.Contains(ps))
+                    if (!mAlreadyCaught.Contains(hs))
                     {
-                        mAlreadyCaught.Add(ps);
+                        mAlreadyCaught.Add(hs);
+
+                        HealthScript.Died hsOnOnInstanceDied = null;
+                        hsOnOnInstanceDied = () =>
+                        {
+                            RemoveInstanceFromList(hs);
+                            hs.OnInstanceDied -= hsOnOnInstanceDied;
+                        };
+                        hs.OnInstanceDied += hsOnOnInstanceDied;
                     }
                 }
             }
             else
             {
-                mAlreadyCaught.Remove(ps);
+                mAlreadyCaught.Remove(hs);
             }
         }
     }
 
     public void OnTriggerExit(Collider other)
     {
-        PlayerScript ps = other.GetComponentInParent<PlayerScript>();
+        HealthScript hs = other.GetComponentInParent<HealthScript>();
+        RemoveInstanceFromList(hs);
+    }
 
-        if (ps)
+    private void RemoveInstanceFromList(HealthScript hs)
+    {
+        if (hs)
         {
-            mAlreadyCaught.Remove(ps);
+            mAlreadyCaught.Remove(hs);
             if (mAlreadyCaught.Count == 0)
             {
                 ActivateStaticPotential();
@@ -90,13 +138,20 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
         transform.position = caster.movement.mRigidbody.worldCenterOfMass;
     }
 
-    private float mTimeCount;
+    private float mTimeCount, mSelfInflictDamageTimeCount;
     void Update()
     {
         //as long as we dont have a caster, do nothing
         if (!caster)
         {
             return;
+        }
+
+        //damage the caster as a penalty
+        if(mInflictSelfDamage && isServer && (mSelfInflictDamageTimeCount += Time.deltaTime) >= 2.0f)
+        {
+            mSelfInflictDamageTimeCount = 0;
+            caster.healthScript.TakeDamage(1, GetType());
         }
 
         if (mAlreadyCaught.Count == 0)
@@ -113,34 +168,51 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
                 ActivateLightningProjectile();
             }
             //which opponent is nearest?
-            PlayerScript nearest = mAlreadyCaught[0];
-            float distance = Vector3.Distance(caster.transform.position, nearest.transform.position);
-            for (int i = 1; i < mAlreadyCaught.Count; ++i)
+            HealthScript nearest = null;
+            float distance = 100000.0f;
+
+            //if there are more than one opponents in reach, choose the nearest
+            for (int i = 0; i < mAlreadyCaught.Count; ++i)
             {
-                float dist = Vector3.Distance(mAlreadyCaught[i].transform.position, caster.transform.position);
+                var hs = mAlreadyCaught[i];
+                if (hs == null)
+                {
+                    continue;
+                }
+                  
+                float dist = Vector3.Distance(hs.transform.position, caster.transform.position);
                 if (dist < distance)
                 {
-                    nearest = mAlreadyCaught[i];
+                    nearest = hs;
                 }
             }
-            //since mAlreadyCaught is not empty we assume, that mLightningProjectile is already active
-            //shoot the lightning projectile at nearest opponent
-            var vel = mLightningProjectile.velocityOverLifetime;
-            Vector3 lightningDirection =
-                Vector3.Normalize(nearest.movement.mRigidbody.worldCenterOfMass - transform.position);
-            lightningDirection *= 30;
-            //vel.x = lightningDirection.x;
-            //vel.y = lightningDirection.y;
-            mLightningProjectile.transform.LookAt(nearest.movement.mRigidbody.worldCenterOfMass);
 
-            //apply damage to nearest opponent
-            mTimeCount += Time.deltaTime;
-            if (mTimeCount >= mCountTillDamage)
+            if (nearest)
             {
-                mTimeCount = 0;
-                if (isServer)
+                //since mAlreadyCaught is not empty we assume, that mLightningProjectile is already active
+                //shoot the lightning projectile at nearest opponent
+                ServerMoveable sm = nearest.GetComponent<ServerMoveable>();
+                if (sm)
                 {
-                    nearest.healthScript.TakeDamage(mDamage, this.GetType());
+                    mLightningProjectile.transform.LookAt(sm.mRigidbody.worldCenterOfMass);
+                }
+                else
+                {
+                    mLightningProjectile.transform.LookAt(nearest.transform.position);
+                }
+
+                //apply damage to nearest opponent
+                if (isServer && ((mTimeCount += Time.deltaTime) >= mCountTilDamage))
+                {
+                    mTimeCount = 0;
+                    nearest.TakeDamage(mDamage, this.GetType());
+                }
+            }
+            else
+            {
+                if (!mStaticPotential.isPlaying)
+                {
+                    ActivateStaticPotential();
                 }
             }
         }
@@ -149,25 +221,33 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
         if (isServer)
         {
             mEnergyLevel -= Time.deltaTime;
-            if (mEnergyLevel < 0.0f)
+            if (mEnergyLevel <= 0.0f)
             {
                 Disappear();
             }
         }
     }
 
+    public override void EndSpell()
+    {
+        Disappear();
+    }
+
     private void Disappear()
     {
         mStaticPotential.gameObject.SetActive(false);
         mStaticPotential.Stop();
+
         mLightningProjectile.gameObject.SetActive(false);
         mLightningProjectile.Stop();
+
         gameObject.SetActive(false);
         NetworkServer.UnSpawn(gameObject);
     }
 
     private void ActivateLightningProjectile()
     {
+        mAudioSource.PlayOneShot(AttackSound);
         mStaticPotential.gameObject.SetActive(false);
         mLightningProjectile.gameObject.SetActive(true);
         mStaticPotential.Stop();

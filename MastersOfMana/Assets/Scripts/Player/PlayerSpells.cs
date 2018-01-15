@@ -51,6 +51,7 @@ public class PlayerSpells : NetworkBehaviour {
         {
             slot.cooldown = 0;
         }
+		ultimateEnergy = 0;
     }
 
     void RoundStarted()
@@ -166,6 +167,14 @@ public class PlayerSpells : NetworkBehaviour {
         //}
     }
 
+    public void UpdateSpells(List<A_Spell> spells)
+    {
+        for(int i = 0; i < spells.Count; i++)
+        {
+            spellslot[i].spell = spells[i];
+        }
+    }
+
     ///// <summary>
     ///// Update spells on client side
     ///// </summary>
@@ -204,6 +213,11 @@ public class PlayerSpells : NetworkBehaviour {
 			}
 			return false;
 		}
+
+        public void ResetCooldown()
+        {
+            cooldown = spell.coolDownInSeconds;
+        }
 
         /// <summary>
         /// casts the spell inside the slot and also adjusts the cooldown accordingly

@@ -14,6 +14,8 @@ public abstract class A_Spell : ScriptableObject
     public float castDurationInSeconds;
     public float resolveDurationInSeconds;
 
+    public int castAnimationID = 0;
+
     [System.Serializable]
     public struct SpellDescription
     {
@@ -21,7 +23,10 @@ public abstract class A_Spell : ScriptableObject
         public int force;
         public int cooldown;
         public string spellName;
-        public UnityEngine.Video.VideoClip video;
+
+        [Header("Video")]
+        public int beginFrame;
+        public int endFrame;
     }
     public SpellDescription spellDescription;
 

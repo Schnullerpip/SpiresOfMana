@@ -11,7 +11,7 @@ namespace Prototype.NetworkLobby
     //Any LobbyHook can then grab it and pass those value to the game player prefab (see the Pong Example in the Samples Scenes)
     public class LobbyPlayer : NetworkLobbyPlayer
     {
-        static Color[] Colors = new Color[] { Color.magenta, Color.red, Color.cyan, Color.blue, Color.green, Color.yellow };
+        public static Color[] Colors = new Color[] { Color.magenta, Color.red, Color.cyan, Color.blue, Color.green, Color.yellow };
         //used on server to avoid assigning the same color to two player
         static List<int> _colorInUse = new List<int>();
 
@@ -30,6 +30,9 @@ namespace Prototype.NetworkLobby
         public GameObject localIcone;
         public GameObject remoteIcone;
         private Button backButton;
+        private bool initialized = false;
+        [SyncVar]
+        private bool forcedColor = false;
 
         //OnMyName function will be invoked on clients when server change the value of playerName
         [SyncVar(hook = "OnMyName")]
@@ -40,7 +43,6 @@ namespace Prototype.NetworkLobby
         public Color OddRowColor = new Color(250.0f / 255.0f, 250.0f / 255.0f, 250.0f / 255.0f, 1.0f);
         public Color EvenRowColor = new Color(180.0f / 255.0f, 180.0f / 255.0f, 180.0f / 255.0f, 1.0f);
 
-        static Color JoinColor = new Color(255.0f / 255.0f, 0.0f, 101.0f / 255.0f, 1.0f);
         static Color NotReadyColor = new Color(34.0f / 255.0f, 44 / 255.0f, 55.0f / 255.0f, 1.0f);
         static Color ReadyColor = new Color(0.0f, 204.0f / 255.0f, 204.0f / 255.0f, 1.0f);
         static Color TransparentColor = new Color(0, 0, 0, 0);
@@ -58,7 +60,6 @@ namespace Prototype.NetworkLobby
             if (LobbyManager.s_Singleton != null) LobbyManager.s_Singleton.OnPlayersNumberModified(1);
 
             LobbyPlayerList._instance.AddPlayer(this);
-            LobbyPlayerList._instance.DisplayDirectServerWarning(isServer && LobbyManager.s_Singleton.matchMaker == null);
 
             if (isLocalPlayer)
             {
@@ -68,7 +69,7 @@ namespace Prototype.NetworkLobby
             {
                 SetupOtherPlayer();
             }
-
+			removePlayerButton.gameObject.SetActive(LobbyManager.s_Singleton.isHost);
             //setup the player data on UI. The value are SyncVar so the player
             //will be created with the right value currently on server
             OnMyName(playerName);
@@ -112,6 +113,7 @@ namespace Prototype.NetworkLobby
 				readyButtonText.color = ReadyColor;
 			}
             readyButton.interactable = false;
+            colorButton.interactable = false;
         }
 
         void SetupLocalPlayer()
@@ -122,14 +124,14 @@ namespace Prototype.NetworkLobby
 
             CheckRemoveButton();
 
-            if (playerColor == Color.white)
-                CmdColorChange();
+            playerColor = PlayerPrefsExtended.GetColor("Playercolor", Color.white);
+            CmdSetPlayerColor(playerColor);
 
-            ChangeReadyButtonColor(JoinColor);
+            //ChangeReadyButtonColor(JoinColor);
 
-            readyButton.transform.GetChild(0).GetComponent<Text>().text = "JOIN";
-            readyButton.interactable = true;
-            EventSystem.current.SetSelectedGameObject(readyButton.gameObject);
+            //readyButton.transform.GetChild(0).GetComponent<Text>().text = "JOIN";
+            //readyButton.interactable = true;
+            //EventSystem.current.SetSelectedGameObject(readyButton.gameObject);
 
             //have to use child count of player prefab already setup as "this.slot" is not set yet
             playerName = PlayerPrefs.GetString("Playername","Player" + (LobbyPlayerList._instance.playerListContentTransform.childCount - 1));
@@ -145,13 +147,11 @@ namespace Prototype.NetworkLobby
             colorButton.onClick.RemoveAllListeners();
             colorButton.onClick.AddListener(OnColorClicked);
 
-            readyButton.onClick.RemoveAllListeners();
-            readyButton.onClick.AddListener(OnReadyClicked);
-
             //We need to assign the navigation for down directly, it seems to lose the explicit reference because the back button is on a different UI
             backButton = GetComponentInParent<LobbyPlayerList>().backButton;
-            AssignCustomNavigation(readyButton, backButton, OnSelectDirection.down);
+            //AssignCustomNavigation(readyButton, backButton, OnSelectDirection.down);
             AssignCustomNavigation(removePlayerButton, backButton, OnSelectDirection.down);
+            removePlayerButton.gameObject.SetActive(false);
 
             //when OnClientEnterLobby is called, the loval PlayerController is not yet created, so we need to redo that here to disable
             //the add button if we reach maxLocalPlayer. We pass 0, as it was already counted on OnClientEnterLobby
@@ -205,29 +205,33 @@ namespace Prototype.NetworkLobby
             if (readyState)
             {
 				isReady = true;
-                ChangeReadyButtonColor(TransparentColor);
+                //ChangeReadyButtonColor(TransparentColor);
 
-                Text textComponent = readyButton.transform.GetChild(0).GetComponent<Text>();
-                textComponent.text = "READY";
-                textComponent.color = ReadyColor;
-                readyButton.interactable = false;
+                //Text textComponent = readyButton.transform.GetChild(0).GetComponent<Text>();
+                //textComponent.text = "READY";
+                //textComponent.color = ReadyColor;
+                //readyButton.interactable = false;
                 colorButton.interactable = false;
                 nameInput.interactable = false;
                 // Push chosen spells to server
                 if (isLocalPlayer)
                 {
                     PlayerPrefs.SetString("Playername", playerName);
+                    if(!forcedColor)
+                    {
+                        PlayerPrefsExtended.SetColor("Playercolor", playerColor);
+                    }
                     PlayerPrefs.Save();
                 }
             }
             else
             {
-                ChangeReadyButtonColor(isLocalPlayer ? JoinColor : NotReadyColor);
+                //ChangeReadyButtonColor(isLocalPlayer ? JoinColor : NotReadyColor);
 				isReady = false;
-                Text textComponent = readyButton.transform.GetChild(0).GetComponent<Text>();
-                textComponent.text = isLocalPlayer ? "JOIN" : "...";
-                textComponent.color = Color.white;
-                readyButton.interactable = isLocalPlayer;
+                //Text textComponent = readyButton.transform.GetChild(0).GetComponent<Text>();
+                //textComponent.text = isLocalPlayer ? "JOIN" : "...";
+                //textComponent.color = Color.white;
+                //readyButton.interactable = isLocalPlayer;
                 colorButton.interactable = isLocalPlayer;
                 nameInput.interactable = isLocalPlayer;
             }
@@ -266,8 +270,20 @@ namespace Prototype.NetworkLobby
             SendReadyToBeginMessage();
         }
 
+        [ClientRpc]
+        public void RpcSetPlayerReady()
+        {
+            if(isLocalPlayer)
+            {
+                GameManager.ResetEvents();
+                SendReadyToBeginMessage();
+            }
+        }
+
         public void OnNameChanged(string str)
         {
+            PlayerPrefs.SetString("Playername", str);
+            PlayerPrefs.Save();
             CmdNameChanged(str);
         }
 
@@ -284,8 +300,8 @@ namespace Prototype.NetworkLobby
 
         public void ToggleJoinButton(bool enabled)
         {
-            readyButton.gameObject.SetActive(enabled);
-            waitingPlayerButton.gameObject.SetActive(!enabled);
+            //readyButton.gameObject.SetActive(enabled);
+            //waitingPlayerButton.gameObject.SetActive(!enabled);
         }
 
         [ClientRpc]
@@ -310,15 +326,28 @@ namespace Prototype.NetworkLobby
         //====== Server Command
 
         [Command]
+        public void CmdSetPlayerColor(Color color)
+        {
+            playerColor = color;
+            CmdColorChange();
+            initialized = true;
+            if(playerColor != color)
+            {
+                forcedColor = true;
+            }
+        }
+
+        [Command]
         public void CmdColorChange()
         {
+            forcedColor = false;
             int idx = System.Array.IndexOf(Colors, playerColor);
 
             int inUseIdx = _colorInUse.IndexOf(idx);
 
             if (idx < 0) idx = 0;
 
-            idx = (idx + 1) % Colors.Length;
+            //idx = (idx + 1) % Colors.Length;
 
             bool alreadyInUse = false;
 
@@ -336,7 +365,7 @@ namespace Prototype.NetworkLobby
             }
             while (alreadyInUse);
 
-            if (inUseIdx >= 0)
+            if (inUseIdx >= 0 && initialized)//If its not initialized yet, make sure  we add the color and don't overwrite another one!
             {//if we already add an entry in the colorTabs, we change it
                 _colorInUse[inUseIdx] = idx;
             }

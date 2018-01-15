@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -22,6 +21,8 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
 
 	public LightningStrike strikePrefab;
 
+    public ParticleSystem clouds;
+
 	private PlayerScript[] mOpponents;
 
     private bool mIsActive;
@@ -29,10 +30,10 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
 	#region implemented abstract members of A_SpellBehaviour
 	public override void Execute (PlayerScript caster)
 	{
-		GameManager.instance.isUltimateActive = true;
 
 		ThunderStormBehaviour thunderStormBehaviour = PoolRegistry.GetInstance(gameObject, 1, 1).GetComponent<ThunderStormBehaviour>();
 
+		GameManager.instance.RegisterUltiSpell(thunderStormBehaviour);
 		thunderStormBehaviour.caster = caster;
 		thunderStormBehaviour.transform.position = transform.position;
 
@@ -40,7 +41,14 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
 		thunderStormBehaviour.gameObject.SetActive(true);
 
         thunderStormBehaviour.StartCoroutine(thunderStormBehaviour.Init());
+	    caster.healthScript.OnInstanceDied += thunderStormBehaviour.EndSpell;
 	}
+
+    public override void EndSpell()
+    {
+	    caster.healthScript.OnInstanceDied -= EndSpell;
+        StartCoroutine(EndEffect());
+    }
 	#endregion
 
     private IEnumerator Init()
@@ -63,16 +71,34 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
 
         yield return new WaitForSeconds(duration);
 
+        StartCoroutine(EndEffect());
+    }
+
+    private IEnumerator EndEffect()
+    {
         mIsActive = false;
+        RpcCloudsStop();
 
         //wait additional time to make the effect not look so abrupt
-        yield return new WaitForSeconds(strikePrefab.anticipationTime * 2 + strikePrefab.lifetime);
+        yield return new WaitForSeconds(Mathf.Max(strikePrefab.anticipationTime * 2 + strikePrefab.lifetime, clouds.main.startLifetime.constantMax));
 
-        //reset the flag so a new ultimate can be started
-        GameManager.instance.isUltimateActive = false;
+	    if (gameObject.activeSelf)
+	    {
+            if(GameManager.instance.isUltimateActive)
+            {
+				//reset the flag so a new ultimate can be started
+				GameManager.instance.UnregisterUltiSpell(this);
+            }
 
-        NetworkServer.UnSpawn(this.gameObject);
-        this.gameObject.SetActive(false);
+            NetworkServer.UnSpawn(this.gameObject);
+            this.gameObject.SetActive(false);
+	    }
+    }
+
+    [ClientRpc]
+    private void RpcCloudsStop()
+    {
+        clouds.Stop();
     }
 
     private IEnumerator RepeatedStrike(PlayerScript playerScript)

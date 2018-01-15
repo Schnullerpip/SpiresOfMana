@@ -35,7 +35,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4961514470493612}
-  - component: {fileID: 114530018702685370}
+  - component: {fileID: 114391420305972444}
   m_Layer: 0
   m_Name: FistOfFury_Explosion
   m_TagString: Untagged
@@ -160,7 +160,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1921541155211408
 GameObject:
   m_ObjectHideFlags: 1
@@ -364,7 +364,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1233248937701180}
   m_LocalRotation: {x: 0, y: -0.97646344, z: 0, w: 0.21568306}
-  m_LocalPosition: {x: -17.792164, y: 6.999634, z: -0.051094055}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4883993370753854}
@@ -386,7 +386,8 @@ AudioSource:
   m_GameObject: {fileID: 1451087628927558}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 243260064957582752, guid: 75146e90f04cc459f82a15f9cccbe71c,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: 2aadecf546529c642bd505685aa15cbc, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.6
@@ -466,7 +467,8 @@ AudioSource:
   m_GameObject: {fileID: 1077029055340934}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 243260064957582752, guid: 75146e90f04cc459f82a15f9cccbe71c,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: 70a2d051802ebc5449f30d822f6a3c16, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.6
@@ -546,7 +548,8 @@ AudioSource:
   m_GameObject: {fileID: 1921541155211408}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 243260064957582752, guid: 75146e90f04cc459f82a15f9cccbe71c,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: 28b1894a33d811d48b7b99aa52222767, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.2
@@ -683,6 +686,18 @@ MonoBehaviour:
   GraphIntensityMultiplier: 1
   IsLoop: 0
   UseSharedMaterial: 0
+--- !u!114 &114391420305972444
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1233248937701180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8410750655a2d2f489c642c14c30aaec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DeactivateTime: 5
 --- !u!114 &114399828769155324
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -720,18 +735,6 @@ MonoBehaviour:
     m_RotationOrder: 0
   GraphTimeMultiplier: 3
   IsLoop: 0
---- !u!114 &114530018702685370
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1233248937701180}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 794cff72f2dbc47f286e6190fffb795e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lifetime: 5
 --- !u!114 &114569235193594034
 MonoBehaviour:
   m_ObjectHideFlags: 1

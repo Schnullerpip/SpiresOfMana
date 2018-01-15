@@ -24,7 +24,8 @@ GameObject:
   - component: {fileID: 114769817448363982}
   - component: {fileID: 114712952528206216}
   - component: {fileID: 114627543095687896}
-  m_Layer: 0
+  - component: {fileID: 82228138417238232}
+  m_Layer: 15
   m_Name: Grenade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,9 +42,24 @@ GameObject:
   - component: {fileID: 4282112524986164}
   - component: {fileID: 33924657860463448}
   - component: {fileID: 23174091859119044}
-  - component: {fileID: 65591705369265742}
   m_Layer: 0
   m_Name: Mesh
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1618188297244870
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4350252071366978}
+  - component: {fileID: 65392894971472918}
+  m_Layer: 0
+  m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -56,10 +72,11 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1520938232169682}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 7.392788, y: 9.26, z: -18.35156}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4282112524986164}
+  - {fileID: 4350252071366978}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -75,6 +92,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4154339031615722}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4350252071366978
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1618188297244870}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4154339031615722}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &23174091859119044
 MeshRenderer:
@@ -130,18 +160,99 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &65591705369265742
+--- !u!65 &65392894971472918
 BoxCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1559055025800544}
+  m_GameObject: {fileID: 1618188297244870}
   m_Material: {fileID: 13400000, guid: f945533613c833b45923473ff79a6cb3, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.418808, y: 0.4379381, z: 0.2577304}
-  m_Center: {x: 0.001433, y: 0.00094100833, z: 0.052983105}
+  m_Size: {x: 0.418808, y: 0.2640792, z: 0.43764496}
+  m_Center: {x: 0.001433, y: 0.019999698, z: -0.0019054413}
+--- !u!82 &82228138417238232
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1520938232169682}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 243260064957582752, guid: 75146e90f04cc459f82a15f9cccbe71c,
+    type: 2}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!114 &114437587964823430
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -253,4 +364,177 @@ MonoBehaviour:
   explosionTime: 1
   explosionPrefab: {fileID: 1771704966800898, guid: 6f72d0ff6a0d6468dbe17ef1fb952efe,
     type: 2}
-  grenadeMesh: {fileID: 0}
+  mesh: {fileID: 4282112524986164}
+  scaleX:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.5
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.60689604
+      value: 1.0687742
+      inSlope: -0.14839983
+      outSlope: -0.14839983
+      tangentMode: 34
+    - serializedVersion: 2
+      time: 0.756405
+      value: 0.9282097
+      inSlope: -0.12137249
+      outSlope: -0.12137249
+      tangentMode: 34
+    - serializedVersion: 2
+      time: 0.84057826
+      value: 0.98691463
+      inSlope: -0.6854998
+      outSlope: -0.6854998
+      tangentMode: 34
+    - serializedVersion: 2
+      time: 0.9017307
+      value: 0.8604251
+      inSlope: 0.9895468
+      outSlope: 0.9895468
+      tangentMode: 34
+    - serializedVersion: 2
+      time: 0.9781015
+      value: 1.1695375
+      inSlope: -1.8472226
+      outSlope: -1.8472226
+      tangentMode: 34
+    - serializedVersion: 2
+      time: 1
+      value: 1
+      inSlope: -7.7419677
+      outSlope: -7.7419677
+      tangentMode: 34
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  scaleY:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.5
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.6489706
+      value: 1.0687742
+      inSlope: -0.57460064
+      outSlope: -0.57460064
+      tangentMode: 34
+    - serializedVersion: 2
+      time: 0.7353784
+      value: 0.929583
+      inSlope: -0.2400688
+      outSlope: -0.2400688
+      tangentMode: 34
+    - serializedVersion: 2
+      time: 0.8142721
+      value: 1.0187902
+      inSlope: -0.12462115
+      outSlope: -0.12462115
+      tangentMode: 34
+    - serializedVersion: 2
+      time: 0.92803687
+      value: 0.8617984
+      inSlope: 7.623044
+      outSlope: 7.623044
+      tangentMode: 34
+    - serializedVersion: 2
+      time: 0.9465463
+      value: 1.1695375
+      inSlope: 6.7271924
+      outSlope: 6.7271924
+      tangentMode: 34
+    - serializedVersion: 2
+      time: 1
+      value: 1
+      inSlope: -3.1716719
+      outSlope: -3.1716719
+      tangentMode: 34
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  scaleZ:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.4887623
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.62000674
+      value: 1.0628512
+      inSlope: -0.32506627
+      outSlope: -0.32506627
+      tangentMode: 34
+    - serializedVersion: 2
+      time: 0.7357751
+      value: 0.9321465
+      inSlope: -0.22592273
+      outSlope: -0.22592273
+      tangentMode: 34
+    - serializedVersion: 2
+      time: 0.8181173
+      value: 0.98790646
+      inSlope: -0.20995834
+      outSlope: -0.20995834
+      tangentMode: 34
+    - serializedVersion: 2
+      time: 0.952617
+      value: 0.8403482
+      inSlope: 3.7074072
+      outSlope: 3.7074072
+      tangentMode: 34
+    - serializedVersion: 2
+      time: 0.9831064
+      value: 1.0998709
+      inSlope: 1.3000765
+      outSlope: 1.3000765
+      tangentMode: 34
+    - serializedVersion: 2
+      time: 1
+      value: 1
+      inSlope: -5.9117517
+      outSlope: -5.9117517
+      tangentMode: 34
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  collisionSounds:
+  - audioClip: {fileID: 8300000, guid: 53beec1edb749417092f1cba27723720, type: 3}
+    pitchtingRange:
+      min: 0.7
+      max: 1
+  throwSounds:
+  - audioClip: {fileID: 8300000, guid: 91e48de274d354aaab29f3570e354bd9, type: 3}
+    pitchtingRange:
+      min: 0.8
+      max: 1.2
+  audioSource: {fileID: 82228138417238232}

@@ -9,7 +9,7 @@ public class PlayerMovement : ServerMoveable
 	public float speed = 4;  
 	[Range(0,1)]
 	public float focusSpeedSlowdown = .25f;
-	public float jumpStrength = 5;
+	//public float jumpStrength = 5;
 	public float additionalFallGravityMultiplier = 1f;
 	[Tooltip("How much slower is the player when he/she walks backwards? 0 = no slowdown, 1 = fullstop")]
 	[Range(0.0f,1.0f)]
@@ -22,18 +22,16 @@ public class PlayerMovement : ServerMoveable
 
     public float mMaxVelocityMagnitude;
 
-	public float hurtSlowdown = 0.5f;
-
 	[Range(0,1)]
 	public float inputVelocityInfluence = 0.75f;
 
 	public FeetCollider feet;
 
+    public SoundEffects soundEffects;
+
 	private bool mIsFalling = false;
 	private Vector3 mMoveInput;
 	private bool mFocusActive;
-
-    private bool mHurtSlowdownActive;
 
 	private Vector3 mDeltaPos;
 	private Vector3 mLastPos;
@@ -62,13 +60,6 @@ public class PlayerMovement : ServerMoveable
         mMoveInput = Vector3.zero;
     }
 
-	public void SetMoveInputHurt(Vector3 input)
-	{
-		mHurtSlowdownActive = true;
-		//clamp it to prevent faster diagonal movement
-		mMoveInput = Vector3.ClampMagnitude(input,1);
-	}
-
 	public void SetFocusActive(bool value){
 		mFocusActive = value;
 	}
@@ -92,7 +83,6 @@ public class PlayerMovement : ServerMoveable
         movement *= speed;
 
 		movement *= mFocusActive ? focusSpeedSlowdown : 1;
-		movement *= mHurtSlowdownActive ? hurtSlowdown : 1;
 
 		Vector2 movementXZ = movement.xz();
 
@@ -162,8 +152,6 @@ public class PlayerMovement : ServerMoveable
 
 		mIsFalling = mRigidbody.velocity.y <= -fallingDamageThreshold;
 
-		mHurtSlowdownActive = false;
-
 		mDeltaPos = mRigidbody.position - mLastPos;
 		mLastPos = mRigidbody.position;
 
@@ -192,35 +180,37 @@ public class PlayerMovement : ServerMoveable
                 onLandingWhileFalling(delta);
 			}
 		}
+
+        soundEffects.PlayLandingSFX();
 	}
 
-	/// <summary>
-	/// Let's the character jump with the default jumpStength
-	/// </summary>
-	public void Jump(bool onlyIfGrounded = true)
-	{
-		Jump(jumpStrength, onlyIfGrounded);
-	}
+	///// <summary>
+	///// Let's the character jump with the default jumpStength
+	///// </summary>
+	//public void Jump(bool onlyIfGrounded = true)
+	//{
+	//	Jump(jumpStrength, onlyIfGrounded);
+	//}
 
-	public delegate void OnJumping();
-	public OnJumping onJumping;
+	//public delegate void OnJumping();
+	//public OnJumping onJumping;
 
-	/// <summary>
-	/// Let's the character jump with a specified jumpStrength
-	/// </summary>
-	/// <SpellslotLambda name="jumpForce">Jump force.</SpellslotLambda>
-	public void Jump(float jumpStrength, bool onlyIfGrounded)
-	{
-		if(feet.IsGrounded() || !onlyIfGrounded)
-		{
-			mRigidbody.SetVelocityY(jumpStrength);
+	///// <summary>
+	///// Let's the character jump with a specified jumpStrength
+	///// </summary>
+	///// <SpellslotLambda name="jumpForce">Jump force.</SpellslotLambda>
+	//public void Jump(float jumpStrength, bool onlyIfGrounded)
+	//{
+	//	if(feet.IsGrounded() || !onlyIfGrounded)
+	//	{
+	//		mRigidbody.SetVelocityY(jumpStrength);
 			
-			if(onJumping != null)
-			{
-				onJumping();
-			}
-		}
-	}
+	//		if(onJumping != null)
+	//		{
+	//			onJumping();
+	//		}
+	//	}
+	//}
 
     /// <summary>
     /// Gets the anticipated position in n-seconds if the player keeps his current speed and direction.
@@ -237,5 +227,34 @@ public class PlayerMovement : ServerMoveable
     public Vector3 GetCurrentMovementVector()
     {
         return GetDeltaMovement() / Time.fixedDeltaTime;
+    }
+
+    /// <summary>
+    /// This method is called from the player animator. The event is triggered when a foot is touching the ground.
+    /// </summary>
+    private void Step()
+    {
+        soundEffects.PlayStepSound();
+    }
+
+    [System.Serializable]
+    public class SoundEffects
+    {
+        public AudioClip[] stepSounds;
+        public AudioSource sfxSource;
+
+        public PitchingAudioClip landingSfx;
+
+        public void PlayStepSound()
+        {
+            sfxSource.pitch = 1;
+            sfxSource.PlayOneShot(stepSounds.RandomElement());
+        }
+
+        public void PlayLandingSFX()
+        {
+            sfxSource.pitch = landingSfx.GetRandomPitch();
+            sfxSource.PlayOneShot(landingSfx.audioClip);
+        }
     }
 }

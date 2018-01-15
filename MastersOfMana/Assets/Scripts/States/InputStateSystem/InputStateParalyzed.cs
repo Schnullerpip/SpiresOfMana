@@ -9,6 +9,9 @@ public class InputStateParalyzed : A_InputState {
 
     public override void UpdateLocal()
     {
+
+        base.UpdateLocal();
+
 		#region Spell Selection
 		if (playerInput.GetButtonDown("SpellSelection1")) 
 		{
@@ -44,6 +47,7 @@ public class InputStateParalyzed : A_InputState {
             player.GetPlayerSpells().StopPreview();
         }
 
+        //TODO should we allow the player to look around while being frozen?
 		//Aim(playerInput.GetAxis2D("AimHorizontal", "AimVertical"));
     }
 }

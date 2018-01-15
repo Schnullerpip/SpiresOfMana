@@ -172,10 +172,11 @@ AudioSource:
   m_GameObject: {fileID: 1553457549544014}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 243260064957582752, guid: 75146e90f04cc459f82a15f9cccbe71c,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: 70b6e007003158e4fa167f9b0a084a77, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.6
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -213,7 +214,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 2
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -459,13 +460,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 223ffae99d1c8d74e9541e7cb9f7e91b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  preview: {fileID: 114879560510636316, guid: 3deca10ba12068b47906dfb677554e93, type: 2}
   serverMoveable: {fileID: 114238628051958222}
   mHitCollider: {fileID: 135519342530548852}
   mRockVelocity: 30
   mDamageAmount: 4
   mRotationVelocity: 170
   mPushForce: 8
-  mShootingReach: 8
+  mShootingReach: 8.5
   mRandomOffsets:
   - {x: -0.23318186, y: 0.8019558, z: 0.54999375}
   - {x: 0.44906592, y: 0.82617134, z: 0.3402658}
@@ -607,7 +609,7 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 1530032498
+  randomSeed: -1487248187
   InitialModule:
     serializedVersion: 3
     enabled: 1

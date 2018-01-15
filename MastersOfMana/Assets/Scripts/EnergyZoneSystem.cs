@@ -5,25 +5,35 @@ using UnityEngine.Networking;
 
 public class EnergyZoneSystem : NetworkBehaviour 
 {
-	public float duration = 20;
+    public float initialDelay = 10;
+	public float lifetime = 20;
+    public float gapBetweenSpawns = 10;
+    //public List<GameObject> spawnables;
+    public List<spawnZone> spawnables;
+    public Transform spawnpointsParent;
 
-	[System.Serializable]
-	public struct spawnZone
+    [System.Serializable]
+    public struct spawnZone
     {
-		public float spawnDelay;
-		public GameObject spanwObject;
-	}
+        public GameObject prefab;
+        [Range(0.0f, 1.0f)]
+        public float randomFactor;
+    }
 
-	public List<spawnZone> spawnZones;
-	public Transform EnergyZones;
+    private List<PlatformSpiresEffect> mSpawnpoints = new List<PlatformSpiresEffect>();
+    private float factorSum;
 
-    public AudioSource audioSource;
-    public AudioClip appearanceSfx;
+    public void Start()
+    {
+        spawnables.Sort((s1, s2) => s1.randomFactor.CompareTo(s2.randomFactor));//sorts the list so the object with the lowest random factor is first
+        factorSum = 0.0f;
+        foreach (var s in spawnables)
+        {
+            factorSum += s.randomFactor;
+        }
+    }
 
-    private List<Transform> mZoneSpawns = new List<Transform>();
-    private int currentIndex = 0;
-
-	public void OnEnable()
+    public void OnEnable()
 	{
 		GameManager.OnRoundStarted += RoundStarted;
 		GameManager.OnRoundEnded += RoundEnded;
@@ -38,51 +48,88 @@ public class EnergyZoneSystem : NetworkBehaviour
 
 	void RoundStarted()
 	{
-        mZoneSpawns.Clear();
-        //find all possible spawnPositions
-		for(int i = 0; i < EnergyZones.childCount; i++)
+        mSpawnpoints.Clear();
+        //find all possible spawnPoints
+        for(int i = 0; i < spawnpointsParent.childCount; i++)
         {
-			mZoneSpawns.Add(EnergyZones.GetChild(i));
+            Transform child = spawnpointsParent.GetChild(i);
+            if (child.gameObject.activeSelf)
+                mSpawnpoints.Add(child.GetComponent<PlatformSpiresEffect>());
         }
-		currentIndex = 0;
-		StartCoroutine(SpawnHeals());
+
+        StartCoroutine(SpawnZone(true));
 	}
 
 	void RoundEnded()
 	{
-		StopAllCoroutines();
+        for (int i = 0; i < mSpawnpoints.Count; ++i)
+        {
+            mSpawnpoints[i].RpcDeactivate();
+        }
+        StopAllCoroutines();
 	}
 
-    private IEnumerator SpawnHeals()
+    private IEnumerator SpawnZone(bool init = false)
     {
-        //Spawns the healthpackets one after the other
-		while(currentIndex < spawnZones.Count)
+        if(init)
+            yield return new WaitForSeconds(initialDelay);//to skip initial spawn; is 1 frame "too late"
+        else
+            yield return new WaitForSeconds(gapBetweenSpawns);
+
+        //Get a random spawn position
+        PlatformSpiresEffect platform = GetRandomPlatform();
+        Transform spawnPoint = platform.transform;
+        Vector3 position = spawnPoint.position;
+        Quaternion rotation = spawnPoint.rotation;
+
+        GameObject objToSpawn = null;
+        float r = Random.value,
+              rCnt = 0.0f;
+        foreach(var s in spawnables)
         {
-			yield return new WaitForSeconds(spawnZones[currentIndex].spawnDelay);
-
-            //Get a random spawn position
-            Transform healSpawnPosition = mZoneSpawns.RandomElement();
-            Vector3 position = healSpawnPosition.position;
-
-            audioSource.transform.position = position;
-            audioSource.Play();
-
-            Quaternion rotation = healSpawnPosition.rotation;
-            mZoneSpawns.Remove(healSpawnPosition);
-			position.y += spawnZones[currentIndex].spanwObject.transform.localScale.y * 0.5f;
-            //Instantiate and spawn
-			GameObject obj = Instantiate(spawnZones[currentIndex].spanwObject, position, rotation);
-			StartCoroutine(Despawn(healSpawnPosition, obj));
-            NetworkServer.Spawn(obj.gameObject);
-			currentIndex++;
+            rCnt += s.randomFactor / factorSum;
+            if (r < rCnt)
+            {
+                objToSpawn = s.prefab;
+                break;
+            }
         }
+
+        if(objToSpawn == null)
+        {
+            Debug.LogError("Couldn't spawn loading zone, because it was impossible to determine which should get spawned.");
+            yield break;
+        }
+
+        //Instantiate and spawn
+        GameObject obj = Instantiate(objToSpawn, position, rotation);
+        //obj.transform.localScale = spawnPoint.localScale;
+        obj.GetComponent<LoadingZone>().spawnScale = spawnPoint.localScale;
+        StartCoroutine(Despawn(spawnPoint, obj, platform));
+        NetworkServer.Spawn(obj);
+
+        platform.RpcActivate(obj.GetComponent<SetEffectColor>().Color);
     }
 
-    private IEnumerator Despawn(Transform trans, GameObject obj)
+    private PlatformSpiresEffect GetRandomPlatform()
     {
-		yield return new WaitForSeconds(duration);
+        PlatformSpiresEffect spawnPlatform = mSpawnpoints.RandomElement();
+
+        if (spawnPlatform.transform.position.y < GameManager.instance.GetLavaFloorHeight())
+        {
+            mSpawnpoints.Remove(spawnPlatform);
+            spawnPlatform = GetRandomPlatform();
+        }
+        return spawnPlatform;
+    }
+
+    private IEnumerator Despawn(Transform trans, GameObject obj, PlatformSpiresEffect platform)
+    {
+		yield return new WaitForSeconds(lifetime);
 		NetworkServer.UnSpawn (obj);
 		Destroy (obj);
-        mZoneSpawns.Add(trans);
+        StartCoroutine(SpawnZone());
+
+        platform.RpcDeactivate();
     }
 }

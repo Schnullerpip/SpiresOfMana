@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33577980648631928}
   - component: {fileID: 23394804949500618}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: Ball
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -56,7 +56,7 @@ GameObject:
   - component: {fileID: 33240445984257386}
   - component: {fileID: 23837392615018222}
   m_Layer: 0
-  m_Name: Sphere (1)
+  m_Name: Explosion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -110,13 +110,13 @@ MeshRenderer:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1029771112544678}
   m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: eebe50c972f8541d092093d3cbb0dea8, type: 2}
+  - {fileID: 2100000, guid: 18eebc2772c2a477b8ef43d6d99d075f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -148,7 +148,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: bdaa9dcc7c336472ba5f3d0cb073ec2c, type: 2}
+  - {fileID: 2100000, guid: 7405afdf00ef945f394cc4efad7210cb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -211,7 +211,5 @@ MonoBehaviour:
   rendererProperties:
   - renderer: {fileID: 23394804949500618}
     propertyName: _Color
-    propertyId: 10
   - renderer: {fileID: 23837392615018222}
     propertyName: _Color
-    propertyId: 10

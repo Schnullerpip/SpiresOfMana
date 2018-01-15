@@ -24,8 +24,10 @@ namespace Prototype.NetworkLobby
         protected RectTransform currentPanel;
 
         public LobbyMainMenu mainMenu;
+        public RectTransform disconnectedMenu;
 
         public bool isInGame = false;
+        public bool isHost = false;
 
         //Client numPlayers from NetworkManager is always 0, so we count (throught connect/destroy in LobbyPlayer) the number
         //of players, so that even client know how many player there is.
@@ -68,7 +70,6 @@ namespace Prototype.NetworkLobby
 
         public override void OnLobbyClientSceneChanged(NetworkConnection conn)
         {
-
             if (SceneManager.GetSceneAt(0).name == lobbyScene)
             {
                 if (isInGame)
@@ -192,8 +193,7 @@ namespace Prototype.NetworkLobby
             {
                 StopHost();
             }
-
-            
+ 
             ChangeTo(mainMenu.mainMenuPanel);
         }
 
@@ -361,7 +361,6 @@ namespace Prototype.NetworkLobby
                     p.ToggleJoinButton(numPlayers >= minPlayers);
                 }
             }
-
         }
 
         public override bool OnLobbyServerSceneLoadedForPlayer(GameObject lobbyPlayer, GameObject gamePlayer)
@@ -384,10 +383,14 @@ namespace Prototype.NetworkLobby
         }
 
         // --- Countdown management
+        public override void OnLobbyClientExit()
+        {
+            mLoadedPlayers.Clear();
+        }
 
         public override void OnLobbyServerPlayersReady()
         {
-			bool allready = true;
+            bool allready = true;
 			for(int i = 0; i < lobbySlots.Length; ++i)
 			{
 				if(lobbySlots[i] != null)
@@ -398,6 +401,11 @@ namespace Prototype.NetworkLobby
 
 			if(allready)
 				StartCoroutine(ServerCountdownCoroutine());
+        }
+
+        public void StartServerCountdown()
+        {
+            StartCoroutine(ServerCountdownCoroutine());
         }
 
         public IEnumerator ServerCountdownCoroutine()
@@ -468,8 +476,17 @@ namespace Prototype.NetworkLobby
         public override void OnClientDisconnect(NetworkConnection conn)
         {
             StopClientClbk();
+            disconnectedMenu.gameObject.SetActive(true);
+            mainMenu.gameObject.SetActive(false);
             //base.OnClientDisconnect(conn);
             //ChangeTo(mainMenu.mainMenuPanel);
+        }
+
+        public void OnDisconnectedMenuReturn()
+        {
+            disconnectedMenu.gameObject.SetActive(false);
+            mainMenu.mainMenuPanel.gameObject.SetActive(true);
+
         }
 
         public override void OnClientError(NetworkConnection conn, int errorCode)

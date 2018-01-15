@@ -41,6 +41,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
     private Vector3 mOffset;
 
     //nice visuals
+    [SyncVar]
     private Vector3 mRotationAxis;
     [SerializeField]
     private float mRotationSpeed;
@@ -52,6 +53,21 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
 
     //to be able to remember which stone was casted y which player
     private static Dictionary<PlayerScript, RockProjectileBehaviour> mShootingOrder = new Dictionary<PlayerScript, RockProjectileBehaviour>();
+
+	public override void Preview (PlayerScript caster)
+	{
+		base.Preview (caster);
+
+	    preview.instance.transform.localScale = mShootingReach * 2 * Vector3.one; // * 2 because we want to describe the radius rather than the diameter
+        preview.instance.Move(caster.movement.mRigidbody.worldCenterOfMass);
+	}
+
+	public override void StopPreview (PlayerScript caster)
+	{
+		base.StopPreview (caster);
+        preview.instance.Deactivate();
+	}
+
 
     public override void Execute(PlayerScript caster)
     {
@@ -74,6 +90,16 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
             mOffsetCount = 0;
         }
         rp.RepositionRock();
+
+        //gather all enemys for the new rockprojectile
+        rp.enemys = new List<PlayerScript>();
+        foreach (var p in GameManager.instance.players)
+        {
+            if (p != caster)
+            {
+                rp.enemys.Add(p);
+            }
+        }
 
         //spawn an explosion to make an entrance!
         GameObject spawnExplosion = PoolRegistry.GetInstance(mCollisioinEffect, rp.transform.position, rp.transform.rotation, 2, 4, Pool.PoolingStrategy.OnMissSubjoinElements, Pool.Activation.ReturnActivated);
@@ -147,23 +173,19 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         if (isServer)
         {
             mRigid = GetComponent<Rigidbody>();
+            GameManager.OnRoundEnded += EndSpell;
         }
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.OnRoundEnded -= EndSpell;
     }
 
     public override void OnStartClient()
     {
         base.OnStartClient();
 
-
-        //gather all the enemies
-        enemys = new List<PlayerScript>();
-        foreach (var p in GameManager.instance.players)
-        {
-            if (p != caster)
-            {
-                enemys.Add(p);
-            }
-        }
 
         //assign one of the rock meshes
         GetComponentInChildren<MeshFilter>().mesh = mRandomRockMeshes[mMeshCount++];
@@ -182,16 +204,20 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         trail.enabled = false;
         mRockDustParticles.Play();
         spawnTrail.time = spawnTrailTime;//reset the spawnTrail.time to its initial value
+
     }
 
 
     public void Update()
     {
-        //if we dont have a caster anymore - disappear
+        //if we dont have a caster anymore - disappear (disconnected or player is dead)
         if (!caster)
         {
-            gameObject.SetActive(false);
-            NetworkServer.UnSpawn(gameObject);
+            return;
+        }
+        if (!caster.healthScript.IsAlive() && isServer)
+        {
+            Explode();
             return;
         }
 
@@ -214,25 +240,26 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
 
         if (!mRotateAroundCaster) return;
 
-        //if it is this instances' turn to shot towards enemies
+        //if it is this instances' turn to shoot towards enemies
         if (previous != null)
         {
             return; //this means an instance should be thrown before this instance
         }
         if((mShootCount+=Time.deltaTime) < shootFreqencyInSeconds)
         {
-            return; //this rock instance should not yet be fired
+            return; //this rock instance should not yet be fired - delay is neccessary or else all rocks would be fired at once
         }
 
         //check for each enemy, wheather or not we should shoot towards them
         //get nearest enemy
         PlayerScript nearest = null;
+        Vector3 casterPos = caster.movement.mRigidbody.worldCenterOfMass;
         float distance = 10000;
         for (var i = 0; i < enemys.Count; ++i)
         {
             if (enemys[i] != null)
             {
-                float dist = Vector3.Distance(caster.transform.position, enemys[i].movement.mRigidbody.worldCenterOfMass);
+                float dist = Vector3.Distance(casterPos, enemys[i].movement.mRigidbody.worldCenterOfMass);
                 if (dist < distance)
                 {
                     nearest = enemys[i];
@@ -241,7 +268,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
             }
         }
         //if nearest is in reach shoot it!
-        if (distance < mShootingReach && nearest)
+        if (distance <= mShootingReach && nearest)
         {
             //now if the stones direct path to the enemy is free, shoot it
             RaycastHit hit;
@@ -260,17 +287,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
                         //set velocity to shoot towards enemy
                         Vector3 projectileVelocity = Vector3.Normalize(nearest.movement.mRigidbody.worldCenterOfMass - transform.position)*mRockVelocity;
 
-                        //shoot the rock! -> make sure the shoting order stays legit
-                        if (successor)
-                        {
-                            //if there is another instance after this one, inform it, that it is next
-                            successor.previous = null;
-                        }
-                        else
-                        {
-                            //there is no successor -> make sure the next cast will be handled correctly
-                            mShootingOrder.Remove(caster);
-                        }
+                        UnregisterFromShootingOrder();
 
                         trail.enabled = true;
                         RpcShoot(transform.position, projectileVelocity);
@@ -322,9 +339,35 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         Explode();
     }
 
+    private void UnregisterFromShootingOrder()
+    {
+        //shoot the rock! -> make sure the shoting order stays legit
+        if (successor)
+        {
+            //if there is another instance after this one, inform it, that it is next
+            successor.previous = null;
+        }
+        else
+        {
+            //there is no successor -> make sure the next cast will be handled correctly
+            mShootingOrder.Remove(caster);
+        }
+
+    }
+
+    public override void EndSpell()
+    {
+        StopPreview(caster);
+        Explode();
+    }
+
+
     private void Explode()
     {
+        UnregisterFromShootingOrder();
+
         spawnTrail.enabled = false;
+        
 
         GameObject collisionExplosion = PoolRegistry.GetInstance(mCollisioinEffect, transform.position,
             transform.rotation, 1, 1, Pool.PoolingStrategy.OnMissSubjoinElements, Pool.Activation.ReturnActivated);
@@ -351,6 +394,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
 
         whooshSource.Play();
     }
+
 
     public void OnValidate()
     {

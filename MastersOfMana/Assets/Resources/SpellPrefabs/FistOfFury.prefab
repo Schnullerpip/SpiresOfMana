@@ -22,6 +22,8 @@ GameObject:
   - component: {fileID: 114492089816408794}
   - component: {fileID: 114742002225623834}
   - component: {fileID: 135348172352856590}
+  - component: {fileID: 82620215226701394}
+  - component: {fileID: 82878058435812354}
   m_Layer: 0
   m_Name: FistOfFury
   m_TagString: Untagged
@@ -53,7 +55,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1518199114825658}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -17.35, y: 8.88, z: 0.38880157}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4464106925681972}
@@ -73,6 +75,168 @@ Transform:
   m_Father: {fileID: 4024058881127660}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &82620215226701394
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1518199114825658}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 243260064957582752, guid: 75146e90f04cc459f82a15f9cccbe71c,
+    type: 2}
+  m_audioClip: {fileID: 8300000, guid: 4d35235a01de04408ba9d10f9e71c4aa, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 0
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+--- !u!82 &82878058435812354
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1518199114825658}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 243260064957582752, guid: 75146e90f04cc459f82a15f9cccbe71c,
+    type: 2}
+  m_audioClip: {fileID: 8300000, guid: 5f8e3d3cba747804680b2cf9da7a4e57, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 0
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!96 &96202489323359798
 TrailRenderer:
   serializedVersion: 2
@@ -220,33 +384,45 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   preview: {fileID: 114041355954258062, guid: c9bd312dd9100433bbf9c52f1f65128c, type: 2}
-  mExplosionForce: 11
   mPushDownForce: 20
-  explosionPrefab: {fileID: 1233248937701180, guid: 269420ecf4b3e5b47b6df9c50e9dab61,
-    type: 2}
   mExplosionFalloff:
-    force: 11
+    force: 8
     damage: 100
     falloff:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 2
-        time: -0.0066184998
-        value: 0.30471802
+        time: 0
+        value: 0
         inSlope: 0.708119
-        outSlope: 0.708119
-        tangentMode: 0
+        outSlope: 0.04249434
+        tangentMode: 5
       - serializedVersion: 2
         time: 1
         value: 1
-        inSlope: 0.92074525
+        inSlope: 2.3675425
         outSlope: 0.92074525
-        tangentMode: 0
+        tangentMode: 65
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 0
   mExplosionRadius: 6
-  mMaxDistance: 25
+  mMaxDistance: 20
+  mMinDamage: 10
+  mMaxDamage: 45
+  explosionPrefab: {fileID: 1682363581096778, guid: cd53c0c034522f349a623b0109c17c5c,
+    type: 2}
+  decalPrefab: {fileID: 1618936622195280, guid: d4aadc842a706974e8987ec5e9f6ad28,
+    type: 2}
+  brutalityPrefab: {fileID: 1652243401414912, guid: ef8c51b2da1b10c44ba48aaf05f772a3,
+    type: 2}
+  flamesPrefab: {fileID: 1064705097968612, guid: c5fb38eeb9c3d894caefe3d77b6bed3e,
+    type: 2}
+  spawnExplosionIfAirborn: {fileID: 1019098708853560, guid: 9ed67b18f32bff948b23a43e2d59fc81,
+    type: 2}
+  EffectQuantum1: 0.17
+  EffectQuantum2: 0.4
+  EffectQuantum3: 0.6
 --- !u!135 &135348172352856590
 SphereCollider:
   m_ObjectHideFlags: 1

@@ -20,8 +20,13 @@ public class GameManager : MonoBehaviour
     public PlayerScript localPlayer;
     public GameObject eventSystem;
     public bool isUltimateActive = false;
+    public A_SpellBehaviour currentlyCastUltiSpell = null;
     public int numOfActiveMenus = 0;
     public bool gameRunning = false;
+    public CameraSystem cameraSystem;
+    private LavaFloor mLavaFloor;
+
+    public AudioListener listener;
 
     public delegate void GameStarted();
     public static event GameStarted OnGameStarted;
@@ -32,8 +37,14 @@ public class GameManager : MonoBehaviour
     public delegate void LocalPlayerDead();
     public static event LocalPlayerDead OnLocalPlayerDead;
 
+    public delegate void LocalPlayerWon();
+    public static event LocalPlayerWon OnLocalPlayerWon;
+
     public delegate void RoundEnded();
     public static event RoundEnded OnRoundEnded;
+
+    public delegate void HostEndedRound();
+    public static event HostEndedRound OnHostEndedRound;
 
     private int mNumOfReadyPlayers = 0;
     private StartPoints mStartPoints;
@@ -51,6 +62,8 @@ public class GameManager : MonoBehaviour
             instance = this;
             eventSystem.SetActive(true);
             DontDestroyOnLoad(this);
+
+            Application.targetFrameRate = 300;
         }
     }
 
@@ -65,7 +78,14 @@ public class GameManager : MonoBehaviour
         mNumberOfGoMessages = 0;
         mNumberOfDeadPlayers = 0;
         mNumOfReadyPlayers = 0;
-        isUltimateActive = false;
+        mLavaFloor = FindObjectOfType<LavaFloor>();
+        //end ultispells, that are currently running
+        if (isUltimateActive)
+        {
+            isUltimateActive = false;
+            mSun.RpcFade(true);
+            currentlyCastUltiSpell.EndSpell();
+        }
     }
 
     public void Go()
@@ -101,10 +121,20 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public static void ResetEvents()
+    {
+        OnGameStarted = null;
+        OnRoundStarted = null;
+        OnRoundEnded = null;
+        OnHostEndedRound = null;
+        OnLocalPlayerWon = null;
+        OnLocalPlayerDead = null;
+    }
+
     public void TriggerGameStarted()
     {
+        ResetLocalGameState();
         mStartPoints = FindObjectOfType<StartPoints>();
-        gameRunning = true;
         if (OnGameStarted != null)
         {
             OnGameStarted();
@@ -117,24 +147,62 @@ public class GameManager : MonoBehaviour
         ++mNumberOfDeadPlayers;
 
         //TODO: What happens if both die simultaniously?
-        if (mNumberOfDeadPlayers >= (players.Count - 1)) { //only one player left -> he/she won the game!
+        if (mNumberOfDeadPlayers >= (players.Count - 1)) //only one player left -> he/she won the game!
+        { 
+            PostGame();
+        }
+    }
 
-            //Find out who has won and call post game screen
-            foreach (var p in players)
+    public void PostGame()
+    {
+        //Find out who has won and call post game screen
+        foreach (var p in players)
+        {
+            if (p.healthScript.IsAlive())
             {
-                if(p.healthScript.IsAlive())
-                {
-                    winnerID = p.netId.Value;
-                    break;
-                }
+                winnerID = p.netId.Value;
+                break;
             }
-            PostGameLobby(winnerID);
-            ResetLocalGameState();
+        }
+        PostGameLobby(winnerID);
+        ResetLocalGameState();
+    }
+
+    private AnimateLightIntensity mSun;
+
+    public void RegisterUltiSpell(A_SpellBehaviour ultiSpell)
+    {
+        if(!mSun)
+        {
+            mSun = GameObject.FindGameObjectWithTag("Sun").GetComponent<AnimateLightIntensity>();
+        }
+
+        mSun.RpcFade(false);
+
+        isUltimateActive = true;
+        currentlyCastUltiSpell = ultiSpell;
+    }
+
+    public void UnregisterUltiSpell(A_SpellBehaviour ultiSpell)
+    {
+        if (isUltimateActive && currentlyCastUltiSpell == ultiSpell)
+        {
+            mSun.RpcFade(true);
+            isUltimateActive = false;
+            currentlyCastUltiSpell = null;
+        }
+        else
+        {
+            Debug.LogWarning("Trying to unregister an ultiSpell, that is not registered!");
         }
     }
 
     public void TriggerRoundEnded()
     {
+        //make sure the preview is ended whenever the current round has ended
+        localPlayer.GetPlayerSpells().StopPreview();
+        localPlayer.inputStateSystem.current.SetPreview(false);
+
         gameRunning = false;
         if (OnRoundEnded != null)
         {
@@ -174,7 +242,16 @@ public class GameManager : MonoBehaviour
         {
             mRewiredPlayer.controllers.maps.SetMapsEnabled(numOfActiveMenus > 0, "UI");
             mRewiredPlayer.controllers.maps.SetMapsEnabled(!(numOfActiveMenus > 0), "Default");
-            Cursor.lockState = numOfActiveMenus > 0 ? CursorLockMode.None : CursorLockMode.Locked;
+            //If the game is running, check if a menu is currently open
+            if(gameRunning)
+            {
+                Cursor.lockState = numOfActiveMenus > 0 ? CursorLockMode.None : CursorLockMode.Locked;
+            }
+            //If the game is not running, never lock the mouse
+            else
+            {
+                Cursor.lockState = CursorLockMode.None;
+            }
             Cursor.visible = numOfActiveMenus > 0;
         }
     }
@@ -188,6 +265,59 @@ public class GameManager : MonoBehaviour
             NetManager.instance.RpcTriggerRoundStarted();
         }
     }
+
+    public void PlayerDisconnected()
+    {
+        for (int i = 0; i < players.Count; i++)
+        {
+            if (!players[i].gameObject.activeSelf)
+            {
+                players.Remove(players[i]);
+                i--;
+            }
+        }
+
+        //If we don't have a NetManager return!
+        if (!NetManager.instance || !NetManager.instance.amIServer())
+        {
+            return;
+        }
+
+            //If the game is runnning we need to check for dead players
+            if (gameRunning)
+        {
+            //We need to recheck if all but one players are dead!
+            //Since we can't be sure that we can still access the players Healthscript we need to check the alive status of all remaining players again
+            mNumberOfDeadPlayers = 0;
+            foreach (PlayerScript player in players)
+            {
+                if (!player.healthScript.IsAlive())
+                {
+                    ++mNumberOfDeadPlayers;
+                }
+            }
+            if (mNumberOfDeadPlayers >= (players.Count - 1)) //only one player left -> he/she won the game!
+            {
+                PostGame();
+            }
+        }
+        //Otherwise we need to check for ready players
+        else
+        {
+            mNumOfReadyPlayers = 0;
+            foreach(PlayerScript player in players)
+            {
+                if (player.playerLobby.isReady)
+                {
+                    ++mNumOfReadyPlayers;
+                }
+            }
+            if (mNumOfReadyPlayers >= players.Count)
+            {
+                NetManager.instance.RpcTriggerRoundStarted();
+            }
+        }
+    }
 		
     void ResetGame()
     {
@@ -199,7 +329,7 @@ public class GameManager : MonoBehaviour
 		List<Transform> startPositions = mStartPoints.GetRandomStartPositions();
 		for(int i = 0; i < players.Count; i++)
 		{
-			players[i].movement.RpcSetPosition(startPositions[i].position);
+			players[i].movement.RpcSetPositionAndRotation(startPositions[i].position, startPositions[i].rotation);
 			players[i].movement.RpcSetVelocity(Vector3.zero);
             players[i].RpcSetInputState(InputStateSystem.InputStateID.Normal);
 			players[i].enabled = true;
@@ -208,12 +338,23 @@ public class GameManager : MonoBehaviour
 
     public void TriggerOnRoundStarted()
     {
+        gameRunning = true;
+        OnApplicationFocus(true);
         ResetGame();
+        listener.enabled = false;
         if (OnRoundStarted != null)
         {
             OnRoundStarted();
         }
 	}
+
+    public void TriggerOnLocalPlayerWon()
+    {
+        if (OnLocalPlayerWon != null)
+        {
+            OnLocalPlayerWon();
+        }
+    }
 
     /// <summary>
     /// Gets a list of all opponents of the given player script.
@@ -222,6 +363,9 @@ public class GameManager : MonoBehaviour
     /// <param name="self">Self.</param>
     public List<PlayerScript> GetOpponents(PlayerScript self)
     {
+        Debug.Assert(self != null, 
+                     "Opponents of null is not very sensical. Either you forgot to set a player or you just want \"GameManager.instance.player\"");
+
         List<PlayerScript> opponents = new List<PlayerScript>(players.Count - 1);
 		for (int i = 0; i < players.Count; ++i)
         {
@@ -231,5 +375,28 @@ public class GameManager : MonoBehaviour
             }
         }
         return opponents;
+    }
+
+    public List<PlayerScript> GetNonLocalPlayers()
+    {
+        return GetOpponents(localPlayer);
+    }
+
+    public float GetLavaFloorHeight()
+    {
+        return mLavaFloor.transform.position.y;
+    }
+
+    public LavaFloor GetLavaFloor()
+    {
+        return mLavaFloor;
+    }
+
+    public void TriggerHostEndedRound()
+    {
+        if (OnHostEndedRound!=null)
+        {
+            OnHostEndedRound();
+        }
     }
 }

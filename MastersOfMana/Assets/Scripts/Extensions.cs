@@ -123,6 +123,11 @@ public static class Extensions
 		}		
 	}
 
+    public static void SetPosition(this Transform trans, float? x = null, float? y = null, float? z = null)
+    {
+        trans.position = new Vector3(x ?? trans.position.x, y ?? trans.position.y, z ?? trans.position.z);
+    }
+
 	#endregion
 
 	#region Rigidbody
@@ -218,6 +223,24 @@ public static class Extensions
     public static float DecibelToLinear(float dB)
     {
         return Mathf.Pow(10.0f, dB / 20.0f);
+    }
+
+    public static float InverseLerpFullRange(float a, float b, float value)
+    {
+        return (value - a) / (b - a);
+    }
+    #endregion
+
+    #region RectTransform
+    public static void SetPivot(this RectTransform rectTransform, Vector2 pivot)
+    {
+        if (rectTransform == null) return;
+
+        Vector2 size = rectTransform.rect.size;
+        Vector2 deltaPivot = rectTransform.pivot - pivot;
+        Vector3 deltaPosition = new Vector3(deltaPivot.x * size.x, deltaPivot.y * size.y);
+        rectTransform.pivot = pivot;
+        rectTransform.localPosition -= deltaPosition;
     }
     #endregion
 }

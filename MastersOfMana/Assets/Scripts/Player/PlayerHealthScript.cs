@@ -40,6 +40,10 @@ public class PlayerHealthScript : HealthScript
     [ClientRpc]
     void RpcPlayerDead()
     {
+        //if the player was casting a spell - stop its preview
+        mPlayer.GetPlayerSpells().StopPreview();
+        mPlayer.inputStateSystem.current.SetPreview(false);
+
         if(isLocalPlayer)
         {
             GameManager.instance.localPlayerDead();
@@ -62,5 +66,11 @@ public class PlayerHealthScript : HealthScript
     public override void HealthChangedHook(int newHealth)
     {
 		base.HealthChangedHook(newHealth);
+    }
+
+    [Command]
+    public void CmdTakeLocalLavaDamage(int amount)
+    {
+        TakeDamage(amount, typeof(LavaFloor));
     }
 }

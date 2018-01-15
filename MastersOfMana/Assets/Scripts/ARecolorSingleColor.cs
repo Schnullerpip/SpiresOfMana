@@ -7,6 +7,7 @@ using UnityEngine;
 /// </summary>
 public abstract class ARecolorSingleColor : ARecolor 
 {
+    [ColorUsage(true,true,0,8,0.125f,3)]
     public Color secondaryColor = Color.gray;
 
     protected Color[] mOriginalColors;

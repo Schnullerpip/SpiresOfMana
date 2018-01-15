@@ -143,7 +143,7 @@ public class MultiTrackCrossFade : MonoBehaviour
     #region Editor
     private void OnValidate()
     {
-        if (sources.Length == 0 || sources[0] == null)
+        if (sources.Length == 0 || sources[0] == null || sources[0].clip == null)
         {
             return;
         }

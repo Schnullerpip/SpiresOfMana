@@ -5,6 +5,7 @@ using UnityEngine.Networking;
 public class NetManager : NetworkBehaviour {
     public static NetManager instance;
     public bool initialized = false;
+    private HUD mHud;
 
     private void Awake()
     {
@@ -18,6 +19,11 @@ public class NetManager : NetworkBehaviour {
         }
     }
 
+    void Start()
+    {
+        mHud = FindObjectOfType<HUD>();
+    }
+
     public bool amIServer()
     {
         return isServer;
@@ -26,27 +32,24 @@ public class NetManager : NetworkBehaviour {
     [ClientRpc]
     public void RpcRoundEnded(uint winner)
     {
-        //If the player is dead, he already has the postGame loaded!
-        //if (GameManager.instance.localPlayer.healthScript.IsAlive())
-        //{
         GameManager.instance.winnerID = winner;
-        //SceneManager.LoadSceneAsync("Scenes/arne_postGame", LoadSceneMode.Additive);
         FindObjectOfType<HUD>().ShowPostGameScreen(true);
-        //GameManager.instance.TriggerRoundEnded();
-        //}
+        GameManager.instance.TriggerRoundEnded();
+        if (GameManager.instance.winnerID == GameManager.instance.localPlayer.netId.Value)
+        {
+            GameManager.instance.TriggerOnLocalPlayerWon();
+        }
     }
 
     [ClientRpc]
     public void RpcTriggerGameStarted()
     {
-        if (!isServer)
+        GameManager.instance.players.Clear();
+        //GameManager on client doe not have the players yet - get them
+        var players = FindObjectsOfType<PlayerScript>();
+        foreach (var p in players)
         {
-            //GameManager on client doe not have the players yet - get them
-            var players = FindObjectsOfType<PlayerScript>();
-            foreach (var p in players)
-            {
-                GameManager.instance.players.Add(p);
-            }
+            GameManager.instance.players.Add(p);
         }
 
         GameManager.instance.TriggerGameStarted();
@@ -56,5 +59,15 @@ public class NetManager : NetworkBehaviour {
     public void RpcTriggerRoundStarted()
     {
         GameManager.instance.TriggerOnRoundStarted();
+    }
+
+    [ClientRpc]
+    public void RpcHostEndedRound()
+    {
+		if (!isServer) 
+		{
+        	mHud.ExitPostGameScreen();
+		}
+		GameManager.instance.TriggerHostEndedRound ();
     }
 }

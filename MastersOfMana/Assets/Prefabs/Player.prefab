@@ -73,6 +73,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1030867839712178
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4582068225429284}
+  - component: {fileID: 114161840104926018}
+  m_Layer: 10
+  m_Name: Recoloring
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1036284982856732
 GameObject:
   m_ObjectHideFlags: 1
@@ -310,6 +326,22 @@ GameObject:
   - component: {fileID: 137092093087513316}
   m_Layer: 10
   m_Name: Body
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1399146309116562
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4821346410131452}
+  - component: {fileID: 82262730603465000}
+  m_Layer: 10
+  m_Name: FeetSounds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1004,6 +1036,8 @@ Transform:
   - {fileID: 4679889578031652}
   - {fileID: 4198942380630712}
   - {fileID: 4994964135387356}
+  - {fileID: 4821346410131452}
+  - {fileID: 4582068225429284}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1092,6 +1126,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4299005479340800}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4582068225429284
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1030867839712178}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4467387514677664}
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4617874108812108
 Transform:
@@ -1241,6 +1288,19 @@ Transform:
   - {fileID: 4520588515631040}
   m_Father: {fileID: 4193294255927244}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4821346410131452
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1399146309116562}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4467387514677664}
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4830424713887898
 Transform:
@@ -1472,6 +1532,87 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!82 &82262730603465000
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1399146309116562}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 243260064957582752, guid: 75146e90f04cc459f82a15f9cccbe71c,
+    type: 2}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!82 &82406275544267284
 AudioSource:
   m_ObjectHideFlags: 1
@@ -1683,15 +1824,48 @@ MonoBehaviour:
   originalSpeed: 5
   speed: 5
   focusSpeedSlowdown: 0.25
-  jumpStrength: 5
   additionalFallGravityMultiplier: 1
   amountOfReverseSlowdown: 0.25
   maxFullspeedAngle: 90
   fallingDamageThreshold: 18
   mMaxVelocityMagnitude: 33
-  hurtSlowdown: 0.5
   inputVelocityInfluence: 0.75
   feet: {fileID: 114211396574403768}
+  soundEffects:
+    stepSounds:
+    - {fileID: 8300000, guid: f8dcb121aae1f41d1bf7eec187186719, type: 3}
+    - {fileID: 8300000, guid: eae7b2735e44b48998c4ea2e6709c82f, type: 3}
+    - {fileID: 8300000, guid: 910f8ec7abe0f4e7a80d735bd714fabb, type: 3}
+    - {fileID: 8300000, guid: 0e811ec311732456e9ba914a94beeae1, type: 3}
+    - {fileID: 8300000, guid: 0cc8f24669347499c85394fb3e63cd5f, type: 3}
+    - {fileID: 8300000, guid: 8561e0dc00c3d4c2cbae12e923466414, type: 3}
+    - {fileID: 8300000, guid: cd9e065b7dea9409bb99dff470f338cc, type: 3}
+    - {fileID: 8300000, guid: 96f895e1fb9e140b4a4f0d8fce774120, type: 3}
+    - {fileID: 8300000, guid: e3ae2b62727164a8a85bf010d8969fe2, type: 3}
+    - {fileID: 8300000, guid: 63fd06920cf484c809a900473cadb9ec, type: 3}
+    sfxSource: {fileID: 82262730603465000}
+    landingSfx:
+      audioClip: {fileID: 8300000, guid: 234f8bf2620b146738feebb4b363b421, type: 3}
+      pitchtingRange:
+        min: 0.8
+        max: 1.2
+--- !u!114 &114161840104926018
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1030867839712178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68797316d3d0347ffaba7bda286bbb0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  secondaryColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  rendererProperties:
+  - renderer: {fileID: 137225967526559924}
+    propertyName: _Color
+  - renderer: {fileID: 137215779864429072}
+    propertyName: _Color
 --- !u!114 &114211396574403768
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1773,11 +1947,23 @@ MonoBehaviour:
   mMaxHealth: 100
   mCurrentHealth: 0
   damageSFXs:
-  - audioClip: {fileID: 8300000, guid: 6de2f1403a27740a9bf72611f9d0b6d3, type: 3}
+  - audioClip: {fileID: 8300000, guid: 8d5d81aa2e10142c2a53b220eb8ad868, type: 3}
     pitchtingRange:
-      min: 0.8
-      max: 1.2
-  deathSFX: {fileID: 8300000, guid: 84e1cf0e5dff35745b6881671cec1a7e, type: 3}
+      min: 0.9
+      max: 1.1
+  - audioClip: {fileID: 8300000, guid: d2deae79991644c0386240a04a0fd2fc, type: 3}
+    pitchtingRange:
+      min: 0.9
+      max: 1.1
+  - audioClip: {fileID: 8300000, guid: 325ee8e3e5b91408888b8d09bc9fc605, type: 3}
+    pitchtingRange:
+      min: 0.9
+      max: 1.1
+  - audioClip: {fileID: 8300000, guid: 64ccb44b7594043289dc9459332f9b6f, type: 3}
+    pitchtingRange:
+      min: 0.9
+      max: 1.1
+  deathSFX: {fileID: 8300000, guid: 15232b1d0d1bd428387f21515dfda36e, type: 3}
   SFXaudioSource: {fileID: 82406275544267284}
 --- !u!114 &114612807110646480
 MonoBehaviour:
@@ -1798,7 +1984,8 @@ MonoBehaviour:
   playerLobby: {fileID: 114753484251476076}
   playerName: 
   playerColor: {r: 0, g: 0, b: 0, a: 0}
-  rendererToColor: {fileID: 137225967526559924}
+  recolors:
+  - {fileID: 114161840104926018}
   healthScript: {fileID: 114581584314824656}
   headJoint: {fileID: 4520588515631040}
   ignoreLayer:
@@ -1863,8 +2050,8 @@ MonoBehaviour:
   spellregistry: {fileID: 114448282116005220, guid: c6e96029e521cc24b85c56b8937c90ce,
     type: 2}
   audioSource: {fileID: 82777463225774896}
-  castFailedSFX: {fileID: 8300000, guid: 0cd3e72bb97d646739f183f1ff525a2a, type: 3}
-  cooldownDoneSFX: {fileID: 8300000, guid: bcbe3b2023fc348609f579b4cc475e9b, type: 3}
+  castFailedSFX: {fileID: 8300000, guid: 73863dac69ba0469f8e4899e3e05223a, type: 3}
+  cooldownDoneSFX: {fileID: 8300000, guid: 7b98ce392ed3e4ee8ada383adaa3eb10, type: 3}
   ultimateEnergy: 0
   ultimateEnergyThreshold: 100
   spellslot:

@@ -60,6 +60,7 @@ public class PlayerScript : NetworkBehaviour
 	public PlayerAim aim;
 	public PlayerCamera cameraRigPrefab;
     private PlayerCamera mPlayerCamera;
+    private SpectatorCamera mSpectatorCamera;
     public Transform handTransform;
     public PlayerLobby playerLobby;
 
@@ -72,7 +73,7 @@ public class PlayerScript : NetworkBehaviour
 	[SyncVar] public string playerName;
     [SyncVar] public Color playerColor;
 
-	public Renderer rendererToColor;
+    public ARecolorSingleColor[] recolors;
 
     public PlayerHealthScript healthScript;
 
@@ -85,6 +86,8 @@ public class PlayerScript : NetworkBehaviour
 	public LayerMask ignoreLayer;
 
 	private ColliderPack mColliderPack;
+
+    private Coroutine specatorCoroutine;
 
     /// <summary>
     /// Is the provided collider part of the players whole compound collider?
@@ -99,6 +102,7 @@ public class PlayerScript : NetworkBehaviour
 	void Awake()
 	{
         mPlayerSpells = GetComponent<PlayerSpells>();
+        GameManager.OnRoundEnded += RoundEnded;
 	}
 
     private void OnDisable()
@@ -107,6 +111,12 @@ public class PlayerScript : NetworkBehaviour
         {
             movement.onLandingWhileFalling -= healthScript.TakeFallDamage;
         }
+    }
+
+    public void OnDestroy()
+    {
+        GameManager.instance.PlayerDisconnected();
+        GameManager.OnRoundEnded -= RoundEnded;
     }
 
     // Use this for initialization
@@ -162,20 +172,22 @@ public class PlayerScript : NetworkBehaviour
         GameManager.instance.localPlayer = this;
         CmdGiveGo();
         mPlayerCamera = Instantiate(cameraRigPrefab);
+        GameManager.instance.cameraSystem.RegisterCameraObject(CameraSystem.Cameras.PlayerCamera, mPlayerCamera.gameObject);
         mPlayerCamera.followTarget = this;
 		aim.SetCameraRig(mPlayerCamera);
-        SetCameraActive(false);
-    }
-
-    public void SetCameraActive(bool active)
-    {
-        mPlayerCamera.gameObject.SetActive(active);
+        mPlayerCamera.gameObject.SetActive(false);
+        mSpectatorCamera = Instantiate(specCamPrefab);
+        mSpectatorCamera.gameObject.SetActive(false);
+        GameManager.instance.cameraSystem.RegisterCameraObject(CameraSystem.Cameras.SpectatorCamera, mSpectatorCamera.gameObject);
     }
 
 	public override void OnStartClient ()
 	{
 		base.OnStartClient ();
-		rendererToColor.material.color = playerColor;
+        foreach (var r in recolors)
+        {
+            r.ChangeColorTo(playerColor);
+        }
 	}
 
     //Statechanging ----------------------------------------
@@ -235,12 +247,16 @@ public class PlayerScript : NetworkBehaviour
     /// </summary>
     public void SpawnSpectator()
     {
-        StartCoroutine(DramaticDeathPause());
+        specatorCoroutine = StartCoroutine(DramaticDeathPause());
         this.enabled = false;
     }
 
     private IEnumerator DramaticDeathPause()
     {
+		if(!GameManager.instance.gameRunning)
+		{
+			yield break;
+		}
         yield return new WaitForSeconds(2);
         //Only spawn the specatator if the game is actually still running!
         //Otherwise we might miss the RoundEnded event because of the pause!
@@ -248,8 +264,8 @@ public class PlayerScript : NetworkBehaviour
         {
             yield break;
         }
-        (Instantiate(specCamPrefab) as SpectatorCamera).Setup(aim.GetCameraRig().GetCamera());
-        aim.GetCameraRig().gameObject.SetActive(false);
+        mSpectatorCamera.Setup(aim.GetCameraRig().GetCamera());
+        GameManager.instance.cameraSystem.ActivateCamera(CameraSystem.Cameras.SpectatorCamera);
     }
 
     // Update is called once per frame
@@ -290,12 +306,32 @@ public class PlayerScript : NetworkBehaviour
 		}
 	}
 
+    private void RoundEnded()
+    {
+        if (specatorCoroutine != null)
+        {
+            StopCoroutine(specatorCoroutine);
+        }
+    }
+
 	void LateUpdate()
 	{
 		//rotate the head joint, do this in the lateupdate to override the animation (?)
 		//TODO: put it somewhere else or get rid of it entirely
 		headJoint.localRotation = Quaternion.AngleAxis(aim.GetYAngle(), Vector3.right); 
 	}
+
+    public delegate void Shock(float shock);
+    public event Shock OnShock;
+
+    [ClientRpc]
+    public void RpcShockPlayer(float shock)
+    {
+        if(OnShock != null)
+        {
+            OnShock(shock);
+        }
+    }
 
 	public bool HandTransformIsObscured(out RaycastHit hit)
 	{

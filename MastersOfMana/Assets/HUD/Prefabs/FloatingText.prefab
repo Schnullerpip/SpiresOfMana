@@ -57,9 +57,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 114562677525243774}
-  xRange: 1000
-  yDeviation: 500
-  yExpected: 1000
+  xRange:
+    min: -1000
+    max: 1000
+  yDeviation:
+    min: 500
+    max: 1500
   gravity: 50
   lifetime: 2
   drag: 0.95

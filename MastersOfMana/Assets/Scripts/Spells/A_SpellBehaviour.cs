@@ -14,7 +14,13 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 
     public PreviewSpell preview;
 
-	public virtual void Preview(PlayerScript caster) {}
+	public virtual void Preview(PlayerScript caster) 
+    {
+        if (preview)
+        {
+            preview.instance.SetAvailability(caster.CurrentSpellReady());
+        }
+    }
 
 	public virtual void StopPreview(PlayerScript caster) {}
 
@@ -25,6 +31,10 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
     public PlayerScript GetCaster()
     {
         return caster;
+    }
+    public void SetCaster(PlayerScript newCaster)
+    {
+        caster = newCaster;
     }
     /// <summary>
     /// This is only used for initializing the caster reference on clientside!
@@ -37,7 +47,7 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
     public override void OnStartClient()
     {
         //initialize the caster - serverSpell's casters can and should be set in the Execute routine, so we're only interested in Clientside calls
-        if (!isServer && casterObject)
+        if (!isServer && casterObject && !caster)
         {
             caster = casterObject.GetComponent<PlayerScript>();
         }
@@ -161,22 +171,23 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
     }
 
 	[System.Serializable]
-	public struct ExplosionFalloff
+	public class ExplosionFalloff
 	{
 		public float force;
 		public int damage;
 		public AnimationCurve falloff;
 
-		public float EvaluateForce(float t)
+		public virtual float EvaluateForce(float t)
 		{
 			return falloff.Evaluate(t) * force;
 		}
 
-		public int EvaluateDamage(float t)
+		public virtual int EvaluateDamage(float t)
 		{
 			return Mathf.RoundToInt(falloff.Evaluate(t) * damage);
 		}
 	}
+
 
 	/// <summary>
 	/// Applies an explosion with the provided parameters.
@@ -185,7 +196,7 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 	/// <param name="radius">Radius.</param>
 	/// <param name="explFalloff">Explosion falloff.</param>
 	/// <param name="excluded">A list of Healthscript that should be skipped. eg these already got hit.</param>
-	protected void ExplosionDamage(Vector3 explosionOrigin, float radius, ExplosionFalloff explFalloff, List<HealthScript> excluded = null, float externalDamageFactor = 1.0f)
+	protected void ExplosionDamage(Vector3 explosionOrigin, float radius, ExplosionFalloff explFalloff, List<HealthScript> excluded = null, float externalDamageFactor = 1.0f, float externalForceFactor = 1.0f, int min_damage = 0, int max_damage = int.MaxValue)
 	{
 
 		//overlap a sphere at the hit position
@@ -241,16 +252,17 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 				affect = 1 - forceVector.sqrMagnitude / radiusSqr;
 				
 				forceVector.Normalize();
-				forceVector *= explFalloff.EvaluateForce(affect);
+				forceVector *= explFalloff.EvaluateForce(affect) * externalForceFactor;
 
-				//check wheather or not we are handling a player or just some random rigidbody
-				if (c.attachedRigidbody.CompareTag("Player"))
+                //check wheather or not we are handling a ServerMoveable or just some random rigidbody
+                ServerMoveable sm = c.attachedRigidbody.GetComponent<ServerMoveable>();
+				if (sm)
 				{
-					PlayerScript ps = c.attachedRigidbody.GetComponent<PlayerScript>();
-					ps.movement.RpcAddForce(forceVector, ForceMode.VelocityChange);
+					sm.RpcAddForce(forceVector, ForceMode.VelocityChange);
 				}
 				else
 				{
+                    //its safe to move rigid bodies if they're not a server moveable since then it is only local objects, that should not affect the game anyway
 					c.attachedRigidbody.AddForce(forceVector, ForceMode.VelocityChange);
 				}
 			}
@@ -280,9 +292,9 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 		}
 	
 		//this is done after the overlapshere loop, that way, walls and other obstacles where able to block the explosion before dying
-		for (int i = 0; i < cachedHealth.Count; i++) 
+		for (int i = 0; i < cachedHealth.Count; i++)
 		{
-			cachedHealth[i].TakeDamage(Mathf.RoundToInt(explFalloff.EvaluateDamage(affectFactors[i]) * externalDamageFactor), GetType());
+			cachedHealth[i].TakeDamage(Mathf.Clamp(Mathf.RoundToInt(explFalloff.EvaluateDamage(affectFactors[i])*externalDamageFactor), min_damage, max_damage), GetType());
 		}
 	}
 
@@ -297,14 +309,66 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
     //}
 
     /// <summary>
-    /// Stop the spell execution and clean up any remaining spell parts
+    /// Stop the spell and clean up any remaining spell parts
     /// </summary>
-    //public virtual void EndSpell()
-    //{
-    //    if (isServer)
-    //    {
-    //        NetworkServer.UnSpawn(this.gameObject);
-    //        this.gameObject.SetActive(false);
-    //    }
-    //}
+    public virtual void EndSpell() { }
+
+    /// <summary>
+    /// Checks wether or not a player is in the hittable range.
+    /// </summary>
+    /// <returns>The AP layer.</returns>
+    /// <param name="player">The opponents PlayerScript if there was one.</param>
+    /// <param name="pos">Position of the hit. Either the center, head or feet.</param>
+    protected static PlayerScript HitAPlayer(PlayerScript player, float hitRadius, float maxDistance, out Vector3 pos, bool onServer)
+    {
+        //check for a hit
+
+		var opponents = GameManager.instance.players;
+
+        PlayerScript hitPlayer = null;
+        pos = Vector3.zero;
+
+        foreach (var p in opponents)
+        {
+            if (p == player)
+            {
+                continue;
+            }
+
+            if (HelperConfiredHit(p.movement.mRigidbody.worldCenterOfMass, player, hitRadius, maxDistance, onServer))
+            {
+                hitPlayer = p;
+                pos = p.movement.mRigidbody.worldCenterOfMass;
+            }
+            else if (HelperConfiredHit(p.headJoint.position, player, hitRadius, maxDistance, onServer))
+            {
+                hitPlayer = p;
+                pos = p.headJoint.position;
+            }
+            else if (HelperConfiredHit(p.transform.position, player, hitRadius, maxDistance, onServer))
+            {
+                hitPlayer = p;
+                pos = p.transform.position;
+            }
+
+            if (hitPlayer)
+            {
+                break;
+            }
+        }
+
+        return hitPlayer;
+    }
+
+    protected static  bool HelperConfiredHit(Vector3 h_point, PlayerScript h_caster, float h_hitRadius, float h_hitRange, bool onServer)
+    {
+        if(onServer)
+        {
+            return ConfirmedHitServer(h_point, h_caster, h_hitRadius, h_hitRange);
+        }
+        else
+        {
+            return ConfirmedHitClient(h_point, h_caster, h_hitRadius, h_hitRange);
+        }
+    }
 }

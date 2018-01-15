@@ -7,19 +7,27 @@ public class PlayerLobby : NetworkBehaviour {
     [SyncVar]
     public bool isReady = false;
 
-	public void OnEnable()
+	public void Awake()
 	{
 		GameManager.OnRoundEnded += RoundEnded;
 	}
 
-	public void OnDisable()
+	public void OnDestroy()
 	{
 		GameManager.OnRoundEnded -= RoundEnded;
 	}
 
 	void RoundEnded()
 	{
-		isReady = false;
+        if (isLocalPlayer)
+        {
+            CmdSetReady(false);
+        }
+        else
+        {
+            //This is just so we don't have "Ready" displayed in the lobby for all players that have not ended their round yet
+            isReady = false;
+        }
 	}
 
     [Command]

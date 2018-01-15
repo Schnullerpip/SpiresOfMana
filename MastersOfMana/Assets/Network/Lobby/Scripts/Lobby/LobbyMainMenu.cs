@@ -10,8 +10,6 @@ namespace Prototype.NetworkLobby
     {
         public LobbyManager lobbyManager;
 
-
-
         [Header("UI Reference")]
 
         public RectTransform mainMenuPanel;
@@ -21,6 +19,9 @@ namespace Prototype.NetworkLobby
         public LobbyCountdownPanel countdownPanel;
         public RectTransform spellSelectionPanel;
         public RectTransform optionsPanel;
+        public InputField playernameField;
+        private int playerColorIndex = 0;
+        public Image playerColor;
 
         public InputField matchNameInput;
         public Button backButton;
@@ -32,17 +33,44 @@ namespace Prototype.NetworkLobby
 			return rewiredPlayer;
 		}
 
+        private void Awake()
+        {
+            optionsPanel.GetComponent<LobbyOptions>().ApplySettings();
+        }
+
         public void OnEnable()
         {
             matchNameInput.onEndEdit.RemoveAllListeners();
             matchNameInput.onEndEdit.AddListener(onEndEditGameName);
-
-            lobbyManager = GameObject.FindObjectOfType<LobbyManager>();
             backButton.onClick.RemoveAllListeners();
             backButton.onClick.AddListener(lobbyManager.GoBackButton);
 
 			rewiredPlayer = ReInput.players.GetPlayer (0);
-			matchNameInput.text = PlayerPrefs.GetString ("Playername", "DefaultName") + "'s Gameroom";
+            string playername = PlayerPrefs.GetString("Playername", "DefaultName");
+            matchNameInput.text = playername + "'s Gameroom";
+            playernameField.text = playername;
+            playerColor.color = PlayerPrefsExtended.GetColor("Playercolor", LobbyPlayer.Colors[playerColorIndex]);
+            playerColorIndex = System.Array.IndexOf(LobbyPlayer.Colors, playerColor.color);
+        }
+
+        public void OnClickNextPlayerColor()
+        {
+            playerColorIndex++;
+            if (playerColorIndex > LobbyPlayer.Colors.Length - 1)
+            {
+                playerColorIndex = 0;
+            }
+            playerColor.color = LobbyPlayer.Colors[playerColorIndex];
+        }
+
+        public void OnClickPreviousPlayerColor()
+        {
+            playerColorIndex--;
+            if(playerColorIndex < 0)
+            {
+                playerColorIndex = LobbyPlayer.Colors.Length - 1;
+            }
+            playerColor.color = LobbyPlayer.Colors[playerColorIndex];
         }
 
         public void OnClickHost()
@@ -74,6 +102,9 @@ namespace Prototype.NetworkLobby
 
         public void OnClickCreateMatchmakingGame()
         {
+            lobbyManager.isHost = true;
+            PlayerPrefsExtended.SetColor("Playercolor", playerColor.color);
+            PlayerPrefs.Save();
             lobbyManager.StartMatchMaker();
             lobbyManager.matchMaker.CreateMatch(
                 matchNameInput.text,
@@ -91,6 +122,9 @@ namespace Prototype.NetworkLobby
 
         public void OnClickOpenServerList()
         {
+            lobbyManager.isHost = false;
+            PlayerPrefsExtended.SetColor("Playercolor", playerColor.color);
+            PlayerPrefs.Save();
             lobbyManager.StartMatchMaker();
             lobbyManager.SetCancelDelegate(lobbyManager.SimpleBackClbk);
             lobbyManager.backDelegate = lobbyManager.Cancel;
@@ -128,5 +162,11 @@ namespace Prototype.NetworkLobby
 #endif
         }
 
+        public void OnPlayerNameChanged(InputField input)
+        {
+            PlayerPrefs.SetString("Playername", input.text);
+            PlayerPrefs.Save();
+            matchNameInput.text = input.text + "'s Gameroom";
+        }
     }
 }

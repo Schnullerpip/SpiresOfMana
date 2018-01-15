@@ -22,6 +22,13 @@ public class WhipBehaviour : A_SummoningBehaviour
 	[SyncVar(hook = "SetLinePoint1")]
 	private Vector3 linePoint1;
 
+
+    public Vector3 WhipStartOffset;
+
+    [SyncVar]
+    private GameObject mAffectedPlayerObject;
+    private PlayerScript mAffectedPlayer;
+
 	private void SetLinePoint0(Vector3 vec)
 	{
 		linePoint0 = vec;
@@ -49,11 +56,9 @@ public class WhipBehaviour : A_SummoningBehaviour
 		RaycastHit hit;
 		Ray ray = caster.aim.GetCameraRig().GetCenterRay();
 
-        preview.instance.SetAvailability(caster.CurrentSpellReady());
-
         Vector3 hitPlayerPos;
 
-        PlayerScript hitPlayer = HitAPlayer(caster, out hitPlayerPos, false);
+        PlayerScript hitPlayer = HitAPlayer(caster, hitRadius, maxDistance, out hitPlayerPos, false);
 
         if(hitPlayer)
         {
@@ -75,115 +80,99 @@ public class WhipBehaviour : A_SummoningBehaviour
         preview.instance.Deactivate();
 	}
 
-    /// <summary>
-    /// Checks wether or not a player is in the hittable range.
-    /// </summary>
-    /// <returns>The AP layer.</returns>
-    /// <param name="player">The opponents PlayerScript if there was one.</param>
-    /// <param name="pos">Position of the hit. Either the center, head or feet.</param>
-    private PlayerScript HitAPlayer(PlayerScript player, out Vector3 pos, bool onServer)
-    {
-        //check for a hit
-
-		var opponents = GameManager.instance.players;
-
-        PlayerScript hitPlayer = null;
-        pos = Vector3.zero;
-
-        foreach (var p in opponents)
-        {
-            if (p == player)
-            {
-                continue;
-            }
-
-            if (HelperConfiredHit(p.movement.mRigidbody.worldCenterOfMass, player, hitRadius, maxDistance, onServer))
-            {
-                hitPlayer = p;
-                pos = p.movement.mRigidbody.worldCenterOfMass;
-            }
-            else if (HelperConfiredHit(p.headJoint.position, player, hitRadius, maxDistance, onServer))
-            {
-                hitPlayer = p;
-                pos = p.headJoint.position;
-            }
-            else if (HelperConfiredHit(p.transform.position, player, hitRadius, maxDistance, onServer))
-            {
-                hitPlayer = p;
-                pos = p.transform.position;
-            }
-
-            if (hitPlayer)
-            {
-                break;
-            }
-        }
-
-        return hitPlayer;
-    }
-
-    private bool HelperConfiredHit(Vector3 h_point, PlayerScript h_caster, float h_hitRadius, float h_hitRange, bool onServer)
-    {
-        if(onServer)
-        {
-            return ConfirmedHitServer(h_point, h_caster, h_hitRadius, h_hitRange);
-        }
-        else
-        {
-            return ConfirmedHitClient(h_point, h_caster, h_hitRadius, h_hitRange);
-        }
-    }
-
     public override void Execute(PlayerScript caster)
     {
-		WhipBehaviour whipBehaviour = PoolRegistry.GetInstance(this.gameObject, 4, 4).GetComponent<WhipBehaviour>();
+        WhipBehaviour whipBehaviour = PoolRegistry.GetInstance(this.gameObject, caster.transform, 1, 1).GetComponent<WhipBehaviour>();
 
         whipBehaviour.caster = caster;
+        whipBehaviour.casterObject = caster.gameObject;
+        whipBehaviour.Init();
+
+        whipBehaviour.gameObject.SetActive(true);
+        NetworkServer.Spawn(whipBehaviour.gameObject);
+
+        whipBehaviour.StartCoroutine(whipBehaviour.DelayedUnspawn());
+    }
+
+    private void Init()
+    {
+        //standard Initializations
+        mAffectedPlayerObject = null;
+        mAffectedPlayer = null;
 
         //initialize the linepoint
-        whipBehaviour.linePoint0 = caster.handTransform.position;
+        Vector3 casterPosition = caster.handTransform.position;
+        casterPosition += WhipStartOffset;
+        linePoint0 = casterPosition;
 
         //check for a hit
         Vector3 hitPlayerPos;
 
-        PlayerScript hitPlayer = HitAPlayer(caster, out hitPlayerPos, true);
+        PlayerScript hitPlayer = HitAPlayer(caster, hitRadius, maxDistance, out hitPlayerPos, true);
 
         RaycastHit hit;
 
         //case 1: hit the player
         if (hitPlayer)
         {
-            whipBehaviour.linePoint1 = hitPlayerPos;
+            linePoint1 = hitPlayerPos;
             Vector3 aimDirection = Vector3.Normalize(hitPlayerPos - caster.handTransform.position);
-            Vector3 force = -aimDirection*pullForce + Vector3.up*UpForce;
+            Vector3 force = -aimDirection * pullForce + Vector3.up * UpForce;
             hitPlayer.movement.RpcAddForce(force, ForceMode.VelocityChange);
             hitPlayer.healthScript.TakeDamage(0, GetType());
+
+            //cache the hitplayer and sync it down to the client
+            mAffectedPlayerObject = hitPlayer.gameObject;
+            mAffectedPlayer = hitPlayer;
+            //also cache the hitPlayerPos, so we can readjust the linerenderer through parenting
+            transform.position = hitPlayerPos;
+            transform.parent = hitPlayer.transform;
         }
         //case 2: hit geometry
         else if (RayCast(caster, new Ray(caster.GetCameraPosition(), caster.GetCameraLookDirection()), out hit) && hit.distance <= maxDistance)
         {
-            whipBehaviour.linePoint1 = hit.point;
-            Vector3 aimDirection = Vector3.Normalize(whipBehaviour.linePoint1 - caster.transform.position);
+            transform.position = linePoint1 = hit.point;
+            Vector3 aimDirection = Vector3.Normalize(linePoint1 - caster.transform.position);
             Vector3 forceVector = aimDirection * pullForce + Vector3.up * UpForce;
             caster.movement.RpcAddForce(forceVector, ForceMode.VelocityChange);
         }
         //case 3: hit nothing
-        else 
+        else
         {
-            whipBehaviour.linePoint1 = caster.handTransform.position + caster.GetCameraLookDirection() * maxDistance;
+            transform.position = linePoint1 = caster.handTransform.position + caster.GetCameraLookDirection() * maxDistance;
         }
-
-        whipBehaviour.gameObject.SetActive(true);
-		NetworkServer.Spawn(whipBehaviour.gameObject, whipBehaviour.GetComponent<NetworkIdentity>().assetId);
-
-		whipBehaviour.StartCoroutine(whipBehaviour.DelayedUnspawn());
     }
 
     public IEnumerator DelayedUnspawn()
 	{
 		yield return new WaitForSeconds(disappearTimer);
 
+	    caster = null;
+	    casterObject = null;
 		gameObject.SetActive(false);
 		NetworkServer.UnSpawn(gameObject);
 	}
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+
+        if (mAffectedPlayerObject)
+        {
+            mAffectedPlayer = mAffectedPlayerObject.GetComponent<PlayerScript>();
+            transform.parent = mAffectedPlayer.transform;
+        }
+    }
+
+    void Update()
+    {
+        if (caster)
+        {
+            Vector3 casterPosition = caster.handTransform.position;
+            casterPosition += WhipStartOffset;
+            lineRenderer.SetPosition(0, casterPosition);
+        }
+
+        lineRenderer.SetPosition(1, transform.position);
+    }
 }

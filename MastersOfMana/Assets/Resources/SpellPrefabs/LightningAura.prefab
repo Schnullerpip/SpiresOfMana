@@ -39,6 +39,7 @@ GameObject:
   - component: {fileID: 135246191822953554}
   - component: {fileID: 114403616181053528}
   - component: {fileID: 114687043436565668}
+  - component: {fileID: 82544458144263344}
   m_Layer: 0
   m_Name: LightningAura
   m_TagString: Untagged
@@ -105,7 +106,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1270497008473598}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.24633408, y: 9.176, z: 7.987999}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4572635989441690}
@@ -189,6 +190,87 @@ AudioSource:
   DopplerLevel: 1
   MinDistance: 5
   MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+--- !u!82 &82544458144263344
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1270497008473598}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 243260064957582752, guid: 75146e90f04cc459f82a15f9cccbe71c,
+    type: 2}
+  m_audioClip: {fileID: 8300000, guid: b1b358c2dfdc57e47b1489ad3f0bd0c8, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 0.24
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 84.58
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -540,11 +622,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d652fdf162e3dfd4a8eb15411f6a8a64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  preview: {fileID: 114879560510636316, guid: 3deca10ba12068b47906dfb677554e93, type: 2}
   mDuration: 5
-  mCountTillDamage: 1
-  mDamage: 4
+  mCountTilDamage: 0.5
+  mDamage: 2
+  mInflictSelfDamage: 0
   mStaticPotential: {fileID: 198975284805952996}
   mLightningProjectile: {fileID: 198504703758112080}
+  mAudioSource: {fileID: 82544458144263344}
+  CastEffectClip: {fileID: 8300000, guid: d047a38f51f8c2648b63a55f5e82942e, type: 3}
+  StaticEnergyLoop: {fileID: 8300000, guid: b1b358c2dfdc57e47b1489ad3f0bd0c8, type: 3}
+  AttackSound: {fileID: 8300000, guid: 1df45eb77b03e0a4fa699638d6a3b8f1, type: 3}
+  mDecectionTrigger: {fileID: 135246191822953554}
 --- !u!114 &114738432914703358
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -592,7 +681,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 9
+  m_Radius: 4.5
   m_Center: {x: 0, y: 1.5, z: 0}
 --- !u!182 &182541259549421760
 WindZone:
@@ -3946,7 +4035,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -341209673
+  randomSeed: -154089627
   InitialModule:
     serializedVersion: 3
     enabled: 1

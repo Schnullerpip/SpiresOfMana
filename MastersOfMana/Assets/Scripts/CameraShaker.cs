@@ -12,13 +12,6 @@ public class CameraShaker : MonoBehaviour
 	public bool rotate = false;
 	public float smoothing = 5;
 
-//	void Update () {
-//		if(Input.GetKeyDown(KeyCode.P))
-//		{
-//			Shake();
-//		}
-//	}
-
 	/// <summary>
 	/// Shakes the camera with a scaling amount and the default duration.
 	/// </summary>
@@ -27,6 +20,15 @@ public class CameraShaker : MonoBehaviour
 	{
 		Shake(dmg * 1.0f, defaultDuration);
 	}
+
+    /// <summary>
+    /// Shakes the camera with a scaling amount and the default duration.
+    /// </summary>
+    /// <param name="dmg">Dmg.</param>
+    public void ShakeByDamage(float dmg)
+    {
+        Shake(dmg, defaultDuration);
+    }
 
 	/// <summary>
 	/// Shake the camera with the default amount and duration.

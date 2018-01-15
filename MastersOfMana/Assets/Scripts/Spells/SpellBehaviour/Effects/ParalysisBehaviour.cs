@@ -119,12 +119,11 @@ public class ParalysisBehaviour : A_EffectBehaviour
             }
             else //hit some nonplayer object or terrain
             {
-
                 if (hit.transform.gameObject.isStatic)
                 {
                     //its definitely terrain
                     //get its normal and create an iceCrystal with the hit points normal as rotation
-                    ParalysisBehaviour pb = PoolRegistry.GetInstance(gameObject, hit.point, Quaternion.LookRotation(Vector3.forward, hit.normal), 1, 1) .GetComponent<ParalysisBehaviour>();
+                    ParalysisBehaviour pb = PoolRegistry.GetInstance(gameObject, hit.point,Quaternion.FromToRotation(Vector3.up, hit.normal), 1, 1) .GetComponent<ParalysisBehaviour>();
                     pb.gameObject.layer = LayerMask.NameToLayer("Default");
                     pb.Init(null);
                     NetworkServer.Spawn(pb.gameObject);

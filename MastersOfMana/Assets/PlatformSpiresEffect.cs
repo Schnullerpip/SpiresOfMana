@@ -14,6 +14,18 @@ public class PlatformSpiresEffect : NetworkBehaviour
     private int mEmissionPropID;
     private int mColorPropID;
 
+    //Events
+    public delegate void LoadingZoneWillSpawn();
+    public delegate void LoadingZoneDisappeared();
+    /// <summary>
+    /// everyone who wants to be informed, whenever a loading zone will spawn soon, should register on this event
+    /// </summary>
+    public event LoadingZoneWillSpawn OnLoadingZoneWillSpawn;
+    /// <summary>
+    /// everyone who wants to be informed, whenever a loading zone unspawns, should register on this event
+    /// </summary>
+    public event LoadingZoneDisappeared OnLoadingZoneDisappeared;
+
     void Awake()
     {
         mMaterial = new Material(renderers[0].material);
@@ -34,6 +46,12 @@ public class PlatformSpiresEffect : NetworkBehaviour
         mMaterial.SetColor(mColorPropID, color);
         StopAllCoroutines();
         StartCoroutine(EmissionRamp(Direction.INCREASE));
+
+        //inform the listeners, that a loading zone will spawn soon (announcementTime)
+        if (OnLoadingZoneWillSpawn != null)
+        {
+            OnLoadingZoneWillSpawn();
+        }
     }
 
     [ClientRpc]
@@ -41,6 +59,11 @@ public class PlatformSpiresEffect : NetworkBehaviour
     {
         StopAllCoroutines();
         StartCoroutine(EmissionRamp(Direction.DECREASE));
+
+        if (OnLoadingZoneDisappeared != null)
+        {
+            OnLoadingZoneDisappeared();
+        }
     }
 
     private float mInterpolator = 0;

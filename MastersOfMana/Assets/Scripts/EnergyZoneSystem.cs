@@ -65,10 +65,6 @@ public class EnergyZoneSystem : NetworkBehaviour
 	{
         for (int i = 0; i < mSpawnpoints.Count; ++i)
         {
-            if (OnLoadingZoneDisappeared != null)
-            {
-                OnLoadingZoneDisappeared();
-            }
             mSpawnpoints[i].RpcDeactivate();
         }
         StopAllCoroutines();
@@ -77,32 +73,14 @@ public class EnergyZoneSystem : NetworkBehaviour
     [Header("LoadingzoneAnnouncement")]
     public float announcementTime;
 
-    public delegate void LoadingZoneWillSpawn();
-    public delegate void LoadingZoneDisappeared();
-    /// <summary>
-    /// everyone who wants to be informed, whenever a loading zone will spawn soon, should register on this event
-    /// </summary>
-    public event LoadingZoneWillSpawn OnLoadingZoneWillSpawn;
-    /// <summary>
-    /// everyone who wants to be informed, whenever a loading zone unspawns, should register on this event
-    /// </summary>
-    public event LoadingZoneDisappeared OnLoadingZoneDisappeared;
 
 
     private IEnumerator SpawnZone(bool init = false)
     {
         if(init)
-            yield return new WaitForSeconds(initialDelay - announcementTime);//to skip initial spawn; is 1 frame "too late"
+            yield return new WaitForSeconds(initialDelay);//to skip initial spawn; is 1 frame "too late"
         else
-            yield return new WaitForSeconds(gapBetweenSpawns - announcementTime);
-
-        //inform the listeners, that a loading zone will spawn soon (announcementTime)
-        if (OnLoadingZoneWillSpawn != null)
-        {
-            OnLoadingZoneWillSpawn();
-        }
-
-        yield return new WaitForSeconds(announcementTime);
+            yield return new WaitForSeconds(gapBetweenSpawns);
 
         //Get a random spawn position
         PlatformSpiresEffect platform = GetRandomPlatform();
@@ -158,10 +136,6 @@ public class EnergyZoneSystem : NetworkBehaviour
 		Destroy (obj);
         StartCoroutine(SpawnZone());
 
-        if (OnLoadingZoneDisappeared != null)
-        {
-            OnLoadingZoneDisappeared();
-        }
         platform.RpcDeactivate();
     }
 }

@@ -10,6 +10,7 @@ public class HUD : MonoBehaviour {
     private IngameLobby mLobby;
     private HealthHUD mHealthHUD;
     private HurtIndicator mHurtIndicator;
+    private InfoHUD mInfoHud;
 
     void OnEnable()
     {
@@ -37,6 +38,9 @@ public class HUD : MonoBehaviour {
 
         mHurtIndicator = GetComponentInChildren<HurtIndicator>();
         mHurtIndicator.gameObject.SetActive(false);
+
+        mInfoHud = GetComponentInChildren<InfoHUD>();
+        mInfoHud.gameObject.SetActive(false);
     }
 
     public SpellHUD GetSpellHUD()

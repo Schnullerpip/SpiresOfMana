@@ -334,7 +334,7 @@ public class GameManager : MonoBehaviour
 		
     void ResetGame()
     {
-        localPlayer.enabled = true;
+        //localPlayer.enabled = true;
 		if (!(NetManager.instance.amIServer())) 
 		{
 			return;
@@ -345,7 +345,7 @@ public class GameManager : MonoBehaviour
 			players[i].movement.RpcSetPositionAndRotation(startPositions[i].position, startPositions[i].rotation);
 			players[i].movement.RpcSetVelocity(Vector3.zero);
             players[i].RpcSetInputState(InputStateSystem.InputStateID.Normal);
-			players[i].enabled = true;
+			//players[i].enabled = true;
 		}
     }
 

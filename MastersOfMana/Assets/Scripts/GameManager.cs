@@ -139,6 +139,9 @@ public class GameManager : MonoBehaviour
         {
             OnGameStarted();
         }
+        //Example for Arne TODO delete this! and the testfunctions!!1!
+        mLavaFloor.OnLavaWillRise += ONLYFORTESTINGDELETETHIS;
+        mLavaFloor.OnLavaStoppedRising += ONLYFORTESTINGDELETETHIS1;
     }
 
     // INGAME
@@ -398,5 +401,15 @@ public class GameManager : MonoBehaviour
         {
             OnHostEndedRound();
         }
+    }
+
+    private void ONLYFORTESTINGDELETETHIS()
+    {
+        Debug.Log("works");
+    }
+
+    private void ONLYFORTESTINGDELETETHIS1()
+    {
+        Debug.Log("works too");
     }
 }

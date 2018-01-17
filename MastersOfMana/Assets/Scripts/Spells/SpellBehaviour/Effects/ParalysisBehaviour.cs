@@ -36,6 +36,8 @@ public class ParalysisBehaviour : A_EffectBehaviour
 
     //the effect original (to copy) whenever nothing was hit
     [SerializeField] private GameObject mNonHitEffect;
+    [SerializeField] private GameObject mTakeDamageEffect;
+    private ParticleSystem DamageEffect;
 
     [SyncVar] private GameObject mAffectedPlayerObject;
     private PlayerScript mAffectedPlayer;
@@ -89,7 +91,7 @@ public class ParalysisBehaviour : A_EffectBehaviour
                 ConfirmedHitServer(p.movement.mRigidbody.worldCenterOfMass, caster, mHitRadius, mHitRange))
             {
                 //player was hit -> create an icecrystalsurrounding him/her
-                ParalysisBehaviour pb = PoolRegistry.GetInstance(gameObject, p.transform.position, caster.transform.rotation, 1, 1) .GetComponent<ParalysisBehaviour>();
+                ParalysisBehaviour pb = PoolRegistry.GetInstance(gameObject, p.transform.position, caster.transform.rotation, 2, 1) .GetComponent<ParalysisBehaviour>();
 
                 pb.gameObject.layer = LayerMask.NameToLayer("FrostPrison");
 
@@ -197,13 +199,28 @@ public class ParalysisBehaviour : A_EffectBehaviour
 
     void Start()
     {
+        DamageEffect = mTakeDamageEffect.GetComponent<ParticleSystem>();
+
         healthscript.OnDamageTaken += VisualCrackPerDamageUnit; //make the icecrystal crack per damage normalized unit
+        healthscript.OnDamageTaken += VisualizeDamageTaken; //Spawn a little particle effect, that looks like shards falling off the ice
         if (isServer)
         {
             healthscript.OnDamageTaken += DisappearWhenDead;
             healthscript.OnDamageTaken += RemitDamage; //redirect the icecrystals damage to the player
         }
     }
+
+    void OnDestroy()
+    {
+        healthscript.OnDamageTaken -= VisualizeDamageTaken;
+        healthscript.OnDamageTaken -= VisualCrackPerDamageUnit;
+        if (isServer)
+        {
+            healthscript.OnDamageTaken -= DisappearWhenDead;
+            healthscript.OnDamageTaken -= RemitDamage;
+        }
+    }
+
 
     /// <summary>
     /// will make the affected player immovable, ignoring all input and also preventing being moved by the server
@@ -297,6 +314,11 @@ public class ParalysisBehaviour : A_EffectBehaviour
         }
 
         mLastIndex = numberActivatedFragments;
+    }
+
+    private void VisualizeDamageTaken(int amount)
+    {
+        DamageEffect.Emit(amount*10);
     }
     #endregion
 

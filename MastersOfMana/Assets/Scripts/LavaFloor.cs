@@ -260,7 +260,7 @@ public class LavaFloor : NetworkBehaviour
                 //inform listeners, that lava has stopped rising
                 if (OnLavaStoppedRising != null)
                 {
-                    OnLavaStoppedRising();
+                    RpcTriggerOnLavaStoppedRising();
                 }
 
                 //reinitialize the detection
@@ -280,7 +280,7 @@ public class LavaFloor : NetworkBehaviour
                 //looking into the future by RAS_Offset we actually found, that the lava will rise! -> inform everyone, that needs to know
                 if (OnLavaWillRise != null)
                 {
-                    OnLavaWillRise();
+                    RpcTriggerOnLavaWillRiseSoon();
                 }
             }
 
@@ -293,6 +293,18 @@ public class LavaFloor : NetworkBehaviour
 
             mRunTime += Time.fixedDeltaTime;
         }
+    }
+
+    [ClientRpc]
+    private void RpcTriggerOnLavaWillRiseSoon()
+    {
+        OnLavaWillRise();
+    }
+
+    [ClientRpc]
+    private void RpcTriggerOnLavaStoppedRising()
+    {
+        OnLavaStoppedRising();
     }
 
     private void EmissionHook(float emissionValue)

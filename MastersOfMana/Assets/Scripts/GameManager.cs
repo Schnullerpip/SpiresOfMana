@@ -138,13 +138,6 @@ public class GameManager : MonoBehaviour
         {
             OnGameStarted();
         }
-
-        //Example for Arne TODO delete this! and the testfunctions!!1!
-        mLavaFloor.OnLavaWillRise += ONLYFORTESTINGDELETETHIS;
-        mLavaFloor.OnLavaStoppedRising += ONLYFORTESTINGDELETETHIS1;
-        var ezs = FindObjectOfType<EnergyZoneSystem>();
-        ezs.OnLoadingZoneWillSpawn += ONLYFORTESTINGDELETETHIS2;
-        ezs.OnLoadingZoneDisappeared += ONLYFORTESTINGDELETETHIS3;
     }
 
     // INGAME
@@ -334,7 +327,7 @@ public class GameManager : MonoBehaviour
 		
     void ResetGame()
     {
-        localPlayer.enabled = true;
+        //localPlayer.enabled = true;
 		if (!(NetManager.instance.amIServer())) 
 		{
 			return;
@@ -345,7 +338,7 @@ public class GameManager : MonoBehaviour
 			players[i].movement.RpcSetPositionAndRotation(startPositions[i].position, startPositions[i].rotation);
 			players[i].movement.RpcSetVelocity(Vector3.zero);
             players[i].RpcSetInputState(InputStateSystem.InputStateID.Normal);
-			players[i].enabled = true;
+			//players[i].enabled = true;
 		}
     }
 
@@ -411,25 +404,5 @@ public class GameManager : MonoBehaviour
         {
             OnHostEndedRound();
         }
-    }
-
-    private void ONLYFORTESTINGDELETETHIS()
-    {
-        Debug.Log("lava works");
-    }
-
-    private void ONLYFORTESTINGDELETETHIS1()
-    {
-        Debug.Log("lava end works too");
-    }
-
-    private void ONLYFORTESTINGDELETETHIS2()
-    {
-        Debug.Log("zone works");
-    }
-
-    private void ONLYFORTESTINGDELETETHIS3()
-    {
-        Debug.Log("zone end works too");
     }
 }

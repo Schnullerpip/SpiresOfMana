@@ -83,12 +83,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9928495bbd779b44ba1febe3f94ebe7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mLifetime: 5
+  preview: {fileID: 0}
   mHitRadius: 2
-  mHitRange: 100
+  mHitRange: 60
+  mReductionIntervalInSeconds: 0
+  mLifeTime: 3
+  mLifetimeAfterShatter: 0
+  mShatterEffect: {fileID: 0}
+  mFragmentTransforms: []
   iceCollider: {fileID: 0}
   healthscript: {fileID: 0}
+  DamageRemitFactor: 1
   ActivateOnDeactivation: {fileID: 0}
+  fragments: []
+  mNonHitEffect: {fileID: 0}
 --- !u!114 &114333617069955034
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -385,34 +385,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   preview: {fileID: 114041355954258062, guid: c9bd312dd9100433bbf9c52f1f65128c, type: 2}
   mPushDownForce: 20
-  mExplosionForce: 11
   mExplosionFalloff:
-    force: 11
+    force: 8
     damage: 100
     falloff:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 2
-        time: -0.0066184998
-        value: 0.30471802
+        time: 0
+        value: 0
         inSlope: 0.708119
-        outSlope: 0.3412937
+        outSlope: 0.04249434
         tangentMode: 5
       - serializedVersion: 2
         time: 1
         value: 1
-        inSlope: -0.026207484
+        inSlope: 2.3675425
         outSlope: 0.92074525
         tangentMode: 65
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 0
-    min_force: 0
-    max_force: 11
-    min_damage: 0
-    max_damage: 45
   mExplosionRadius: 6
-  mMaxDistance: 25
+  mMaxDistance: 20
+  mMinDamage: 10
+  mMaxDamage: 45
   explosionPrefab: {fileID: 1682363581096778, guid: cd53c0c034522f349a623b0109c17c5c,
     type: 2}
   decalPrefab: {fileID: 1618936622195280, guid: d4aadc842a706974e8987ec5e9f6ad28,

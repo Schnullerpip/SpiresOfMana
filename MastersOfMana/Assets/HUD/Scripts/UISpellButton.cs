@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class UISpellButton : MonoBehaviour
 {
@@ -10,6 +11,9 @@ public class UISpellButton : MonoBehaviour
     public UnityEngine.UI.Image icon;
 
     public Color chosenColor;
+
+    public float colorTransitionSpeed = 8.0f;
+
     private Color mColor;
 
     private void Awake()
@@ -19,12 +23,34 @@ public class UISpellButton : MonoBehaviour
 
     public void SetColor(Color color)
     {
-        icon.color = color;
+        StopAllCoroutines();
+        if(gameObject.activeInHierarchy)
+        {
+			StartCoroutine(TransitionColor(color));
+        }
+        else
+        {
+            icon.color = color;
+        }
     }
 
     public void SetIsChosen(bool value)
     {
         isInSpellSlot = value;
-        icon.color = isInSpellSlot ? chosenColor : mColor;
+
+        SetColor(isInSpellSlot ? chosenColor : mColor);
+    }
+
+    private IEnumerator TransitionColor(Color toColor)
+    {
+        Color startColor = icon.color;
+
+        for (float t = 0.0f; t < 1.0f; t += Time.unscaledDeltaTime * colorTransitionSpeed)
+        {
+            icon.color = Color.Lerp(startColor, toColor, t);
+			yield return null;
+        }
+
+        icon.color = toColor;
     }
 }

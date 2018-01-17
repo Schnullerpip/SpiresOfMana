@@ -20,6 +20,7 @@ public class SpellSelectionPanel : MonoBehaviour {
 
     public SpellAssignmentPopup popupMenu;
     public PopupMenu unableToAssignPopup;
+    public RectTransform[] selectionHighlights;
 
     private Rewired.Player playerInput;
     private PlayerLobby lobbyPlayer;
@@ -192,6 +193,13 @@ public class SpellSelectionPanel : MonoBehaviour {
         {
             mPlayerSpellList[3] = spellregistry.ultimateSpellList[0];
         }
+
+        for (int i = 0; i < selectionHighlights.Length; i++)
+        {
+            selectionHighlights[i].SetParent(mSpellButtonDictionary[mPlayerSpellList[i]].transform, false);
+            selectionHighlights[i].anchoredPosition = Vector2.zero;
+        }
+
     }
 
     public enum OnSelectDirection
@@ -247,7 +255,7 @@ public class SpellSelectionPanel : MonoBehaviour {
     {
         lobbyPlayer.CmdSetReady(true);
         ValidateSpellSelection();
-        //Save Spells to PlayerPrefs
+        //!Save Spells to PlayerPrefs
         PlayerPrefs.SetInt("SpellSlot0", mPlayerSpellList[0].spellID);
         PlayerPrefs.SetInt("SpellSlot1", mPlayerSpellList[1].spellID);
         PlayerPrefs.SetInt("SpellSlot2", mPlayerSpellList[2].spellID);

@@ -21,6 +21,11 @@ public class ReadyButton : MonoBehaviour {
         buttonLabel = readyButton.GetComponentInChildren<Text>();
     }
 
+    void OnDisable()
+    {
+        SetReadyState(true);
+    }
+
 	public void SetReadyState(bool ready)
     {
         if (ready)

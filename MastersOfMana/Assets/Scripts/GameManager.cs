@@ -77,7 +77,6 @@ public class GameManager : MonoBehaviour
         mNeededToGo = mInitialNeededToGo;
         mNumberOfGoMessages = 0;
         mNumberOfDeadPlayers = 0;
-        mNumOfReadyPlayers = 0;
         mLavaFloor = FindObjectOfType<LavaFloor>();
         //end ultispells, that are currently running
         if (isUltimateActive)

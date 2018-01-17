@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GrenadeExplosion : MonoBehaviour
+public class ScaleManipulation : MonoBehaviour
 {
 
     public AnimationCurve Curve;

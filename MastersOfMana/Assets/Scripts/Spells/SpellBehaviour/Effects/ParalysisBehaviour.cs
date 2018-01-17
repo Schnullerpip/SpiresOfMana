@@ -91,7 +91,7 @@ public class ParalysisBehaviour : A_EffectBehaviour
                 ConfirmedHitServer(p.movement.mRigidbody.worldCenterOfMass, caster, mHitRadius, mHitRange))
             {
                 //player was hit -> create an icecrystalsurrounding him/her
-                ParalysisBehaviour pb = PoolRegistry.GetInstance(gameObject, p.transform.position, caster.transform.rotation, 1, 1) .GetComponent<ParalysisBehaviour>();
+                ParalysisBehaviour pb = PoolRegistry.GetInstance(gameObject, p.transform.position, caster.transform.rotation, 2, 1) .GetComponent<ParalysisBehaviour>();
 
                 pb.gameObject.layer = LayerMask.NameToLayer("FrostPrison");
 

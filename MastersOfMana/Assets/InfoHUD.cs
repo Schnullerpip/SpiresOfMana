@@ -7,20 +7,29 @@ public class InfoHUD : MonoBehaviour
 {
 
     [SerializeField] private Image LavaRisesImage;
-    [SerializeField] private Image EnergyZone;
+    [SerializeField] private Image EnergyZoneImage;
 
     private LavaFloor lava;
     private EnergyZoneSystem ezs;
 
 	// Use this for initialization
 	void Start () {
-        //LavaRisesImage.gameObject.SetActive(false);
-        //EnergyZone.gameObject.SetActive(false);
-
 	    animationCurve.postWrapMode = WrapMode.PingPong;
         mCachedScaleLava = LavaRisesImage.transform.localScale;
-        mCachedScaleEnergy = EnergyZone.transform.localScale;
+        mCachedScaleEnergy = EnergyZoneImage.transform.localScale;
 	}
+
+    void Awake()
+    {
+        GameManager.OnRoundStarted += RoundStarted;
+        GameManager.OnRoundEnded += RoundEnded;
+    }
+
+    void OnDestroy()
+    {
+        GameManager.OnRoundStarted -= RoundStarted;
+        GameManager.OnRoundEnded -= RoundEnded;
+    }
 
     void OnEnable()
     {
@@ -62,11 +71,13 @@ public class InfoHUD : MonoBehaviour
     private void UninitializeLavaMotion()
     {
         lavaImageAaction = Idle;
+        LavaRisesImage.transform.localScale = mCachedScaleLava;
     }
 
     private void UninitializeEnergyMotion()
     {
         energyImageAction = Idle;
+        EnergyZoneImage.transform.localScale = mCachedScaleEnergy;
     }
 	
 	// Update is called once per frame
@@ -76,7 +87,7 @@ public class InfoHUD : MonoBehaviour
 	void Update ()
 	{
 	    lavaImageAaction(LavaRisesImage, mCachedScaleLava);
-	    energyImageAction(EnergyZone, mCachedScaleEnergy);
+	    energyImageAction(EnergyZoneImage, mCachedScaleEnergy);
 	}
 
     [Header("ImageAnimation")]
@@ -95,5 +106,15 @@ public class InfoHUD : MonoBehaviour
 
     private void Idle(Image image, Vector3 cachedScale) {}
 
+
+    private void RoundStarted()
+    {
+        gameObject.SetActive(true);
+    }
+
+    private void RoundEnded()
+    {
+        gameObject.SetActive(false);
+    }
 
 }

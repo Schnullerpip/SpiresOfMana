@@ -5,8 +5,8 @@ using UnityEngine.UI;
 public class PopupMenu : MonoBehaviour
 {
     public float scaleSpeed = 20;
-
-    public GameObject normalPanel, ultiPanel;
+    [Tooltip("Will automatically call Close() after x seconds. If this value is 0, the popup won't close automatically")]
+    public float closeAfter = 0;
 
     private bool mIsActive = false;
 
@@ -20,17 +20,18 @@ public class PopupMenu : MonoBehaviour
         return mIsActive;
     }
 
-    public void Open(bool isUlti)
+    public void Open()
     {
-        normalPanel.SetActive(!isUlti);
-        ultiPanel.SetActive(isUlti);
-
         mIsActive = true;
 
         //gameObject.SetActive(mIsActive);
 
         StopAllCoroutines();
         StartCoroutine(Scale(Vector3.one, scaleSpeed));
+        if(closeAfter > 0)
+        {
+            StartCoroutine(DeferredClose(closeAfter));
+        }
 
     }
 
@@ -41,6 +42,12 @@ public class PopupMenu : MonoBehaviour
 
         StopAllCoroutines();
         StartCoroutine(Scale(Vector3.zero, scaleSpeed));
+    }
+
+    IEnumerator DeferredClose(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        Close();
     }
 
     private void LateUpdate()

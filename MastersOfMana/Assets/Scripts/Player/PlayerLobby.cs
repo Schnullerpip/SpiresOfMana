@@ -34,9 +34,6 @@ public class PlayerLobby : NetworkBehaviour {
     public void CmdSetReady(bool ready)
     {
         isReady = ready;
-        if(ready)
-        {
-            GameManager.instance.playerReady();
-        }
+        GameManager.instance.playerReady(ready);
     }
 }

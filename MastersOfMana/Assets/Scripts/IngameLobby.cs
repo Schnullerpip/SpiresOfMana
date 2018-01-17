@@ -5,9 +5,6 @@ using Rewired;
 
 public class IngameLobby : MonoBehaviour 
 {
-    public Canvas canvas;
-    public GameObject spellselectionPanel;
-    public GameObject lobby;
     public GameObject cineCamPrefab;
 
     private void Awake()
@@ -19,22 +16,12 @@ public class IngameLobby : MonoBehaviour
 
     public void OnEnable()
     {
-        spellselectionPanel.SetActive(true);
-        lobby.gameObject.SetActive(false);
         GameManager.instance.cameraSystem.ActivateCamera(CameraSystem.Cameras.CinematicCamera);
     }
 
     void RoundStarted()
     {
         gameObject.SetActive(false);
-    }
-
-    public void SpellselectionFinished()
-    {
-		spellselectionPanel.GetComponent<SpellSelectionPanel> ().OnReady ();
-        spellselectionPanel.SetActive(false);
-        lobby.gameObject.SetActive(true);
-        GameManager.instance.localPlayer.playerLobby.CmdSetReady(true);
     }
 
     public void OnDestroy()

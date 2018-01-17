@@ -264,12 +264,19 @@ public class GameManager : MonoBehaviour
     }
 
     //called on the server only!
-    public void playerReady()
+    public void playerReady(bool isReady)
     {
-        mNumOfReadyPlayers++;
-        if(mNumOfReadyPlayers >= players.Count)
+        if (isReady)
         {
-            NetManager.instance.RpcTriggerRoundStarted();
+            mNumOfReadyPlayers++;
+            if (mNumOfReadyPlayers >= players.Count)
+            {
+                NetManager.instance.RpcTriggerRoundStarted();
+            }
+        }
+        else
+        {
+            mNumOfReadyPlayers--;
         }
     }
 

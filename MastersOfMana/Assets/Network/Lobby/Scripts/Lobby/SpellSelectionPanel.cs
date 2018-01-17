@@ -37,7 +37,17 @@ public class SpellSelectionPanel : MonoBehaviour {
         ValidateSpellSelection();
 
         //display the player first spell
+        SetDescriptionToFirstSpell();
+    }
+
+    private void SetDescriptionToFirstSpell()
+    {
         spellDescription.SetDescription(mPlayerSpells.spellslot[0].spell.spellDescription);
+    }
+
+    private void OnEnable()
+    {
+        SetDescriptionToFirstSpell();
     }
 
     private void FillContainer(RectTransform container, List<A_Spell> spells)

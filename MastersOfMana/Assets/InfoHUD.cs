@@ -10,7 +10,7 @@ public class InfoHUD : MonoBehaviour
     [SerializeField] private Image EnergyZoneImage;
 
     private LavaFloor lava;
-    private EnergyZoneSystem ezs;
+    private PlatformSpiresEffect[] platforms;
 
 	// Use this for initialization
 	void Start () {
@@ -37,24 +37,31 @@ public class InfoHUD : MonoBehaviour
         energyImageAction = Idle;
 
         lava = FindObjectOfType<LavaFloor>();
-        ezs = FindObjectOfType<EnergyZoneSystem>();
+        platforms = FindObjectsOfType<PlatformSpiresEffect>();
 
         //register on events
         lava.OnLavaWillRise += InitializeLavaMotion;
-        ezs.OnLoadingZoneWillSpawn += InitializeEnergyMotion;
-
         lava.OnLavaStoppedRising += UninitializeLavaMotion;
-        ezs.OnLoadingZoneDisappeared += UninitializeEnergyMotion;
+
+        foreach (var p in platforms)
+        {
+            p.OnLoadingZoneWillSpawn += InitializeEnergyMotion;
+            p.OnLoadingZoneDisappeared += UninitializeEnergyMotion;
+        }
+
     }
 
     void OnDisable()
     {
         //unregister on events
         lava.OnLavaWillRise -= InitializeLavaMotion;
-        ezs.OnLoadingZoneWillSpawn -= InitializeEnergyMotion;
-
         lava.OnLavaStoppedRising -= UninitializeLavaMotion;
-        ezs.OnLoadingZoneDisappeared -= UninitializeEnergyMotion;
+
+        foreach (var p in platforms)
+        {
+            p.OnLoadingZoneWillSpawn -= InitializeEnergyMotion;
+            p.OnLoadingZoneDisappeared -= UninitializeEnergyMotion;
+        }
     }
 
     //EVENTS
@@ -94,6 +101,15 @@ public class InfoHUD : MonoBehaviour
     public AnimationCurve animationCurve;
 
     private Vector3 mCachedScaleLava, mCachedScaleEnergy;
+
+    /// <summary>
+    /// this is the method, that animates the image/icon so it is noticed and stated as 'active'
+    /// whatever should happen to the image should be coded into this method!
+    /// 
+    /// right now the icon is scaled repeatedly to attract attention
+    /// </summary>
+    /// <param name="image">the image that is manipulated</param>
+    /// <param name="cachedScale"> the original scale of the image</param>
     private void AnimateImage(Image image, Vector3 cachedScale)
     {
         Vector3 scale = image.gameObject.transform.localScale;

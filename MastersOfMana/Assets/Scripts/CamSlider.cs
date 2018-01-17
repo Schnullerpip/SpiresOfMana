@@ -32,17 +32,25 @@ public class CamSlider : MonoBehaviour {
 	{
         if (mPlayer)
         {
+            //disable collision with player
             mPlayer.SetColliderIgnoreRaycast(true);
 
-            if (Physics.SphereCast(transform.position, wallDistance, transform.TransformPoint(mLocalEndPosition) - transform.position, out mHit, mMaxDistance))
+            //first check if the camera is already touching a collider
+            if(Physics.CheckSphere(transform.position, wallDistance))
+            {
+                cam.localPosition = Vector3.MoveTowards(cam.localPosition, Vector3.zero, inSpeed * Time.deltaTime);
+            }
+            //then check with a spherecast backwards if there is a wall
+            else if (Physics.SphereCast(transform.position, wallDistance, transform.TransformPoint(mLocalEndPosition) - transform.position, out mHit, mMaxDistance))
             {
                 cam.position = Vector3.MoveTowards(cam.position, mHit.point + mHit.normal * wallDistance, inSpeed * Time.deltaTime);
             }
+            //if not, no sliding necessary, move back to original position;
             else
             {
                 cam.localPosition = Vector3.MoveTowards(cam.localPosition, mLocalEndPosition, outSpeed * Time.deltaTime);
             }
-
+            //reenable collision with player
             mPlayer.SetColliderIgnoreRaycast(false);
         }
 	}

@@ -165,51 +165,51 @@ public class PlayerAim : NetworkBehaviour {
 	//	LookAt(mFocusedTarget.bounds.center);
 	//}
 
-	/// <summary>
-	/// Rotates the player towards the focus target.
-	/// </summary>
-	public void LookAt (Vector3 pointInWorldSpace)
-	{
-		//get the direction to the target, from the actual cameras position
-		Vector3 dirToTarget = (pointInWorldSpace /*+ mAimRefinement*/) - mCameraRig.GetCamera().transform.position;
+//	/// <summary>
+//	/// Rotates the player towards the focus target.
+//	/// </summary>
+//	public void LookAt (Vector3 pointInWorldSpace)
+//	{
+//		//get the direction to the target, from the actual cameras position
+//		Vector3 dirToTarget = (pointInWorldSpace /*+ mAimRefinement*/) - mCameraRig.GetCamera().transform.position;
 
-		//rotate towards the the direction of the target over multiple frames
-		//at short distances this is usually 1 or 2 frames, but when doing bigger rotations this should help with the view snapping effect
-		Quaternion targetRotation = Quaternion.RotateTowards (currentLookRotation, Quaternion.LookRotation (dirToTarget), focusAssistSpeed * Time.deltaTime);
+//		//rotate towards the the direction of the target over multiple frames
+//		//at short distances this is usually 1 or 2 frames, but when doing bigger rotations this should help with the view snapping effect
+//		Quaternion targetRotation = Quaternion.RotateTowards (currentLookRotation, Quaternion.LookRotation (dirToTarget), focusAssistSpeed * Time.deltaTime);
 
-		Vector3 rotationEuler = targetRotation.eulerAngles;
+//		Vector3 rotationEuler = targetRotation.eulerAngles;
 
-		//take the calculated quaternuon and split it into a rotation along the players y axis
-		transform.rotation = Quaternion.Euler(0, rotationEuler.y, 0);
-		//and the yAngle (which is the angle along the players x-Axis, maybe this name should be refactored?
-		yAngle = rotationEuler.x;
+//		//take the calculated quaternuon and split it into a rotation along the players y axis
+//		transform.rotation = Quaternion.Euler(0, rotationEuler.y, 0);
+//		//and the yAngle (which is the angle along the players x-Axis, maybe this name should be refactored?
+//		yAngle = rotationEuler.x;
 
-		//since quaterions go from 0 - 360 and then wrap around, this is a workaround to get the desired value between -maxYAngle and maxYAngle
-		if(yAngle > maxYAngle)
-		{
-			yAngle -= 360;
-		}
+//		//since quaterions go from 0 - 360 and then wrap around, this is a workaround to get the desired value between -maxYAngle and maxYAngle
+//		if(yAngle > maxYAngle)
+//		{
+//			yAngle -= 360;
+//		}
 
-		yAngle = Mathf.Clamp(yAngle, -maxYAngle, maxYAngle);
+//		yAngle = Mathf.Clamp(yAngle, -maxYAngle, maxYAngle);
 
-//		yAngle = Vector3.SignedAngle (transform.forward, dirToTarget, -transform.right);
-//		Quaternion lookRotation = Quaternion.LookRotation(dirToTarget, Vector3.up);
-//
-//		Vector3 lookRotationEuler = lookRotation.eulerAngles;
-//
-//		transform.rotation = Quaternion.Euler(0,lookRotation.y * Mathf.Rad2Deg,0);
+////		yAngle = Vector3.SignedAngle (transform.forward, dirToTarget, -transform.right);
+////		Quaternion lookRotation = Quaternion.LookRotation(dirToTarget, Vector3.up);
+////
+////		Vector3 lookRotationEuler = lookRotation.eulerAngles;
+////
+////		transform.rotation = Quaternion.Euler(0,lookRotation.y * Mathf.Rad2Deg,0);
 
-		/*
-		float yRotation = Mathf.Atan2 (dirToTarget.x, dirToTarget.z) * Mathf.Rad2Deg;
+//		/*
+//		float yRotation = Mathf.Atan2 (dirToTarget.x, dirToTarget.z) * Mathf.Rad2Deg;
 
-		Vector3 rot = transform.rotation.eulerAngles;
-		rot.y = Mathf.MoveTowardsAngle(rot.y, yRotation, 5);
-		transform.rotation = Quaternion.Euler(rot);
+//		Vector3 rot = transform.rotation.eulerAngles;
+//		rot.y = Mathf.MoveTowardsAngle(rot.y, yRotation, 5);
+//		transform.rotation = Quaternion.Euler(rot);
 
-//		transform.rotation = Quaternion.AngleAxis (Mathf.MoveTowards(transform.rotation.y, yRotation, 5), Vector3.up);
-		yAngle = Mathf.MoveTowardsAngle(yAngle, -Vector3.SignedAngle (transform.forward, dirToTarget, transform.right), 5);
-		*/
-	}
+////		transform.rotation = Quaternion.AngleAxis (Mathf.MoveTowards(transform.rotation.y, yRotation, 5), Vector3.up);
+	//	yAngle = Mathf.MoveTowardsAngle(yAngle, -Vector3.SignedAngle (transform.forward, dirToTarget, transform.right), 5);
+	//	*/
+	//}
 
 	/// <summary>
 	/// Determines whether the player is focused.

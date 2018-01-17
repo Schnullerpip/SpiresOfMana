@@ -10,6 +10,12 @@ public class RFX4_ShaderColorGradient : MonoBehaviour {
     public bool UseSharedMaterial;
     [HideInInspector] public float HUE = -1;
 
+    /*custom additions - Julian*/
+    public bool reverseAfterTime = false;
+    public float reverseAfterSeconds;
+
+
+
     [HideInInspector]
      public bool canUpdate;
     private Material mat;
@@ -73,10 +79,19 @@ public class RFX4_ShaderColorGradient : MonoBehaviour {
       
     }
 
+    private bool revert = false;
     private void Update()
     {
         if (mat == null) return;
         var time = Time.time - startTime;
+        if (!revert)
+        {
+            revert = reverseAfterTime && (time >= reverseAfterSeconds);
+        }
+        if (revert)
+        {
+            time = 1 - (time - reverseAfterSeconds);
+        }
         if (canUpdate)
         {
             var eval = Color.Evaluate(time / TimeMultiplier);
@@ -87,7 +102,8 @@ public class RFX4_ShaderColorGradient : MonoBehaviour {
             }
             mat.SetColor(propertyID, eval * startColor);
         }
-        if (time >= TimeMultiplier) {
+        if (!reverseAfterTime && ( time >= TimeMultiplier))
+        {
             if (IsLoop) startTime = Time.time;
             else canUpdate = false;
         }

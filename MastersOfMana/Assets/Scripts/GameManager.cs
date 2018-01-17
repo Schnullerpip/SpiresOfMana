@@ -139,9 +139,13 @@ public class GameManager : MonoBehaviour
         {
             OnGameStarted();
         }
+
         //Example for Arne TODO delete this! and the testfunctions!!1!
         mLavaFloor.OnLavaWillRise += ONLYFORTESTINGDELETETHIS;
         mLavaFloor.OnLavaStoppedRising += ONLYFORTESTINGDELETETHIS1;
+        var ezs = FindObjectOfType<EnergyZoneSystem>();
+        ezs.OnLoadingZoneWillSpawn += ONLYFORTESTINGDELETETHIS2;
+        ezs.OnLoadingZoneDisappeared += ONLYFORTESTINGDELETETHIS3;
     }
 
     // INGAME
@@ -405,11 +409,21 @@ public class GameManager : MonoBehaviour
 
     private void ONLYFORTESTINGDELETETHIS()
     {
-        Debug.Log("works");
+        Debug.Log("lava works");
     }
 
     private void ONLYFORTESTINGDELETETHIS1()
     {
-        Debug.Log("works too");
+        Debug.Log("lava end works too");
+    }
+
+    private void ONLYFORTESTINGDELETETHIS2()
+    {
+        Debug.Log("zone works");
+    }
+
+    private void ONLYFORTESTINGDELETETHIS3()
+    {
+        Debug.Log("zone end works too");
     }
 }

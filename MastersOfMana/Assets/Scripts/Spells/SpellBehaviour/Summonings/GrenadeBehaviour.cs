@@ -139,7 +139,7 @@ public class GrenadeBehaviour : A_ServerMoveableSummoning
 	void RpcExplosion(Vector3 position, Quaternion rotation)
 	{
         Instantiate(explosionPrefab,position,rotation);
-	    GameObject burningGround = PoolRegistry.GetInstance(grenadeLeftOver, position, Quaternion.identity, 2, 2, Pool.PoolingStrategy.OnMissRoundRobin, Pool.Activation.ReturnActivated);
+	    PoolRegistry.GetInstance(grenadeLeftOver, position, Quaternion.identity, 2, 2, Pool.PoolingStrategy.OnMissRoundRobin, Pool.Activation.ReturnActivated);
 	}
 
     [ClientRpc]

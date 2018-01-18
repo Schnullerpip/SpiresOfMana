@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class SpellDescription : MonoBehaviour {
 
     public Text spellName;
-    public Text flavorText;
+    public TextAppearingFX flavorText;
 	public StatsIndicator damageIndicator;
 	public StatsIndicator forceIndicator;
 	public StatsIndicator cooldownIndicator;
@@ -33,7 +33,7 @@ public class SpellDescription : MonoBehaviour {
 
         SetSpellName(mCurrentDescription.spellName);
 
-        flavorText.text = mCurrentDescription.flavorText;
+        flavorText.SetText(mCurrentDescription.flavorText);
 
         mStartFrame = mCurrentDescription.beginFrame;
         mEndFrame = mCurrentDescription.endFrame;

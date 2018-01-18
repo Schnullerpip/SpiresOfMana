@@ -9,6 +9,10 @@ public class ScaleManipulation : MonoBehaviour
     private float mTimeCount;
     private Vector3 mCachedScale;
 
+    [Tooltip("Will add a random number to the evaluation of the scalemanipulation, making it look a bit more uniquely when next to many other objects, that do the same")]
+    public bool IncludeRandomFactor;
+    private float mRandomFactor;
+
     void Awake()
     {
         mCachedScale = transform.localScale;
@@ -18,6 +22,11 @@ public class ScaleManipulation : MonoBehaviour
     {
         mTimeCount = 0;
         Scale();
+
+        if (IncludeRandomFactor)
+        {
+            mRandomFactor = Mathf.Clamp(Random.Range(-0.3f, 0.8f), 0.0f, 0.8f);
+        }
     }
 
 	// Update is called once per frame
@@ -26,15 +35,15 @@ public class ScaleManipulation : MonoBehaviour
 	    mTimeCount += Time.deltaTime;
 
 	    Scale();
-
 	}
 
     private void Scale()
     {
 	    Vector3 scale = mCachedScale;
-        scale.x *= Curve.Evaluate(mTimeCount);
-        scale.y *= Curve.Evaluate(mTimeCount);
-        scale.z *= Curve.Evaluate(mTimeCount);
+        var evaluationX = mTimeCount + (IncludeRandomFactor ? mRandomFactor : 0.0f);
+        scale.x *= Curve.Evaluate(evaluationX);
+        scale.y *= Curve.Evaluate(evaluationX);
+        scale.z *= Curve.Evaluate(evaluationX);
 	    transform.localScale = scale;
     }
 }

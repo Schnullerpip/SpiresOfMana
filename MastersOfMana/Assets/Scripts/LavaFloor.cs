@@ -164,7 +164,7 @@ public class LavaFloor : NetworkBehaviour
 
             PlayDamageSound(player.transform.position);
 
-            if (player.healthScript.IsAlive())
+            if (player.healthScript.IsAlive() && player.movement.GetMovementAllowed())
             {
                 //shoot the moveable into the sky to make it jump mario-ayayayayay-style
                 Vector3 vel = player.movement.mRigidbody.velocity;

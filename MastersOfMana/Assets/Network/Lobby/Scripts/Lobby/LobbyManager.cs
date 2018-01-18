@@ -28,6 +28,7 @@ namespace Prototype.NetworkLobby
 
         public bool isInGame = false;
         public bool isHost = false;
+        public bool isLocalGame = false;
 
         //Client numPlayers from NetworkManager is always 0, so we count (throught connect/destroy in LobbyPlayer) the number
         //of players, so that even client know how many player there is.
@@ -146,9 +147,12 @@ namespace Prototype.NetworkLobby
 
         public void DisplayIsConnecting()
         {
-            var _this = this;
+            mainMenu.infoPanel.Display("Connecting...", "Cancel", StopHostClbk);
+        }
 
-            mainMenu.infoPanel.Display("Connecting...", "Cancel", () => { _this.backDelegate(); });
+        public void DisplayUnableToConnect()
+        {
+            mainMenu.infoPanel.Display("Unable to connect to Server", "Cancel", () => { StopHost(); ; mainMenu.infoPanel.enabled = false; });
         }
 
         public void SetServerInfo(string status, string host)
@@ -240,6 +244,15 @@ namespace Prototype.NetworkLobby
             }
         }
 
+        public IEnumerator dropFailedConnectionAfter(float seconds)
+        {
+            yield return new WaitForSeconds(seconds);
+            if (!IsClientConnected())
+            {
+                DisplayUnableToConnect();
+            }
+        }
+
         public void StopClientClbk()
         {
             StopClient();
@@ -281,7 +294,13 @@ namespace Prototype.NetworkLobby
             SetServerInfo("Hosting", networkAddress);
         }
 
-		public override void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo)
+        public override void OnStartClient(NetworkClient client)
+        {
+            base.OnStartClient(client);
+        }
+
+
+        public override void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo)
 		{
 			base.OnMatchCreate(success, extendedInfo, matchInfo);
             mCurrentMatchID = (System.UInt64)matchInfo.networkId;
@@ -410,10 +429,13 @@ namespace Prototype.NetworkLobby
 
         public IEnumerator ServerCountdownCoroutine()
         {
-            //We actually need a Callback, otherwise the function doesnt work!
-            //Make sure this match is no longer shown in the serverlist!
-            NetworkMatch.BasicResponseDelegate del = BasicResponseDelegate;
-            matchMaker.SetMatchAttributes(matchInfo.networkId, false, 1, del);
+            if (!isLocalGame)//For local game we cannot and dont have to remove it from the serverlist
+            {
+                //Make sure this match is no longer shown in the serverlist!
+                //We actually need a Callback, otherwise the function doesnt work!
+                NetworkMatch.BasicResponseDelegate del = BasicResponseDelegate;
+                matchMaker.SetMatchAttributes(matchInfo.networkId, false, 1, del);
+            }
             float remainingTime = prematchCountdown;
             int floorTime = Mathf.FloorToInt(remainingTime);
 

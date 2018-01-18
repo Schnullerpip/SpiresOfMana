@@ -9,7 +9,7 @@ namespace Prototype.NetworkLobby
 {
     public class LobbyServerList : MonoBehaviour
     {
-        public LobbyManager lobbyManager;
+        private LobbyManager mLobbyManager;
 
         public RectTransform serverListRect;
         public GameObject serverEntryPrefab;
@@ -32,11 +32,25 @@ namespace Prototype.NetworkLobby
 
             noServerFound.SetActive(false);
 
-            lobbyManager = GameObject.FindObjectOfType<LobbyManager>();
+            mLobbyManager = LobbyManager.s_Singleton;
             RequestPage(0);
         }
 
-		public void OnGUIMatchList(bool success, string extendedInfo, List<MatchInfoSnapshot> matches)
+        public void OnClickJoin()
+        {
+            mLobbyManager.StopMatchMaker();
+            mLobbyManager.isHost = false;
+
+            mLobbyManager.StartClient();
+
+            mLobbyManager.backDelegate = mLobbyManager.StopClientClbk;
+            mLobbyManager.DisplayIsConnecting();
+
+            mLobbyManager.SetServerInfo("Connecting...", mLobbyManager.networkAddress);
+            StartCoroutine(mLobbyManager.dropFailedConnectionAfter(2));
+        }
+
+        public void OnGUIMatchList(bool success, string extendedInfo, List<MatchInfoSnapshot> matches)
 		{
 			if (matches.Count == 0)
 			{
@@ -58,7 +72,7 @@ namespace Prototype.NetworkLobby
 			{
                 GameObject o = Instantiate(serverEntryPrefab) as GameObject;
 
-				o.GetComponent<LobbyServerEntry>().Populate(matches[i], lobbyManager, (i % 2 == 0) ? OddServerColor : EvenServerColor);
+				o.GetComponent<LobbyServerEntry>().Populate(matches[i], mLobbyManager, (i % 2 == 0) ? OddServerColor : EvenServerColor);
 
 				o.transform.SetParent(serverListRect, false);
             }
@@ -79,7 +93,7 @@ namespace Prototype.NetworkLobby
         {
             previousPage = currentPage;
             currentPage = page;
-			lobbyManager.matchMaker.ListMatches(page, 6, "", true, 0, 0, OnGUIMatchList);
+			mLobbyManager.matchMaker.ListMatches(page, 6, "", true, 0, 0, OnGUIMatchList);
 		}
     }
 }

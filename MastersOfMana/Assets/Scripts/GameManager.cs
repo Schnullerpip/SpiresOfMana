@@ -77,7 +77,6 @@ public class GameManager : MonoBehaviour
         mNeededToGo = mInitialNeededToGo;
         mNumberOfGoMessages = 0;
         mNumberOfDeadPlayers = 0;
-        mNumOfReadyPlayers = 0;
         mLavaFloor = FindObjectOfType<LavaFloor>();
         //end ultispells, that are currently running
         if (isUltimateActive)
@@ -119,6 +118,16 @@ public class GameManager : MonoBehaviour
 
             NetManager.instance.RpcTriggerGameStarted();
         }
+    }
+
+    public static void ResetEvents()
+    {
+        OnGameStarted = null;
+        OnRoundStarted = null;
+        OnRoundEnded = null;
+        OnHostEndedRound = null;
+        OnLocalPlayerWon = null;
+        OnLocalPlayerDead = null;
     }
 
     public void TriggerGameStarted()
@@ -247,12 +256,19 @@ public class GameManager : MonoBehaviour
     }
 
     //called on the server only!
-    public void playerReady()
+    public void playerReady(bool isReady)
     {
-        mNumOfReadyPlayers++;
-        if(mNumOfReadyPlayers >= players.Count)
+        if (isReady)
         {
-            NetManager.instance.RpcTriggerRoundStarted();
+            mNumOfReadyPlayers++;
+            if (mNumOfReadyPlayers >= players.Count)
+            {
+                NetManager.instance.RpcTriggerRoundStarted();
+            }
+        }
+        else
+        {
+            mNumOfReadyPlayers--;
         }
     }
 
@@ -311,7 +327,7 @@ public class GameManager : MonoBehaviour
 		
     void ResetGame()
     {
-        localPlayer.enabled = true;
+        //localPlayer.enabled = true;
 		if (!(NetManager.instance.amIServer())) 
 		{
 			return;
@@ -322,7 +338,7 @@ public class GameManager : MonoBehaviour
 			players[i].movement.RpcSetPositionAndRotation(startPositions[i].position, startPositions[i].rotation);
 			players[i].movement.RpcSetVelocity(Vector3.zero);
             players[i].RpcSetInputState(InputStateSystem.InputStateID.Normal);
-			players[i].enabled = true;
+			//players[i].enabled = true;
 		}
     }
 

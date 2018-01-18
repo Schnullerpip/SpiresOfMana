@@ -12,6 +12,7 @@ public class EnergyZoneSystem : NetworkBehaviour
     public List<spawnZone> spawnables;
     public Transform spawnpointsParent;
 
+
     [System.Serializable]
     public struct spawnZone
     {
@@ -68,6 +69,11 @@ public class EnergyZoneSystem : NetworkBehaviour
         }
         StopAllCoroutines();
 	}
+
+    [Header("LoadingzoneAnnouncement")]
+    public float announcementTime;
+
+
 
     private IEnumerator SpawnZone(bool init = false)
     {

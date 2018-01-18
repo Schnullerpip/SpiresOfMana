@@ -54,7 +54,11 @@ public class LavaFloor : NetworkBehaviour
         GameManager.OnHostEndedRound += HostRoundEnded;
         GameManager.OnRoundEnded += RoundEnded;
         mInstanceCoroutineDictionary = new Dictionary<HealthScript, Coroutine>();
+        mCanSendSignal = true;
+        mStopSignaling = false;
+        mRiseCount = 4; //the first three keyframes need to be skipped
     }
+
 
     public void OnDisable()
     {
@@ -114,6 +118,11 @@ public class LavaFloor : NetworkBehaviour
         //newTrans.y = mStartHeight;
         //transform.position = newTrans;
         mRenderer.material.SetFloat(mEmissionID, mEmissionStart);
+
+        //Lava RAS
+        mCanSendSignal = true;
+        mStopSignaling = false;
+        mRiseCount = 4; //the first three keyframes need to be skipped
     }
 
     public void OnTriggerExit(Collider other)
@@ -155,7 +164,7 @@ public class LavaFloor : NetworkBehaviour
 
             PlayDamageSound(player.transform.position);
 
-            if (player.healthScript.IsAlive())
+            if (player.healthScript.IsAlive() && player.movement.GetMovementAllowed())
             {
                 //shoot the moveable into the sky to make it jump mario-ayayayayay-style
                 Vector3 vel = player.movement.mRigidbody.velocity;
@@ -204,6 +213,28 @@ public class LavaFloor : NetworkBehaviour
         burnSource.PlayOneShot(clip.audioClip);
     }
 
+    //-------------------Lava RAS---------------------------
+    [Header("Lava Rapid Alert System")]
+    [SerializeField] private float RAS_Offset;
+
+    private int mRiseCount = 4;
+    private bool mCanSendSignal, mStopSignaling;
+
+
+    public delegate void LavaWillRiseSoon();
+    /// <summary>
+    /// everyone, who wants to be informed when the lava will rise soon, should register on this event
+    /// </summary>
+    public event LavaWillRiseSoon OnLavaWillRise;
+
+    public delegate void LavaStoppedRising();
+    /// <summary>
+    /// everyone, who wants to be informed when the lava stopped rising, should register on this event
+    /// </summary>
+    public event LavaStoppedRising OnLavaStoppedRising;
+    //------------------------------------------------------
+
+
     private void FixedUpdate()
     {
         if (isServer && mLavaActive)
@@ -221,14 +252,59 @@ public class LavaFloor : NetworkBehaviour
 
             emissionEval = emission.Evaluate(mRunTime);
 
+            //lava RAS (warning when lava is about to rise - look into the future according to RAS_Offset
+            //enables the detection, so only oe event is send whenever the detection returns positive
+            if (!mStopSignaling && (mRunTime >= emission.keys[mRiseCount].time))
+            {
+                mCanSendSignal = true;
+                //inform listeners, that lava has stopped rising
+                if (OnLavaStoppedRising != null)
+                {
+                    RpcTriggerOnLavaStoppedRising();
+                }
+
+                //reinitialize the detection
+                if (mRiseCount + 4 >= emission.keys.Length)
+                {
+                    mStopSignaling = true;
+                }
+                else
+                {
+                    mRiseCount += 4;
+                }
+            }
+            //detects wether the lava will rise soon and informs the listeners
+            if (mCanSendSignal && ((int)emissionEval == 0) && (emission.Evaluate(mRunTime + RAS_Offset) > 0))
+            {
+                mCanSendSignal = false;
+                //looking into the future by RAS_Offset we actually found, that the lava will rise! -> inform everyone, that needs to know
+                if (OnLavaWillRise != null)
+                {
+                    RpcTriggerOnLavaWillRiseSoon();
+                }
+            }
+
             if(mNextOutbreakIndex < emission.length && mRunTime > emission.keys[mNextOutbreakIndex].time)
             {
                 mNextOutbreakIndex += 4;
                 RpcOutbreak();
             }
 
+
             mRunTime += Time.fixedDeltaTime;
         }
+    }
+
+    [ClientRpc]
+    private void RpcTriggerOnLavaWillRiseSoon()
+    {
+        OnLavaWillRise();
+    }
+
+    [ClientRpc]
+    private void RpcTriggerOnLavaStoppedRising()
+    {
+        OnLavaStoppedRising();
     }
 
     private void EmissionHook(float emissionValue)

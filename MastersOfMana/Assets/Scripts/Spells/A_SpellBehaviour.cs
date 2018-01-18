@@ -171,22 +171,23 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
     }
 
 	[System.Serializable]
-	public struct ExplosionFalloff
+	public class ExplosionFalloff
 	{
 		public float force;
 		public int damage;
 		public AnimationCurve falloff;
 
-		public float EvaluateForce(float t)
+		public virtual float EvaluateForce(float t)
 		{
 			return falloff.Evaluate(t) * force;
 		}
 
-		public int EvaluateDamage(float t)
+		public virtual int EvaluateDamage(float t)
 		{
 			return Mathf.RoundToInt(falloff.Evaluate(t) * damage);
 		}
 	}
+
 
 	/// <summary>
 	/// Applies an explosion with the provided parameters.
@@ -195,7 +196,7 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 	/// <param name="radius">Radius.</param>
 	/// <param name="explFalloff">Explosion falloff.</param>
 	/// <param name="excluded">A list of Healthscript that should be skipped. eg these already got hit.</param>
-	protected void ExplosionDamage(Vector3 explosionOrigin, float radius, ExplosionFalloff explFalloff, List<HealthScript> excluded = null, float externalDamageFactor = 1.0f, float externalForceFactor = 1.0f)
+	protected void ExplosionDamage(Vector3 explosionOrigin, float radius, ExplosionFalloff explFalloff, List<HealthScript> excluded = null, float externalDamageFactor = 1.0f, float externalForceFactor = 1.0f, int min_damage = 0, int max_damage = int.MaxValue)
 	{
 
 		//overlap a sphere at the hit position
@@ -291,9 +292,9 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 		}
 	
 		//this is done after the overlapshere loop, that way, walls and other obstacles where able to block the explosion before dying
-		for (int i = 0; i < cachedHealth.Count; i++) 
+		for (int i = 0; i < cachedHealth.Count; i++)
 		{
-			cachedHealth[i].TakeDamage(Mathf.RoundToInt(explFalloff.EvaluateDamage(affectFactors[i]) * externalDamageFactor), GetType());
+			cachedHealth[i].TakeDamage(Mathf.Clamp(Mathf.RoundToInt(explFalloff.EvaluateDamage(affectFactors[i])*externalDamageFactor), min_damage, max_damage), GetType());
 		}
 	}
 

@@ -177,6 +177,11 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         }
     }
 
+    private void OnDestroy()
+    {
+        GameManager.OnRoundEnded -= EndSpell;
+    }
+
     public override void OnStartClient()
     {
         base.OnStartClient();

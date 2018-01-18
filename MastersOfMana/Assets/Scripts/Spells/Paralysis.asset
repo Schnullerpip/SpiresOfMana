@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Name: Paralysis
   m_EditorClassIdentifier: 
   icon: {fileID: 21300008, guid: 2acb9c0903a4e4b7ba02e382ff5afdd1, type: 3}
-  coolDownInSeconds: 13
+  coolDownInSeconds: 12
   castDurationInSeconds: 0
   resolveDurationInSeconds: 0
   castAnimationID: 0
@@ -21,7 +21,10 @@ MonoBehaviour:
     force: 0
     cooldown: 1
     spellName: Frost Prison
-    beginFrame: 2419
+    flavorText: "Freezing vegetables really makes them sustain a lot of damage and
+      time. Questions? Well indeed, it works on people too, but please don\u2019t...
+      Aaargh!.\n- Bulba, former Professor on the Academy for Arcane Mastery"
+    beginFrame: 2420
     endFrame: 2639
   spellID: 11
   SpellBehaviours:

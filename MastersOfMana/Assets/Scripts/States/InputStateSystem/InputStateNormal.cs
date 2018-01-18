@@ -66,6 +66,10 @@ public class InputStateNormal : A_InputState
 				TogglePreview();
 				ChooseSpell(3);
 			}
+            else
+            {
+                player.GetPlayerSpells().PlayFailSFX();
+            }
 		}
 		else if(playerInput.GetButtonUp("Ultimate") && mPreviewActive)
 		{

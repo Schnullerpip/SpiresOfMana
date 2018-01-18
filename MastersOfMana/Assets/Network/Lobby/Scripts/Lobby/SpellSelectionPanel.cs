@@ -9,29 +9,68 @@ public class SpellSelectionPanel : MonoBehaviour {
     public SpellRegistry spellregistry;
     public RectTransform normalSpellList;
     public RectTransform ultimateSpellList;
-    public Button spellButtonPrefab;
+    public UISpellButton spellButtonPrefab;
     public SpellDescription spellDescription;
+    public ReadyButton readyButton;
     private PlayerSpells mPlayerSpells;
     private List<A_Spell> mPlayerSpellList = new List<A_Spell>();
     private HUD mHUD;
     private List<Button> spellButtons = new List<Button>();
     private Dictionary<A_Spell, Button> mSpellButtonDictionary = new Dictionary<A_Spell, Button>();
 
-    public PopupMenu popupMenu;
-
+    public SpellAssignmentPopup popupMenu;
+    public PopupMenu unableToAssignPopup;
     public RectTransform[] selectionHighlights;
 
     private Rewired.Player playerInput;
+    private PlayerLobby lobbyPlayer;
+
+    private UISpellButton mCurrentHightlighted = null;
 
     private void Start()
     {
         playerInput = GameManager.instance.localPlayer.GetRewired();
         mPlayerSpells = GameManager.instance.localPlayer.GetPlayerSpells();
+        lobbyPlayer = GameManager.instance.localPlayer.playerLobby;
         mPlayerSpellList = GetPlayerSpellList();
         mHUD = GetComponentInParent<HUD>();
         FillContainer(normalSpellList, spellregistry.spellList);
         FillContainer(ultimateSpellList, spellregistry.ultimateSpellList);
         ValidateSpellSelection();
+
+        //display the player first spell
+        SetDescriptionToFirstSpell();
+    }
+
+    private void SetDescriptionToFirstSpell()
+    {
+        A_Spell aSpell = mPlayerSpells.spellslot[0].spell;
+
+        spellDescription.SetDescription(aSpell.spellDescription);
+
+        mCurrentHightlighted = mSpellButtonDictionary[aSpell].GetComponent<UISpellButton>();
+
+        SetDescriptionHighlight(mCurrentHightlighted);
+    }
+
+    private void SetDescriptionHighlight(UISpellButton spellButton)
+    {
+        mCurrentHightlighted.SetIsChosen(false);
+        mCurrentHightlighted = spellButton;
+        mCurrentHightlighted.SetIsChosen(true);
+    }
+
+    private void OnEnable()
+    {
+        if(mCurrentHightlighted != null)
+        {
+			SetDescriptionToFirstSpell();
+        }
+    }
+
+    private void OnDisable()
+    {
+        mCurrentHightlighted.SetIsChosen(false);
     }
 
     private void FillContainer(RectTransform container, List<A_Spell> spells)
@@ -39,12 +78,16 @@ public class SpellSelectionPanel : MonoBehaviour {
         for (int i = 0; i < spells.Count; i++)
         {
             A_Spell spell = spells[i];
-            Button spellButton = GameObject.Instantiate(spellButtonPrefab);
-            spellButton.name += " " + spell.name;
-            UISpellButton spellButtonScript = spellButton.gameObject.AddComponent<UISpellButton>();
-            spellButtonScript.isUltimate = spells[i].spellID >= 100; //This relies on the fact, that all ultimates get an ID assigned by the spellregistry that's higher than 100!
+            UISpellButton spellButtonScript = GameObject.Instantiate(spellButtonPrefab);
+            Button spellButton = spellButtonScript.gameObject.GetComponent<Button>();
+			spellButton.name += " " + spell.name;
+            if(spells[i].spellID >= 100) //This relies on the fact, that all ultimates get an ID assigned by the spellregistry that's higher than 100!
+            {
+                spellButtonScript.isUltimate = true;
+                spellButton.onClick.AddListener(()=>OnHoverClick(3, true));
+            }
             spellButtonScript.spell = spells[i];
-            Image image = spellButton.transform.GetChild(0).GetComponent<Image>();
+            Image image = spellButton.transform.GetChild(1).GetComponent<Image>();
             if (image)
             {
                 image.sprite = spell.icon;
@@ -89,7 +132,12 @@ public class SpellSelectionPanel : MonoBehaviour {
     private void OnPointerEnterSpellButton(UISpellButton spellButton)
     {
         spellDescription.SetDescription(spellButton.spell.spellDescription);
-        popupMenu.Open(spellButton.isUltimate);
+        SetDescriptionHighlight(spellButton);
+
+        if(!GameManager.instance.localPlayer.playerLobby.isReady)
+        {
+            popupMenu.Open(spellButton.isUltimate);
+        }
     }
 
     private void OnPointerExitSpellButton(UISpellButton spellButton)
@@ -186,6 +234,7 @@ public class SpellSelectionPanel : MonoBehaviour {
             selectionHighlights[i].SetParent(mSpellButtonDictionary[mPlayerSpellList[i]].transform, false);
             selectionHighlights[i].anchoredPosition = Vector2.zero;
         }
+
     }
 
     public enum OnSelectDirection
@@ -223,10 +272,25 @@ public class SpellSelectionPanel : MonoBehaviour {
         ValidateSpellSelection();
     }
 
+    public void OnReadyButtonClicked()
+    {
+        if(lobbyPlayer.isReady)
+        {
+            readyButton.SetReadyState(lobbyPlayer.isReady); //We have to do this here as the ready status is set via Command and might cause timing issues if we try to set it after OnUnready
+            OnUnready();
+        }
+        else
+        {
+            readyButton.SetReadyState(lobbyPlayer.isReady); //We have to do this here as the ready status is set via Command and might cause timing issues if we try to set it after OnReady
+            OnReady();
+        }
+    }
+
     public void OnReady()
     {
+        lobbyPlayer.CmdSetReady(true);
         ValidateSpellSelection();
-        //Save Spells to PlayerPrefs
+        //!Save Spells to PlayerPrefs
         PlayerPrefs.SetInt("SpellSlot0", mPlayerSpellList[0].spellID);
         PlayerPrefs.SetInt("SpellSlot1", mPlayerSpellList[1].spellID);
         PlayerPrefs.SetInt("SpellSlot2", mPlayerSpellList[2].spellID);
@@ -235,6 +299,11 @@ public class SpellSelectionPanel : MonoBehaviour {
         mPlayerSpells.CmdUpdateSpells(mPlayerSpellList[0].spellID, mPlayerSpellList[1].spellID, mPlayerSpellList[2].spellID, mPlayerSpellList[3].spellID);
         mPlayerSpells.UpdateSpells(mPlayerSpellList);
         mHUD.GetSpellHUD().UpdateSpellIcons();
+    }
+
+    private void OnUnready()
+    {
+        lobbyPlayer.CmdSetReady(false);
     }
 
     private void Update()
@@ -261,9 +330,16 @@ public class SpellSelectionPanel : MonoBehaviour {
     {
         var gameObjectHoveredOver = ((Rewired.Integration.UnityUI.RewiredStandaloneInputModule)EventSystem.current.currentInputModule).pointerEventDataOnClick.pointerEnter;
         UISpellButton spellButtonScript = gameObjectHoveredOver.GetComponentInParent<UISpellButton>();
-        if (spellButtonScript && spellButtonScript.isUltimate == needsToBeUltimate)
+        if (spellButtonScript)
         {
-            TradeSpells(spellButtonScript.spell, inputIndex);
+            if (GameManager.instance.localPlayer.playerLobby.isReady)
+            {
+                unableToAssignPopup.Open();
+            }
+            else if (spellButtonScript.isUltimate == needsToBeUltimate)
+            {
+                TradeSpells(spellButtonScript.spell, inputIndex);
+            }
         }
     }
 }

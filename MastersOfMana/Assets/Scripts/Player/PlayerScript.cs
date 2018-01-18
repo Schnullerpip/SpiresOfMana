@@ -248,7 +248,7 @@ public class PlayerScript : NetworkBehaviour
     public void SpawnSpectator()
     {
         specatorCoroutine = StartCoroutine(DramaticDeathPause());
-        this.enabled = false;
+        //this.enabled = false;
     }
 
     private IEnumerator DramaticDeathPause()

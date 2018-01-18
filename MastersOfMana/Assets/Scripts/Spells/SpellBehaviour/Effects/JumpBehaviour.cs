@@ -11,6 +11,8 @@ public class JumpBehaviour : A_EffectBehaviour
 	public float pullInForce = 8.0f;
     public float lifeTime = 0.0f;
 
+    public float additionalUpForce = 0.4f;
+
 	public GameObject vacuumPrefab;
 
 	public override void Preview (PlayerScript caster)
@@ -60,9 +62,11 @@ public class JumpBehaviour : A_EffectBehaviour
 		velocity.y = jumpForce;
         caster.movement.RpcSetVelocity(velocity);
 
-		caster.StartCoroutine(DelayedImpulse(implosionDelay, caster.transform.position, caster.transform));
-        jumpBehaviour.RpcImplosion(caster.transform.position, caster.transform.rotation);
-		Instantiate(vacuumPrefab, caster.transform.position, caster.transform.rotation);
+        Vector3 impulsePos = caster.transform.position + Vector3.up * additionalUpForce;
+
+        caster.StartCoroutine(DelayedImpulse(implosionDelay, impulsePos, caster.transform));
+        jumpBehaviour.RpcImplosion(impulsePos, caster.transform.rotation);
+        Instantiate(vacuumPrefab, impulsePos, caster.transform.rotation);
 	}
 
 	[ClientRpc]
@@ -86,7 +90,7 @@ public class JumpBehaviour : A_EffectBehaviour
 			{
 				cachedRigid.Add(c.attachedRigidbody);
 
-				Vector3 direction = position - c.attachedRigidbody.transform.position + Vector3.up * 0.2f;
+                Vector3 direction = position - c.attachedRigidbody.transform.position;
 				direction.Normalize();
 				direction *= pullInForce;
 

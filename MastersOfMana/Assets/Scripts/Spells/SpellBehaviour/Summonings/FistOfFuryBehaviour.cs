@@ -12,10 +12,11 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     //will store the transform.position of the caster when he casted - the difference between that and he collisionpoint will be a factor to the resulting damage
     [SyncVar]
     private Vector3 castPosition;
-    [SerializeField] private float mExplosionForce;
     [SerializeField] private ExplosionFalloff mExplosionFalloff;
     [SerializeField] private float mExplosionRadius;
     [SerializeField] private float mMaxDistance;
+    [SerializeField] private int mMinDamage;
+    [SerializeField] private int mMaxDamage;
 
     [Header("Visuals")]
     [SerializeField] private GameObject explosionPrefab;
@@ -105,11 +106,11 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         {
             //unparent it
             transform.parent = null;
-            caster.SetColliderIgnoreRaycast(true);
 
             //apply Explosion force and damage
-            ExplosionDamage(caster.transform.position + Vector3.up * 0.8f/*so the terrain is not hit*/, mExplosionRadius, mExplosionFalloff, new List<HealthScript>(), resultingHeightFactor, 1 + resultingHeightFactor);
-
+            caster.SetColliderIgnoreRaycast(true);
+            ExplosionDamage(caster.transform.position + Vector3.up * 0.3f/*so the terrain is not hit*/,
+                mExplosionRadius, mExplosionFalloff, new List<HealthScript>(), resultingHeightFactor, 1 + resultingHeightFactor, mMinDamage, mMaxDamage);
             caster.SetColliderIgnoreRaycast(false);
 
             //remove the fistoffury object on all clients

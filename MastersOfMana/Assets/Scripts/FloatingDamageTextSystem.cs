@@ -48,12 +48,14 @@ public class FloatingDamageTextSystem : MonoBehaviour {
     {
         player.healthScript.OnDamageTaken += CreateDamageText;
         player.healthScript.OnHealTaken += CreateHealText;
+        GameManager.OnRoundStarted += Clear;
     }
 
     public void UnsubscribeFromEvents()
     {
         player.healthScript.OnDamageTaken -= CreateDamageText;
         player.healthScript.OnHealTaken -= CreateHealText;
+        GameManager.OnRoundStarted -= Clear;
     }
 
     public void CreateDamageText(int damage)
@@ -83,5 +85,14 @@ public class FloatingDamageTextSystem : MonoBehaviour {
             mCurrentObj = 0;
         }
         return obj;
+    }
+
+    void Clear()
+    {
+        foreach(FloatingDamageText text in mTextPool)
+        {
+            text.gameObject.SetActive(false);
+        }
+        mCurrentObj = 0;
     }
 }

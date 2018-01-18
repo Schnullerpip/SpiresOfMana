@@ -150,13 +150,13 @@ public class SpellHUD : MonoBehaviour
 
         if(ultimateEnergyPoints < maximumUltimateEnergyPoints)
         {
-            ultimateEnergyProgess.color = ultimateEnergyDefaultColor;
-            ultimateEnergyProgess.fillAmount = ultimateEnergyPoints / maximumUltimateEnergyPoints;
+            //ultimateEnergyProgess.color = ultimateEnergyDefaultColor;
+            ultimateEnergyProgess.fillAmount = 1 - (ultimateEnergyPoints / maximumUltimateEnergyPoints);
         }
         else
         {
-            ultimateEnergyProgess.fillAmount = 1;
-            ultimateEnergyProgess.color = ultimateEnergyFullColor;
+            ultimateEnergyProgess.fillAmount = 0;
+            //ultimateEnergyProgess.color = ultimateEnergyFullColor;
         }
     }
 

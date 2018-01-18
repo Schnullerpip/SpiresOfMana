@@ -82,20 +82,7 @@ namespace Prototype.NetworkLobby
             lobbyManager.isHost = true;
             lobbyManager.isLocalGame = true;
             lobbyManager.StartHost();
-        }
-
-        public void OnClickJoin()
-        {
-            lobbyManager.isHost = false;
-            lobbyManager.ChangeTo(lobbyPanel);
-
-            lobbyManager.StartClient();
-
-            lobbyManager.backDelegate = lobbyManager.StopClientClbk;
-            lobbyManager.DisplayIsConnecting();
-
-            lobbyManager.SetServerInfo("Connecting...", lobbyManager.networkAddress);
-        }
+        } 
 
         public void OnClickDedicated()
         {
@@ -144,7 +131,7 @@ namespace Prototype.NetworkLobby
         {
             if (Input.GetKeyDown(KeyCode.Return))
             {
-                OnClickJoin();
+                //OnClickJoin();
             }
         }
 

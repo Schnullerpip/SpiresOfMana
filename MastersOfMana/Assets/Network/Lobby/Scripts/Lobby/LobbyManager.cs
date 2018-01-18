@@ -147,9 +147,12 @@ namespace Prototype.NetworkLobby
 
         public void DisplayIsConnecting()
         {
-            var _this = this;
-
             mainMenu.infoPanel.Display("Connecting...", "Cancel", StopHostClbk);
+        }
+
+        public void DisplayUnableToConnect()
+        {
+            mainMenu.infoPanel.Display("Unable to connect to Server", "Cancel", () => { StopHost(); ; mainMenu.infoPanel.enabled = false; });
         }
 
         public void SetServerInfo(string status, string host)
@@ -241,6 +244,15 @@ namespace Prototype.NetworkLobby
             }
         }
 
+        public IEnumerator dropFailedConnectionAfter(float seconds)
+        {
+            yield return new WaitForSeconds(seconds);
+            if (!IsClientConnected())
+            {
+                DisplayUnableToConnect();
+            }
+        }
+
         public void StopClientClbk()
         {
             StopClient();
@@ -282,7 +294,13 @@ namespace Prototype.NetworkLobby
             SetServerInfo("Hosting", networkAddress);
         }
 
-		public override void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo)
+        public override void OnStartClient(NetworkClient client)
+        {
+            base.OnStartClient(client);
+        }
+
+
+        public override void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo)
 		{
 			base.OnMatchCreate(success, extendedInfo, matchInfo);
             mCurrentMatchID = (System.UInt64)matchInfo.networkId;

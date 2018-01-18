@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class SpellDescription : MonoBehaviour {
 
     public Text spellName;
+    public Text flavorText;
 	public StatsIndicator damageIndicator;
 	public StatsIndicator forceIndicator;
 	public StatsIndicator cooldownIndicator;
@@ -31,6 +32,9 @@ public class SpellDescription : MonoBehaviour {
 		cooldownIndicator.SetIntensityLevel (mCurrentDescription.cooldown);
 
         SetSpellName(mCurrentDescription.spellName);
+
+        flavorText.text = mCurrentDescription.flavorText;
+
         mStartFrame = mCurrentDescription.beginFrame;
         mEndFrame = mCurrentDescription.endFrame;
         if (!previewPlayer.isPlaying)

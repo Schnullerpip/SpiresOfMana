@@ -13,7 +13,11 @@ public class LoadingZoneUltimate : LoadingZone
         var spells = player.GetComponentInParent<PlayerSpells>();
         while (enabled)
         {
-			yield return new WaitForSeconds(tickDuration);
+            if(spells.ultimateEnergy > 0)
+            {
+				yield return new WaitForSeconds(tickDuration);            
+            }
+
             if(!GameManager.instance.isUltimateActive)
             {
                 spells.ultimateEnergy += ultimateEnergyPerSecond;

@@ -25,6 +25,8 @@ public class SpellSelectionPanel : MonoBehaviour {
     private Rewired.Player playerInput;
     private PlayerLobby lobbyPlayer;
 
+    private UISpellButton mCurrentHightlighted = null;
+
     private void Start()
     {
         playerInput = GameManager.instance.localPlayer.GetRewired();
@@ -37,7 +39,38 @@ public class SpellSelectionPanel : MonoBehaviour {
         ValidateSpellSelection();
 
         //display the player first spell
-        spellDescription.SetDescription(mPlayerSpells.spellslot[0].spell.spellDescription);
+        SetDescriptionToFirstSpell();
+    }
+
+    private void SetDescriptionToFirstSpell()
+    {
+        A_Spell aSpell = mPlayerSpells.spellslot[0].spell;
+
+        spellDescription.SetDescription(aSpell.spellDescription);
+
+        mCurrentHightlighted = mSpellButtonDictionary[aSpell].GetComponent<UISpellButton>();
+
+        SetDescriptionHighlight(mCurrentHightlighted);
+    }
+
+    private void SetDescriptionHighlight(UISpellButton spellButton)
+    {
+        mCurrentHightlighted.SetIsChosen(false);
+        mCurrentHightlighted = spellButton;
+        mCurrentHightlighted.SetIsChosen(true);
+    }
+
+    private void OnEnable()
+    {
+        if(mCurrentHightlighted != null)
+        {
+			SetDescriptionToFirstSpell();
+        }
+    }
+
+    private void OnDisable()
+    {
+        mCurrentHightlighted.SetIsChosen(false);
     }
 
     private void FillContainer(RectTransform container, List<A_Spell> spells)
@@ -99,6 +132,8 @@ public class SpellSelectionPanel : MonoBehaviour {
     private void OnPointerEnterSpellButton(UISpellButton spellButton)
     {
         spellDescription.SetDescription(spellButton.spell.spellDescription);
+        SetDescriptionHighlight(spellButton);
+
         if(!GameManager.instance.localPlayer.playerLobby.isReady)
         {
             popupMenu.Open(spellButton.isUltimate);

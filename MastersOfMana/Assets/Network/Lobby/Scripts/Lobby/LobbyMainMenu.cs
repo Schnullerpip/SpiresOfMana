@@ -22,6 +22,7 @@ namespace Prototype.NetworkLobby
         public InputField playernameField;
         private int playerColorIndex = 0;
         public Image playerColor;
+        public LoadingScreen loadingScreen;
 
         public InputField matchNameInput;
 		public InputField ipInput;

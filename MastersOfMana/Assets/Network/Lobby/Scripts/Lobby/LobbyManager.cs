@@ -67,6 +67,17 @@ namespace Prototype.NetworkLobby
             DontDestroyOnLoad(gameObject);
             SetServerInfo("Offline", "None");
             SetCancelDelegate(mainMenu.Quit);
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        void OnDestroy()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+
+        public void OnSceneLoaded(Scene scene, LoadSceneMode loadMode)
+        {
+            mainMenu.loadingScreen.FadeOut();
         }
 
         public override void OnLobbyClientSceneChanged(NetworkConnection conn)
@@ -445,7 +456,10 @@ namespace Prototype.NetworkLobby
 
                 remainingTime -= Time.deltaTime;
                 int newFloorTime = Mathf.FloorToInt(remainingTime);
-
+                if(floorTime == 0)
+                {
+                    mainMenu.loadingScreen.gameObject.SetActive(true);
+                }
                 if (newFloorTime != floorTime)
                 {//to avoid flooding the network of message, we only send a notice to client when the number of plain seconds change.
                     floorTime = newFloorTime;
@@ -470,7 +484,6 @@ namespace Prototype.NetworkLobby
                     GameManager.instance.AddPlayerMessageCounter();
                 }
             }
-
             ServerChangeScene(playScene);
         }
 

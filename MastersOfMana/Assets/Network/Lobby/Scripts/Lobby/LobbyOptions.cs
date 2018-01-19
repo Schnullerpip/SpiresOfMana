@@ -21,6 +21,10 @@ public class LobbyOptions : MonoBehaviour
     private Dictionary<string, int> mReverseResolutionDropdownMatch = new Dictionary<string,int>();
     private bool isInitialized = false;
     private bool valuesSaved = false;
+    //private float mInitialMusicVolume;
+    //private float mInitialSfxVolume;
+    //private bool mInitialMuted;
+    //private int mInitialDropdownValue;
 
     /// <summary>
     /// Applies the audio settings. 
@@ -38,7 +42,6 @@ public class LobbyOptions : MonoBehaviour
 
     public void SetPlayerMouseSensitivity()
     {
-        PlayerPrefs.SetFloat("mouse", mouseSensitivity.value);
         if(GameManager.instance.localPlayer)
         {
             GameManager.instance.localPlayer.aim.SetSensitivity(mouseSensitivity.value);
@@ -90,6 +93,7 @@ public class LobbyOptions : MonoBehaviour
         PlayerPrefs.SetFloat("musicVol", musicSlider.value);
         PlayerPrefs.SetFloat("sfxVol", sfxSlider.value);
         PlayerPrefsExtended.SetBool("muted", mutedToggle.isOn);
+        PlayerPrefs.SetFloat("mouse", mouseSensitivity.value);
         PlayerPrefs.Save();
         if (GameManager.instance.localPlayer)
         {
@@ -154,8 +158,36 @@ public class LobbyOptions : MonoBehaviour
         //Revert back to initial values!
         if(!valuesSaved)
         {
-            OnBack();
+            RestoreInitialValues();
         }
+    }
+
+    private void RestoreInitialValues()
+    {
+        musicSlider.value = PlayerPrefs.GetFloat("musicVol", 1);
+        mixer.SetFloat("musicVol", Extensions.LinearToDecibel(musicSlider.value));
+
+        sfxSlider.value = PlayerPrefs.GetFloat("sfxVol", 1);
+        mixer.SetFloat("sfxVol", Extensions.LinearToDecibel(sfxSlider.value));
+
+        mutedToggle.isOn = PlayerPrefsExtended.GetBool("muted", false);
+        mixer.SetFloat("musicVol", Extensions.LinearToDecibel(mutedToggle.isOn ? 0 : musicSlider.value));
+        mixer.SetFloat("sfxVol", Extensions.LinearToDecibel(mutedToggle.isOn ? 0 : sfxSlider.value));
+
+        mouseSensitivity.value = PlayerPrefs.GetFloat("mouse", 0.5f);
+
+        string screenKey = Screen.width + " x " + Screen.height;
+        if (mReverseResolutionDropdownMatch.ContainsKey(screenKey))
+        {
+            resolutionDropdown.value = mReverseResolutionDropdownMatch[Screen.width + " x " + Screen.height];
+        }
+        else
+        {
+            string resolution = Screen.currentResolution.ToString();
+            resolution = resolution.Remove(resolution.LastIndexOf('@') - 1);
+            resolutionDropdown.value = mReverseResolutionDropdownMatch[resolution];
+        }
+        fullscreenToggle.isOn = Screen.fullScreen;
     }
 }
 

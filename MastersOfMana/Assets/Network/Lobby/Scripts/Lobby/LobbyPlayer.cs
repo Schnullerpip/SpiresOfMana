@@ -307,6 +307,10 @@ namespace Prototype.NetworkLobby
         [ClientRpc]
         public void RpcUpdateCountdown(int countdown)
         {
+            if (countdown == 0)
+            {
+                LobbyManager.s_Singleton.mainMenu.loadingScreen.gameObject.SetActive(true);
+            }
             LobbyManager.s_Singleton.mainMenu.countdownPanel.UIText.text = "Match Starting in " + countdown;
             LobbyManager.s_Singleton.mainMenu.countdownPanel.gameObject.SetActive(countdown != 0);
         }

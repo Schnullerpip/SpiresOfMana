@@ -39,7 +39,7 @@ public class SpellRegistry : MonoBehaviour {
     {
         foreach (A_Spell spell in spellList)
         {
-            if (spell.GetType().AssemblyQualifiedName == type)
+            if (spell.SpellBehaviours[0].GetType().AssemblyQualifiedName == type)
             {
                 return spell;
             }

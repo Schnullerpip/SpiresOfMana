@@ -502,10 +502,6 @@ namespace Prototype.NetworkLobby
 
                 remainingTime -= Time.deltaTime;
                 int newFloorTime = Mathf.FloorToInt(remainingTime);
-                if(floorTime == 0)
-                {
-                    mainMenu.loadingScreen.gameObject.SetActive(true);
-                }
                 if (newFloorTime != floorTime)
                 {//to avoid flooding the network of message, we only send a notice to client when the number of plain seconds change.
                     floorTime = newFloorTime;

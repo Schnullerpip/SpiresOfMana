@@ -30,7 +30,15 @@ public class PlayerHealthScript : HealthScript
             GameManager.instance.PlayerDown();
             //Show the postGame screen for this player
             RpcPlayerDead();
-            NetManager.instance.RpcPlayerDied(damageDealer.playerName, typeOfDamageDealer.AssemblyQualifiedName, mPlayer.playerName);
+            if(mPlayer == damageDealer)
+            {
+                NetManager.instance.RpcPlayerDied("", typeOfDamageDealer.AssemblyQualifiedName, mPlayer.playerName);
+            }
+            else
+            {
+                NetManager.instance.RpcPlayerDied(damageDealer.playerName, typeOfDamageDealer.AssemblyQualifiedName, mPlayer.playerName);
+
+            }
             mPlayer.SetInputState(InputStateSystem.InputStateID.Dead);
         }
 

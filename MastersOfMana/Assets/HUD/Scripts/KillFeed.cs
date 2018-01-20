@@ -23,11 +23,21 @@ public class KillFeed : MonoBehaviour {
             feedItemPool[i].gameObject.SetActive(false);
         }
         GameManager.OnPlayerDied += CreateKillFeed;
+        GameManager.OnHostEndedRound += ClearKilLFeed;
     }
 
     void OnDestroy()
     {
         GameManager.OnPlayerDied -= CreateKillFeed;
+        GameManager.OnHostEndedRound -= ClearKilLFeed;
+    }
+
+    public void ClearKilLFeed()
+    {
+        foreach(KillFeedItem item in feedItemPool)
+        {
+            item.gameObject.SetActive(false);
+        }
     }
 
     public void CreateKillFeed(string killerName, System.Type damageSource, string deadPlayerName)

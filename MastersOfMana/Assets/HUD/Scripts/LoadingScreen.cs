@@ -22,8 +22,8 @@ public class LoadingScreen : MonoBehaviour {
             parent.alpha = Mathf.MoveTowards(parent.alpha, 0, fadingSpeed);
             if(parent.alpha == 0)
             {
-                gameObject.SetActive(false);
                 mFading = false;
+                gameObject.SetActive(false);
                 parent.alpha = 1;
             }
         }

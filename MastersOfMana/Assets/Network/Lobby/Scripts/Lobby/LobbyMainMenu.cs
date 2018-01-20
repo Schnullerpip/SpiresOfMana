@@ -14,9 +14,8 @@ namespace Prototype.NetworkLobby
 
         public RectTransform mainMenuPanel;
         public RectTransform lobbyServerList;
-        public RectTransform lobbyPanel;
+        public LobbyPlayerList lobbyPanel;
         public LobbyInfoPanel infoPanel;
-        public LobbyCountdownPanel countdownPanel;
         public RectTransform spellSelectionPanel;
         public RectTransform optionsPanel;
         public InputField playernameField;

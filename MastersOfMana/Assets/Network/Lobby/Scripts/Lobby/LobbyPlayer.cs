@@ -30,7 +30,6 @@ namespace Prototype.NetworkLobby
         public GameObject localIcone;
         public GameObject remoteIcone;
         private Button backButton;
-        private bool initialized = false;
         [SyncVar]
         private bool forcedColor = false;
 
@@ -125,7 +124,7 @@ namespace Prototype.NetworkLobby
             CheckRemoveButton();
 
             playerColor = PlayerPrefsExtended.GetColor("Playercolor", Color.white);
-            CmdSetPlayerColor(playerColor);
+            CmdSetPlayerColor(playerColor,true);
 
             //ChangeReadyButtonColor(JoinColor);
 
@@ -211,18 +210,9 @@ namespace Prototype.NetworkLobby
                 //textComponent.text = "READY";
                 //textComponent.color = ReadyColor;
                 //readyButton.interactable = false;
-                colorButton.interactable = false;
-                nameInput.interactable = false;
+                //colorButton.interactable = false;
+                //nameInput.interactable = false;
                 // Push chosen spells to server
-                if (isLocalPlayer)
-                {
-                    PlayerPrefs.SetString("Playername", playerName);
-                    if(!forcedColor)
-                    {
-                        PlayerPrefsExtended.SetColor("Playercolor", playerColor);
-                    }
-                    PlayerPrefs.Save();
-                }
             }
             else
             {
@@ -231,9 +221,9 @@ namespace Prototype.NetworkLobby
                 //Text textComponent = readyButton.transform.GetChild(0).GetComponent<Text>();
                 //textComponent.text = isLocalPlayer ? "JOIN" : "...";
                 //textComponent.color = Color.white;
-                //readyButton.interactable = isLocalPlayer;
-                colorButton.interactable = isLocalPlayer;
-                nameInput.interactable = isLocalPlayer;
+                ////readyButton.interactable = isLocalPlayer;
+                //colorButton.interactable = isLocalPlayer;
+                //nameInput.interactable = isLocalPlayer;
             }
         }
 
@@ -307,12 +297,31 @@ namespace Prototype.NetworkLobby
         [ClientRpc]
         public void RpcUpdateCountdown(int countdown)
         {
+            
             if (countdown == 0)
             {
                 LobbyManager.s_Singleton.mainMenu.loadingScreen.gameObject.SetActive(true);
             }
-            LobbyManager.s_Singleton.mainMenu.countdownPanel.UIText.text = "Match Starting in " + countdown;
-            LobbyManager.s_Singleton.mainMenu.countdownPanel.gameObject.SetActive(countdown != 0);
+            LobbyPlayerList lobbyPlayerList = LobbyManager.s_Singleton.mainMenu.lobbyPanel;
+            if (countdown == 1)
+            {
+                lobbyPlayerList.canvasGroup.interactable = false;
+                if (isLocalPlayer)
+                {
+                    CmdNameChanged(playerName);
+                    CmdSetPlayerColor(playerColor,false);
+                    PlayerPrefs.SetString("Playername", playerName);
+                    if (!forcedColor)
+                    {
+                        PlayerPrefsExtended.SetColor("Playercolor", playerColor);
+                    }
+                    PlayerPrefs.Save();
+                }
+            }
+            lobbyPlayerList.waitingText.gameObject.SetActive(false);
+            lobbyPlayerList.startButton.gameObject.SetActive(false);
+            lobbyPlayerList.countdownText.text = "Match Starting in " + countdown;
+            lobbyPlayerList.countdownText.gameObject.SetActive(countdown != 0);
         }
 
         [ClientRpc]
@@ -330,11 +339,13 @@ namespace Prototype.NetworkLobby
         //====== Server Command
 
         [Command]
-        public void CmdSetPlayerColor(Color color)
+        public void CmdSetPlayerColor(Color color, bool validate)
         {
             playerColor = color;
-            CmdColorChange();
-            initialized = true;
+            if (validate)
+            {
+                CmdColorChange();
+            }
             if(playerColor != color)
             {
                 forcedColor = true;
@@ -369,7 +380,7 @@ namespace Prototype.NetworkLobby
             }
             while (alreadyInUse);
 
-            if (inUseIdx >= 0 && initialized)//If its not initialized yet, make sure  we add the color and don't overwrite another one!
+            if (inUseIdx >= 0)
             {//if we already add an entry in the colorTabs, we change it
                 _colorInUse[inUseIdx] = idx;
             }

@@ -87,7 +87,10 @@ namespace Prototype.NetworkLobby
 
         public void OnSceneLoaded(Scene scene, LoadSceneMode loadMode)
         {
-            mainMenu.loadingScreen.FadeOut();
+            if (mainMenu.loadingScreen.gameObject.activeSelf)
+            {
+                mainMenu.loadingScreen.FadeOut();
+            }
         }
 
         public override void OnLobbyClientSceneChanged(NetworkConnection conn)
@@ -96,7 +99,7 @@ namespace Prototype.NetworkLobby
             {
                 if (isInGame)
                 {
-                    ChangeTo(mainMenu.lobbyPanel);
+                    ChangeTo(mainMenu.lobbyPanel.panel);
                     if (mIsMatchmaking)
                     {
                         if (conn.playerControllers[0].unetView.isServer)
@@ -260,7 +263,6 @@ namespace Prototype.NetworkLobby
             {
                 StopHost();
             }
- 
             ChangeTo(mainMenu.mainMenuPanel);
         }
 
@@ -352,7 +354,7 @@ namespace Prototype.NetworkLobby
         {
             base.OnStartHost();
             GameManager.instance.ResetLocalGameState();
-            ChangeTo(mainMenu.lobbyPanel);
+            ChangeTo(mainMenu.lobbyPanel.panel);
             backDelegate = StopHostClbk;
             SetServerInfo("Hosting", networkAddress);
         }
@@ -546,7 +548,7 @@ namespace Prototype.NetworkLobby
 
             if (!NetworkServer.active)
             {//only to do on pure client (not self hosting client)
-                ChangeTo(mainMenu.lobbyPanel);
+                ChangeTo(mainMenu.lobbyPanel.panel);
                 backDelegate = StopClientClbk;
                 SetServerInfo("Client", networkAddress);
             }

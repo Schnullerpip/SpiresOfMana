@@ -24,6 +24,7 @@ namespace Prototype.NetworkLobby
         public Image playerColor;
 
         public InputField matchNameInput;
+		public InputField ipInput;
         public Button backButton;
 
 		private Rewired.Player rewiredPlayer;
@@ -40,10 +41,21 @@ namespace Prototype.NetworkLobby
 
         public void OnEnable()
         {
+            if (GameManager.instance)
+            {
+                GameManager.instance.listener.enabled = true;
+            }
+            if(lobbyManager)
+            {
+                lobbyManager.sceneChangeAllowed = false;
+            }
             matchNameInput.onEndEdit.RemoveAllListeners();
             matchNameInput.onEndEdit.AddListener(onEndEditGameName);
             backButton.onClick.RemoveAllListeners();
             backButton.onClick.AddListener(lobbyManager.GoBackButton);
+
+			ipInput.onEndEdit.RemoveAllListeners();
+			ipInput.onEndEdit.AddListener(onEndEditIP);
 
 			rewiredPlayer = ReInput.players.GetPlayer (0);
             string playername = PlayerPrefs.GetString("Playername", "DefaultName");
@@ -75,20 +87,10 @@ namespace Prototype.NetworkLobby
 
         public void OnClickHost()
         {
+            lobbyManager.isHost = true;
+            lobbyManager.isLocalGame = true;
             lobbyManager.StartHost();
-        }
-
-        public void OnClickJoin()
-        {
-            lobbyManager.ChangeTo(lobbyPanel);
-
-            lobbyManager.StartClient();
-
-            lobbyManager.backDelegate = lobbyManager.StopClientClbk;
-            lobbyManager.DisplayIsConnecting();
-
-            lobbyManager.SetServerInfo("Connecting...", lobbyManager.networkAddress);
-        }
+        } 
 
         public void OnClickDedicated()
         {
@@ -103,6 +105,7 @@ namespace Prototype.NetworkLobby
         public void OnClickCreateMatchmakingGame()
         {
             lobbyManager.isHost = true;
+            lobbyManager.isLocalGame = false;
             PlayerPrefsExtended.SetColor("Playercolor", playerColor.color);
             PlayerPrefs.Save();
             lobbyManager.StartMatchMaker();
@@ -136,7 +139,7 @@ namespace Prototype.NetworkLobby
         {
             if (Input.GetKeyDown(KeyCode.Return))
             {
-                OnClickJoin();
+                //OnClickJoin();
             }
         }
 

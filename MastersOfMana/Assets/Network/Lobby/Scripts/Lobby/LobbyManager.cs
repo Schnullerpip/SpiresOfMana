@@ -28,6 +28,7 @@ namespace Prototype.NetworkLobby
 
         public bool isInGame = false;
         public bool isHost = false;
+        public bool isLocalGame = false;
 
         //Client numPlayers from NetworkManager is always 0, so we count (throught connect/destroy in LobbyPlayer) the number
         //of players, so that even client know how many player there is.
@@ -46,10 +47,20 @@ namespace Prototype.NetworkLobby
         protected List<LobbyPlayer> mPlayers = new List<LobbyPlayer>();
         protected List<PlayerScript> mLoadedPlayers = new List<PlayerScript>();
 
+        private string originalLobbyScene;
+        public bool sceneChangeAllowed = false;
+
+        public LobbyManager(): base()
+        {
+            offlineScene = "";
+            lobbyScene = "arne_menu"; // Name of the scene with the network manager
+        }
+
 
         void Start()
         {
-            if(s_Singleton == null)
+            originalLobbyScene = lobbyScene;
+            if (s_Singleton == null)
             {
                 s_Singleton = this;
                 mainMenu.gameObject.SetActive(true);
@@ -146,9 +157,12 @@ namespace Prototype.NetworkLobby
 
         public void DisplayIsConnecting()
         {
-            var _this = this;
+            mainMenu.infoPanel.Display("Connecting...", "Cancel", StopHostClbk);
+        }
 
-            mainMenu.infoPanel.Display("Connecting...", "Cancel", () => { _this.backDelegate(); });
+        public void DisplayUnableToConnect()
+        {
+            mainMenu.infoPanel.Display("Unable to connect to Server", "Cancel", () => { StopHost(); ; mainMenu.infoPanel.enabled = false; });
         }
 
         public void SetServerInfo(string status, string host)
@@ -181,7 +195,49 @@ namespace Prototype.NetworkLobby
         {
             ChangeTo(mainMenu.mainMenuPanel);
         }
-                 
+
+        public override void ServerChangeScene(string sceneName)
+        {
+            // Do nothing
+            if(sceneChangeAllowed)
+            {
+                base.ServerChangeScene(sceneName);
+            }
+        }
+
+        public override void OnStartClient(NetworkClient lobbyClient)
+        {
+            if (!sceneChangeAllowed)
+            {
+                lobbyScene = originalLobbyScene; // Ensures the client loads correctly
+            }
+            base.OnStartClient(client);
+        }
+        public override void OnStopClient()
+        {
+            base.OnStopClient();
+            if (!sceneChangeAllowed)
+            {
+                lobbyScene = ""; // Ensures we don't reload the scene after quitting
+            }
+        }
+        public override void OnStartServer()
+        {
+            if (!sceneChangeAllowed)
+            {
+                lobbyScene = originalLobbyScene; // Ensures the server loads correctly
+            }
+            base.OnStartServer();
+        }
+        public override void OnStopServer()
+        {
+            base.OnStopServer();
+            if (!sceneChangeAllowed)
+            {
+                lobbyScene = ""; // Ensures we don't reload the scene after quitting
+            }
+        }
+
         public void StopHostClbk()
         {
             if (mIsMatchmaking)
@@ -240,6 +296,15 @@ namespace Prototype.NetworkLobby
             }
         }
 
+        public IEnumerator dropFailedConnectionAfter(float seconds)
+        {
+            yield return new WaitForSeconds(seconds);
+            if (!IsClientConnected())
+            {
+                DisplayUnableToConnect();
+            }
+        }
+
         public void StopClientClbk()
         {
             StopClient();
@@ -281,7 +346,7 @@ namespace Prototype.NetworkLobby
             SetServerInfo("Hosting", networkAddress);
         }
 
-		public override void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo)
+        public override void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo)
 		{
 			base.OnMatchCreate(success, extendedInfo, matchInfo);
             mCurrentMatchID = (System.UInt64)matchInfo.networkId;
@@ -410,10 +475,13 @@ namespace Prototype.NetworkLobby
 
         public IEnumerator ServerCountdownCoroutine()
         {
-            //We actually need a Callback, otherwise the function doesnt work!
-            //Make sure this match is no longer shown in the serverlist!
-            NetworkMatch.BasicResponseDelegate del = BasicResponseDelegate;
-            matchMaker.SetMatchAttributes(matchInfo.networkId, false, 1, del);
+            if (!isLocalGame)//For local game we cannot and dont have to remove it from the serverlist
+            {
+                //Make sure this match is no longer shown in the serverlist!
+                //We actually need a Callback, otherwise the function doesnt work!
+                NetworkMatch.BasicResponseDelegate del = BasicResponseDelegate;
+                matchMaker.SetMatchAttributes(matchInfo.networkId, false, 1, del);
+            }
             float remainingTime = prematchCountdown;
             int floorTime = Mathf.FloorToInt(remainingTime);
 
@@ -448,7 +516,7 @@ namespace Prototype.NetworkLobby
                     GameManager.instance.AddPlayerMessageCounter();
                 }
             }
-
+            sceneChangeAllowed = true;
             ServerChangeScene(playScene);
         }
 

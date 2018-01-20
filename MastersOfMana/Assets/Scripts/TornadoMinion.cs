@@ -18,6 +18,8 @@ public class TornadoMinion : NetworkBehaviour {
 
 	private float mCurrentLifetime;
 
+    public PlayerScript caster;
+
 	private bool mHot = true;
 	private Vector3 mInitalScale;
 
@@ -117,11 +119,11 @@ public class TornadoMinion : NetworkBehaviour {
 
 			Vector3 appliedForce = direction * force;
 
-			if (rigid.CompareTag("Player"))
+			if (isServer && rigid.CompareTag("Player"))
 			{
 				PlayerScript ps = rigid.GetComponent<PlayerScript>();
 				ps.movement.RpcAddForce(appliedForce, ForceMode.VelocityChange);
-				ps.healthScript.TakeDamage(damage, typeof(TornadopocalypeBehaviour));
+				ps.healthScript.TakeDamage(damage, caster, typeof(TornadopocalypeBehaviour));
 
 				mHot = false;
 			    if (gameObject.activeSelf && isServer)

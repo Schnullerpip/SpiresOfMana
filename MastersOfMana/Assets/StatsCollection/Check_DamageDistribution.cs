@@ -44,6 +44,7 @@ public class Check_DamageDistribution : ICheck
     {
         public System.Type dealer;
         public damage_time dt;
+        public PlayerScript opponent;
     }
 
     //overall damage filePaths
@@ -53,6 +54,13 @@ public class Check_DamageDistribution : ICheck
     //per player damage filePaths
     public static uint PER_PLAYER_DELT_DAMAGE = 2;
     public static uint DISCRETE_PER_PLAYER_DELT_DAMAGE = 3;
+
+    public delegate void LethalDamage(PlayerScript victim, System.Type killedBy, PlayerScript defeator);
+    /// <summary>
+    /// this event will be called whenever lethal damage was applied.
+    /// it will provide the victim, what (e.g. spell) has killed the victim and by whom (another player)
+    /// </summary>
+    public event LethalDamage OnLethalDamage;
 
 
     public void GameEndRoutine()
@@ -80,44 +88,64 @@ public class Check_DamageDistribution : ICheck
 
             //link to the player's OnStatsRelevantDamage event
 	        var i1 = i;
-	        p.healthScript.OnStatsRelevantDamage += (dmg, dealer) =>
+
+	        PlayerHealthScript.StatsRelevant dynamicMethod = null;
+            dynamicMethod = (dmg, damageDealer, dealerType, lethalDamage) =>
 	        {
                 //check whether the damage should be attributed to the previous damage/effect source - e.g. falldamage should be attributed to whatever pushed the player off something
 	            if (player_lastDealer[i1].dealer != null && (
-                dealer == PlayerHealthScript.fallDamageInstance.GetType() ||
-                dealer == typeof(LavaFloor) ||
-                dealer == null ))
+                dealerType == typeof(PlayerHealthScript.FallDamage) ||
+                dealerType == typeof(LavaFloor) ||
+                dealerType == null ))
 	            {
 	                //but only do this if the last dealer occured shortly before
-	                var timeDifferenceSincceLastDealer = Time.time - player_lastDealer[i1].dt.time;
-	                if (timeDifferenceSincceLastDealer < mAttributionThreshold)
+	                var timeDifferenceSinceLastDealer = Time.time - player_lastDealer[i1].dt.time;
+	                if (timeDifferenceSinceLastDealer < mAttributionThreshold)
 	                {
-	                    //Attribute the damage, that was dealt to the last dealer, we now assume, that the last dealer's effect/damage resulted in this damage
-	                    dealer = player_lastDealer[i1].dealer;
+	                    //Attribute the damage, that was dealt to the last dealer, we now assume that the last dealer's effect/damage resulted in this damage
+                        //e.g. someone was pushed off by a Gust,  therefore we want to attribute following fall/lava damage to that Gust
+	                    dealerType = player_lastDealer[i1].dealer;//override dealerType
+	                    damageDealer = player_lastDealer[i1].opponent;
 	                }
 	            }
 
                 var newDamageTime = new damage_time{damage = dmg, time = Time.time};
 
                 //update player_source_damage
-	            if (!player_source_damage[i1].ContainsKey(dealer))
+	            if (!player_source_damage[i1].ContainsKey(dealerType))
 	            {
-	                player_source_damage[i1].Add(dealer, new List<damage_time>());
+	                player_source_damage[i1].Add(dealerType, new List<damage_time>());
 	            }
-                player_source_damage[i1][dealer].Add(newDamageTime);
+                player_source_damage[i1][dealerType].Add(newDamageTime);
 
                 //cache last dealer
-	            player_lastDealer[i1].dealer = dealer;
+	            player_lastDealer[i1].dealer = dealerType;
+	            player_lastDealer[i1].opponent = damageDealer;
 	            player_lastDealer[i1].dt.damage = dmg;
 	            player_lastDealer[i1].dt.time = Time.time;
 
                 //update the source_damage
-	            if (!source_damage.ContainsKey(dealer))
+	            if (!source_damage.ContainsKey(dealerType))
 	            {
-	                source_damage.Add(dealer, new List<damage_time>());
+	                source_damage.Add(dealerType, new List<damage_time>());
 	            }
-                source_damage[dealer].Add(newDamageTime);
+                source_damage[dealerType].Add(newDamageTime);
+
+                //unregister in case of lethal damage
+	            if (lethalDamage)
+	            {
+                    //whoever wants to be informed on what specifically happened, tell them now
+	                if (OnLethalDamage != null)
+	                {
+	                    OnLethalDamage(p, dealerType, damageDealer);
+	                }
+	                p.healthScript.OnStatsRelevantDamage -= dynamicMethod;
+	            }
 	        };
+
+	        p.healthScript.OnStatsRelevantDamage += dynamicMethod;
+
+
 	    }
 
         //register at gamemanager to get OnGameEnded events

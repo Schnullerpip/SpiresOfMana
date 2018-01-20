@@ -155,7 +155,7 @@ public class LavaFloor : NetworkBehaviour
 
             if (isServer)
             {
-                player.healthScript.TakeDamage(damagePerSecond, GetType());
+                player.healthScript.TakeDamage(damagePerSecond, player, GetType());
             }
             else
             {
@@ -187,7 +187,8 @@ public class LavaFloor : NetworkBehaviour
                 yield break;
             }
 
-            health.TakeDamage(damagePerSecond, this.GetType());
+            //null because this routine should normally never be called on a player
+            health.TakeDamage(damagePerSecond, null, GetType());
             RpcPlayDamageSound(health.transform.position);
 
             if (sm && health.IsAlive())

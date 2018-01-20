@@ -151,7 +151,7 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
         if(mInflictSelfDamage && isServer && (mSelfInflictDamageTimeCount += Time.deltaTime) >= 2.0f)
         {
             mSelfInflictDamageTimeCount = 0;
-            caster.healthScript.TakeDamage(1, GetType());
+            caster.healthScript.TakeDamage(1, caster, GetType());
         }
 
         if (mAlreadyCaught.Count == 0)
@@ -205,7 +205,7 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
                 if (isServer && ((mTimeCount += Time.deltaTime) >= mCountTilDamage))
                 {
                     mTimeCount = 0;
-                    nearest.TakeDamage(mDamage, this.GetType());
+                    nearest.TakeDamage(mDamage, caster, this.GetType());
                 }
             }
             else

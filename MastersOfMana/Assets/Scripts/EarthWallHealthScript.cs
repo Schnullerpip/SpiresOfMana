@@ -18,9 +18,9 @@ public class EarthWallHealthScript : HealthScript
         ResetObject();
     }
 
-    public override void TakeDamage(int amount, System.Type typeOfDamageDealer)
+    public override void TakeDamage(int amount, PlayerScript damageDealer , System.Type typeOfDamageDealer)
     {
-        base.TakeDamage(amount, typeOfDamageDealer);
+        base.TakeDamage(amount, damageDealer, typeOfDamageDealer);
         if(!IsAlive())
         {
             mEarthWall.EndSpell();

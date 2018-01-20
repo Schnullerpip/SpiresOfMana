@@ -125,6 +125,7 @@ GameObject:
   - component: {fileID: 114770681507947832}
   - component: {fileID: 114611591390248096}
   - component: {fileID: 114573422005645054}
+  - component: {fileID: 114260773490367972}
   m_Layer: 5
   m_Name: ReadyButton
   m_TagString: Untagged
@@ -181,7 +182,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1148669661638504
 GameObject:
   m_ObjectHideFlags: 1
@@ -310,6 +311,7 @@ GameObject:
   - component: {fileID: 224579344437565982}
   - component: {fileID: 222074337810772910}
   - component: {fileID: 114324309391669940}
+  - component: {fileID: 114719877322076928}
   m_Layer: 5
   m_Name: FlavorText
   m_TagString: Untagged
@@ -504,7 +506,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1430345068267128
 GameObject:
   m_ObjectHideFlags: 1
@@ -808,7 +810,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1618777573694006
 GameObject:
   m_ObjectHideFlags: 1
@@ -1340,7 +1342,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1980507993532430
 GameObject:
   m_ObjectHideFlags: 1
@@ -1777,8 +1779,8 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 56c4630952ccd9546aa30a1eddc073e8, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 70ad2694364564d35b95387a5ca4d224, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -2048,6 +2050,18 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 5
     m_NumAlphaKeys: 2
+--- !u!114 &114260773490367972
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1072405406343872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 679d4b2b26a264d0ba4ec5edffcf8e40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  colorSet: {fileID: 11400000, guid: f57400294e0c8472a87941a05d2e7467, type: 2}
 --- !u!114 &114303454091981612
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2194,8 +2208,8 @@ MonoBehaviour:
   m_Script: {fileID: -900027084, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EffectColor: {r: 1, g: 0.9359736, b: 0.21323532, a: 1}
-  m_EffectDistance: {x: 1, y: -1}
+  m_EffectColor: {r: 0.828, g: 0.77498615, b: 0.17655885, a: 1}
+  m_EffectDistance: {x: 2, y: -2}
   m_UseGraphicAlpha: 1
 --- !u!114 &114359326139893278
 MonoBehaviour:
@@ -2602,20 +2616,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c08d920af9767540bd0bc0e4d9107a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  readyColor:
-    m_NormalColor: {r: 0, g: 0.7058823, b: 0.09249502, a: 1}
-    m_HighlightedColor: {r: 0.539852, g: 0.934, b: 0.59240514, a: 1}
-    m_PressedColor: {r: 1, g: 0.70980394, b: 0.34509805, a: 1}
-    m_DisabledColor: {r: 0.7843138, g: 0.7843138, b: 0.7843138, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.2
-  unreadyColor:
-    m_NormalColor: {r: 0.75735295, g: 0, b: 0, a: 1}
-    m_HighlightedColor: {r: 1, g: 0.3897059, b: 0.3897059, a: 1}
-    m_PressedColor: {r: 1, g: 0.70980394, b: 0.34509805, a: 1}
-    m_DisabledColor: {r: 0.7843138, g: 0.7843138, b: 0.7843138, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.2
+  readyColor: {fileID: 11400000, guid: f57400294e0c8472a87941a05d2e7467, type: 2}
+  unreadyColor: {fileID: 11400000, guid: 921c54179aedb42cb841438421a2ad9b, type: 2}
   readyString: Ready
   unreadyString: Unready
   readyButton: {fileID: 114611591390248096}
@@ -2687,8 +2689,8 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 56c4630952ccd9546aa30a1eddc073e8, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 70ad2694364564d35b95387a5ca4d224, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -2741,10 +2743,10 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 0, g: 0.7058823, b: 0.09249502, a: 1}
-    m_HighlightedColor: {r: 0.539852, g: 0.934, b: 0.59240514, a: 1}
-    m_PressedColor: {r: 1, g: 0.70980394, b: 0.34509805, a: 1}
-    m_DisabledColor: {r: 0.7843138, g: 0.7843138, b: 0.7843138, a: 0.5019608}
+    m_NormalColor: {r: 0.43844402, g: 0.684, b: 0.47062033, a: 1}
+    m_HighlightedColor: {r: 0.6306167, g: 0.866, b: 0.61129415, a: 1}
+    m_PressedColor: {r: 0.33628446, g: 0.4705882, b: 0.3252595, a: 1}
+    m_DisabledColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.2
   m_SpriteState:
@@ -2976,8 +2978,8 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 56c4630952ccd9546aa30a1eddc073e8, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 70ad2694364564d35b95387a5ca4d224, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -3070,8 +3072,8 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 56c4630952ccd9546aa30a1eddc073e8, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 70ad2694364564d35b95387a5ca4d224, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -3118,6 +3120,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cineCamPrefab: {fileID: 1449320244650372, guid: ee45b121f199a334e84a354413aa9ada,
     type: 2}
+--- !u!114 &114719877322076928
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1291895316805678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69ac63e80e9744f7497cd219803a4653, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charactersPerSecond: 300
 --- !u!114 &114736633083059548
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3130,7 +3144,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spellName: {fileID: 114647822973186982}
-  flavorText: {fileID: 114324309391669940}
+  flavorText: {fileID: 114719877322076928}
   damageIndicator: {fileID: 114201997111067600}
   forceIndicator: {fileID: 114990208052425500}
   cooldownIndicator: {fileID: 114247450226036138}
@@ -3154,8 +3168,8 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: e367249fd068a4424869a69d790221df, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 70ad2694364564d35b95387a5ca4d224, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -3443,7 +3457,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.468, g: 0, b: 0, a: 0.709}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.709}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -3602,14 +3616,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.8782052, g: 0.7205882, b: 1, a: 0.934}
+  m_Color: {r: 0.68684113, g: 0.472, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 57756b06b934d4b5caf13cf3d716c4c3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f1380fc19b1014394a6dc553ca133460, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

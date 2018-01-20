@@ -97,7 +97,7 @@ public class JumpBehaviour : A_EffectBehaviour
 				if (c.attachedRigidbody.CompareTag("Player"))
 				{
 					PlayerScript opponent = c.attachedRigidbody.GetComponent<PlayerScript>();
-                    opponent.healthScript.TakeDamage(0, GetType());
+                    opponent.healthScript.TakeDamage(0, caster, GetType());
 					opponent.movement.RpcAddForce(direction, ForceMode.VelocityChange);
 				}
 				else

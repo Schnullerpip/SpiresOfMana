@@ -28,6 +28,10 @@ public class LightningStrike : NetworkBehaviour
 
     public GameObject contactPrefab;
 
+    [SyncVar]
+    public GameObject casterObject;
+    public PlayerScript caster;
+
     [Tooltip("How much time of the anticipation should be dedicated to following the target")]
     [Range(0, 1)]
     public float followPercentage = 0.9f;
@@ -62,6 +66,18 @@ public class LightningStrike : NetworkBehaviour
 
         mLerpProperyID = Shader.PropertyToID("_Lerp");
     }
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+
+        if (casterObject)
+        {
+            caster = casterObject.GetComponent<PlayerScript>();
+        }
+    }
+
+
 
     void LifeTimeEvaluation()
     {
@@ -193,7 +209,7 @@ public class LightningStrike : NetworkBehaviour
                 if (temp.sqrMagnitude < strikeRadius * strikeRadius)
                 {
                     cachedHealth.Add(health);
-                    health.TakeDamage(damage, this.GetType());
+                    health.TakeDamage(damage, caster, this.GetType());
                 }
                 //the outer zone gets a camera shake
                 else

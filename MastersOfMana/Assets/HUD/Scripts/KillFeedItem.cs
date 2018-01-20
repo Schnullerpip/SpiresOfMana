@@ -18,9 +18,12 @@ public class KillFeedItem : MonoBehaviour {
 
     public void Init(string killerName, Sprite spellSprite, string deadPlayerName)
     {
-        playerName1.text = killerName;
-        spellIcon.sprite = spellSprite;
-        playerName2.text = deadPlayerName;
+        if (enabled)//Otherwise leaving the game will cause the disconnect message to be displayed, but this killfeeditem was already destroyed
+        {
+            playerName1.text = killerName;
+            spellIcon.sprite = spellSprite;
+            playerName2.text = deadPlayerName;
+        }
     }
 	
 	// Update is called once per frame

@@ -14,6 +14,8 @@ public class KillFeed : MonoBehaviour {
     private List<KillFeedItem> feedItemPool = new List<KillFeedItem>();
     private int mCurrentIndex = 0;
 
+    private Check_DamageDistribution mCDD;
+
     void Start()
     {
         GameManager.instance.mKillFeed = this;
@@ -22,14 +24,18 @@ public class KillFeed : MonoBehaviour {
             feedItemPool.Add(Instantiate(killFeedItemPrefab, transform));
             feedItemPool[i].gameObject.SetActive(false);
         }
-        GameManager.OnPlayerDied += CreateKillFeed;
+        //GameManager.OnPlayerDied += CreateKillFeed;
         GameManager.OnHostEndedRound += ClearKilLFeed;
+
+        mCDD = FindObjectOfType<Check_DamageDistribution>();
+        mCDD.OnLethalDamage += EventKillFeed;
     }
 
     void OnDestroy()
     {
-        GameManager.OnPlayerDied -= CreateKillFeed;
+        //GameManager.OnPlayerDied -= CreateKillFeed;
         GameManager.OnHostEndedRound -= ClearKilLFeed;
+        mCDD.OnLethalDamage -= EventKillFeed;
     }
 
     public void ClearKilLFeed()
@@ -38,6 +44,11 @@ public class KillFeed : MonoBehaviour {
         {
             item.gameObject.SetActive(false);
         }
+    }
+
+    private void EventKillFeed(PlayerScript victim, System.Type damageSource, PlayerScript responsibleCaster)
+    {
+        CreateKillFeed(victim.name, damageSource, responsibleCaster.name);
     }
 
     public void CreateKillFeed(string killerName, System.Type damageSource, string deadPlayerName)

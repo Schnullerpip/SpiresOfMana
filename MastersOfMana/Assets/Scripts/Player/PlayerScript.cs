@@ -224,8 +224,6 @@ public class PlayerScript : NetworkBehaviour
         //castStateSystem.SetState(CastStateSystem.CastStateID.Resolving);
         GetPlayerSpells().GetCurrentspell().ResetCooldown();
         GetPlayerAnimation().Cast(animationID);
-
-        Debug.Log("castAnimationID: " + GetPlayerSpells().GetCurrentspell().spell.castAnimationID);
     }
 
     [ClientRpc]

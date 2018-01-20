@@ -238,11 +238,16 @@ public class PlayerSpells : NetworkBehaviour {
                     caster.GetPlayerSpells().ultimateEnergy = 0;
                 }
                 //set caster in 'casting mode'
-                caster.RpcSetCastState(CastStateSystem.CastStateID.Resolving);
+                //caster.RpcSetCastState(CastStateSystem.CastStateID.Resolving);
+
+                //set the cooldown of the current spellslot
+                caster.GetPlayerSpells().GetCurrentspell().ResetCooldown();
+                caster.GetPlayerAnimation().Cast(caster.GetPlayerSpells().GetCurrentspell().spell.castAnimationID);
+
                 //resolve the spell
                 spell.Resolve(caster);
                 //set caster in 'normal mode'
-                caster.RpcSetCastState(CastStateSystem.CastStateID.Normal);
+                //caster.RpcSetCastState(CastStateSystem.CastStateID.Normal);
 
 				return true;
             }

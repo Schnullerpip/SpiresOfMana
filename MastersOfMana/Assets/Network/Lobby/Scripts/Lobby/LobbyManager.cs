@@ -77,6 +77,20 @@ namespace Prototype.NetworkLobby
             DontDestroyOnLoad(gameObject);
             SetServerInfo("Offline", "None");
             SetCancelDelegate(mainMenu.Quit);
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        void OnDestroy()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+
+        public void OnSceneLoaded(Scene scene, LoadSceneMode loadMode)
+        {
+            if (mainMenu.loadingScreen.gameObject.activeSelf)
+            {
+                mainMenu.loadingScreen.FadeOut();
+            }
         }
 
         public override void OnLobbyClientSceneChanged(NetworkConnection conn)
@@ -85,7 +99,7 @@ namespace Prototype.NetworkLobby
             {
                 if (isInGame)
                 {
-                    ChangeTo(mainMenu.lobbyPanel);
+                    ChangeTo(mainMenu.lobbyPanel.panel);
                     if (mIsMatchmaking)
                     {
                         if (conn.playerControllers[0].unetView.isServer)
@@ -249,7 +263,6 @@ namespace Prototype.NetworkLobby
             {
                 StopHost();
             }
- 
             ChangeTo(mainMenu.mainMenuPanel);
         }
 
@@ -341,7 +354,7 @@ namespace Prototype.NetworkLobby
         {
             base.OnStartHost();
             GameManager.instance.ResetLocalGameState();
-            ChangeTo(mainMenu.lobbyPanel);
+            ChangeTo(mainMenu.lobbyPanel.panel);
             backDelegate = StopHostClbk;
             SetServerInfo("Hosting", networkAddress);
         }
@@ -491,7 +504,6 @@ namespace Prototype.NetworkLobby
 
                 remainingTime -= Time.deltaTime;
                 int newFloorTime = Mathf.FloorToInt(remainingTime);
-
                 if (newFloorTime != floorTime)
                 {//to avoid flooding the network of message, we only send a notice to client when the number of plain seconds change.
                     floorTime = newFloorTime;
@@ -516,6 +528,7 @@ namespace Prototype.NetworkLobby
                     GameManager.instance.AddPlayerMessageCounter();
                 }
             }
+
             sceneChangeAllowed = true;
             ServerChangeScene(playScene);
         }
@@ -535,7 +548,7 @@ namespace Prototype.NetworkLobby
 
             if (!NetworkServer.active)
             {//only to do on pure client (not self hosting client)
-                ChangeTo(mainMenu.lobbyPanel);
+                ChangeTo(mainMenu.lobbyPanel.panel);
                 backDelegate = StopClientClbk;
                 SetServerInfo("Client", networkAddress);
             }

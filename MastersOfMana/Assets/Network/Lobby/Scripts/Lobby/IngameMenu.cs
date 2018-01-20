@@ -73,6 +73,8 @@ public class IngameMenu : MonoBehaviour
 
     public void GoToMainMenu()
     {
+        gameObject.SetActive(false);
+        lobbyManager.mainMenu.loadingScreen.gameObject.SetActive(true);
         if (NetManager.instance.amIServer())
         {
             lobbyManager.StopHostClbk();

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CastStateNormal : A_CastState{
     public CastStateNormal(PlayerScript player) : base(player) { }
@@ -24,11 +22,5 @@ public class CastStateNormal : A_CastState{
     public override void UpdateSynchronized()
     {
         ReduceCooldowns();
-    }
-
-    public override void Init()
-    {
-        player.GetPlayerSpells().FlushSpellroutines();
-        ResetCastDurationCount();
     }
 }

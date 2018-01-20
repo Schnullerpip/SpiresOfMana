@@ -115,7 +115,7 @@ public class PlayerScript : NetworkBehaviour
 
     public void OnDestroy()
     {
-        GameManager.instance.PlayerDisconnected();
+        GameManager.instance.PlayerDisconnected(playerName);
         GameManager.OnRoundEnded -= RoundEnded;
     }
 
@@ -217,6 +217,15 @@ public class PlayerScript : NetworkBehaviour
     {
         castStateSystem.SetState(id);
     }
+
+    [ClientRpc]
+    public void RpcCastAndAnimate(int animationID)
+    {
+        //castStateSystem.SetState(CastStateSystem.CastStateID.Resolving);
+        GetPlayerSpells().GetCurrentspell().ResetCooldown();
+        GetPlayerAnimation().Cast(animationID);
+    }
+
     [ClientRpc]
     public void RpcSetEffectState(EffectStateSystem.EffectStateID id)
     {

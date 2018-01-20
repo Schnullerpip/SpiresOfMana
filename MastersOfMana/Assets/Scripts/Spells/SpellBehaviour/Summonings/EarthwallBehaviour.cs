@@ -41,6 +41,7 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
         Vector3 position;
         Quaternion rotation;
         GetSpawnPositionAndRotation(caster, out position, out rotation, true);
+	    preview.transform.localScale = gameObject.transform.localScale;
         preview.instance.MoveAndRotate(position, rotation);
 	}
 
@@ -281,7 +282,7 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
             mPendingContactEffect = false;
             SpawnContactEffect();
         }
-        float factor = volumeOverLife.Lerp(mHealthScript.GetCurrentHealth() * 1.0f / mHealthScript.GetMaxHealth() * 1.0f);
+        float factor = volumeOverLife.Lerp(mHealthScript.GetCurrentHealthPercentage());
         loopSource.volume = mOriginalVolume * factor;
 
         transform.localScale = mOriginalScale*spawnScale.Evaluate(mScaleCount);

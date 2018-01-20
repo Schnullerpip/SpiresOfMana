@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     public bool gameRunning = false;
     public CameraSystem cameraSystem;
     private LavaFloor mLavaFloor;
+    public KillFeed mKillFeed;
 
     public AudioListener listener;
 
@@ -36,6 +37,9 @@ public class GameManager : MonoBehaviour
 
     public delegate void LocalPlayerDead();
     public static event LocalPlayerDead OnLocalPlayerDead;
+
+    public delegate void PlayerDied(string killerName, string damageSource, string deadPlayerName);
+    public static event PlayerDied OnPlayerDied;
 
     public delegate void LocalPlayerWon();
     public static event LocalPlayerWon OnLocalPlayerWon;
@@ -128,6 +132,7 @@ public class GameManager : MonoBehaviour
         OnHostEndedRound = null;
         OnLocalPlayerWon = null;
         OnLocalPlayerDead = null;
+        OnPlayerDied = null;
     }
 
     public void TriggerGameStarted()
@@ -272,8 +277,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void PlayerDisconnected()
+    public void PlayerDisconnected(string playerName)
     {
+        mKillFeed.CreateDisconnectNotification(playerName);
         for (int i = 0; i < players.Count; i++)
         {
             if (!players[i].gameObject.activeSelf)
@@ -412,5 +418,54 @@ public class GameManager : MonoBehaviour
         {
             OnHostEndedRound();
         }
+    }
+
+    public void TriggerPlayerDied(string killerName, string damageSource, string deadPlayerName)
+    {
+        if (OnPlayerDied != null)
+        {
+            OnPlayerDied(killerName, damageSource, deadPlayerName);
+        }  
+    }
+
+    /// <summary>
+    /// Returns the tension of the game in a normalized value (0: no tension, 1: MAXIMUM INTENSITY!)
+    /// 75% weight from the current height of lava, 25% weight from the local players health left.
+    /// If there are only 2 players left and anyone has 15 or fever hp left or the local player has 15 or fever => maximum tension
+    /// </summary>
+    /// <returns>The tension.</returns>
+    public float GetTension()
+    {
+        if (!localPlayer || !mLavaFloor)
+        {
+			return 0;         
+        }
+
+        if(!localPlayer.healthScript.IsAlive())
+        {
+            return 0;
+        }
+
+        if (localPlayer.healthScript.GetCurrentHealthPercentage() <= 0.15f)
+        {
+            return 1;
+        }
+
+        if(mNumberOfDeadPlayers >= (players.Count - 2))
+        {
+            for (int i = 0; i < players.Count; ++i)
+            {
+                if(players[i].healthScript.IsAlive())
+                {
+					if(players[i].healthScript.GetCurrentHealthPercentage() <= 0.15f)
+                    {
+                        return 1;
+                    }
+                }
+            }
+        }
+
+        return mLavaFloor.GetHeightNormalized() * 0.75f + 
+                         (1 - localPlayer.healthScript.GetCurrentHealthPercentage()) * 0.25f;
     }
 }

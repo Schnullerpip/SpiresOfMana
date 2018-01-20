@@ -118,6 +118,12 @@ public class HealthScript : NetworkBehaviour
             mCurrentHealth = tempCurrentHealth;
         }
     }
+
+    [ClientRpc]
+    void RpcPlayerDied()
+    {
+
+    }
     
     //bring a GameObject to life
     public void ResetObject()
@@ -138,6 +144,15 @@ public class HealthScript : NetworkBehaviour
     public int GetMaxHealth()
     {
         return mMaxHealth;
+    }
+
+    /// <summary>
+    /// Return the current health in percentage from 0: dead to 1: maxHealth
+    /// </summary>
+    /// <returns>The current health percentage.</returns>
+    public float GetCurrentHealthPercentage()
+    {
+        return mCurrentHealth / (float) mMaxHealth;
     }
 
     /// <summary>

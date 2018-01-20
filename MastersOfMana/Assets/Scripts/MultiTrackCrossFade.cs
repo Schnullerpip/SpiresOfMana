@@ -15,6 +15,7 @@ public class MultiTrackCrossFade : MonoBehaviour
     private int mMasterSample;
 
     private float[] mInitialVols;
+	private int mActiveTransitions;
 
     private void Start()
     {
@@ -42,6 +43,11 @@ public class MultiTrackCrossFade : MonoBehaviour
             //this has to be done, otherwise the audiosources will eventually become slighty out of sync, causing a phase shift
             sources[i].timeSamples = mMasterSample;
 
+            if (IsTransitioning())
+            {
+                return;
+            }
+
             //a linear crossfade, keeping the overall power at the same rate since audiosources volume is normalized (0.5 + 0.5 = 1) (this would not be the case in decible)
             // heres a picture of it :D
             // ‾‾‾\ /\ /‾‾‾
@@ -55,6 +61,17 @@ public class MultiTrackCrossFade : MonoBehaviour
                 currentTrack = i;
             }
         }
+    }
+
+    /// <summary>
+    /// Moves the interpolator with a maximum delta per second.
+    /// </summary>
+    /// <param name="value">Value.</param>
+    /// <param name="maxDelta">Max Delta.</param>
+    public void MoveInterpolation(float value, float maxDelta)
+    {
+        value = Mathf.Clamp01(value);
+        interpolation = Mathf.MoveTowards(interpolation, value, Time.deltaTime * maxDelta);
     }
 
     /// <summary>
@@ -88,7 +105,7 @@ public class MultiTrackCrossFade : MonoBehaviour
         float desiredInterpolation = Lerp(trackIndex);
         float maxDelta = Mathf.Abs(interpolation - desiredInterpolation) / time;
 
-        StopAllCoroutines();
+        StopTransitions();
         StartCoroutine(Transition(Lerp(trackIndex), maxDelta));
     }
 
@@ -101,12 +118,14 @@ public class MultiTrackCrossFade : MonoBehaviour
     {
         trackIndex = ValidateTrackIndex(trackIndex);
 
-        StopAllCoroutines();
+        StopTransitions();
         StartCoroutine(Transition(Lerp(trackIndex), speed));
     }
 
     private IEnumerator Transition(float desiredInterpolation, float maxDelta)
     {
+        ++mActiveTransitions;
+
         //since we're comparing floats its wise to check for the difference with epsilon (super small number)
         while (Mathf.Abs(interpolation - desiredInterpolation) > float.Epsilon)
         {
@@ -116,6 +135,69 @@ public class MultiTrackCrossFade : MonoBehaviour
 
         //just in case set the value once more since the loop could maybe stop one iteration short or a floating point error got here somehow from somewhere
         interpolation = desiredInterpolation;
+        --mActiveTransitions;
+    }
+
+    public void StopTransitions()
+    {
+        if (mActiveTransitions > 0)
+        {
+            StopAllCoroutines();
+        }
+
+        mActiveTransitions = 0;
+    }
+
+    /// <summary>
+    /// Crossfades the tracks.
+    /// </summary>
+    /// <param name="toIndex">To index.</param>
+    /// <param name="maxDelta">Max delta.</param>
+    public void CrossfadeToTrack(int toIndex, float maxDelta)
+    {
+        if (mActiveTransitions > 0)
+        {
+            StopAllCoroutines();
+        }
+
+        for (int i = 0; i < sources.Length; ++i)
+        {
+            if(i == toIndex)
+            {
+                StartCoroutine(MoveVolume(sources[i], mInitialVols[i], maxDelta));
+            }
+            else
+            {
+                StartCoroutine(MoveVolume(sources[i], 0, maxDelta));
+            }
+        }
+
+        StartCoroutine(QueueTransitionDone(() => SetTrack(toIndex)));
+    }
+
+    public bool IsTransitioning()
+    {
+        return mActiveTransitions > 0;
+    }
+
+    IEnumerator QueueTransitionDone(System.Action action)
+    {
+        yield return new WaitUntil(() => !IsTransitioning());
+        action.Invoke();
+    }
+
+    IEnumerator MoveVolume(AudioSource source, float desiredVol, float maxDelta)
+    {
+        ++mActiveTransitions;
+
+        while(Mathf.Abs(source.volume - desiredVol) > float.Epsilon)
+        {
+            source.volume = Mathf.MoveTowards(source.volume, desiredVol, maxDelta * Time.deltaTime);
+            yield return null;
+        }
+
+        source.volume = desiredVol;
+        --mActiveTransitions;
     }
 
     #region Helper

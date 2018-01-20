@@ -1933,12 +1933,6 @@ Transform:
   m_PrefabParentObject: {fileID: 4905744974020766, guid: 66808cb9c1b6e8646b9b21646c72e3ec,
     type: 2}
   m_PrefabInternal: {fileID: 416332830}
---- !u!114 &472790805 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114865154224641114, guid: a17e43ce1afa18148bb83829b15131fb,
-    type: 2}
-  m_PrefabInternal: {fileID: 1211094721}
-  m_Script: {fileID: 11500000, guid: bbbba37821416b643abbb95010c81a62, type: 3}
 --- !u!4 &491701893 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4852928331750076, guid: 9e480aa3dc1767a4ca51f4f9c89c6ca6,
@@ -2207,11 +2201,6 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 114477922938022408, guid: df6c14ede86997448849721dddef0cb4,
-        type: 2}
-      propertyPath: HudPrefabs.Array.size
-      value: 7
-      objectReference: {fileID: 0}
     - target: {fileID: 224232830425643684, guid: df6c14ede86997448849721dddef0cb4,
         type: 2}
       propertyPath: m_LocalPosition.x
@@ -2302,21 +2291,6 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1141904039544438, guid: df6c14ede86997448849721dddef0cb4, type: 2}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114477922938022408, guid: df6c14ede86997448849721dddef0cb4,
-        type: 2}
-      propertyPath: SpellBookCanvas
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 114477922938022408, guid: df6c14ede86997448849721dddef0cb4,
-        type: 2}
-      propertyPath: HudPrefabs.Array.data[6]
-      value: 
-      objectReference: {fileID: 1610403168672548, guid: ef9710161c9673244b3878e85ef29274,
-        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: df6c14ede86997448849721dddef0cb4, type: 2}
   m_IsPrefabParent: 0
@@ -4763,7 +4737,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7c42e72fc9354379a4adfd28eb9bfe1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lavafloor: {fileID: 472790805}
   curve:
     serializedVersion: 2
     m_Curve:
@@ -4783,6 +4756,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 0
   multiTrackCrossFader: {fileID: 975711524}
+  maxDelta: 0.1
 --- !u!1 &1267431641
 GameObject:
   m_ObjectHideFlags: 0

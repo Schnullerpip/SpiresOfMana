@@ -14,6 +14,9 @@ namespace Prototype.NetworkLobby
         public Button backButton;
         public Button startButton;
         public Text waitingText;
+        public Text countdownText;
+        public RectTransform panel;
+        public CanvasGroup canvasGroup;
 
         protected VerticalLayoutGroup _layout;
         protected List<LobbyPlayer> _players = new List<LobbyPlayer>();
@@ -25,6 +28,7 @@ namespace Prototype.NetworkLobby
 
         public void OnEnable()
         {
+            canvasGroup.interactable = true;
             //Only the Server can Start the game!
             startButton.gameObject.SetActive(LobbyManager.s_Singleton.isHost);
             startButton.interactable = true;

@@ -354,6 +354,14 @@ public class GameManager : MonoBehaviour
         {
             OnRoundStarted();
         }
+
+        //<ExampleCode For Arne //TODO Remove this code!!! --------------------->
+        //FindObjectOfType<Check_DamageDistribution>().OnLethalDamage += (victim, killedBy, opponent) =>
+        //{
+            //commented out to prevent whining
+            //Debug.Log(victim + " was defeated by: " + opponent + " with " + killedBy);
+        //};
+        //</ExampleCode For Arne ------------------------------------------------>
 	}
 
     public void TriggerOnLocalPlayerWon()

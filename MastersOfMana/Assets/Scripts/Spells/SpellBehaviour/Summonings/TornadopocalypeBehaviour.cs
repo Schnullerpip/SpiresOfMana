@@ -83,6 +83,7 @@ public class TornadopocalypeBehaviour : A_SummoningBehaviour
 
 			tornado.SetTarget(target);
 			tornado.gameObject.SetActive(true);
+		    tornado.caster = caster;
 			
             Vector3 offset = target.movement.GetCurrentMovementVector() * anticipation //take movement into account 
                 + Vector3.up //plus a little offset up so the position is not in or under the navmesh

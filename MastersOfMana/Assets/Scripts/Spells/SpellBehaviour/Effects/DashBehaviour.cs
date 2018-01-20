@@ -162,7 +162,7 @@ public class DashBehaviour : A_EffectBehaviour
                 PlayerScript ps = sm.GetComponentInParent<PlayerScript>();
                 if (ps)
                 {
-                    ps.healthScript.TakeDamage(0, GetType());
+                    ps.healthScript.TakeDamage(0, caster, GetType());
                 }
             }
         });

@@ -185,7 +185,7 @@ public class FireballBehaviour : A_ServerMoveableSummoning
             if (directHit)
             {
 				//apply direct hit damage
-				directHit.TakeDamage(directDamage, GetType());
+				directHit.TakeDamage(directDamage, caster, GetType());
 
 				//if it was a moveable object, apply a force
 				ServerMoveable moveable = directHit.GetComponentInParent<ServerMoveable>();

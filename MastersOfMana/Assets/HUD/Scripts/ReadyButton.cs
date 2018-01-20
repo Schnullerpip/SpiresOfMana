@@ -6,9 +6,9 @@ using UnityEngine.UI;
 public class ReadyButton : MonoBehaviour {
 
     [Header("Ready Colors")]
-    public ColorBlock readyColor;
+    public ButtonColorSet readyColor;
     [Header("Unready Colors")]
-    public ColorBlock unreadyColor;
+    public ButtonColorSet unreadyColor;
 
     public string readyString = "READY";
     public string unreadyString = "UNREADY";
@@ -31,12 +31,12 @@ public class ReadyButton : MonoBehaviour {
         if (ready)
         {
             buttonLabel.text = readyString;
-            readyButton.colors = readyColor;
+            readyButton.colors = readyColor.colors;
         }
         else
         {
             buttonLabel.text = unreadyString;
-            readyButton.colors = unreadyColor;
+            readyButton.colors = unreadyColor.colors;
         }
     }
 }

@@ -119,7 +119,7 @@ public class WhipBehaviour : A_SummoningBehaviour
             Vector3 aimDirection = Vector3.Normalize(hitPlayerPos - caster.handTransform.position);
             Vector3 force = -aimDirection * pullForce + Vector3.up * UpForce;
             hitPlayer.movement.RpcAddForce(force, ForceMode.VelocityChange);
-            hitPlayer.healthScript.TakeDamage(0, GetType());
+            hitPlayer.healthScript.TakeDamage(0, caster, GetType());
 
             //cache the hitplayer and sync it down to the client
             mAffectedPlayerObject = hitPlayer.gameObject;

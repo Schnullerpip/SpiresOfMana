@@ -35,6 +35,7 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
 
 		GameManager.instance.RegisterUltiSpell(thunderStormBehaviour);
 		thunderStormBehaviour.caster = caster;
+	    thunderStormBehaviour.casterObject = caster.gameObject;
 		thunderStormBehaviour.transform.position = transform.position;
 
 		NetworkServer.Spawn(thunderStormBehaviour.gameObject, thunderStormBehaviour.GetComponent<NetworkIdentity>().assetId);
@@ -108,6 +109,8 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
             LightningStrike strike = PoolRegistry.GetInstance(strikePrefab.gameObject, 10, 4).GetComponent<LightningStrike>();
 
             strike.target = playerScript;
+            strike.casterObject = casterObject;
+            strike.caster = caster;
             NetworkServer.Spawn(strike.gameObject, strike.GetComponent<NetworkIdentity>().assetId);
             strike.gameObject.SetActive(true);
 
@@ -122,6 +125,8 @@ public class ThunderStormBehaviour : A_SummoningBehaviour
             LightningStrike strike = PoolRegistry.GetInstance(strikePrefab.gameObject, 10, 4).GetComponent<LightningStrike>();
 
             strike.transform.position = bounds.RandomInside();
+            strike.casterObject = casterObject;
+            strike.caster = caster;
 
             NetworkServer.Spawn(strike.gameObject, strike.GetComponent<NetworkIdentity>().assetId);
             strike.gameObject.SetActive(true);

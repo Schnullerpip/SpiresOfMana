@@ -47,10 +47,20 @@ namespace Prototype.NetworkLobby
         protected List<LobbyPlayer> mPlayers = new List<LobbyPlayer>();
         protected List<PlayerScript> mLoadedPlayers = new List<PlayerScript>();
 
+        private string originalLobbyScene;
+        public bool sceneChangeAllowed = false;
+
+        public LobbyManager(): base()
+        {
+            offlineScene = "";
+            lobbyScene = "arne_menu"; // Name of the scene with the network manager
+        }
+
 
         void Start()
         {
-            if(s_Singleton == null)
+            originalLobbyScene = lobbyScene;
+            if (s_Singleton == null)
             {
                 s_Singleton = this;
                 mainMenu.gameObject.SetActive(true);
@@ -185,7 +195,49 @@ namespace Prototype.NetworkLobby
         {
             ChangeTo(mainMenu.mainMenuPanel);
         }
-                 
+
+        public override void ServerChangeScene(string sceneName)
+        {
+            // Do nothing
+            if(sceneChangeAllowed)
+            {
+                base.ServerChangeScene(sceneName);
+            }
+        }
+
+        public override void OnStartClient(NetworkClient lobbyClient)
+        {
+            if (!sceneChangeAllowed)
+            {
+                lobbyScene = originalLobbyScene; // Ensures the client loads correctly
+            }
+            base.OnStartClient(client);
+        }
+        public override void OnStopClient()
+        {
+            base.OnStopClient();
+            if (!sceneChangeAllowed)
+            {
+                lobbyScene = ""; // Ensures we don't reload the scene after quitting
+            }
+        }
+        public override void OnStartServer()
+        {
+            if (!sceneChangeAllowed)
+            {
+                lobbyScene = originalLobbyScene; // Ensures the server loads correctly
+            }
+            base.OnStartServer();
+        }
+        public override void OnStopServer()
+        {
+            base.OnStopServer();
+            if (!sceneChangeAllowed)
+            {
+                lobbyScene = ""; // Ensures we don't reload the scene after quitting
+            }
+        }
+
         public void StopHostClbk()
         {
             if (mIsMatchmaking)
@@ -293,12 +345,6 @@ namespace Prototype.NetworkLobby
             backDelegate = StopHostClbk;
             SetServerInfo("Hosting", networkAddress);
         }
-
-        public override void OnStartClient(NetworkClient client)
-        {
-            base.OnStartClient(client);
-        }
-
 
         public override void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo)
 		{
@@ -470,7 +516,7 @@ namespace Prototype.NetworkLobby
                     GameManager.instance.AddPlayerMessageCounter();
                 }
             }
-
+            sceneChangeAllowed = true;
             ServerChangeScene(playScene);
         }
 

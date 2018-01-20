@@ -282,7 +282,7 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
             mPendingContactEffect = false;
             SpawnContactEffect();
         }
-        float factor = volumeOverLife.Lerp(mHealthScript.GetCurrentHealth() * 1.0f / mHealthScript.GetMaxHealth() * 1.0f);
+        float factor = volumeOverLife.Lerp(mHealthScript.GetCurrentHealthPercentage());
         loopSource.volume = mOriginalVolume * factor;
 
         transform.localScale = mOriginalScale*spawnScale.Evaluate(mScaleCount);

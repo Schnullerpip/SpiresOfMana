@@ -115,7 +115,7 @@ public class PlayerScript : NetworkBehaviour
 
     public void OnDestroy()
     {
-        GameManager.instance.PlayerDisconnected();
+        GameManager.instance.PlayerDisconnected(playerName);
         GameManager.OnRoundEnded -= RoundEnded;
     }
 

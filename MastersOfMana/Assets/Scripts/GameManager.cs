@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     public bool gameRunning = false;
     public CameraSystem cameraSystem;
     private LavaFloor mLavaFloor;
+    public KillFeed mKillFeed;
 
     public AudioListener listener;
 
@@ -272,8 +273,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void PlayerDisconnected()
+    public void PlayerDisconnected(string playerName)
     {
+        mKillFeed.CreateDisconnectNotification(playerName);
         for (int i = 0; i < players.Count; i++)
         {
             if (!players[i].gameObject.activeSelf)

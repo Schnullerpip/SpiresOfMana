@@ -253,7 +253,7 @@ public class ParalysisBehaviour : A_EffectBehaviour
 
             //damages itself, so it will disappear eventually
             mRemitDamage = false; //dont remit the damage to the affected player for self inflicted damage
-            healthscript.TakeDamage(mDamagePerSecond, GetType());
+            healthscript.TakeDamage(mDamagePerSecond, null, GetType());
             mRemitDamage = true; //all other damage sources should go through to the affected player
         }
     }
@@ -293,7 +293,7 @@ public class ParalysisBehaviour : A_EffectBehaviour
     private void RemitDamage(int amount) {
         if (mRemitDamage && mAffectedPlayer)
         {
-            mAffectedPlayer.healthScript.TakeDamage((int)(amount * DamageRemitFactor), GetType());
+            mAffectedPlayer.healthScript.TakeDamage((int)(amount * DamageRemitFactor), caster, GetType());
         }
     }
     /// <summary>

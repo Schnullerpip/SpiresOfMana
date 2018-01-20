@@ -15,14 +15,17 @@ public class PlayerHealthScript : HealthScript
         base.Start();
     }
 
-    public delegate void StatsRelevant(int damage, System.Type typeOfDamageDealer);
+    public delegate void StatsRelevant(int damage, PlayerScript damageDealer, System.Type typeOfDamageDealer, bool lethal);
     public event StatsRelevant OnStatsRelevantDamage;
 
-    public override void TakeDamage(int amount, System.Type typeOfDamageDealer) {
+    public override void TakeDamage(int amount, PlayerScript damageDealer, System.Type typeOfDamageDealer = null) {
         bool hasBeenAlive = IsAlive();
         int actualDamage = mPlayer.effectStateSystem.current.CalculateDamage(amount, typeOfDamageDealer);
-        base.TakeDamage(actualDamage, typeOfDamageDealer);
-        if (!IsAlive() && hasBeenAlive) {
+
+        base.TakeDamage(actualDamage, damageDealer, typeOfDamageDealer);
+
+        bool lethalDamage = !IsAlive() && hasBeenAlive;
+        if (lethalDamage) {
             //this mPlayer is dead!!! tell the Gamemanager, that one is down
             GameManager.instance.PlayerDown();
             //Show the postGame screen for this player
@@ -33,7 +36,7 @@ public class PlayerHealthScript : HealthScript
         //fire the stats checks
         if (OnStatsRelevantDamage != null)
         {
-            OnStatsRelevantDamage(actualDamage, typeOfDamageDealer);
+            OnStatsRelevantDamage(actualDamage, damageDealer, typeOfDamageDealer, lethalDamage);
         }
     }
 
@@ -56,11 +59,10 @@ public class PlayerHealthScript : HealthScript
     }
 
     public struct FallDamage { };
-    public static FallDamage fallDamageInstance;
 
     public void TakeFallDamage(int amount)
     {
-        TakeDamage(mPlayer.effectStateSystem.current.CalculateFallDamage(amount), fallDamageInstance.GetType());
+        TakeDamage(mPlayer.effectStateSystem.current.CalculateFallDamage(amount), mPlayer, typeof(FallDamage));
     }
 
     public override void HealthChangedHook(int newHealth)
@@ -71,6 +73,6 @@ public class PlayerHealthScript : HealthScript
     [Command]
     public void CmdTakeLocalLavaDamage(int amount)
     {
-        TakeDamage(amount, typeof(LavaFloor));
+        TakeDamage(amount, mPlayer, typeof(LavaFloor));
     }
 }

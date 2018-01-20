@@ -294,7 +294,7 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 		//this is done after the overlapshere loop, that way, walls and other obstacles where able to block the explosion before dying
 		for (int i = 0; i < cachedHealth.Count; i++)
 		{
-			cachedHealth[i].TakeDamage(Mathf.Clamp(Mathf.RoundToInt(explFalloff.EvaluateDamage(affectFactors[i])*externalDamageFactor), min_damage, max_damage), GetType());
+			cachedHealth[i].TakeDamage(Mathf.Clamp(Mathf.RoundToInt(explFalloff.EvaluateDamage(affectFactors[i])*externalDamageFactor), min_damage, max_damage), caster, GetType());
 		}
 	}
 

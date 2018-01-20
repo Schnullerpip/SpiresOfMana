@@ -293,7 +293,7 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
             if (mDamageCount > 1.0f)
             {
                mDamageCount = 0;
-               mHealthScript.TakeDamage(damagePerSecond, GetType());
+               mHealthScript.TakeDamage(damagePerSecond, null, GetType());
             }
 
             if (mScaleCount <= 0)

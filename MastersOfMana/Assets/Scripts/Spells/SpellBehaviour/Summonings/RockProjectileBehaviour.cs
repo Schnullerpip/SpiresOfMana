@@ -312,7 +312,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         if (hs && hs != caster.healthScript)
         {
             //damage the hit object
-            hs.TakeDamage(mDamageAmount, this.GetType());
+            hs.TakeDamage(mDamageAmount, caster, this.GetType());
         }
 
         ServerMoveable sm = collider.GetComponentInParent<ServerMoveable>();

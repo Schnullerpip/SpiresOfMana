@@ -52,7 +52,7 @@ public class StormBlastBehaviour : A_EffectBehaviour
                         PlayerScript ps;
                         if (ps = rigid.GetComponentInParent<PlayerScript>())
                         {
-                            ps.healthScript.TakeDamage(0, GetType());
+                            ps.healthScript.TakeDamage(0, caster, GetType());
                         }
 	                }
 	            }

@@ -328,7 +328,12 @@ public class SpellSelectionPanel : MonoBehaviour {
 
     private void OnHoverClick(int inputIndex, bool needsToBeUltimate)
     {
-        var gameObjectHoveredOver = ((Rewired.Integration.UnityUI.RewiredStandaloneInputModule)EventSystem.current.currentInputModule).pointerEventDataOnClick.pointerEnter;
+        GameObject gameObjectHoveredOver;
+        try
+        {
+            gameObjectHoveredOver = ((Rewired.Integration.UnityUI.RewiredStandaloneInputModule)EventSystem.current.currentInputModule).pointerEventDataOnClick.pointerEnter;
+        }
+        catch { return; }
         UISpellButton spellButtonScript = gameObjectHoveredOver.GetComponentInParent<UISpellButton>();
         if (spellButtonScript)
         {

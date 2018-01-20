@@ -170,8 +170,8 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 			mRigid.position = adjustmentHit.point - (mRigid.position - mLastPosition) * ballRadius;
             mRigid.rotation = Quaternion.FromToRotation(Vector3.zero, adjustmentHit.normal);
 		}
-		
-		RpcExplosion(mRigid.position, mRigid.rotation);
+
+        RpcExplosion(mRigid.position, mRigid.rotation);
 
 		//disallow a double trigger when touching multiple collider
 		mTriggerEnabled = false;
@@ -215,7 +215,8 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 	void RpcExplosion(Vector3 position, Quaternion rotation)
 	{
         mRigid.isKinematic = true;
-        var explosionObject = Instantiate(explosionPrefab, position, rotation);
+        var explosionObject = PoolRegistry.GetInstance(explosionPrefab, position, rotation, 2, 2, Pool.PoolingStrategy.OnMissSubjoinElements, Pool.Activation.ReturnActivated);
+
         RFX4_ColorHelper.ChangeObjectColorByHUE(explosionObject, RFX4_ColorHelper.ColorToHSV(effectColor).H);
         OnCollisionDeactivateBehaviour(false);
     }

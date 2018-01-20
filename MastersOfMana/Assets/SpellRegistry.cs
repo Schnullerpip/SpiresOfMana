@@ -32,9 +32,14 @@ public class SpellRegistry : MonoBehaviour {
 
     public A_Spell GetSpellByType(System.Type type)
     {
+        return GetSpellByType(type.AssemblyQualifiedName);
+    }
+
+    public A_Spell GetSpellByType(string type)
+    {
         foreach (A_Spell spell in spellList)
         {
-            if (spell.GetType() == type)
+            if (spell.GetType().AssemblyQualifiedName == type)
             {
                 return spell;
             }
@@ -43,7 +48,7 @@ public class SpellRegistry : MonoBehaviour {
         //Check if we search for an Ultimate Spell
         foreach (A_Spell spell in ultimateSpellList)
         {
-            if (spell.GetType() == type)
+            if (spell.GetType().AssemblyQualifiedName == type)
             {
                 return spell;
             }

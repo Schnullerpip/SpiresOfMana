@@ -118,6 +118,12 @@ public class HealthScript : NetworkBehaviour
             mCurrentHealth = tempCurrentHealth;
         }
     }
+
+    [ClientRpc]
+    void RpcPlayerDied()
+    {
+
+    }
     
     //bring a GameObject to life
     public void ResetObject()

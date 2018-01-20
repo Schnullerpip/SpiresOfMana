@@ -22,9 +22,20 @@ public class KillFeed : MonoBehaviour {
             feedItemPool.Add(Instantiate(killFeedItemPrefab, transform));
             feedItemPool[i].gameObject.SetActive(false);
         }
+        GameManager.OnPlayerDied += CreateKillFeed;
+    }
+
+    void OnDestroy()
+    {
+        GameManager.OnPlayerDied -= CreateKillFeed;
     }
 
     public void CreateKillFeed(string killerName, System.Type damageSource, string deadPlayerName)
+    {
+        CreateKillFeed(killerName, damageSource.AssemblyQualifiedName, deadPlayerName);
+    }
+
+    public void CreateKillFeed(string killerName, string damageSource, string deadPlayerName)
     {
         Sprite icon;
         A_Spell spell = spellregistry.GetSpellByType(damageSource);
@@ -32,7 +43,7 @@ public class KillFeed : MonoBehaviour {
         {
             icon = spell.icon;
         }
-        else if(damageSource == GameManager.instance.GetLavaFloor().GetType())
+        else if(damageSource == GameManager.instance.GetLavaFloor().GetType().AssemblyQualifiedName)
         {
             icon = lavaIcon;
         }

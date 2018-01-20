@@ -38,6 +38,9 @@ public class GameManager : MonoBehaviour
     public delegate void LocalPlayerDead();
     public static event LocalPlayerDead OnLocalPlayerDead;
 
+    public delegate void PlayerDied(string killerName, string damageSource, string deadPlayerName);
+    public static event PlayerDied OnPlayerDied;
+
     public delegate void LocalPlayerWon();
     public static event LocalPlayerWon OnLocalPlayerWon;
 
@@ -129,6 +132,7 @@ public class GameManager : MonoBehaviour
         OnHostEndedRound = null;
         OnLocalPlayerWon = null;
         OnLocalPlayerDead = null;
+        OnPlayerDied = null;
     }
 
     public void TriggerGameStarted()
@@ -414,5 +418,13 @@ public class GameManager : MonoBehaviour
         {
             OnHostEndedRound();
         }
+    }
+
+    public void TriggerPlayerDied(string killerName, string damageSource, string deadPlayerName)
+    {
+        if (OnPlayerDied != null)
+        {
+            OnPlayerDied(killerName, damageSource, deadPlayerName);
+        }  
     }
 }

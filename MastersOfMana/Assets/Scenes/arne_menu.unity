@@ -1069,12 +1069,13 @@ MonoBehaviour:
   netManager: {fileID: 1087798453436564, guid: 734e4f3c64c54d14ea8f928f17542f12, type: 2}
   prematchCountdown: 1
   mainMenu: {fileID: 1600317358}
-  disconnectedMenu: {fileID: 0}
+  disconnectedMenu: {fileID: 2083125189}
   isInGame: 0
   isHost: 0
   isLocalGame: 0
   playerNumber: 0
   mIsMatchmaking: 0
+  sceneChangeAllowed: 0
 --- !u!4 &1321811818
 Transform:
   m_ObjectHideFlags: 0
@@ -1566,3 +1567,8 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2049372521}
+--- !u!224 &2083125189 stripped
+RectTransform:
+  m_PrefabParentObject: {fileID: 224111511102823924, guid: c0978251ff7b10d4fb954a4b56acd9f0,
+    type: 2}
+  m_PrefabInternal: {fileID: 1029472459}

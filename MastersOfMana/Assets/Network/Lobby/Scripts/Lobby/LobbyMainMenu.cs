@@ -45,6 +45,10 @@ namespace Prototype.NetworkLobby
             {
                 GameManager.instance.listener.enabled = true;
             }
+            if(lobbyManager)
+            {
+                lobbyManager.sceneChangeAllowed = false;
+            }
             matchNameInput.onEndEdit.RemoveAllListeners();
             matchNameInput.onEndEdit.AddListener(onEndEditGameName);
             backButton.onClick.RemoveAllListeners();

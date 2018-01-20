@@ -217,6 +217,17 @@ public class PlayerScript : NetworkBehaviour
     {
         castStateSystem.SetState(id);
     }
+
+    [ClientRpc]
+    public void RpcCastAndAnimate(int animationID)
+    {
+        //castStateSystem.SetState(CastStateSystem.CastStateID.Resolving);
+        GetPlayerSpells().GetCurrentspell().ResetCooldown();
+        GetPlayerAnimation().Cast(animationID);
+
+        Debug.Log("castAnimationID: " + GetPlayerSpells().GetCurrentspell().spell.castAnimationID);
+    }
+
     [ClientRpc]
     public void RpcSetEffectState(EffectStateSystem.EffectStateID id)
     {

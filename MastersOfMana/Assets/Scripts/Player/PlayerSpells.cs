@@ -59,26 +59,6 @@ public class PlayerSpells : NetworkBehaviour {
 		ultimateEnergy = 0;
 	}
 
-    /// <summary>
-    /// holds references to all the coroutines a spell is running, so they can bes stopped/interrupted w4hen a player is for example hit
-    /// and can therefore not continue to cast the spell
-    /// </summary>
-    private List<Coroutine> mSpellRoutines = new List<Coroutine>();
-
-    public void EnlistSpellRoutine(Coroutine spellRoutine)
-    {
-        mSpellRoutines.Add(spellRoutine);
-    }
-
-    public void FlushSpellroutines()
-    {
-        for (int i = 0; i < mSpellRoutines.Count; ++i)
-        {
-            StopCoroutine(mSpellRoutines[i]);
-        }
-        mSpellRoutines = new List<Coroutine>();
-    }
-
     //spellslots
     public SpellSlot[] spellslot = new SpellSlot[4];
 
@@ -239,15 +219,11 @@ public class PlayerSpells : NetworkBehaviour {
                 }
                 //set caster in 'casting mode'
                 //caster.RpcSetCastState(CastStateSystem.CastStateID.Resolving);
-
-                //set the cooldown of the current spellslot
-                caster.GetPlayerSpells().GetCurrentspell().ResetCooldown();
-                caster.GetPlayerAnimation().Cast(caster.GetPlayerSpells().GetCurrentspell().spell.castAnimationID);
-
+                caster.RpcCastAndAnimate(spell.castAnimationID);
                 //resolve the spell
                 spell.Resolve(caster);
                 //set caster in 'normal mode'
-                //caster.RpcSetCastState(CastStateSystem.CastStateID.Normal);
+                caster.RpcSetCastState(CastStateSystem.CastStateID.Normal);
 
 				return true;
             }

@@ -4,25 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class A_CastState : A_State{
-    public A_CastState(PlayerScript player) : base(player)
-    {
-        castDurationCount = 0;
-    }
-
-    /// <summary>
-    /// will store the time in milliseconds, that a character is casting already, to validate that a spell can resolve now
-    /// </summary>
-    protected float castDurationCount;
-
-    public float GetCastDurationCount()
-    {
-        return castDurationCount;
-    }
-
-    public void ResetCastDurationCount()
-    {
-        castDurationCount = 0;
-    }
+    public A_CastState(PlayerScript player) : base(player) { }
 
     /*behaviour distinction
      * those are keptempty on purpose because they're ment to be implemented in the subclasses

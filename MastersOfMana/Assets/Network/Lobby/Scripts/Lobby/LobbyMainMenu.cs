@@ -41,6 +41,10 @@ namespace Prototype.NetworkLobby
 
         public void OnEnable()
         {
+            if (GameManager.instance)
+            {
+                GameManager.instance.listener.enabled = true;
+            }
             matchNameInput.onEndEdit.RemoveAllListeners();
             matchNameInput.onEndEdit.AddListener(onEndEditGameName);
             backButton.onClick.RemoveAllListeners();

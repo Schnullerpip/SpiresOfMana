@@ -334,6 +334,12 @@ public class SpellSelectionPanel : MonoBehaviour {
             gameObjectHoveredOver = ((Rewired.Integration.UnityUI.RewiredStandaloneInputModule)EventSystem.current.currentInputModule).pointerEventDataOnClick.pointerEnter;
         }
         catch { return; }
+
+        if(!gameObjectHoveredOver)
+        {
+            return;
+        }
+
         UISpellButton spellButtonScript = gameObjectHoveredOver.GetComponentInParent<UISpellButton>();
         if (spellButtonScript)
         {

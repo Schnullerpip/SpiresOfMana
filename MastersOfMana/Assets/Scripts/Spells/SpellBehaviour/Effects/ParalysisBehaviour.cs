@@ -97,6 +97,8 @@ public class ParalysisBehaviour : A_EffectBehaviour
 
                 pb.Init(p.gameObject);
                 pb.mAffectedPlayer = p;
+                pb.caster = caster;
+                pb.casterObject = caster.gameObject;
 
                 NetworkServer.Spawn(pb.gameObject);
 

@@ -29,7 +29,7 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
 
     void OnValidate()
     {
-        mOriginalScale = transform.lossyScale;
+        mOriginalScale = transform.localScale;
     }
 
 	public override void Preview (PlayerScript caster)
@@ -37,11 +37,9 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
 		base.Preview(caster);
 
         preview.instance.SetAvailability(caster.CurrentSpellReady());
-
         Vector3 position;
         Quaternion rotation;
         GetSpawnPositionAndRotation(caster, out position, out rotation, true);
-	    preview.transform.localScale = gameObject.transform.localScale;
         preview.instance.MoveAndRotate(position, rotation);
 	}
 

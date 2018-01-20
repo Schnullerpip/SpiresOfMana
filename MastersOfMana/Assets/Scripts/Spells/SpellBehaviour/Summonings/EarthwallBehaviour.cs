@@ -41,6 +41,7 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
         Vector3 position;
         Quaternion rotation;
         GetSpawnPositionAndRotation(caster, out position, out rotation, true);
+	    preview.transform.localScale = gameObject.transform.localScale;
         preview.instance.MoveAndRotate(position, rotation);
 	}
 

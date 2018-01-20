@@ -70,4 +70,10 @@ public class NetManager : NetworkBehaviour {
 		}
 		GameManager.instance.TriggerHostEndedRound ();
     }
+
+    [ClientRpc]
+    public void RpcPlayerDied(string killerName, string damageSource, string deadPlayerName)
+    {
+        GameManager.instance.TriggerPlayerDied(killerName, damageSource, deadPlayerName);
+    }
 }

@@ -427,4 +427,45 @@ public class GameManager : MonoBehaviour
             OnPlayerDied(killerName, damageSource, deadPlayerName);
         }  
     }
+
+    /// <summary>
+    /// Returns the tension of the game in a normalized value (0: no tension, 1: MAXIMUM INTENSITY!)
+    /// 75% weight from the current height of lava, 25% weight from the local players health left.
+    /// If there are only 2 players left and anyone has 15 or fever hp left or the local player has 15 or fever => maximum tension
+    /// </summary>
+    /// <returns>The tension.</returns>
+    public float GetTension()
+    {
+        if (!localPlayer || !mLavaFloor)
+        {
+			return 0;         
+        }
+
+        if(!localPlayer.healthScript.IsAlive())
+        {
+            return 0;
+        }
+
+        if (localPlayer.healthScript.GetCurrentHealthPercentage() <= 0.15f)
+        {
+            return 1;
+        }
+
+        if(mNumberOfDeadPlayers >= (players.Count - 2))
+        {
+            for (int i = 0; i < players.Count; ++i)
+            {
+                if(players[i].healthScript.IsAlive())
+                {
+					if(players[i].healthScript.GetCurrentHealthPercentage() <= 0.15f)
+                    {
+                        return 1;
+                    }
+                }
+            }
+        }
+
+        return mLavaFloor.GetHeightNormalized() * 0.75f + 
+                         (1 - localPlayer.healthScript.GetCurrentHealthPercentage()) * 0.25f;
+    }
 }

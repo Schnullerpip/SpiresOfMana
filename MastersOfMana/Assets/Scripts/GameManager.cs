@@ -280,6 +280,7 @@ public class GameManager : MonoBehaviour
     public void PlayerDisconnected(string playerName)
     {
         mKillFeed.CreateDisconnectNotification(playerName);
+
         for (int i = 0; i < players.Count; i++)
         {
             if (!players[i].gameObject.activeSelf)
@@ -295,8 +296,9 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-            //If the game is runnning we need to check for dead players
-            if (gameRunning)
+
+        //If the game is runnning we need to check for dead players
+        if (gameRunning)
         {
             //We need to recheck if all but one players are dead!
             //Since we can't be sure that we can still access the players Healthscript we need to check the alive status of all remaining players again
@@ -422,9 +424,6 @@ public class GameManager : MonoBehaviour
 
     public void TriggerPlayerDied(string killerName, string damageSource, string deadPlayerName)
     {
-        if (OnPlayerDied != null)
-        {
-            OnPlayerDied(killerName, damageSource, deadPlayerName);
-        }  
+        mKillFeed.CreateKillFeed(killerName, damageSource, deadPlayerName);
     }
 }

@@ -7,18 +7,21 @@ public class SpellHUD : MonoBehaviour
 {
     public List<SpellSlotHUD> spellSlots;
     public Image ultimateEnergyProgess;
-    public Color ultimateEnergyDefaultColor;
-    public Color ultimateEnergyFullColor;
 
     private PlayerSpells localPlayerSpells;
 
     private List<Image> spellIcons = new List<Image>();
     private List<Image> spellCooldowns = new List<Image>();
 
+
     public delegate void CooldownFinished();
     public event CooldownFinished OnCooldownFinished;
 
     public InputImage[] inputImages;
+
+    public UniformScaler ultiScaler;
+    public ChangeImageColor ultiColorChange;
+    public GameObject shine;
 
     private static readonly System.Guid guid_PS4 = new System.Guid("cd9718bf-a87a-44bc-8716-60a0def28a9f");
     private static readonly System.Guid guid_PS3 = new System.Guid("71dfe6c8-9e81-428f-a58e-c7e664b7fbed");
@@ -45,6 +48,8 @@ public class SpellHUD : MonoBehaviour
 	{
 		GameManager.OnRoundStarted -= RoundStarted;
 		GameManager.OnRoundEnded -= RoundEnded;
+
+        localPlayerSpells.onUltiChange -= UltiEnergyChangeEvent;
 	}
 
 	private void RoundStarted()
@@ -96,6 +101,9 @@ public class SpellHUD : MonoBehaviour
     {
         localPlayerSpells = GameManager.instance.localPlayer.GetPlayerSpells();
 
+        localPlayerSpells.onUltiChange += UltiEnergyChangeEvent;
+        UltiEnergyChangeEvent(0);
+
         foreach(SpellSlotHUD spellslot in spellSlots)
         {
             spellIcons.Add(spellslot.icon);
@@ -135,27 +143,36 @@ public class SpellHUD : MonoBehaviour
         spellCooldowns[SpellSlotID].fillAmount = CooldownPercentage;
     }
 
-  
 
-    private float mLastUlitEnergy = 0.0f;
-    public UniformScaler ultiScaler;
+    void UltiEnergyChangeEvent(float energy)
+    {
+        UpdateSlider(energy, localPlayerSpells.ultimateEnergyThreshold);
+    }
 
     public void UpdateSlider(float ultimateEnergyPoints, float maximumUltimateEnergyPoints)
     {
-        if(ultimateEnergyPoints > mLastUlitEnergy)
+        //charging
+        if(ultimateEnergyPoints > 0)
         {
-            ultiScaler.PlayOnce();
+			ultiScaler.PlayOnce();
         }
-		mLastUlitEnergy = ultimateEnergyPoints;
+        else
+        {
+            ultiColorChange.Revert();
+            shine.SetActive(false);
+        }
 
         if(ultimateEnergyPoints < maximumUltimateEnergyPoints)
         {
             //ultimateEnergyProgess.color = ultimateEnergyDefaultColor;
             ultimateEnergyProgess.fillAmount = 1 - (ultimateEnergyPoints / maximumUltimateEnergyPoints);
         }
-        else
+        else if(ultimateEnergyProgess.fillAmount > 0)
         {
             ultimateEnergyProgess.fillAmount = 0;
+            ultiColorChange.Change();
+            shine.SetActive(true);
+
             //ultimateEnergyProgess.color = ultimateEnergyFullColor;
         }
     }
@@ -167,7 +184,6 @@ public class SpellHUD : MonoBehaviour
             SetCooldown(0, localPlayerSpells.spellslot[0]);
             SetCooldown(1, localPlayerSpells.spellslot[1]);
             SetCooldown(2, localPlayerSpells.spellslot[2]);
-            UpdateSlider(localPlayerSpells.ultimateEnergy, localPlayerSpells.ultimateEnergyThreshold);
         }
     }
 

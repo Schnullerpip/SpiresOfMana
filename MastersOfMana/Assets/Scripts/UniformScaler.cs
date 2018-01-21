@@ -29,13 +29,21 @@ public class UniformScaler : MonoBehaviour
     [ContextMenu("Play Once")]
     public void PlayOnce()
     {
-        Play(true);
+        Play(false);
     }
 
-    public void Play(bool once = true)
+    /// <summary>
+    /// Stops the animations loop, meaning it will finish it's current cycle.
+    /// </summary>
+    public void StopLoop()
+    {
+        loop = false;
+    }
+
+    public void Play(bool looping = true)
     {
         StopAllCoroutines();
-        loop = !once;
+        loop = looping;
         StartCoroutine(Scaling());
     }
 
@@ -61,6 +69,11 @@ public class UniformScaler : MonoBehaviour
         }
 
         transform.localScale = Size() + Vector3.one * curve.Evaluate(maxTime);
+    }
+
+    public void Cancel()
+    {
+        transform.localScale = mStartScale;
     }
 
     private Vector3 Size()

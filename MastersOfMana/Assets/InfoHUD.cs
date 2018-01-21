@@ -5,24 +5,25 @@ using UnityEngine.UI;
 
 public class InfoHUD : MonoBehaviour
 {
+    public GameObject lavaImage;
+    public GameObject energyImage;
 
-    [SerializeField] private Image LavaRisesImage;
-    [SerializeField] private Image EnergyZoneImage;
+    private UniformScaler mLavaScaler, mEnergyScaler;
+    private ChangeImageColor mLavaColor, mEnergyColor;
 
     private LavaFloor lava;
     private PlatformSpiresEffect[] platforms;
-
-	// Use this for initialization
-	void Start () {
-	    animationCurve.postWrapMode = WrapMode.PingPong;
-        mCachedScaleLava = LavaRisesImage.transform.localScale;
-        mCachedScaleEnergy = EnergyZoneImage.transform.localScale;
-	}
 
     void Awake()
     {
         GameManager.OnRoundStarted += RoundStarted;
         GameManager.OnRoundEnded += RoundEnded;
+
+        mLavaScaler = lavaImage.GetComponent<UniformScaler>();
+        mEnergyScaler = energyImage.GetComponent<UniformScaler>();
+
+        mLavaColor = lavaImage.GetComponent<ChangeImageColor>();
+        mEnergyColor = energyImage.GetComponent<ChangeImageColor>();
     }
 
     void OnDestroy()
@@ -33,9 +34,6 @@ public class InfoHUD : MonoBehaviour
 
     void OnEnable()
     {
-        lavaImageAaction = Idle;
-        energyImageAction = Idle;
-
         lava = FindObjectOfType<LavaFloor>();
         platforms = FindObjectsOfType<PlatformSpiresEffect>();
 
@@ -67,61 +65,27 @@ public class InfoHUD : MonoBehaviour
     //EVENTS
     private void InitializeLavaMotion()
     {
-        lavaImageAaction = AnimateImage;
+        mLavaScaler.Play(true);
+        mLavaColor.Change();
     }
 
     private void InitializeEnergyMotion()
     {
-        energyImageAction = AnimateImage;
+        mEnergyScaler.Play(true);
+        mEnergyColor.Change();
     }
 
     private void UninitializeLavaMotion()
     {
-        lavaImageAaction = Idle;
-        LavaRisesImage.transform.localScale = mCachedScaleLava;
+        mLavaScaler.StopLoop();
+        mLavaColor.Revert();
     }
 
     private void UninitializeEnergyMotion()
     {
-        energyImageAction = Idle;
-        EnergyZoneImage.transform.localScale = mCachedScaleEnergy;
+        mEnergyScaler.StopLoop();
+        mEnergyColor.Revert();
     }
-	
-	// Update is called once per frame
-    private delegate void UpdateAction(Image image, Vector3 cachedScale);
-
-    private UpdateAction lavaImageAaction, energyImageAction;
-	void Update ()
-	{
-	    lavaImageAaction(LavaRisesImage, mCachedScaleLava);
-	    energyImageAction(EnergyZoneImage, mCachedScaleEnergy);
-	}
-
-    [Header("ImageAnimation")]
-    public AnimationCurve animationCurve;
-
-    private Vector3 mCachedScaleLava, mCachedScaleEnergy;
-
-    /// <summary>
-    /// this is the method, that animates the image/icon so it is noticed and stated as 'active'
-    /// whatever should happen to the image should be coded into this method!
-    /// 
-    /// right now the icon is scaled repeatedly to attract attention
-    /// </summary>
-    /// <param name="image">the image that is manipulated</param>
-    /// <param name="cachedScale"> the original scale of the image</param>
-    private void AnimateImage(Image image, Vector3 cachedScale)
-    {
-        Vector3 scale = image.gameObject.transform.localScale;
-        scale.x = cachedScale.x*animationCurve.Evaluate(Time.time);
-        scale.y = cachedScale.y*animationCurve.Evaluate(Time.time);
-        scale.z = cachedScale.z*animationCurve.Evaluate(Time.time);
-
-        image.transform.localScale = scale;
-    }
-
-    private void Idle(Image image, Vector3 cachedScale) {}
-
 
     private void RoundStarted()
     {
@@ -131,6 +95,9 @@ public class InfoHUD : MonoBehaviour
     private void RoundEnded()
     {
         gameObject.SetActive(false);
+        mLavaScaler.Cancel();
+        mLavaColor.Cancel();
+        mEnergyScaler.Cancel();
+        mEnergyColor.Cancel();
     }
-
 }

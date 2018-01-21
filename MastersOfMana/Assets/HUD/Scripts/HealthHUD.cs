@@ -10,9 +10,8 @@ public class HealthHUD : MonoBehaviour
     private PlayerHealthScript localPlayerHealthScript;
     private bool isInitialized = false;
 
-    public Transform healthScale;
+	public Image healthFilling;
     public Gradient healthGradient;
-    public Image filling;
     public float scrollingSpeed = 2;
 
     public FloatingDamageTextSystem floatingDamageTextSystem;
@@ -135,8 +134,8 @@ public class HealthHUD : MonoBehaviour
     private void ScaleAndColor()
     {
         float f = mCurrentHealth / 100.0f;
-        healthScale.localScale = healthScale.localScale.Change(y: f);
-        filling.color = healthGradient.Evaluate(1 - f);
+		healthFilling.fillAmount = f;
+        healthFilling.color = healthGradient.Evaluate(1 - f);
     }
 
 	private void LocalPlayerDead()

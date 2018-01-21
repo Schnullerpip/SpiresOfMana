@@ -17,9 +17,28 @@ public class PlayerSpells : NetworkBehaviour {
 
 	[Header("Energy")]
 
-    [SyncVar]
+    [SyncVar(hook = "UltimateEnergyHook")]
     public float ultimateEnergy = 0;
     public float ultimateEnergyThreshold = 30;
+
+    public delegate void UltiChange(float newValue);
+    public UltiChange onUltiChange;
+
+    void UltimateEnergyHook(float newVal)
+    {
+        if(newVal <= ultimateEnergyThreshold)
+        {
+			ultimateEnergy = newVal;
+            if(onUltiChange != null)
+            {
+                onUltiChange(newVal);
+            }         
+        }
+        else
+        {
+            ultimateEnergy = ultimateEnergyThreshold;
+        }
+    }
 
     public void Start()
     {

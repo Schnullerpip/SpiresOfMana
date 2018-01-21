@@ -13,6 +13,8 @@ public class CamSlider : MonoBehaviour {
 	[Tooltip("How close can the camera get to any wall?")]
 	public float wallDistance = 0.1f;
 
+    public LayerMask layerMask;
+
 	private Vector3 mLocalEndPosition;
 	private float mMaxDistance;
 	private RaycastHit mHit;
@@ -36,12 +38,12 @@ public class CamSlider : MonoBehaviour {
             mPlayer.SetColliderIgnoreRaycast(true);
 
             //first check if the camera is already touching a collider
-            if(Physics.CheckSphere(transform.position, wallDistance))
+            if(Physics.CheckSphere(transform.position, wallDistance, layerMask))
             {
                 cam.localPosition = Vector3.MoveTowards(cam.localPosition, Vector3.zero, inSpeed * Time.deltaTime);
             }
             //then check with a spherecast backwards if there is a wall
-            else if (Physics.SphereCast(transform.position, wallDistance, transform.TransformPoint(mLocalEndPosition) - transform.position, out mHit, mMaxDistance))
+            else if (Physics.SphereCast(transform.position, wallDistance, transform.TransformPoint(mLocalEndPosition) - transform.position, out mHit, mMaxDistance, layerMask))
             {
                 cam.position = Vector3.MoveTowards(cam.position, mHit.point + mHit.normal * wallDistance, inSpeed * Time.deltaTime);
             }

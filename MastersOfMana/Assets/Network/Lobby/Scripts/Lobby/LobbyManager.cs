@@ -556,6 +556,7 @@ namespace Prototype.NetworkLobby
         
         public override void OnClientDisconnect(NetworkConnection conn)
         {
+            mainMenu.loadingScreen.gameObject.SetActive(true);
             StopClientClbk();
             disconnectedMenu.gameObject.SetActive(true);
             mainMenu.gameObject.SetActive(false);
@@ -567,7 +568,6 @@ namespace Prototype.NetworkLobby
         {
             disconnectedMenu.gameObject.SetActive(false);
             mainMenu.mainMenuPanel.gameObject.SetActive(true);
-
         }
 
         public override void OnClientError(NetworkConnection conn, int errorCode)

@@ -147,6 +147,15 @@ public class HealthScript : NetworkBehaviour
     }
 
     /// <summary>
+    /// Return the current health in percentage from 0: dead to 1: maxHealth
+    /// </summary>
+    /// <returns>The current health percentage.</returns>
+    public float GetCurrentHealthPercentage()
+    {
+        return mCurrentHealth / (float) mMaxHealth;
+    }
+
+    /// <summary>
     /// the only thing, that should be adressed, to actually heal a GameObject, this should only ever be run on the server!!!
     /// </summary>
     /// <param name="amount"></param>

@@ -305,7 +305,7 @@ public class ParalysisBehaviour : A_EffectBehaviour
     private int mLastIndex;
     private void VisualCrackPerDamageUnit(int amount)
     {
-        float rate = 1.1f - healthscript.GetCurrentHealth()*1.0f/healthscript.GetMaxHealth();
+        float rate = 1.1f - healthscript.GetCurrentHealthPercentage();
         //how many of the fragments should be activated? (instant cast to int)
         int numberActivatedFragments = (int)(rate*fragments.Length);
 

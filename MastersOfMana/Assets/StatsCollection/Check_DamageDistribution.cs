@@ -71,7 +71,6 @@ public class Check_DamageDistribution : ICheck
 
     public void Init()
     {
-
         Debug.Log("[" + this.GetType() + "] starting to log damage stats to: " + preferedFileLocation);
 
         source_damage = new Dictionary<Type, List<damage_time>>();
@@ -139,14 +138,13 @@ public class Check_DamageDistribution : ICheck
 	                {
 	                    OnLethalDamage(p, dealerType, damageDealer);
 	                }
-	                p.healthScript.OnStatsRelevantDamage -= dynamicMethod;
+                    //TODO when no longer needed!!!
+	                //p.healthScript.OnStatsRelevantDamage -= dynamicMethod;
 	            }
 	        };
 
-	        p.healthScript.OnStatsRelevantDamage += dynamicMethod;
-
-
-	    }
+            p.healthScript.OnStatsRelevantDamage += dynamicMethod;
+        }
 
         //register at gamemanager to get OnGameEnded events
         GameManager.OnRoundEnded += GameEndRoutine;

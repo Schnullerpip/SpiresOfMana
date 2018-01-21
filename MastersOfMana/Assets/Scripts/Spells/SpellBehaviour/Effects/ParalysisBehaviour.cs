@@ -97,6 +97,8 @@ public class ParalysisBehaviour : A_EffectBehaviour
 
                 pb.Init(p.gameObject);
                 pb.mAffectedPlayer = p;
+                pb.caster = caster;
+                pb.casterObject = caster.gameObject;
 
                 NetworkServer.Spawn(pb.gameObject);
 
@@ -115,7 +117,7 @@ public class ParalysisBehaviour : A_EffectBehaviour
             if (!hitSomething || hit.distance > mHitRange) //not hitting anything
             {
                 //we hit nothing in range -> spawn empty ice-ish explosion
-                GameObject nonHitEffect = PoolRegistry.GetInstance(mNonHitEffect, 2, 2, Pool.PoolingStrategy.OnMissRoundRobin, Pool.Activation.ReturnActivated);
+                GameObject nonHitEffect = PoolRegistry.GetInstance(mNonHitEffect, 1, 1, Pool.PoolingStrategy.OnMissRoundRobin, Pool.Activation.ReturnActivated);
                 nonHitEffect.transform.position = caster.GetCameraPosition() + caster.GetCameraLookDirection() * mHitRange;
                 NetworkServer.Spawn(nonHitEffect);
             }

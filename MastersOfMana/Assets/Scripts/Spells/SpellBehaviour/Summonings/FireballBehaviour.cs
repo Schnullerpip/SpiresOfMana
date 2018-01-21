@@ -106,15 +106,14 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 		{
 			initPos = caster.handTransform.position;
 		}
-			
+
         //Get a fireballinstance out of the pool
-		FireballBehaviour fireballBehaviour = PoolRegistry.GetInstance(gameObject, initPos, caster.transform.rotation, 7, 5).GetComponent<FireballBehaviour>();
+		FireballBehaviour fireballBehaviour = PoolRegistry.GetInstance(gameObject, initPos, caster.transform.rotation, 3, 1).GetComponent<FireballBehaviour>();
 		fireballBehaviour.caster = caster;
 		fireballBehaviour.mLastPosition = initPos;
 
         //now activate it, so no weird interpolation errors occcure
         fireballBehaviour.gameObject.SetActive(true);
-
 
 		//position the fireball to 'spawn' at the casters hand
 		fireballBehaviour.Reset();
@@ -168,8 +167,8 @@ public class FireballBehaviour : A_ServerMoveableSummoning
 		{
 			//technically the normal is not correct, but it looks fine and is only really wrong when the angle is super flat
 			mRigid.position = adjustmentHit.point - (mRigid.position - mLastPosition) * ballRadius;
-            mRigid.rotation = Quaternion.FromToRotation(Vector3.zero, adjustmentHit.normal);
-		}
+            mRigid.rotation = Quaternion.FromToRotation(Vector3.up, adjustmentHit.normal);
+        }
 
         RpcExplosion(mRigid.position, mRigid.rotation);
 

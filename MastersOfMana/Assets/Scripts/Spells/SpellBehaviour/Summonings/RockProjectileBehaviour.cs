@@ -17,6 +17,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
 
     [SerializeField] private float mPushForce;
     [SerializeField] private float mShootingReach;
+    [SerializeField] private float mFollowSpeed;
     [SerializeField] private Vector3[] mRandomOffsets;
     [SerializeField] private Mesh[] mRandomRockMeshes;
     [SerializeField] private TrailRenderer trail;
@@ -83,8 +84,9 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
         rp.previous = null;
         rp.successor = null;
         rp.mIndividualRotationVelocity = mRotationVelocity + Random.Range(-2, 5);
-
         rp.mOffset = mRandomOffsets[mOffsetCount++];
+
+        rp.transform.position = caster.movement.mRigidbody.worldCenterOfMass + rp.mOffset;
         if (mOffsetCount >= mRandomOffsets.Length)
         {
             mOffsetCount = 0;
@@ -160,7 +162,7 @@ public class RockProjectileBehaviour : A_ServerMoveableSummoning
     {
         if (caster != null)
         {
-            transform.SetPositionAndRotation(caster.movement.mRigidbody.worldCenterOfMass,
+            transform.SetPositionAndRotation(Vector3.MoveTowards(transform.position, caster.movement.mRigidbody.worldCenterOfMass, mFollowSpeed),
                 Quaternion.AngleAxis(mTimeCount *mRotationSpeed, mRotationAxis) * 
                 Quaternion.AngleAxis(mTimeCount * mIndividualRotationVelocity, Vector3.up));
 

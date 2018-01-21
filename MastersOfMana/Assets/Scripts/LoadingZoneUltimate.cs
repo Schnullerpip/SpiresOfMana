@@ -18,9 +18,13 @@ public class LoadingZoneUltimate : LoadingZone
 				yield return new WaitForSeconds(tickDuration);            
             }
 
-            if(!GameManager.instance.isUltimateActive)
+            if (!GameManager.instance.isUltimateActive)
             {
                 spells.ultimateEnergy += ultimateEnergyPerSecond;
+            }
+            else
+            {
+                yield return null;
             }
         }
     }

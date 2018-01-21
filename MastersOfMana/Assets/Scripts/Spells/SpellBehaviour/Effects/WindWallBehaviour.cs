@@ -65,6 +65,7 @@ public class WindWallBehaviour : A_EffectBehaviour
                         if (ps != caster)
                         {
                             ps.movement.RpcSetVelocity(force);
+                            ps.healthScript.TakeDamage(0, caster, GetType());
                         }
                     }
                     else

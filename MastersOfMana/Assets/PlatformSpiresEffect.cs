@@ -28,15 +28,19 @@ public class PlatformSpiresEffect : NetworkBehaviour
 
     void Awake()
     {
-        mMaterial = new Material(renderers[0].material);
+        mMaterial = new Material(renderers[0].materials[1]);
         mEmissionPropID = Shader.PropertyToID("_EmissionStrength");
         mColorPropID = Shader.PropertyToID("_EmissionColor");
 
         mMaterial.SetFloat(mEmissionPropID, 0);
 
+        //since a material in the array can not be set (for whatever reason), we have to cache the array
+        Material[] matArray = renderers[0].materials;
+        matArray[1] = mMaterial;
+
         for (int i = 0; i < renderers.Length; ++i)
         {
-            renderers[i].material = mMaterial;
+            renderers[i].materials = matArray;
         }
     }
 

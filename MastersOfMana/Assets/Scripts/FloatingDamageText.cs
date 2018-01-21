@@ -44,7 +44,7 @@ public class FloatingDamageText : MonoBehaviour {
         gameObject.SetActive(false);
     } 
 
-    public void Update()
+    public void FixedUpdate()
     {
         mVelocity.y -= gravity;
         mRect.anchoredPosition += mVelocity * Time.deltaTime * transform.localScale.x;

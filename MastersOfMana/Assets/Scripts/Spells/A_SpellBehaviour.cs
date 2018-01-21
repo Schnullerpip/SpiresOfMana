@@ -233,8 +233,8 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 						if(hit.collider.attachedRigidbody != c.attachedRigidbody)
 						{
 							//skip it since there is something in between the 2
-							Debug.Log(hit.collider.name+" was in the way of an "+GetType().ToString()+" explosion trying to hit "+ c.attachedRigidbody +". " +
-								"This message is temporarily here to test if this explosionblocking works properly. Delete it when the time comes. dunno when ¯\\_(ツ)_/¯");
+							//Debug.Log(hit.collider.name+" was in the way of an "+GetType().ToString()+" explosion trying to hit "+ c.attachedRigidbody +". " +
+							//	"This message is temporarily here to test if this explosionblocking works properly. Delete it when the time comes. dunno when ¯\\_(ツ)_/¯");
 							continue;
 						}
 					}

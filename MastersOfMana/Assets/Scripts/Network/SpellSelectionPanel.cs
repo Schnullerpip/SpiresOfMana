@@ -20,7 +20,7 @@ public class SpellSelectionPanel : MonoBehaviour {
 
     public SpellAssignmentPopup popupMenu;
     public PopupMenu unableToAssignPopup;
-    public RectTransform[] selectionHighlights;
+    public AnchoredPositionMover[] selectionHighlights;
 
     private Rewired.Player playerInput;
     private PlayerLobby lobbyPlayer;
@@ -36,10 +36,20 @@ public class SpellSelectionPanel : MonoBehaviour {
         mHUD = GetComponentInParent<HUD>();
         FillContainer(normalSpellList, spellregistry.spellList);
         FillContainer(ultimateSpellList, spellregistry.ultimateSpellList);
+
         ValidateSpellSelection();
 
         //display the player first spell
         SetDescriptionToFirstSpell();
+
+        //this has to be done on the second frame, since the canvas layouts are not correct at this moment
+        Extensions.CallInOneFrame(this, () => {
+            for (int i = 0; i < selectionHighlights.Length; i++)
+            {
+                Vector2 pos = (mSpellButtonDictionary[mPlayerSpellList[i]].transform as RectTransform).anchoredPosition;
+                selectionHighlights[i].SetPosition(pos);
+            }
+        });
     }
 
     private void SetDescriptionToFirstSpell()
@@ -231,10 +241,9 @@ public class SpellSelectionPanel : MonoBehaviour {
 
         for (int i = 0; i < selectionHighlights.Length; i++)
         {
-            selectionHighlights[i].SetParent(mSpellButtonDictionary[mPlayerSpellList[i]].transform, false);
-            selectionHighlights[i].anchoredPosition = Vector2.zero;
+            Vector2 pos = (mSpellButtonDictionary[mPlayerSpellList[i]].transform as RectTransform).anchoredPosition;
+            selectionHighlights[i].SetTarget(pos);
         }
-
     }
 
     public enum OnSelectDirection

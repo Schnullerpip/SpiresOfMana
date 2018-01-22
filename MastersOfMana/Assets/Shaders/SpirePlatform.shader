@@ -1,23 +1,27 @@
 // Shader created with Shader Forge v1.38 
 // Shader Forge (c) Neat Corporation / Joachim Holmer - http://www.acegikmo.com/shaderforge/
 // Note: Manually altering this data may prevent you from opening it in Shader Forge
-/*SF_DATA;ver:1.38;sub:START;pass:START;ps:flbk:,iptp:0,cusa:False,bamd:0,cgin:,lico:1,lgpr:1,limd:3,spmd:1,trmd:0,grmd:0,uamb:True,mssp:True,bkdf:True,hqlp:False,rprd:True,enco:False,rmgx:True,imps:True,rpth:0,vtps:0,hqsc:True,nrmq:1,nrsp:0,vomd:0,spxs:False,tesm:0,olmd:1,culm:0,bsrc:0,bdst:1,dpts:2,wrdp:True,dith:0,atcv:False,rfrpo:True,rfrpn:Refraction,coma:15,ufog:True,aust:True,igpj:False,qofs:0,qpre:1,rntp:1,fgom:False,fgoc:False,fgod:False,fgor:False,fgmd:0,fgcr:0.5,fgcg:0.5,fgcb:0.5,fgca:1,fgde:0.01,fgrn:0,fgrf:300,stcl:False,atwp:False,stva:128,stmr:255,stmw:255,stcp:6,stps:0,stfa:0,stfz:0,ofsf:0,ofsu:0,f2p0:False,fnsp:False,fnfb:False,fsmp:False;n:type:ShaderForge.SFN_Final,id:2865,x:33026,y:32676,varname:node_2865,prsc:2|diff-6343-OUT,spec-358-OUT,gloss-1813-OUT,normal-5964-RGB,emission-1222-OUT;n:type:ShaderForge.SFN_Multiply,id:6343,x:32114,y:32712,varname:node_6343,prsc:2|A-7736-RGB,B-6665-RGB;n:type:ShaderForge.SFN_Color,id:6665,x:31921,y:32805,ptovrint:False,ptlb:Color,ptin:_Color,varname:_Color,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,c1:0.1176471,c2:0.1176471,c3:0.1176471,c4:1;n:type:ShaderForge.SFN_Tex2d,id:7736,x:31921,y:32620,ptovrint:True,ptlb:Base Color,ptin:_MainTex,varname:_MainTex,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,ntxv:0,isnm:False;n:type:ShaderForge.SFN_Tex2d,id:5964,x:32520,y:32949,ptovrint:True,ptlb:Normal Map,ptin:_BumpMap,varname:_BumpMap,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,ntxv:3,isnm:True;n:type:ShaderForge.SFN_Slider,id:358,x:32250,y:32780,ptovrint:False,ptlb:Metallic,ptin:_Metallic,varname:node_358,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,min:0,cur:0,max:1;n:type:ShaderForge.SFN_Slider,id:1813,x:32250,y:32882,ptovrint:False,ptlb:Gloss,ptin:_Gloss,varname:_Metallic_copy,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,min:0,cur:0.8,max:1;n:type:ShaderForge.SFN_Tex2d,id:5399,x:31995,y:33013,ptovrint:False,ptlb:EmissionMap,ptin:_EmissionMap,varname:node_5399,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,tex:257747dbb6cd4044ea48a7a4aed61dc7,ntxv:0,isnm:False|UVIN-8239-OUT;n:type:ShaderForge.SFN_ValueProperty,id:8266,x:31195,y:32991,ptovrint:False,ptlb:Y,ptin:_Y,varname:node_8266,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,v1:1;n:type:ShaderForge.SFN_TexCoord,id:7263,x:31497,y:33110,varname:node_7263,prsc:2,uv:0,uaff:False;n:type:ShaderForge.SFN_Add,id:8239,x:31741,y:33130,varname:node_8239,prsc:2|A-694-OUT,B-7263-UVOUT;n:type:ShaderForge.SFN_Color,id:6597,x:32212,y:33166,ptovrint:False,ptlb:EmissionColor,ptin:_EmissionColor,varname:node_6597,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,c1:1,c2:0,c3:0.8896551,c4:1;n:type:ShaderForge.SFN_Multiply,id:7389,x:32579,y:33127,varname:node_7389,prsc:2|A-4850-OUT,B-6597-RGB,C-9394-OUT;n:type:ShaderForge.SFN_ValueProperty,id:1329,x:31195,y:32912,ptovrint:False,ptlb:X,ptin:_X,varname:node_1329,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,v1:1;n:type:ShaderForge.SFN_Power,id:4850,x:32250,y:32999,varname:node_4850,prsc:2|VAL-5399-RGB,EXP-7914-OUT;n:type:ShaderForge.SFN_Slider,id:7914,x:31654,y:33370,ptovrint:False,ptlb:Sharpness,ptin:_Sharpness,varname:node_7914,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,min:0,cur:14.10256,max:50;n:type:ShaderForge.SFN_ValueProperty,id:9394,x:32075,y:33392,ptovrint:False,ptlb:EmissionStrength,ptin:_EmissionStrength,varname:node_9394,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,v1:1;n:type:ShaderForge.SFN_Code,id:694,x:31373,y:32943,varname:node_694,prsc:2,code:cgBlAHQAdQByAG4AIABmAGwAbwBhAHQAMgAoAF8AVABpAG0AZQAuAHkAKgB4ACwAIABfAFQAaQBtAGUALgB5ACoAeQApADsA,output:1,fname:Time,width:247,height:112,input:0,input:0,input_1_label:x,input_2_label:y|A-1329-OUT,B-8266-OUT;n:type:ShaderForge.SFN_Tex2d,id:3865,x:32412,y:33457,ptovrint:False,ptlb:Noise,ptin:_Noise,varname:node_3865,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,tex:82e77c5667c7c4d6aa93d305e368308b,ntxv:0,isnm:False|UVIN-9580-OUT;n:type:ShaderForge.SFN_Multiply,id:1222,x:32797,y:33127,varname:node_1222,prsc:2|A-7389-OUT,B-3865-RGB;n:type:ShaderForge.SFN_Add,id:9580,x:32022,y:33468,varname:node_9580,prsc:2|A-4910-OUT,B-7263-UVOUT;n:type:ShaderForge.SFN_ValueProperty,id:8445,x:31204,y:33503,ptovrint:False,ptlb:NoiseY,ptin:_NoiseY,varname:node_8445,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,v1:1;n:type:ShaderForge.SFN_Code,id:4910,x:31390,y:33644,varname:node_4910,prsc:2,code:cgBlAHQAdQByAG4AIABmAGwAbwBhAHQAMgAoADAALAAgAF8AVABpAG0AZQAuAHkAIAAqACAAeQApADsA,output:1,fname:Function_node_4910,width:459,height:142,input:0,input_1_label:y|A-8445-OUT;proporder:5964-6665-7736-358-1813-5399-6597-9394-1329-8266-7914-3865-8445;pass:END;sub:END;*/
+/*SF_DATA;ver:1.38;sub:START;pass:START;ps:flbk:Standard,iptp:0,cusa:False,bamd:0,cgin:,lico:1,lgpr:1,limd:3,spmd:1,trmd:0,grmd:0,uamb:True,mssp:True,bkdf:True,hqlp:False,rprd:True,enco:False,rmgx:True,imps:True,rpth:0,vtps:0,hqsc:True,nrmq:1,nrsp:0,vomd:0,spxs:False,tesm:0,olmd:1,culm:0,bsrc:0,bdst:1,dpts:2,wrdp:True,dith:0,atcv:False,rfrpo:True,rfrpn:Refraction,coma:15,ufog:True,aust:True,igpj:False,qofs:0,qpre:1,rntp:1,fgom:False,fgoc:False,fgod:False,fgor:False,fgmd:0,fgcr:0.5,fgcg:0.5,fgcb:0.5,fgca:1,fgde:0.01,fgrn:0,fgrf:300,stcl:False,atwp:False,stva:128,stmr:255,stmw:255,stcp:6,stps:0,stfa:0,stfz:0,ofsf:0,ofsu:0,f2p0:False,fnsp:False,fnfb:False,fsmp:False;n:type:ShaderForge.SFN_Final,id:2865,x:33662,y:33163,varname:node_2865,prsc:2|diff-6343-OUT,spec-358-OUT,gloss-1813-OUT,normal-2915-OUT,emission-7470-OUT;n:type:ShaderForge.SFN_Multiply,id:6343,x:32387,y:32195,varname:node_6343,prsc:2|A-7736-RGB,B-6665-RGB;n:type:ShaderForge.SFN_Color,id:6665,x:32194,y:32288,ptovrint:False,ptlb:Color,ptin:_Color,varname:_Color,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,c1:0.5019608,c2:0.5019608,c3:0.5019608,c4:1;n:type:ShaderForge.SFN_Tex2d,id:7736,x:32194,y:32103,ptovrint:True,ptlb:Base Color,ptin:_MainTex,varname:_MainTex,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,tex:c3cfe7d2684045147a1989894b810ce9,ntxv:2,isnm:False;n:type:ShaderForge.SFN_Tex2d,id:5964,x:32032,y:33007,ptovrint:True,ptlb:Normal Map,ptin:_BumpMap,varname:_BumpMap,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,tex:7eae89110ca57954d980b51193786cb1,ntxv:3,isnm:True;n:type:ShaderForge.SFN_Slider,id:358,x:32359,y:32391,ptovrint:False,ptlb:Metallic,ptin:_Metallic,varname:node_358,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,min:0,cur:0,max:1;n:type:ShaderForge.SFN_Slider,id:1813,x:32317,y:32484,ptovrint:False,ptlb:Gloss,ptin:_Gloss,varname:_Metallic_copy,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,min:0,cur:0.1,max:1;n:type:ShaderForge.SFN_Tex2d,id:1772,x:31712,y:33452,ptovrint:False,ptlb:SecondaryNormalMap,ptin:_SecondaryNormalMap,varname:node_1772,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,tex:299df2f6a26d2e94ba683c706174da1b,ntxv:3,isnm:True;n:type:ShaderForge.SFN_Multiply,id:8247,x:32210,y:33108,varname:node_8247,prsc:2|A-5964-RGB,B-6958-OUT;n:type:ShaderForge.SFN_Append,id:6958,x:32032,y:33192,varname:node_6958,prsc:2|A-5891-OUT,B-5891-OUT,C-3732-OUT;n:type:ShaderForge.SFN_Vector1,id:3732,x:31607,y:33284,varname:node_3732,prsc:2,v1:1;n:type:ShaderForge.SFN_ValueProperty,id:5891,x:31742,y:33191,ptovrint:False,ptlb:NormalStrength,ptin:_NormalStrength,varname:node_5891,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,v1:0.5;n:type:ShaderForge.SFN_ValueProperty,id:9165,x:31688,y:33363,ptovrint:False,ptlb:SecondaryNormalStrength,ptin:_SecondaryNormalStrength,varname:node_9165,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,v1:1;n:type:ShaderForge.SFN_Append,id:739,x:31917,y:33335,varname:node_739,prsc:2|A-9165-OUT,B-9165-OUT,C-3732-OUT;n:type:ShaderForge.SFN_Multiply,id:6739,x:32107,y:33335,varname:node_6739,prsc:2|A-739-OUT,B-1772-RGB;n:type:ShaderForge.SFN_Add,id:5135,x:32386,y:33187,varname:node_5135,prsc:2|A-8247-OUT,B-6739-OUT;n:type:ShaderForge.SFN_Append,id:2915,x:32926,y:33210,varname:node_2915,prsc:2|A-338-R,B-338-G,C-4732-OUT;n:type:ShaderForge.SFN_ComponentMask,id:338,x:32571,y:33187,varname:node_338,prsc:2,cc1:0,cc2:1,cc3:2,cc4:-1|IN-5135-OUT;n:type:ShaderForge.SFN_Multiply,id:4732,x:32775,y:33312,varname:node_4732,prsc:2|A-338-B,B-3620-OUT;n:type:ShaderForge.SFN_Vector1,id:3620,x:32571,y:33384,varname:node_3620,prsc:2,v1:0.5;n:type:ShaderForge.SFN_Tex2d,id:1304,x:31760,y:33758,ptovrint:False,ptlb:EmissionMask,ptin:_EmissionMask,varname:node_1304,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,tex:11ebba2ab90456b4c93a366654837c7c,ntxv:0,isnm:False;n:type:ShaderForge.SFN_Tex2d,id:2531,x:31883,y:33961,ptovrint:False,ptlb:EmissionNoise,ptin:_EmissionNoise,varname:node_2531,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,tex:1579dbac07f3945dcb4c555af4956977,ntxv:0,isnm:False|UVIN-3060-UVOUT;n:type:ShaderForge.SFN_Blend,id:2048,x:32779,y:33885,varname:node_2048,prsc:2,blmd:1,clmp:True|SRC-1304-RGB,DST-1528-OUT;n:type:ShaderForge.SFN_Rotator,id:3060,x:31658,y:33992,varname:node_3060,prsc:2|UVIN-6851-UVOUT,SPD-8684-OUT;n:type:ShaderForge.SFN_TexCoord,id:6851,x:31442,y:33968,varname:node_6851,prsc:2,uv:0,uaff:False;n:type:ShaderForge.SFN_ValueProperty,id:8684,x:31442,y:34156,ptovrint:False,ptlb:NoiseRotationSpeed,ptin:_NoiseRotationSpeed,varname:node_8684,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,v1:2;n:type:ShaderForge.SFN_Color,id:2236,x:32142,y:33561,ptovrint:False,ptlb:node_2236,ptin:_node_2236,varname:node_2236,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,c1:0.5,c2:0.5,c3:0.5,c4:1;n:type:ShaderForge.SFN_Color,id:4237,x:31551,y:34404,ptovrint:False,ptlb:EmissionColor,ptin:_EmissionColor,varname:node_4237,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,c1:0,c2:1,c3:0.3379309,c4:1;n:type:ShaderForge.SFN_ValueProperty,id:1186,x:31326,y:34673,ptovrint:False,ptlb:EmissionStrength,ptin:_EmissionStrength,varname:node_1186,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,v1:1;n:type:ShaderForge.SFN_Multiply,id:482,x:31788,y:34404,varname:node_482,prsc:2|A-4237-RGB,B-8394-OUT;n:type:ShaderForge.SFN_Multiply,id:7470,x:33047,y:34106,varname:node_7470,prsc:2|A-2048-OUT,B-482-OUT;n:type:ShaderForge.SFN_Rotator,id:7060,x:31693,y:34204,varname:node_7060,prsc:2|UVIN-6851-UVOUT,SPD-3429-OUT;n:type:ShaderForge.SFN_ValueProperty,id:3429,x:31421,y:34250,ptovrint:False,ptlb:NoiseRotationSpeed2,ptin:_NoiseRotationSpeed2,varname:node_3429,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,v1:-1;n:type:ShaderForge.SFN_Tex2d,id:6568,x:31909,y:34176,ptovrint:False,ptlb:EmissionNoise2,ptin:_EmissionNoise2,varname:node_6568,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,tex:1579dbac07f3945dcb4c555af4956977,ntxv:1,isnm:False|UVIN-7060-UVOUT;n:type:ShaderForge.SFN_Blend,id:363,x:32104,y:33995,varname:node_363,prsc:2,blmd:10,clmp:True|SRC-2531-RGB,DST-6568-RGB;n:type:ShaderForge.SFN_Power,id:1528,x:32494,y:34044,varname:node_1528,prsc:2|VAL-363-OUT,EXP-6101-OUT;n:type:ShaderForge.SFN_Slider,id:6101,x:32093,y:34231,ptovrint:False,ptlb:NoiseSharpness,ptin:_NoiseSharpness,varname:node_6101,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,min:1,cur:1,max:10;n:type:ShaderForge.SFN_Slider,id:9552,x:31276,y:34560,ptovrint:False,ptlb:EmissionDamping,ptin:_EmissionDamping,varname:node_9552,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,min:0,cur:1,max:1;n:type:ShaderForge.SFN_Multiply,id:8394,x:31627,y:34601,varname:node_8394,prsc:2|A-1186-OUT,B-9552-OUT;proporder:7736-6665-5964-5891-358-1813-1772-9165-1304-4237-1186-2531-8684-6568-3429-6101-9552;pass:END;sub:END;*/
 
-Shader "Custom/Spires" {
+Shader "Custom/SpirePlatform" {
     Properties {
+        _MainTex ("Base Color", 2D) = "black" {}
+        _Color ("Color", Color) = (0.5019608,0.5019608,0.5019608,1)
         _BumpMap ("Normal Map", 2D) = "bump" {}
-        _Color ("Color", Color) = (0.1176471,0.1176471,0.1176471,1)
-        _MainTex ("Base Color", 2D) = "white" {}
+        _NormalStrength ("NormalStrength", Float ) = 0.5
         _Metallic ("Metallic", Range(0, 1)) = 0
-        _Gloss ("Gloss", Range(0, 1)) = 0.8
-        _EmissionMap ("EmissionMap", 2D) = "white" {}
-        _EmissionColor ("EmissionColor", Color) = (1,0,0.8896551,1)
+        _Gloss ("Gloss", Range(0, 1)) = 0.1
+        _SecondaryNormalMap ("SecondaryNormalMap", 2D) = "bump" {}
+        _SecondaryNormalStrength ("SecondaryNormalStrength", Float ) = 1
+        _EmissionMask ("EmissionMask", 2D) = "white" {}
+        _EmissionColor ("EmissionColor", Color) = (0,1,0.3379309,1)
         _EmissionStrength ("EmissionStrength", Float ) = 1
-        _X ("X", Float ) = 1
-        _Y ("Y", Float ) = 1
-        _Sharpness ("Sharpness", Range(0, 50)) = 14.10256
-        _Noise ("Noise", 2D) = "white" {}
-        _NoiseY ("NoiseY", Float ) = 1
+        _EmissionNoise ("EmissionNoise", 2D) = "white" {}
+        _NoiseRotationSpeed ("NoiseRotationSpeed", Float ) = 2
+        _EmissionNoise2 ("EmissionNoise2", 2D) = "gray" {}
+        _NoiseRotationSpeed2 ("NoiseRotationSpeed2", Float ) = -1
+        _NoiseSharpness ("NoiseSharpness", Range(1, 10)) = 1
+        _EmissionDamping ("EmissionDamping", Range(0, 1)) = 1
     }
     SubShader {
         Tags {
@@ -53,22 +57,18 @@ Shader "Custom/Spires" {
             uniform sampler2D _BumpMap; uniform float4 _BumpMap_ST;
             uniform float _Metallic;
             uniform float _Gloss;
-            uniform sampler2D _EmissionMap; uniform float4 _EmissionMap_ST;
-            uniform float _Y;
+            uniform sampler2D _SecondaryNormalMap; uniform float4 _SecondaryNormalMap_ST;
+            uniform float _NormalStrength;
+            uniform float _SecondaryNormalStrength;
+            uniform sampler2D _EmissionMask; uniform float4 _EmissionMask_ST;
+            uniform sampler2D _EmissionNoise; uniform float4 _EmissionNoise_ST;
+            uniform float _NoiseRotationSpeed;
             uniform float4 _EmissionColor;
-            uniform float _X;
-            uniform float _Sharpness;
             uniform float _EmissionStrength;
-            float2 Time( float x , float y ){
-            return float2(_Time.y*x, _Time.y*y);
-            }
-            
-            uniform sampler2D _Noise; uniform float4 _Noise_ST;
-            uniform float _NoiseY;
-            float2 Function_node_4910( float y ){
-            return float2(0, _Time.y * y);
-            }
-            
+            uniform float _NoiseRotationSpeed2;
+            uniform sampler2D _EmissionNoise2; uniform float4 _EmissionNoise2_ST;
+            uniform float _NoiseSharpness;
+            uniform float _EmissionDamping;
             struct VertexInput {
                 float4 vertex : POSITION;
                 float3 normal : NORMAL;
@@ -120,7 +120,10 @@ Shader "Custom/Spires" {
                 float3x3 tangentTransform = float3x3( i.tangentDir, i.bitangentDir, i.normalDir);
                 float3 viewDirection = normalize(_WorldSpaceCameraPos.xyz - i.posWorld.xyz);
                 float3 _BumpMap_var = UnpackNormal(tex2D(_BumpMap,TRANSFORM_TEX(i.uv0, _BumpMap)));
-                float3 normalLocal = _BumpMap_var.rgb;
+                float node_3732 = 1.0;
+                float3 _SecondaryNormalMap_var = UnpackNormal(tex2D(_SecondaryNormalMap,TRANSFORM_TEX(i.uv0, _SecondaryNormalMap)));
+                float3 node_338 = ((_BumpMap_var.rgb*float3(_NormalStrength,_NormalStrength,node_3732))+(float3(_SecondaryNormalStrength,_SecondaryNormalStrength,node_3732)*_SecondaryNormalMap_var.rgb)).rgb;
+                float3 normalLocal = float3(node_338.r,node_338.g,(node_338.b*0.5));
                 float3 normalDirection = normalize(mul( normalLocal, tangentTransform )); // Perturbed normals
                 float3 viewReflectDirection = reflect( -viewDirection, normalDirection );
                 float3 lightDirection = normalize(_WorldSpaceLightPos0.xyz);
@@ -221,11 +224,23 @@ Shader "Custom/Spires" {
                 indirectDiffuse += gi.indirect.diffuse;
                 float3 diffuse = (directDiffuse + indirectDiffuse) * diffuseColor;
 ////// Emissive:
-                float2 node_8239 = (Time( _X , _Y )+i.uv0);
-                float4 _EmissionMap_var = tex2D(_EmissionMap,TRANSFORM_TEX(node_8239, _EmissionMap));
-                float2 node_9580 = (Function_node_4910( _NoiseY )+i.uv0);
-                float4 _Noise_var = tex2D(_Noise,TRANSFORM_TEX(node_9580, _Noise));
-                float3 emissive = ((pow(_EmissionMap_var.rgb,_Sharpness)*_EmissionColor.rgb*_EmissionStrength)*_Noise_var.rgb);
+                float4 _EmissionMask_var = tex2D(_EmissionMask,TRANSFORM_TEX(i.uv0, _EmissionMask));
+                float4 node_5890 = _Time;
+                float node_3060_ang = node_5890.g;
+                float node_3060_spd = _NoiseRotationSpeed;
+                float node_3060_cos = cos(node_3060_spd*node_3060_ang);
+                float node_3060_sin = sin(node_3060_spd*node_3060_ang);
+                float2 node_3060_piv = float2(0.5,0.5);
+                float2 node_3060 = (mul(i.uv0-node_3060_piv,float2x2( node_3060_cos, -node_3060_sin, node_3060_sin, node_3060_cos))+node_3060_piv);
+                float4 _EmissionNoise_var = tex2D(_EmissionNoise,TRANSFORM_TEX(node_3060, _EmissionNoise));
+                float node_7060_ang = node_5890.g;
+                float node_7060_spd = _NoiseRotationSpeed2;
+                float node_7060_cos = cos(node_7060_spd*node_7060_ang);
+                float node_7060_sin = sin(node_7060_spd*node_7060_ang);
+                float2 node_7060_piv = float2(0.5,0.5);
+                float2 node_7060 = (mul(i.uv0-node_7060_piv,float2x2( node_7060_cos, -node_7060_sin, node_7060_sin, node_7060_cos))+node_7060_piv);
+                float4 _EmissionNoise2_var = tex2D(_EmissionNoise2,TRANSFORM_TEX(node_7060, _EmissionNoise2));
+                float3 emissive = (saturate((_EmissionMask_var.rgb*pow(saturate(( _EmissionNoise2_var.rgb > 0.5 ? (1.0-(1.0-2.0*(_EmissionNoise2_var.rgb-0.5))*(1.0-_EmissionNoise_var.rgb)) : (2.0*_EmissionNoise2_var.rgb*_EmissionNoise_var.rgb) )),_NoiseSharpness)))*(_EmissionColor.rgb*(_EmissionStrength*_EmissionDamping)));
 /// Final Color:
                 float3 finalColor = diffuse + specular + emissive;
                 fixed4 finalRGBA = fixed4(finalColor,1);
@@ -265,22 +280,18 @@ Shader "Custom/Spires" {
             uniform sampler2D _BumpMap; uniform float4 _BumpMap_ST;
             uniform float _Metallic;
             uniform float _Gloss;
-            uniform sampler2D _EmissionMap; uniform float4 _EmissionMap_ST;
-            uniform float _Y;
+            uniform sampler2D _SecondaryNormalMap; uniform float4 _SecondaryNormalMap_ST;
+            uniform float _NormalStrength;
+            uniform float _SecondaryNormalStrength;
+            uniform sampler2D _EmissionMask; uniform float4 _EmissionMask_ST;
+            uniform sampler2D _EmissionNoise; uniform float4 _EmissionNoise_ST;
+            uniform float _NoiseRotationSpeed;
             uniform float4 _EmissionColor;
-            uniform float _X;
-            uniform float _Sharpness;
             uniform float _EmissionStrength;
-            float2 Time( float x , float y ){
-            return float2(_Time.y*x, _Time.y*y);
-            }
-            
-            uniform sampler2D _Noise; uniform float4 _Noise_ST;
-            uniform float _NoiseY;
-            float2 Function_node_4910( float y ){
-            return float2(0, _Time.y * y);
-            }
-            
+            uniform float _NoiseRotationSpeed2;
+            uniform sampler2D _EmissionNoise2; uniform float4 _EmissionNoise2_ST;
+            uniform float _NoiseSharpness;
+            uniform float _EmissionDamping;
             struct VertexInput {
                 float4 vertex : POSITION;
                 float3 normal : NORMAL;
@@ -321,7 +332,10 @@ Shader "Custom/Spires" {
                 float3x3 tangentTransform = float3x3( i.tangentDir, i.bitangentDir, i.normalDir);
                 float3 viewDirection = normalize(_WorldSpaceCameraPos.xyz - i.posWorld.xyz);
                 float3 _BumpMap_var = UnpackNormal(tex2D(_BumpMap,TRANSFORM_TEX(i.uv0, _BumpMap)));
-                float3 normalLocal = _BumpMap_var.rgb;
+                float node_3732 = 1.0;
+                float3 _SecondaryNormalMap_var = UnpackNormal(tex2D(_SecondaryNormalMap,TRANSFORM_TEX(i.uv0, _SecondaryNormalMap)));
+                float3 node_338 = ((_BumpMap_var.rgb*float3(_NormalStrength,_NormalStrength,node_3732))+(float3(_SecondaryNormalStrength,_SecondaryNormalStrength,node_3732)*_SecondaryNormalMap_var.rgb)).rgb;
+                float3 normalLocal = float3(node_338.r,node_338.g,(node_338.b*0.5));
                 float3 normalDirection = normalize(mul( normalLocal, tangentTransform )); // Perturbed normals
                 float3 lightDirection = normalize(lerp(_WorldSpaceLightPos0.xyz, _WorldSpaceLightPos0.xyz - i.posWorld.xyz,_WorldSpaceLightPos0.w));
                 float3 lightColor = _LightColor0.rgb;
@@ -406,22 +420,15 @@ Shader "Custom/Spires" {
             uniform sampler2D _MainTex; uniform float4 _MainTex_ST;
             uniform float _Metallic;
             uniform float _Gloss;
-            uniform sampler2D _EmissionMap; uniform float4 _EmissionMap_ST;
-            uniform float _Y;
+            uniform sampler2D _EmissionMask; uniform float4 _EmissionMask_ST;
+            uniform sampler2D _EmissionNoise; uniform float4 _EmissionNoise_ST;
+            uniform float _NoiseRotationSpeed;
             uniform float4 _EmissionColor;
-            uniform float _X;
-            uniform float _Sharpness;
             uniform float _EmissionStrength;
-            float2 Time( float x , float y ){
-            return float2(_Time.y*x, _Time.y*y);
-            }
-            
-            uniform sampler2D _Noise; uniform float4 _Noise_ST;
-            uniform float _NoiseY;
-            float2 Function_node_4910( float y ){
-            return float2(0, _Time.y * y);
-            }
-            
+            uniform float _NoiseRotationSpeed2;
+            uniform sampler2D _EmissionNoise2; uniform float4 _EmissionNoise2_ST;
+            uniform float _NoiseSharpness;
+            uniform float _EmissionDamping;
             struct VertexInput {
                 float4 vertex : POSITION;
                 float2 texcoord0 : TEXCOORD0;
@@ -449,11 +456,23 @@ Shader "Custom/Spires" {
                 UnityMetaInput o;
                 UNITY_INITIALIZE_OUTPUT( UnityMetaInput, o );
                 
-                float2 node_8239 = (Time( _X , _Y )+i.uv0);
-                float4 _EmissionMap_var = tex2D(_EmissionMap,TRANSFORM_TEX(node_8239, _EmissionMap));
-                float2 node_9580 = (Function_node_4910( _NoiseY )+i.uv0);
-                float4 _Noise_var = tex2D(_Noise,TRANSFORM_TEX(node_9580, _Noise));
-                o.Emission = ((pow(_EmissionMap_var.rgb,_Sharpness)*_EmissionColor.rgb*_EmissionStrength)*_Noise_var.rgb);
+                float4 _EmissionMask_var = tex2D(_EmissionMask,TRANSFORM_TEX(i.uv0, _EmissionMask));
+                float4 node_6660 = _Time;
+                float node_3060_ang = node_6660.g;
+                float node_3060_spd = _NoiseRotationSpeed;
+                float node_3060_cos = cos(node_3060_spd*node_3060_ang);
+                float node_3060_sin = sin(node_3060_spd*node_3060_ang);
+                float2 node_3060_piv = float2(0.5,0.5);
+                float2 node_3060 = (mul(i.uv0-node_3060_piv,float2x2( node_3060_cos, -node_3060_sin, node_3060_sin, node_3060_cos))+node_3060_piv);
+                float4 _EmissionNoise_var = tex2D(_EmissionNoise,TRANSFORM_TEX(node_3060, _EmissionNoise));
+                float node_7060_ang = node_6660.g;
+                float node_7060_spd = _NoiseRotationSpeed2;
+                float node_7060_cos = cos(node_7060_spd*node_7060_ang);
+                float node_7060_sin = sin(node_7060_spd*node_7060_ang);
+                float2 node_7060_piv = float2(0.5,0.5);
+                float2 node_7060 = (mul(i.uv0-node_7060_piv,float2x2( node_7060_cos, -node_7060_sin, node_7060_sin, node_7060_cos))+node_7060_piv);
+                float4 _EmissionNoise2_var = tex2D(_EmissionNoise2,TRANSFORM_TEX(node_7060, _EmissionNoise2));
+                o.Emission = (saturate((_EmissionMask_var.rgb*pow(saturate(( _EmissionNoise2_var.rgb > 0.5 ? (1.0-(1.0-2.0*(_EmissionNoise2_var.rgb-0.5))*(1.0-_EmissionNoise_var.rgb)) : (2.0*_EmissionNoise2_var.rgb*_EmissionNoise_var.rgb) )),_NoiseSharpness)))*(_EmissionColor.rgb*(_EmissionStrength*_EmissionDamping)));
                 
                 float4 _MainTex_var = tex2D(_MainTex,TRANSFORM_TEX(i.uv0, _MainTex));
                 float3 diffColor = (_MainTex_var.rgb*_Color.rgb);
@@ -468,6 +487,6 @@ Shader "Custom/Spires" {
             ENDCG
         }
     }
-    FallBack "Diffuse"
+    FallBack "Standard"
     CustomEditor "ShaderForgeMaterialInspector"
 }

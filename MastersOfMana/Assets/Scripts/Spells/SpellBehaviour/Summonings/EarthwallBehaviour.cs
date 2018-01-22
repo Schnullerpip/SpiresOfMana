@@ -48,7 +48,7 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
     private void GetSpawnPositionAndRotation(PlayerScript caster, out Vector3 position, out Quaternion rotation, bool isClientCall)
     {
 		RaycastHit hit;
-		Vector3 aimDirection = isClientCall ? GetAimClient(caster, out hit) : GetAimServer(caster, out hit);
+        Vector3 aimDirection = isClientCall ? GetAimClient(caster, out hit, false) : GetAimServer(caster, out hit, false);
         Vector3 expectedPos = caster.movement.mRigidbody.worldCenterOfMass + aimDirection * initialDistanceToCaster;
 
         caster.SetColliderIgnoreRaycast(true);

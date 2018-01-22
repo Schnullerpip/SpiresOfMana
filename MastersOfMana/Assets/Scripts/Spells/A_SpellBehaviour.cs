@@ -80,27 +80,27 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 	/// <returns>The aim.</returns>
 	/// <param name="player">Player.</param>
 	/// <param name="hit">Hit.</param>
-    public Vector3 GetAimServer(PlayerScript player, out RaycastHit hit)
+    public Vector3 GetAimServer(PlayerScript player, out RaycastHit hit, bool considerObstacles = true)
 	{
 		Ray ray = new Ray(player.GetCameraPosition(), player.GetCameraLookDirection());
 
-		return RayCast(player, ray, out hit);
+		return RayCast(player, ray, out hit, considerObstacles);
 	}
 
-	public Vector3 GetAimClient(PlayerScript player, out RaycastHit hit)
+	public Vector3 GetAimClient(PlayerScript player, out RaycastHit hit, bool considerObstacles = true)
 	{
 		Ray ray = player.aim.GetCameraRig().GetCenterRay();
 
-		return RayCast(player, ray, out hit);
+		return RayCast(player, ray, out hit, considerObstacles);
 	}
 
-	private Vector3 RayCast(PlayerScript player, Ray ray, out RaycastHit hit)
+	private Vector3 RayCast(PlayerScript player, Ray ray, out RaycastHit hit, bool considerObstacles)
 	{
 		player.SetColliderIgnoreRaycast(true);
 		bool hitSomething = Physics.Raycast(ray, out hit);
 		player.SetColliderIgnoreRaycast(false);
 
-		if(hitSomething)
+		if(considerObstacles && hitSomething)
 		{
 			return Vector3.Normalize(hit.point - player.handTransform.position);
 		}

@@ -27,9 +27,10 @@ public class KillFeedItem : MonoBehaviour {
     }
 	
 	// Update is called once per frame
-	void Update () {
+	void Update () 
+    {
         canvasGroup.alpha = Mathf.MoveTowards(canvasGroup.alpha, 0, fadingSpeed);
-        if (canvasGroup.alpha == 0)
+        if (canvasGroup.alpha <= 0)
         {
             gameObject.SetActive(false);
         }

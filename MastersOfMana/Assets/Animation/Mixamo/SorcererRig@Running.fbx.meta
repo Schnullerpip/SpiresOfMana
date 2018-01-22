@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: c15fe8caea5b9af49ad7e8d7b5adab41
-timeCreated: 1509968828
+timeCreated: 1516649149
 licenseType: Free
 ModelImporter:
   serializedVersion: 21
@@ -74,6 +74,7 @@ ModelImporter:
     400064: upper_arm.R
     400066: Rig
     7400000: Running
+    7400002: Running FreezeFrame
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -137,6 +138,34 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Running FreezeFrame
+      takeName: mixamo.com
+      firstFrame: 8
+      lastFrame: 8
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

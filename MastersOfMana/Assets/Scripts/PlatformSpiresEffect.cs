@@ -6,14 +6,12 @@ using UnityEngine.Networking;
 public class PlatformSpiresEffect : NetworkBehaviour
 {
     public Renderer[] renderers;
+    public Renderer platformRenderer;
 
     public FloatRange emission = new FloatRange(0, 10);
     public float speed = 1;
 
-    private Material mMaterial;
-    private int mEmissionPropID;
-    private int mColorPropID;
-
+    private MaterialInstance mSpireMat;     private MaterialInstance mPlatformMat; 
     //Events
     public delegate void LoadingZoneWillSpawn();
     public delegate void LoadingZoneDisappeared();
@@ -28,26 +26,34 @@ public class PlatformSpiresEffect : NetworkBehaviour
 
     void Awake()
     {
-        mMaterial = new Material(renderers[0].materials[1]);
-        mEmissionPropID = Shader.PropertyToID("_EmissionStrength");
-        mColorPropID = Shader.PropertyToID("_EmissionColor");
+        mSpireMat = new MaterialInstance();
+        mPlatformMat = new MaterialInstance();
 
-        mMaterial.SetFloat(mEmissionPropID, 0);
+        //spire materials
+        mSpireMat.Init(renderers[0].materials[1]);         mSpireMat.SetEmission(0);
 
         //since a material in the array can not be set (for whatever reason), we have to cache the array
         Material[] matArray = renderers[0].materials;
-        matArray[1] = mMaterial;
+        matArray[1] = mSpireMat.material;
 
         for (int i = 0; i < renderers.Length; ++i)
         {
             renderers[i].materials = matArray;
         }
+
+        //platform material
+        mPlatformMat.Init(platformRenderer.material);
+        mPlatformMat.SetEmission(0);
+
+        platformRenderer.material = mPlatformMat.material;
     }
 
     [ClientRpc]
     public void RpcActivate(Color color)
     {
-        mMaterial.SetColor(mColorPropID, color);
+        mSpireMat.SetColor(color);
+        mPlatformMat.SetColor(color);
+
         StopAllCoroutines();
         StartCoroutine(EmissionRamp(Direction.INCREASE));
 
@@ -80,7 +86,10 @@ public class PlatformSpiresEffect : NetworkBehaviour
         {
             mInterpolator = Mathf.MoveTowards(mInterpolator, target, speed * Time.deltaTime);
 
-            mMaterial.SetFloat(mEmissionPropID, emission.Lerp(mInterpolator));
+            float em = emission.Lerp(mInterpolator);
+
+            mSpireMat.SetEmission(em);
+            mPlatformMat.SetEmission(em);
             yield return null;
         }
     }
@@ -89,4 +98,8 @@ public class PlatformSpiresEffect : NetworkBehaviour
     {
         INCREASE = 1, DECREASE = -1
     }
+
+    internal struct MaterialInstance     {         internal Material material;         private int emissionPropertyID;         private int colorPropertyID;          internal void Init(Material original)         {             material = new Material(original);             emissionPropertyID = Shader.PropertyToID("_EmissionStrength");             colorPropertyID = Shader.PropertyToID("_EmissionColor");         }          internal void SetEmission(float value)         {             material.SetFloat(emissionPropertyID, value);         }          internal void SetColor(Color value)         {
+            material.SetColor(colorPropertyID, value);
+        }     }
 }

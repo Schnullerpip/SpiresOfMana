@@ -149,6 +149,8 @@ public class SpellHUD : MonoBehaviour
         UpdateSlider(energy, localPlayerSpells.ultimateEnergyThreshold);
     }
 
+    private bool mUltiAlreadyFull = false;
+
     public void UpdateSlider(float ultimateEnergyPoints, float maximumUltimateEnergyPoints)
     {
         //charging
@@ -166,9 +168,11 @@ public class SpellHUD : MonoBehaviour
         {
             //ultimateEnergyProgess.color = ultimateEnergyDefaultColor;
             ultimateEnergyProgess.fillAmount = 1 - (ultimateEnergyPoints / maximumUltimateEnergyPoints);
+            mUltiAlreadyFull = false;
         }
-        else if(ultimateEnergyProgess.fillAmount > 0)
+        else if(!mUltiAlreadyFull)
         {
+            mUltiAlreadyFull = true;
             ultimateEnergyProgess.fillAmount = 0;
             ultiColorChange.Change();
             shine.SetActive(true);

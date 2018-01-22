@@ -24,20 +24,23 @@ public class PlayerSpells : NetworkBehaviour {
     public delegate void UltiChange(float newValue);
     public UltiChange onUltiChange;
 
+    private float mClampedEnergy;
+
     void UltimateEnergyHook(float newVal)
     {
-        if(newVal <= ultimateEnergyThreshold)
+        newVal = Mathf.Clamp(newVal, 0, ultimateEnergyThreshold);
+
+        //only trigger if the value actually changed within the threshold
+        if(!Mathf.Approximately(newVal, mClampedEnergy))
         {
-			ultimateEnergy = newVal;
             if(onUltiChange != null)
             {
                 onUltiChange(newVal);
-            }         
+            }  
         }
-        else
-        {
-            ultimateEnergy = ultimateEnergyThreshold;
-        }
+
+        ultimateEnergy = newVal;
+        mClampedEnergy = newVal;		
     }
 
     public void Start()

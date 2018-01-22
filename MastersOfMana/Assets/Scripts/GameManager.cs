@@ -245,7 +245,7 @@ public class GameManager : MonoBehaviour
 		if (focus && ReInput.isReady)
         {
             mRewiredPlayer.controllers.maps.SetMapsEnabled(numOfActiveMenus > 0, "UI");
-            mRewiredPlayer.controllers.maps.SetMapsEnabled(!(numOfActiveMenus > 0), "Default");
+            mRewiredPlayer.controllers.maps.SetMapsEnabled(numOfActiveMenus <= 0, "Default");
             //If the game is running, check if a menu is currently open
             if(gameRunning)
             {

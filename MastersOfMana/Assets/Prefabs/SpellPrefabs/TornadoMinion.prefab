@@ -910,6 +910,7 @@ MonoBehaviour:
   lifeTime: 4
   force: 9
   damage: 12
+  caster: {fileID: 0}
 --- !u!114 &114167618137758666
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1064,6 +1065,8 @@ MonoBehaviour:
   IsLoop: 0
   UseSharedMaterial: 0
   HUE: -1
+  reverseAfterTime: 0
+  reverseAfterSeconds: 0
   canUpdate: 0
 --- !u!114 &114657055621735434
 MonoBehaviour:
@@ -1122,6 +1125,8 @@ MonoBehaviour:
   IsLoop: 0
   UseSharedMaterial: 0
   HUE: -1
+  reverseAfterTime: 0
+  reverseAfterSeconds: 0
   canUpdate: 0
 --- !u!114 &114717341790127724
 MonoBehaviour:
@@ -1276,6 +1281,8 @@ MonoBehaviour:
   IsLoop: 0
   UseSharedMaterial: 0
   HUE: -1
+  reverseAfterTime: 0
+  reverseAfterSeconds: 0
   canUpdate: 0
 --- !u!136 &136331595589211014
 CapsuleCollider:

@@ -48,7 +48,7 @@ public class SpellRegistry : MonoBehaviour {
         //Check if we search for an Ultimate Spell
         foreach (A_Spell spell in ultimateSpellList)
         {
-            if (spell.GetType().AssemblyQualifiedName == type)
+            if (spell.SpellBehaviours[0].GetType().AssemblyQualifiedName == type)
             {
                 return spell;
             }

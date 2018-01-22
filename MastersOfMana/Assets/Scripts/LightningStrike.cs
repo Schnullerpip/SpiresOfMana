@@ -209,7 +209,7 @@ public class LightningStrike : NetworkBehaviour
                 if (temp.sqrMagnitude < strikeRadius * strikeRadius)
                 {
                     cachedHealth.Add(health);
-                    health.TakeDamage(damage, caster, this.GetType());
+                    health.TakeDamage(damage, caster, typeof(ThunderStormBehaviour));
                 }
                 //the outer zone gets a camera shake
                 else

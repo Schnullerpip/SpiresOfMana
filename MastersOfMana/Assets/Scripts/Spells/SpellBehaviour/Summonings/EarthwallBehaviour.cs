@@ -56,12 +56,13 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
         {
             if (hit.distance <= initialDistanceToCaster)
             {
-                expectedPos= hit.point + (hit.normal * mOffsetToHitGeometry);
+                expectedPos = hit.point + (hit.normal * mOffsetToHitGeometry);
             }
+            //nothing in the way of the shield origin
         }
 
+        //now check wether ot nor its bounds would collide with something and emend the position accordingly
         var pos = expectedPos;
-        //nothing in the way of the shield origin - now check wether ot nor its bounds would collide with something and emend the position accordingly
         pos += CorrigatePosition(pos, aimDirection);
 
         caster.SetColliderIgnoreRaycast(false);
@@ -75,10 +76,10 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
     private Vector3 CorrigatePosition(Vector3 pos, Vector3 aimDirection)
     {
         return 
-        EmendPositionTowards(pos, aimDirection, Vector3.down, () => transform.localScale.y/2.0f) +
-        EmendPositionTowards(pos, aimDirection, Vector3.up, () => transform.localScale.y/2.0f) +
-        EmendPositionTowards(pos, aimDirection, Vector3.left, () => transform.localScale.x/2.0f) +
-        EmendPositionTowards(pos, aimDirection, Vector3.right, () => transform.localScale.x/2.0f);
+        EmendPositionTowards(pos, aimDirection, Vector3.down, () => transform.localScale.y/2.0f+0.2f) +
+        EmendPositionTowards(pos, aimDirection, Vector3.up, () => transform.localScale.y/2.0f+0.2f) +
+        EmendPositionTowards(pos, aimDirection, Vector3.left, () => transform.localScale.x/2.0f+0.2f) +
+        EmendPositionTowards(pos, aimDirection, Vector3.right, () => transform.localScale.x/2.0f+0.2f);
     }
 
     private Vector3 EmendPositionTowards(Vector3 position, Vector3 direction, Vector3 towards, Func<float> supposedDistanceGetter)
@@ -90,7 +91,6 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
         if (Physics.Raycast(new Ray(position, dir), out hit) && hit.distance < supposedDistance)
         {
             //towards (shields perspective) we have a collision -> emend the position accordingly
-            Debug.Log("distance: " + hit.distance);
             return -1*dir*(supposedDistance - hit.distance);
         }
         return Vector3.zero;

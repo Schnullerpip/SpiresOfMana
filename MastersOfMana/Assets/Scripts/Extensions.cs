@@ -4,6 +4,24 @@ using System.Collections.Generic;
 
 public static class Extensions
 {
+    #region Generic Coroutines
+    /// <summary>
+    /// Calls action after a one-frame delay.
+    /// </summary>
+    /// <param name="behaviour">The Behaviour on which the coroutine should be running.</param>
+    /// <param name="action">The action that is called after one frame.</param>
+    public static void CallInOneFrame(MonoBehaviour behaviour, System.Action action)
+    {
+        behaviour.StartCoroutine(OneFrameDelay(action));
+    }
+
+    private static IEnumerator OneFrameDelay(System.Action action)
+    {
+        yield return null;
+        action.Invoke();
+    }
+    #endregion
+
     #region Vector
     /// <summary>
     /// Returns a Vector2 with the x and z Component of the 

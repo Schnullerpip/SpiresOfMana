@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -9,6 +10,7 @@ using UnityEngine.Networking;
 public class EarthwallBehaviour : A_SummoningBehaviour {
 
     public float initialDistanceToCaster = 2;
+    [SerializeField] private float mOffsetToHitGeometry;
 
     public AudioSource loopSource;
     public FloatRange volumeOverLife;
@@ -46,27 +48,52 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
     private void GetSpawnPositionAndRotation(PlayerScript caster, out Vector3 position, out Quaternion rotation, bool isClientCall)
     {
 		RaycastHit hit;
-		if(caster.HandTransformIsObscured(out hit))
-		{
-            position = hit.point;
-            rotation = caster.aim.currentLookRotation;
-			return;
-		}
-	
-		caster.SetColliderIgnoreRaycast(true);
-		if(Physics.CheckSphere(caster.handTransform.position, 1.0f))
-		{
-			//this is only reset here, because the aimdirection will also set the ignore layer
-			caster.SetColliderIgnoreRaycast(false);
-            position = caster.handTransform.position;
-            rotation = caster.aim.currentLookRotation;
-			return ;
-		}
-
 		Vector3 aimDirection = isClientCall ? GetAimClient(caster, out hit) : GetAimServer(caster, out hit);
+        Vector3 expectedPos = caster.movement.mRigidbody.worldCenterOfMass + aimDirection * initialDistanceToCaster;
 
-        position = caster.movement.mRigidbody.worldCenterOfMass + aimDirection * initialDistanceToCaster;
+        caster.SetColliderIgnoreRaycast(true);
+        if (Physics.Raycast(new Ray(caster.movement.mRigidbody.worldCenterOfMass, aimDirection), out hit))
+        {
+            if (hit.distance <= initialDistanceToCaster)
+            {
+                expectedPos= hit.point + (hit.normal * mOffsetToHitGeometry);
+            }
+        }
+
+        var pos = expectedPos;
+        //nothing in the way of the shield origin - now check wether ot nor its bounds would collide with something and emend the position accordingly
+        pos += CorrigatePosition(pos, aimDirection);
+
+        caster.SetColliderIgnoreRaycast(false);
+
+        expectedPos = pos;
+
+        position = expectedPos;
         rotation = Quaternion.LookRotation(aimDirection);
+    }
+
+    private Vector3 CorrigatePosition(Vector3 pos, Vector3 aimDirection)
+    {
+        return 
+        EmendPositionTowards(pos, aimDirection, Vector3.down, () => transform.localScale.y/2.0f) +
+        EmendPositionTowards(pos, aimDirection, Vector3.up, () => transform.localScale.y/2.0f) +
+        EmendPositionTowards(pos, aimDirection, Vector3.left, () => transform.localScale.x/2.0f) +
+        EmendPositionTowards(pos, aimDirection, Vector3.right, () => transform.localScale.x/2.0f);
+    }
+
+    private Vector3 EmendPositionTowards(Vector3 position, Vector3 direction, Vector3 towards, Func<float> supposedDistanceGetter)
+    {
+        RaycastHit hit;
+        var dir = Quaternion.LookRotation(direction)*towards;
+        var supposedDistance = supposedDistanceGetter();
+        Debug.DrawRay(position, dir, Color.green);
+        if (Physics.Raycast(new Ray(position, dir), out hit) && hit.distance < supposedDistance)
+        {
+            //towards (shields perspective) we have a collision -> emend the position accordingly
+            Debug.Log("distance: " + hit.distance);
+            return -1*dir*(supposedDistance - hit.distance);
+        }
+        return Vector3.zero;
     }
 
     public override void StopPreview(PlayerScript caster)

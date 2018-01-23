@@ -17,6 +17,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     [SerializeField] private float mMaxDistance;
     [SerializeField] private int mMinDamage;
     [SerializeField] private int mMaxDamage;
+    [SerializeField] private float mMovementRestrictionTimeInSeconds;
 
     [Header("Visuals")]
     [SerializeField] private GameObject explosionPrefab;
@@ -121,7 +122,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
             caster.RpcSetEffectState(EffectStateSystem.EffectStateID.Normal);
         }
 
-        StartCoroutine(ImmobilizeCasterForSeconds(caster, 1.0f));
+        StartCoroutine(ImmobilizeCasterForSeconds(caster, mMovementRestrictionTimeInSeconds));
     }
 
     private IEnumerator ImmobilizeCasterForSeconds(PlayerScript ps, float seconds)

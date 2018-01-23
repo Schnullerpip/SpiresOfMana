@@ -354,6 +354,7 @@ namespace Prototype.NetworkLobby
         {
             base.OnStartHost();
             GameManager.instance.ResetLocalGameState();
+			GameManager.instance.ResetReadyPlayers ();
             ChangeTo(mainMenu.lobbyPanel.panel);
             backDelegate = StopHostClbk;
             SetServerInfo("Hosting", networkAddress);
@@ -496,7 +497,7 @@ namespace Prototype.NetworkLobby
                 matchMaker.SetMatchAttributes(matchInfo.networkId, false, 1, del);
             }
             float remainingTime = prematchCountdown;
-            int floorTime = Mathf.FloorToInt(remainingTime);
+			int floorTime = (int)prematchCountdown;
 
             while (remainingTime > 0)
             {
@@ -528,7 +529,6 @@ namespace Prototype.NetworkLobby
                     GameManager.instance.AddPlayerMessageCounter();
                 }
             }
-			GameManager.instance.ResetLocalGameState ();
             sceneChangeAllowed = true;
             ServerChangeScene(playScene);
         }

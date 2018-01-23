@@ -61,8 +61,8 @@ namespace Prototype.NetworkLobby
             string playername = PlayerPrefs.GetString("Playername", "DefaultName");
             matchNameInput.text = playername + "'s Gameroom";
             playernameField.text = playername;
-            playerColor.color = PlayerPrefsExtended.GetColor("Playercolor", LobbyPlayer.Colors[playerColorIndex]);
-            playerColorIndex = System.Array.IndexOf(LobbyPlayer.Colors, playerColor.color);
+            //playerColor.color = PlayerPrefsExtended.GetColor("Playercolor", LobbyPlayer.Colors[playerColorIndex]);
+            //playerColorIndex = System.Array.IndexOf(LobbyPlayer.Colors, playerColor.color);
         }
 
         public void OnClickNextPlayerColor()

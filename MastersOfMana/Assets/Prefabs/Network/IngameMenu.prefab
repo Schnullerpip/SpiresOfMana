@@ -2294,6 +2294,7 @@ MonoBehaviour:
   mutedToggle: {fileID: 114100765146868618}
   sfxSampler: {fileID: 82599987424018754}
   mouseSensitivity: {fileID: 114970918025550832}
+  aimSpeedRef: {fileID: 11400000, guid: 5a34550dde8fd4ca0ace1bb7ae75734c, type: 2}
 --- !u!114 &114307261628965270
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3878,10 +3879,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 224772229627995840}
   m_HandleRect: {fileID: 224382408203470714}
   m_Direction: 0
-  m_MinValue: 0.1
-  m_MaxValue: 3
+  m_MinValue: 10
+  m_MaxValue: 600
   m_WholeNumbers: 0
-  m_Value: 0.76
+  m_Value: 150
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:

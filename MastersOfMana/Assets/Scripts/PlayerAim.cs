@@ -6,8 +6,7 @@ using UnityEngine.Networking;
 [DisallowMultipleComponent]
 public class PlayerAim : NetworkBehaviour {
 
-	[Tooltip("Degrees per seconds")]
-	public float aimSpeed = 360;    
+	public FloatReference aimSpeed;    
 
 	[Header("Focus Assist")]
 //	public float aimAssistInUnits = 1.0f;
@@ -33,20 +32,6 @@ public class PlayerAim : NetworkBehaviour {
 	private PlayerCamera mCameraRig;
 	private bool mFocusActive = false;
 	//private Collider mFocusedTarget = null;
-
-    private float mStartSpeed;
-
-	void Awake()
-	{
-        mStartSpeed = aimSpeed;
-//		lookDirection = transform.forward;
-        SetSensitivity(PlayerPrefs.GetFloat("mouse", 1));
-	}
-
-    public void SetSensitivity(float sensitivity)
-    {
-        aimSpeed = mStartSpeed * sensitivity;
-    }
 
 	void OnDisable()
 	{
@@ -126,7 +111,7 @@ public class PlayerAim : NetworkBehaviour {
 	/// <param name="aimMovement">Aim movement.</param>
 	public void Aim (Vector2 aimMovement)
 	{
-		aimMovement *= Time.deltaTime * aimSpeed * (mFocusActive ? focusAimSpeedFactor : 1);
+		aimMovement *= Time.deltaTime * aimSpeed.value * (mFocusActive ? focusAimSpeedFactor : 1);
 
 		//rotate the entire player along its y-axis
 		transform.Rotate (0, aimMovement.x, 0);

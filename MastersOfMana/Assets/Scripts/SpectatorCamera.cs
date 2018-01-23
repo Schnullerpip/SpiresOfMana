@@ -9,7 +9,7 @@ public class SpectatorCamera : MonoBehaviour
 
     public float maxYAngle = 89;
     public float movementSpeed = 20;
-    public float aimSpeed = 40;
+    public FloatReference aimSpeed;
 
     public float zoomSpeed = 10;
     public float zoomOutFOV = 100;
@@ -50,7 +50,7 @@ public class SpectatorCamera : MonoBehaviour
     private void Update()
     {
         Vector2 moveInput = player.GetAxis2D("MoveHorizontal", "MoveVertical") * Time.deltaTime * movementSpeed;
-        Vector2 aimInput = player.GetAxis2D("AimHorizontal", "AimVertical") * Time.deltaTime * aimSpeed;
+        Vector2 aimInput = player.GetAxis2D("AimHorizontal", "AimVertical") * Time.deltaTime * aimSpeed.value;
 
         mEuler.y += aimInput.x;
         mEuler.x -= aimInput.y;

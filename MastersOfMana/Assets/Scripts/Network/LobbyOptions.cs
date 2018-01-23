@@ -16,6 +16,7 @@ public class LobbyOptions : MonoBehaviour
     public AudioSource sfxSampler;
 
     public Slider mouseSensitivity;
+    public FloatReference aimSpeedRef;
 
     private Dictionary<int, Resolution> mResolutionDropdownMatch = new Dictionary<int, Resolution>();
     private Dictionary<string, int> mReverseResolutionDropdownMatch = new Dictionary<string,int>();
@@ -42,10 +43,7 @@ public class LobbyOptions : MonoBehaviour
 
     public void SetPlayerMouseSensitivity()
     {
-        if(GameManager.instance.localPlayer)
-        {
-            GameManager.instance.localPlayer.aim.SetSensitivity(mouseSensitivity.value);
-        }
+        aimSpeedRef.value = mouseSensitivity.value;
     }
 
     public void Init()

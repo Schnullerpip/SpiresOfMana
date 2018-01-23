@@ -9,6 +9,7 @@ namespace Prototype.NetworkLobby
     public class LobbyMainMenu : MonoBehaviour 
     {
         public LobbyManager lobbyManager;
+		public CustomNetworkDiscovery networkDiscovery;
 
         [Header("UI Reference")]
 
@@ -90,6 +91,9 @@ namespace Prototype.NetworkLobby
             lobbyManager.isHost = true;
             lobbyManager.isLocalGame = true;
             lobbyManager.StartHost();
+			networkDiscovery.Initialize ();
+			networkDiscovery.StartAsServer ();
+
         } 
 
         public void OnClickDedicated()
@@ -133,6 +137,8 @@ namespace Prototype.NetworkLobby
             lobbyManager.backDelegate = lobbyManager.Cancel;
             backButton.gameObject.SetActive(true);
             lobbyManager.ChangeTo(lobbyServerList);
+			networkDiscovery.Initialize ();
+			networkDiscovery.StartAsClient ();
         }
 
         void onEndEditIP(string text)

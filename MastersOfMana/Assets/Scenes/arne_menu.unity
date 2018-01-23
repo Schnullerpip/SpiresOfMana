@@ -325,6 +325,12 @@ RectTransform:
   m_PrefabParentObject: {fileID: 22459552, guid: c0978251ff7b10d4fb954a4b56acd9f0,
     type: 2}
   m_PrefabInternal: {fileID: 1029472459}
+--- !u!114 &643935864 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11478224, guid: c0978251ff7b10d4fb954a4b56acd9f0,
+    type: 2}
+  m_PrefabInternal: {fileID: 1029472459}
+  m_Script: {fileID: 11500000, guid: 2fc8e7df4caaef14e97fb5dbb4825c5a, type: 3}
 --- !u!1001 &665017916
 Prefab:
   m_ObjectHideFlags: 0
@@ -602,6 +608,10 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11478224, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
+      propertyPath: networkDiscovery
+      value: 
+      objectReference: {fileID: 1321811820}
     - target: {fileID: 155310, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
       propertyPath: m_Name
       value: MainMenu
@@ -611,57 +621,16 @@ Prefab:
       propertyPath: lobbyManager
       value: 
       objectReference: {fileID: 1321811817}
-    - target: {fileID: 1402982566861454, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
+    - target: {fileID: 114907993927819114, guid: c0978251ff7b10d4fb954a4b56acd9f0,
+        type: 2}
+      propertyPath: networkDiscovery
+      value: 
+      objectReference: {fileID: 1321811820}
     - target: {fileID: 114490360761040098, guid: c0978251ff7b10d4fb954a4b56acd9f0,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1321811817}
-    - target: {fileID: 114490360761040098, guid: c0978251ff7b10d4fb954a4b56acd9f0,
-        type: 2}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnDisconnectedMenuReturn
-      objectReference: {fileID: 0}
-    - target: {fileID: 114047381807122030, guid: c0978251ff7b10d4fb954a4b56acd9f0,
-        type: 2}
-      propertyPath: m_FontData.m_Alignment
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1820477212224956, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1505641770454442, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1226787549266778, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 224792574500244698, guid: c0978251ff7b10d4fb954a4b56acd9f0,
-        type: 2}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 224792574500244698, guid: c0978251ff7b10d4fb954a4b56acd9f0,
-        type: 2}
-      propertyPath: m_SizeDelta.x
-      value: 264.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 224792574500244698, guid: c0978251ff7b10d4fb954a4b56acd9f0,
-        type: 2}
-      propertyPath: m_SizeDelta.y
-      value: 160.7
-      objectReference: {fileID: 0}
-    - target: {fileID: 224792574500244698, guid: c0978251ff7b10d4fb954a4b56acd9f0,
-        type: 2}
-      propertyPath: m_AnchoredPosition.y
-      value: 155.52013
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
   m_IsPrefabParent: 0
@@ -977,6 +946,7 @@ GameObject:
   - component: {fileID: 1321811818}
   - component: {fileID: 1321811817}
   - component: {fileID: 1321811819}
+  - component: {fileID: 1321811820}
   m_Layer: 5
   m_Name: LobbyManager
   m_TagString: Untagged
@@ -1105,6 +1075,7 @@ MonoBehaviour:
   m_PlayScene: fisch_testLevel02
   lobbySlots: []
   netManager: {fileID: 1087798453436564, guid: 734e4f3c64c54d14ea8f928f17542f12, type: 2}
+  networkDiscovery: {fileID: 1321811820}
   prematchCountdown: 5
   mainMenu: {fileID: 1600317358}
   disconnectedMenu: {fileID: 2083125189}
@@ -1139,6 +1110,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc7575121cbedfd4c862c0be5fd8cc4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1321811820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1321811816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73b7cd594b7f7244aa4495162fb61d7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_BroadcastPort: 47777
+  m_BroadcastKey: 2222
+  m_BroadcastVersion: 1
+  m_BroadcastSubVersion: 1
+  m_BroadcastInterval: 1000
+  m_UseNetworkManager: 1
+  m_BroadcastData: HELLO
+  m_ShowGUI: 0
+  m_OffsetX: 0
+  m_OffsetY: 0
+  lobbyServerList: {fileID: 643935864}
+  lobbyManager: {fileID: 1321811817}
+  localMatches: []
+  serverEntryPrefab: {fileID: 11446726, guid: 9a1af8c2b03c38c43a3e9c2b43db4483, type: 2}
 --- !u!1 &1339438569
 GameObject:
   m_ObjectHideFlags: 0

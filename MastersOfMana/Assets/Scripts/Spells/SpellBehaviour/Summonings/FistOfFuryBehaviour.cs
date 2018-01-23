@@ -103,11 +103,10 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         //so no multiple explosions occure - remember to activate it again!!
         GetComponent<Collider>().enabled = false;
 
+        transform.parent = null;
+
         if (isServer)
         {
-            //unparent it
-            transform.parent = null;
-
             //apply Explosion force and damage
             caster.SetColliderIgnoreRaycast(true);
             ExplosionDamage(caster.transform.position + Vector3.up*0.3f /*so the terrain is not hit*/,
@@ -127,11 +126,19 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
 
     private IEnumerator ImmobilizeCasterForSeconds(PlayerScript ps, float seconds)
     {
+        float timer = 0;
         //clear movement input with player
         ps.movement.ClearMovementInput();
         ps.inputStateSystem.SetState(InputStateSystem.InputStateID.NoMovement);
-        yield return new WaitForSeconds(seconds);
-        ps.movement.ClearMovementInput();
+        while (timer < seconds)
+        {
+            if (!ps.movement.feet.IsGrounded())
+            {
+                break;
+            }
+            yield return null;
+            timer += Time.deltaTime;
+        }
         ps.SetInputState(InputStateSystem.InputStateID.Normal);
     }
 

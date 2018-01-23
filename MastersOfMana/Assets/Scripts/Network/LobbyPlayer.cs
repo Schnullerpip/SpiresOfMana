@@ -121,6 +121,7 @@ namespace Prototype.NetworkLobby
             remoteIcone.gameObject.SetActive(false);
             localIcone.gameObject.SetActive(true);
 
+
             CheckRemoveButton();
 
             playerColor = PlayerPrefsExtended.GetColor("Playercolor", Color.white);

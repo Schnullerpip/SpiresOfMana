@@ -1,0 +1,130 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: mPlatformEmission
+  m_Shader: {fileID: 4800000, guid: d2605c200c3c54d05b18e5a7ea28aac6, type: 3}
+  m_ShaderKeywords: _DETAIL_MULX2 _NORMALMAP
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 2800000, guid: 7eae89110ca57954d980b51193786cb1, type: 3}
+        m_Scale: {x: 4, y: 4}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 2800000, guid: 299df2f6a26d2e94ba683c706174da1b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Emission:
+        m_Texture: {fileID: 2800000, guid: 11ebba2ab90456b4c93a366654837c7c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMask:
+        m_Texture: {fileID: 2800000, guid: 11ebba2ab90456b4c93a366654837c7c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionNoise:
+        m_Texture: {fileID: 2800000, guid: 1579dbac07f3945dcb4c555af4956977, type: 3}
+        m_Scale: {x: 2, y: 2}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionNoise2:
+        m_Texture: {fileID: 2800000, guid: 1579dbac07f3945dcb4c555af4956977, type: 3}
+        m_Scale: {x: 2, y: 2}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: c3cfe7d2684045147a1989894b810ce9, type: 3}
+        m_Scale: {x: 4, y: 4}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SecondaryNormalMap:
+        m_Texture: {fileID: 2800000, guid: 299df2f6a26d2e94ba683c706174da1b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SpecGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _node_1304:
+        m_Texture: {fileID: 2800000, guid: 11ebba2ab90456b4c93a366654837c7c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _node_1772:
+        m_Texture: {fileID: 2800000, guid: 299df2f6a26d2e94ba683c706174da1b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _node_2531:
+        m_Texture: {fileID: 2800000, guid: 1579dbac07f3945dcb4c555af4956977, type: 3}
+        m_Scale: {x: 5, y: 5}
+        m_Offset: {x: 0, y: 0}
+    - _node_6568:
+        m_Texture: {fileID: 2800000, guid: 1579dbac07f3945dcb4c555af4956977, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _BumpScale: 0.22
+    - _CounterRotationSpeed: -1
+    - _Cutoff: 0.5
+    - _DetailNormalMapScale: 1
+    - _DstBlend: 0
+    - _EmissionDamping: 0.2
+    - _EmissionStrength: 10
+    - _Gloss: 0.217
+    - _GlossMapScale: 0.937
+    - _Glossiness: 0.241
+    - _GlossyReflections: 1
+    - _Metallic: 0
+    - _Mode: 0
+    - _NoiseRotationSpeed: 1
+    - _NoiseRotationSpeed2: -1
+    - _NoiseSharpness: 1
+    - _NormalStrength: 0.98
+    - _OcclusionStrength: 1
+    - _Parallax: 0.02
+    - _SecondaryNormalStrength: 1
+    - _Sharpness: 1
+    - _SmoothnessTextureChannel: 0
+    - _SpecularHighlights: 1
+    - _SrcBlend: 1
+    - _UVSec: 0
+    - _ZWrite: 1
+    - _node_9836: 198.44
+    m_Colors:
+    - _Color: {r: 0.350346, g: 0.35240424, b: 0.35294116, a: 1}
+    - _EmissionColor: {r: 0.57241344, g: 0, b: 1, a: 1}
+    - _SpecColor: {r: 0.11764705, g: 0.11764705, b: 0.11764705, a: 1}
+    - _SpecularColor: {r: 0.4969958, g: 0.24699998, b: 1, a: 1}
+    - _node_4779: {r: 0.11764705, g: 0.11764705, b: 0.11764705, a: 1}

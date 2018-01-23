@@ -17,11 +17,13 @@ public class IngameLobby : MonoBehaviour
     public void OnEnable()
     {
         GameManager.instance.cameraSystem.ActivateCamera(CameraSystem.Cameras.CinematicCamera);
+        GameManager.instance.localPlayer.SetInputState(InputStateSystem.InputStateID.Lobby);
     }
 
     void RoundStarted()
     {
         gameObject.SetActive(false);
+        GameManager.instance.localPlayer.SetInputState(InputStateSystem.InputStateID.Normal);
     }
 
     public void OnDestroy()

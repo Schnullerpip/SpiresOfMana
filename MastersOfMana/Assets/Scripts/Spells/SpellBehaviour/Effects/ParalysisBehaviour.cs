@@ -330,9 +330,9 @@ public class ParalysisBehaviour : A_EffectBehaviour
         if (mAffectedPlayer)
         {
             //revert back to normal status
-            mAffectedPlayer.SetEffectState(EffectStateSystem.EffectStateID.Normal);
+            mAffectedPlayer.RpcSetEffectState(EffectStateSystem.EffectStateID.Normal);
             mAffectedPlayer.movement.SetMovementAllowed(true);
-            mAffectedPlayer.SetInputState(InputStateSystem.InputStateID.Normal);
+            mAffectedPlayer.RpcSetInputState(InputStateSystem.InputStateID.Normal);
         }
     }
 

@@ -354,6 +354,7 @@ namespace Prototype.NetworkLobby
         {
             base.OnStartHost();
             GameManager.instance.ResetLocalGameState();
+			GameManager.instance.ResetReadyPlayers ();
             ChangeTo(mainMenu.lobbyPanel.panel);
             backDelegate = StopHostClbk;
             SetServerInfo("Hosting", networkAddress);
@@ -528,7 +529,6 @@ namespace Prototype.NetworkLobby
                     GameManager.instance.AddPlayerMessageCounter();
                 }
             }
-			//GameManager.instance.ResetLocalGameState ();fireball
             sceneChangeAllowed = true;
             ServerChangeScene(playScene);
         }

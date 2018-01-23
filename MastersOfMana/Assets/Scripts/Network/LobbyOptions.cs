@@ -172,7 +172,7 @@ public class LobbyOptions : MonoBehaviour
         mixer.SetFloat("musicVol", Extensions.LinearToDecibel(mutedToggle.isOn ? 0 : musicSlider.value));
         mixer.SetFloat("sfxVol", Extensions.LinearToDecibel(mutedToggle.isOn ? 0 : sfxSlider.value));
 
-        mouseSensitivity.value = PlayerPrefs.GetFloat("mouse", 0.5f);
+        mouseSensitivity.value = PlayerPrefs.GetFloat("mouse", 180.0f);
 
         string screenKey = Screen.width + " x " + Screen.height;
         if (mReverseResolutionDropdownMatch.ContainsKey(screenKey))

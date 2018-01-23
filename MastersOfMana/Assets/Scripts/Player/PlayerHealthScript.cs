@@ -30,7 +30,7 @@ public class PlayerHealthScript : HealthScript
             GameManager.instance.PlayerDown();
             //Show the postGame screen for this player
             RpcPlayerDead();
-            mPlayer.SetInputState(InputStateSystem.InputStateID.Dead);
+            mPlayer.RpcSetInputState(InputStateSystem.InputStateID.Dead);
         }
 
         //fire the stats checks

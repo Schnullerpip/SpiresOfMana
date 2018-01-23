@@ -13,7 +13,7 @@ public class PlatformSpiresEffect : NetworkBehaviour
 
     private MaterialInstance mSpireMat;     private MaterialInstance mPlatformMat; 
     //Events
-    public delegate void LoadingZoneWillSpawn();
+	public delegate void LoadingZoneWillSpawn(Color color);
     public delegate void LoadingZoneDisappeared();
     /// <summary>
     /// everyone who wants to be informed, whenever a loading zone will spawn soon, should register on this event
@@ -60,7 +60,7 @@ public class PlatformSpiresEffect : NetworkBehaviour
         //inform the listeners, that a loading zone will spawn soon (announcementTime)
         if (OnLoadingZoneWillSpawn != null)
         {
-            OnLoadingZoneWillSpawn();
+            OnLoadingZoneWillSpawn(color);
         }
     }
 

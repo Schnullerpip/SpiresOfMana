@@ -95,4 +95,9 @@ public class FloatingDamageTextSystem : MonoBehaviour {
         }
         mCurrentObj = 0;
     }
+
+	void OnDestroy()
+	{
+		UnsubscribeFromEvents ();
+	}
 }

@@ -69,10 +69,10 @@ public class InfoHUD : MonoBehaviour
         mLavaColor.Change();
     }
 
-    private void InitializeEnergyMotion()
+	private void InitializeEnergyMotion(Color color)
     {
         mEnergyScaler.Play(true);
-        mEnergyColor.Change();
+        mEnergyColor.Change(color);
     }
 
     private void UninitializeLavaMotion()

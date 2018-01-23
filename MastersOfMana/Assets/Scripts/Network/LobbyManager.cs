@@ -496,7 +496,7 @@ namespace Prototype.NetworkLobby
                 matchMaker.SetMatchAttributes(matchInfo.networkId, false, 1, del);
             }
             float remainingTime = prematchCountdown;
-            int floorTime = Mathf.FloorToInt(remainingTime);
+			int floorTime = (int)prematchCountdown;
 
             while (remainingTime > 0)
             {

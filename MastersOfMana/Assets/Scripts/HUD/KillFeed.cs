@@ -28,6 +28,7 @@ public class KillFeed : MonoBehaviour {
         //GameManager.OnPlayerDied += CreateKillFeed;
 
         GameManager.OnHostEndedRound += ClearKillFeed;
+		GameManager.OnRoundStarted += ClearKillFeed;
         if (NetManager.instance.isServer)
         {
             mCDD = FindObjectOfType<Check_DamageDistribution>();
@@ -38,6 +39,7 @@ public class KillFeed : MonoBehaviour {
     void OnDestroy()
     {
         GameManager.OnHostEndedRound -= ClearKillFeed;
+		GameManager.OnRoundStarted -= ClearKillFeed;
 
         if (NetManager.instance && NetManager.instance.isServer)
         {

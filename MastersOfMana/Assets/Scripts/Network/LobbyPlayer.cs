@@ -11,7 +11,19 @@ namespace Prototype.NetworkLobby
     //Any LobbyHook can then grab it and pass those value to the game player prefab (see the Pong Example in the Samples Scenes)
     public class LobbyPlayer : NetworkLobbyPlayer
     {
-        public static Color[] Colors = new Color[] { Color.magenta, Color.red, Color.cyan, Color.blue, Color.green, Color.yellow, new Color(0.1f,0.1f,0.1f), new Color(.9f,.9f,.9f) };
+        public static Color[] Colors = new Color[]
+        {
+        new Color(0.722f,0.07869802f,0.07869802f), //red
+        new Color(0.1352774f,0.061072f,0.694f), //blue
+        new Color(0.1764447f,0.406f,0.133168f), //green
+        new Color(0.5955882f,0.5626678f,0.1182418f), //yellow
+        new Color(0.7714174f,0.1308391f,0.8088235f), //pink
+        new Color(0.4375839f,0.1021842f,0.9264706f), //purple
+        new Color(0.79f,0.2604276f,0.02212f), //orange
+        new Color(0.255045f,0.735f,0.6555591f), //turquoise
+        new Color(0.8602941f,0.8602941f,0.8602941f), //white
+        new Color(0.134f,0.134f,0.134f) //black
+        };        
         //used on server to avoid assigning the same color to two player
         static List<int> _colorInUse = new List<int>();
 
@@ -21,7 +33,8 @@ namespace Prototype.NetworkLobby
             SelectEqualsTrigger = 1
         }
 
-        public Button colorButton;
+        public Button colorNextButton, colorPrevButton;
+        public Image colorPortrait;
         public InputField nameInput;
         public Button readyButton;
         public Button waitingPlayerButton;
@@ -112,7 +125,9 @@ namespace Prototype.NetworkLobby
 				readyButtonText.color = ReadyColor;
 			}
             readyButton.interactable = false;
-            colorButton.interactable = false;
+
+            colorNextButton.interactable = false;
+            colorPrevButton.interactable = false;
         }
 
         void SetupLocalPlayer()
@@ -138,14 +153,18 @@ namespace Prototype.NetworkLobby
             CmdNameChanged(playerName);
 
             //we switch from simple name display to name input
-            colorButton.interactable = true;
+            colorNextButton.interactable = true;
+            colorPrevButton.interactable = true;
             nameInput.interactable = true;
 
             nameInput.onEndEdit.RemoveAllListeners();
             nameInput.onEndEdit.AddListener(OnNameChanged);
 
-            colorButton.onClick.RemoveAllListeners();
-            colorButton.onClick.AddListener(OnColorClicked);
+            colorNextButton.onClick.RemoveAllListeners();
+            colorNextButton.onClick.AddListener(OnNextColorClicked);
+
+            colorPrevButton.onClick.RemoveAllListeners();
+            colorPrevButton.onClick.AddListener(OnPrevColorClicked);
 
             //We need to assign the navigation for down directly, it seems to lose the explicit reference because the back button is on a different UI
             backButton = GetComponentInParent<LobbyPlayerList>().backButton;
@@ -244,16 +263,21 @@ namespace Prototype.NetworkLobby
         public void OnMyColor(Color newColor)
         {
             playerColor = newColor;
-            colorButton.GetComponent<Image>().color = newColor;
+            colorPortrait.color = newColor;
         }
 
         //===== UI Handler
 
         //Note that those handler use Command function, as we need to change the value on the server not locally
         //so that all client get the new value throught syncvar
-        public void OnColorClicked()
+        public void OnNextColorClicked()
         {
             CmdColorChange();
+        }
+
+        public void OnPrevColorClicked()
+        {
+            throw new System.NotImplementedException();
         }
 
         public void OnReadyClicked()

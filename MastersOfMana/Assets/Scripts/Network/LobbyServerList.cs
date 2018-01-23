@@ -45,9 +45,11 @@ namespace Prototype.NetworkLobby
 
             mLobbyManager.backDelegate = mLobbyManager.StopClientClbk;
             mLobbyManager.DisplayIsConnecting();
+			mLobbyManager.networkAddress = mLobbyManager.mainMenu.ipInput.text;
 
             mLobbyManager.SetServerInfo("Connecting...", mLobbyManager.networkAddress);
-            StartCoroutine(mLobbyManager.dropFailedConnectionAfter(2));
+			mLobbyManager.StartClient ();
+            //StartCoroutine(mLobbyManager.dropFailedConnectionAfter(2));
         }
 
         public void OnGUIMatchList(bool success, string extendedInfo, List<MatchInfoSnapshot> matches)

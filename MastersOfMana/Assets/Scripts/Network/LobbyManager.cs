@@ -528,7 +528,7 @@ namespace Prototype.NetworkLobby
                     GameManager.instance.AddPlayerMessageCounter();
                 }
             }
-			GameManager.instance.ResetLocalGameState ();
+			//GameManager.instance.ResetLocalGameState ();fireball
             sceneChangeAllowed = true;
             ServerChangeScene(playScene);
         }

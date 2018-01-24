@@ -109,6 +109,8 @@ public class LavaFloor : NetworkBehaviour
         float evaluation = lavaFlow.Evaluate(mRunTime);
         newTransformPosition.y = evaluation + mStartHeight;
         transform.position = newTransformPosition;
+		StopAllCoroutines ();
+		mInstanceCoroutineDictionary.Clear ();
     }
 
     void RoundEnded()

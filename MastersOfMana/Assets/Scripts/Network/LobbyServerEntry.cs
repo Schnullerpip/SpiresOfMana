@@ -17,7 +17,7 @@ namespace Prototype.NetworkLobby
 		{
             serverInfoText.text = match.name;
 
-            slotInfo.text = match.currentSize.ToString() + "/" + match.maxSize.ToString(); ;
+            slotInfo.text = match.currentSize.ToString() + "/" + match.maxSize.ToString(); 
 
             NetworkID networkID = match.networkId;
 
@@ -26,6 +26,14 @@ namespace Prototype.NetworkLobby
 
             GetComponent<Image>().color = c;
         }
+
+		public void setupLocalMatch (string matchName, UnityEngine.Events.UnityAction callback)
+		{
+			serverInfoText.text = matchName;
+			slotInfo.text =""; 
+			joinButton.onClick.RemoveAllListeners();
+			joinButton.onClick.AddListener(callback);
+		}
 
         void JoinMatch(NetworkID networkID, LobbyManager lobbyManager)
         {

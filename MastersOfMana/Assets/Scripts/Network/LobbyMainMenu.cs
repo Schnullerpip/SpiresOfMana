@@ -9,6 +9,7 @@ namespace Prototype.NetworkLobby
     public class LobbyMainMenu : MonoBehaviour 
     {
         public LobbyManager lobbyManager;
+		public CustomNetworkDiscovery networkDiscovery;
 
         [Header("UI Reference")]
 
@@ -61,8 +62,8 @@ namespace Prototype.NetworkLobby
             string playername = PlayerPrefs.GetString("Playername", "DefaultName");
             matchNameInput.text = playername + "'s Gameroom";
             playernameField.text = playername;
-            playerColor.color = PlayerPrefsExtended.GetColor("Playercolor", LobbyPlayer.Colors[playerColorIndex]);
-            playerColorIndex = System.Array.IndexOf(LobbyPlayer.Colors, playerColor.color);
+            //playerColor.color = PlayerPrefsExtended.GetColor("Playercolor", LobbyPlayer.Colors[playerColorIndex]);
+            //playerColorIndex = System.Array.IndexOf(LobbyPlayer.Colors, playerColor.color);
         }
 
         public void OnClickNextPlayerColor()
@@ -90,6 +91,9 @@ namespace Prototype.NetworkLobby
             lobbyManager.isHost = true;
             lobbyManager.isLocalGame = true;
             lobbyManager.StartHost();
+			networkDiscovery.Initialize ();
+			networkDiscovery.StartAsServer ();
+
         } 
 
         public void OnClickDedicated()
@@ -133,6 +137,8 @@ namespace Prototype.NetworkLobby
             lobbyManager.backDelegate = lobbyManager.Cancel;
             backButton.gameObject.SetActive(true);
             lobbyManager.ChangeTo(lobbyServerList);
+			networkDiscovery.Initialize ();
+			networkDiscovery.StartAsClient ();
         }
 
         void onEndEditIP(string text)

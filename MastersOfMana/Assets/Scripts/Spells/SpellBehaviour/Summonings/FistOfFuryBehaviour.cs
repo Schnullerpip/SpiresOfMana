@@ -17,6 +17,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     [SerializeField] private float mMaxDistance;
     [SerializeField] private int mMinDamage;
     [SerializeField] private int mMaxDamage;
+    [SerializeField] private float mMovementRestrictionTimeInSeconds;
 
     [Header("Visuals")]
     [SerializeField] private GameObject explosionPrefab;
@@ -102,15 +103,15 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         //so no multiple explosions occure - remember to activate it again!!
         GetComponent<Collider>().enabled = false;
 
+        transform.parent = null;
+
         if (isServer)
         {
-            //unparent it
-            transform.parent = null;
-
             //apply Explosion force and damage
             caster.SetColliderIgnoreRaycast(true);
-            ExplosionDamage(caster.transform.position + Vector3.up * 0.3f/*so the terrain is not hit*/,
-                mExplosionRadius, mExplosionFalloff, new List<HealthScript>(), resultingHeightFactor, 1 + resultingHeightFactor, mMinDamage, mMaxDamage);
+            ExplosionDamage(caster.transform.position + Vector3.up*0.3f /*so the terrain is not hit*/,
+                mExplosionRadius, mExplosionFalloff, new List<HealthScript>(), resultingHeightFactor,
+                1 + resultingHeightFactor, mMinDamage, mMaxDamage);
             caster.SetColliderIgnoreRaycast(false);
 
             //remove the fistoffury object on all clients
@@ -119,6 +120,26 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
             //Set state of player to normal
             caster.RpcSetEffectState(EffectStateSystem.EffectStateID.Normal);
         }
+
+        StartCoroutine(ImmobilizeCasterForSeconds(caster, mMovementRestrictionTimeInSeconds));
+    }
+
+    private IEnumerator ImmobilizeCasterForSeconds(PlayerScript ps, float seconds)
+    {
+        float timer = 0;
+        //clear movement input with player
+        ps.movement.ClearMovementInput();
+        ps.inputStateSystem.SetState(InputStateSystem.InputStateID.NoMovement);
+        while (timer < seconds)
+        {
+            if (!ps.movement.feet.IsGrounded())
+            {
+                break;
+            }
+            yield return null;
+            timer += Time.deltaTime;
+        }
+        ps.SetInputState(InputStateSystem.InputStateID.Normal);
     }
 
 

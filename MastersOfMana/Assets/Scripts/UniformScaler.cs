@@ -42,9 +42,12 @@ public class UniformScaler : MonoBehaviour
 
     public void Play(bool looping = true)
     {
-        StopAllCoroutines();
-        loop = looping;
-        StartCoroutine(Scaling());
+		StopAllCoroutines ();
+		loop = looping;
+		if (gameObject.activeInHierarchy)
+		{
+			StartCoroutine (Scaling ());
+		}
     }
 
     private IEnumerator Scaling()

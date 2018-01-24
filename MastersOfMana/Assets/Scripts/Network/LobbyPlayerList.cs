@@ -29,6 +29,7 @@ namespace Prototype.NetworkLobby
         public void OnEnable()
         {
             canvasGroup.interactable = true;
+			countdownText.gameObject.SetActive (false);
             //Only the Server can Start the game!
             startButton.gameObject.SetActive(LobbyManager.s_Singleton.isHost);
             startButton.interactable = true;
@@ -46,6 +47,7 @@ namespace Prototype.NetworkLobby
 
         public void OnStartClicked()
         {
+			LobbyManager.s_Singleton.networkDiscovery.StopBroadcast ();
             startButton.interactable = false;
             foreach (LobbyPlayer player in _players)
             {

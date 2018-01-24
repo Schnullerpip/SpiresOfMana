@@ -14,6 +14,7 @@ namespace Prototype.NetworkLobby
         public RectTransform serverListRect;
         public GameObject serverEntryPrefab;
         public GameObject noServerFound;
+		public CustomNetworkDiscovery networkDiscovery;
 
         protected int currentPage = 0;
         protected int previousPage = 0;
@@ -45,14 +46,15 @@ namespace Prototype.NetworkLobby
 
             mLobbyManager.backDelegate = mLobbyManager.StopClientClbk;
             mLobbyManager.DisplayIsConnecting();
+			mLobbyManager.networkAddress = mLobbyManager.mainMenu.ipInput.text;
 
             mLobbyManager.SetServerInfo("Connecting...", mLobbyManager.networkAddress);
-            StartCoroutine(mLobbyManager.dropFailedConnectionAfter(2));
+			mLobbyManager.StartClient ();
         }
 
         public void OnGUIMatchList(bool success, string extendedInfo, List<MatchInfoSnapshot> matches)
 		{
-			if (matches.Count == 0)
+			if (matches.Count == 0 && networkDiscovery.localMatches.Count == 0)
 			{
                 if (currentPage == 0)
                 {
@@ -76,6 +78,11 @@ namespace Prototype.NetworkLobby
 
 				o.transform.SetParent(serverListRect, false);
             }
+
+			foreach (LobbyServerEntry entry in networkDiscovery.localMatches)
+			{
+				entry.transform.SetParent(serverListRect, false);
+			}
         }
 
         public void ChangePage(int dir)

@@ -76,6 +76,11 @@ public class GameManager : MonoBehaviour
         players = new List<PlayerScript>();
     }
 
+	public void ResetReadyPlayers()
+	{
+		mNumOfReadyPlayers = 0;
+	}
+
     public void ResetLocalGameState()
     {
         mNeededToGo = mInitialNeededToGo;

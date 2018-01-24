@@ -194,17 +194,14 @@ public class PlayerScript : NetworkBehaviour
     public void SetInputState(InputStateSystem.InputStateID id)
     {
         inputStateSystem.SetState(id);
-        RpcSetInputState(id);
     }
     public void SetEffectState(EffectStateSystem.EffectStateID id)
     {
         effectStateSystem.SetState(id);
-        RpcSetEffectState(id);
     }
     public void SetCastState(CastStateSystem.CastStateID id)
     {
         castStateSystem.SetState(id);
-        RpcSetCastState(id);
     }
 
     [ClientRpc]

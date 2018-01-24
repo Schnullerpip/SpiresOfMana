@@ -75,6 +75,7 @@ public class IngameMenu : MonoBehaviour
     {
         gameObject.SetActive(false);
         lobbyManager.mainMenu.loadingScreen.gameObject.SetActive(true);
+		lobbyManager.sceneChangeAllowed = true;
         if (NetManager.instance.amIServer())
         {
             lobbyManager.StopHostClbk();

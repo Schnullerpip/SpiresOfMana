@@ -51,6 +51,7 @@ public class JumpBehaviour : A_EffectBehaviour
 
         jumpBehaviour.transform.position = caster.transform.position;
         jumpBehaviour.caster = caster;
+        jumpBehaviour.casterObject = caster.gameObject;
 
         //now activate it
         jumpBehaviour.gameObject.SetActive(true);
@@ -115,20 +116,4 @@ public class JumpBehaviour : A_EffectBehaviour
         gameObject.SetActive(false);
         NetworkServer.UnSpawn(gameObject);
     }
-
-    private void LateUpdate()
-    {
-        if (caster)
-        {
-			transform.position = caster.transform.position;
-		}
-    }
-
-    void OnValidate()
-	{
-	    if (vacuumPrefab)
-	    {
-            //vacuumPrefab.transform.localScale = Vector3.one * pullInRadius * 2;
-	    }
-	}
 }

@@ -16,6 +16,7 @@ public class LobbyOptions : MonoBehaviour
     public AudioSource sfxSampler;
 
     public Slider mouseSensitivity;
+    public FloatReference aimSpeedRef;
 
     private Dictionary<int, Resolution> mResolutionDropdownMatch = new Dictionary<int, Resolution>();
     private Dictionary<string, int> mReverseResolutionDropdownMatch = new Dictionary<string,int>();
@@ -42,10 +43,7 @@ public class LobbyOptions : MonoBehaviour
 
     public void SetPlayerMouseSensitivity()
     {
-        if(GameManager.instance.localPlayer)
-        {
-            GameManager.instance.localPlayer.aim.SetSensitivity(mouseSensitivity.value);
-        }
+        aimSpeedRef.value = mouseSensitivity.value;
     }
 
     public void Init()
@@ -174,7 +172,7 @@ public class LobbyOptions : MonoBehaviour
         mixer.SetFloat("musicVol", Extensions.LinearToDecibel(mutedToggle.isOn ? 0 : musicSlider.value));
         mixer.SetFloat("sfxVol", Extensions.LinearToDecibel(mutedToggle.isOn ? 0 : sfxSlider.value));
 
-        mouseSensitivity.value = PlayerPrefs.GetFloat("mouse", 0.5f);
+        mouseSensitivity.value = PlayerPrefs.GetFloat("mouse", 180.0f);
 
         string screenKey = Screen.width + " x " + Screen.height;
         if (mReverseResolutionDropdownMatch.ContainsKey(screenKey))

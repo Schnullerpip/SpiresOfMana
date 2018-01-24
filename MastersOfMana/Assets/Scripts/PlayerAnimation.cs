@@ -6,9 +6,15 @@ using UnityEngine.Networking;
 public class PlayerAnimation : NetworkBehaviour {
 
 	public Animator animator;
-	private PlayerScript mPlayer;
+    [Tooltip("How fast does a change in movment direction affect the movement animation?")]
+    public float movementDirectionTransitionSpeed = 10;
+
+	private Vector2 mDirection;
+    private PlayerScript mPlayer;
 
     private int movementSpeedHash, speedRightHash, speedForwardHash, groundedHash, isDeadHash, isCastingHash, castAnimationHash;
+
+
 
     void Start()
 	{
@@ -34,10 +40,13 @@ public class PlayerAnimation : NetworkBehaviour {
 
     void UpdateMovement(float movementSpeed, Vector2 direction, bool isGrounded)
 	{
+        //move the value over multiple frames, so the transitions are smoother
+        mDirection = Vector2.MoveTowards(mDirection, direction, Time.deltaTime * movementDirectionTransitionSpeed);
+
 		animator.SetFloat(movementSpeedHash, movementSpeed / mPlayer.movement.speed );
 
-        animator.SetFloat(speedRightHash, direction.x / mPlayer.movement.speed);
-        animator.SetFloat(speedForwardHash ,direction.y / mPlayer.movement.speed);
+        animator.SetFloat(speedRightHash, mDirection.x / mPlayer.movement.speed);
+        animator.SetFloat(speedForwardHash, mDirection.y / mPlayer.movement.speed);
 	
         animator.SetBool(groundedHash,isGrounded);
 	}

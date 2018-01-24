@@ -174,6 +174,66 @@ MonoBehaviour:
   maxDistance: 30
   hitRadius: 1.2
   disappearTimer: 1
+  lineWidthCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 54.258995
+      outSlope: 54.258995
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.044936895
+      value: 0.9999873
+      inSlope: -3.8402767
+      outSlope: -3.8402767
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.14882709
+      value: 0.615583
+      inSlope: -1.4077384
+      outSlope: -1.4077384
+      tangentMode: 34
+    - serializedVersion: 2
+      time: 0.33734053
+      value: 0.7823467
+      inSlope: -1.7105894
+      outSlope: -1.7105894
+      tangentMode: 34
+    - serializedVersion: 2
+      time: 0.45418918
+      value: 0.27921936
+      inSlope: -1.7910137
+      outSlope: -1.7910137
+      tangentMode: 34
+    - serializedVersion: 2
+      time: 0.64831495
+      value: 0.419723
+      inSlope: -1.1650887
+      outSlope: -1.1650887
+      tangentMode: 34
+    - serializedVersion: 2
+      time: 0.76518524
+      value: 0.06280658
+      inSlope: -1.449814
+      outSlope: -1.449814
+      tangentMode: 34
+    - serializedVersion: 2
+      time: 0.9089253
+      value: 0.08498936
+      inSlope: -0.38942862
+      outSlope: -0.38942862
+      tangentMode: 34
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: -0.93318295
+      outSlope: -0.93318295
+      tangentMode: 34
+    m_PreInfinity: 1
+    m_PostInfinity: 1
+    m_RotationOrder: 0
   lineRenderer: {fileID: 120818958224146740}
   WhipStartOffset: {x: 0, y: -0.4, z: 0}
 --- !u!120 &120818958224146740
@@ -213,7 +273,7 @@ LineRenderer:
   - {x: 0, y: 0, z: 1}
   m_Parameters:
     serializedVersion: 2
-    widthMultiplier: 0.3
+    widthMultiplier: 0.7
     widthCurve:
       serializedVersion: 2
       m_Curve:

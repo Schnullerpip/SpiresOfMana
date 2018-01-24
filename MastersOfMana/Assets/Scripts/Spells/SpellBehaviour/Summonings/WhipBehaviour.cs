@@ -15,6 +15,11 @@ public class WhipBehaviour : A_SummoningBehaviour
 
 	public float disappearTimer = 1.0f;
 
+    public AnimationCurve lineWidthCurve;
+
+    private float mLifeTime = 0;
+    private float mInitWidth;
+
 	public LineRenderer lineRenderer;
 
 	[SyncVar(hook = "SetLinePoint0")]
@@ -86,16 +91,18 @@ public class WhipBehaviour : A_SummoningBehaviour
 
         whipBehaviour.caster = caster;
         whipBehaviour.casterObject = caster.gameObject;
+        whipBehaviour.mInitWidth = lineRenderer.widthMultiplier;
+        whipBehaviour.lineRenderer.widthMultiplier = 0;
         whipBehaviour.Init();
 
         whipBehaviour.gameObject.SetActive(true);
         NetworkServer.Spawn(whipBehaviour.gameObject);
-
-        whipBehaviour.StartCoroutine(whipBehaviour.DelayedUnspawn());
     }
 
     private void Init()
     {
+        mLifeTime = 0;
+
         //standard Initializations
         mAffectedPlayerObject = null;
         mAffectedPlayer = null;
@@ -143,16 +150,6 @@ public class WhipBehaviour : A_SummoningBehaviour
         }
     }
 
-    public IEnumerator DelayedUnspawn()
-	{
-		yield return new WaitForSeconds(disappearTimer);
-
-	    caster = null;
-	    casterObject = null;
-		gameObject.SetActive(false);
-		NetworkServer.UnSpawn(gameObject);
-	}
-
     public override void OnStartClient()
     {
         base.OnStartClient();
@@ -174,5 +171,17 @@ public class WhipBehaviour : A_SummoningBehaviour
         }
 
         lineRenderer.SetPosition(1, transform.position);
+
+        mLifeTime += Time.deltaTime;
+
+        lineRenderer.widthMultiplier = lineWidthCurve.Evaluate(mLifeTime / disappearTimer) * mInitWidth;
+
+        if(mLifeTime >= disappearTimer)
+        {
+            caster = null;
+            casterObject = null;
+            gameObject.SetActive(false);
+            NetworkServer.UnSpawn(gameObject);
+        }
     }
 }

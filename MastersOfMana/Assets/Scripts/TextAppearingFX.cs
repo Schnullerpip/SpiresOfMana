@@ -8,6 +8,8 @@ public class TextAppearingFX : MonoBehaviour
 {
 	public float charactersPerSecond = 300;
 
+    public bool playOnEnable = false;
+
 	private const string BEGIN_COL_TAG = "<color=#ffffff00>";
     private const string END_COL_TAG = "</color>";
 
@@ -21,7 +23,10 @@ public class TextAppearingFX : MonoBehaviour
 
     private void OnEnable()
     {
-        SetText(mText.text);
+        if(playOnEnable)
+        {
+            SetText(mText.text);
+        }
     }
 
     private void OnDisable()

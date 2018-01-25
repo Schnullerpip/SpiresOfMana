@@ -54,7 +54,7 @@ namespace Prototype.NetworkLobby
 
         public void OnGUIMatchList(bool success, string extendedInfo, List<MatchInfoSnapshot> matches)
 		{
-			if (matches.Count == 0 && networkDiscovery.localMatches.Count == 0)
+            if (matches.Count == 0 && networkDiscovery.localMatches.Count == 0)
 			{
                 if (currentPage == 0)
                 {
@@ -78,8 +78,8 @@ namespace Prototype.NetworkLobby
 
 				o.transform.SetParent(serverListRect, false);
             }
-
-			foreach (LobbyServerEntry entry in networkDiscovery.localMatches)
+          
+            foreach (LobbyServerEntry entry in networkDiscovery.localMatches)
 			{
 				entry.transform.SetParent(serverListRect, false);
 			}
@@ -100,7 +100,8 @@ namespace Prototype.NetworkLobby
         {
             previousPage = currentPage;
             currentPage = page;
-			mLobbyManager.matchMaker.ListMatches(page, 6, "", true, 0, 0, OnGUIMatchList);
+            networkDiscovery.UpdateLocalMatches();
+            mLobbyManager.matchMaker.ListMatches(page, 6, "", true, 0, 0, OnGUIMatchList);
 		}
     }
 }

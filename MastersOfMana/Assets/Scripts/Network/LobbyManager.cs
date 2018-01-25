@@ -255,6 +255,7 @@ namespace Prototype.NetworkLobby
 
         public void StopHostClbk()
         {
+            networkDiscovery.SafeStopBroadcast();
             if (mIsMatchmaking)
             {
 				matchMaker.DestroyMatch((NetworkID)mCurrentMatchID, 0, OnDestroyMatch);
@@ -322,6 +323,7 @@ namespace Prototype.NetworkLobby
         public void StopClientClbk()
         {
             StopClient();
+            networkDiscovery.SafeStopBroadcast();
 
             if (mIsMatchmaking)
             {

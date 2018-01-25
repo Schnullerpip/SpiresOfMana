@@ -91,10 +91,9 @@ namespace Prototype.NetworkLobby
             lobbyManager.isHost = true;
             lobbyManager.isLocalGame = true;
             lobbyManager.StartHost();
-			networkDiscovery.Initialize ();
-			networkDiscovery.StartAsServer ();
-
-        } 
+            
+            networkDiscovery.CustomStartAsServer();
+        }
 
         public void OnClickDedicated()
         {
@@ -138,7 +137,7 @@ namespace Prototype.NetworkLobby
             backButton.gameObject.SetActive(true);
             lobbyManager.ChangeTo(lobbyServerList);
 			networkDiscovery.Initialize ();
-			networkDiscovery.StartAsClient ();
+            networkDiscovery.CustomStartAsClient();
         }
 
         void onEndEditIP(string text)

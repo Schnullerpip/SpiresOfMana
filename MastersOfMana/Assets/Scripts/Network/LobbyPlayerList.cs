@@ -47,7 +47,7 @@ namespace Prototype.NetworkLobby
 
         public void OnStartClicked()
         {
-			LobbyManager.s_Singleton.networkDiscovery.StopBroadcast ();
+			LobbyManager.s_Singleton.networkDiscovery.SafeStopBroadcast ();
             startButton.interactable = false;
             foreach (LobbyPlayer player in _players)
             {

@@ -71,11 +71,9 @@ public class CustomNetworkDiscovery : UnityEngine.Networking.NetworkDiscovery {
         {
             foreach (var addr in broadcastsReceived.Keys)
             {
-                var value = broadcastsReceived[addr];
-                string dataString = BytesToString(value.broadcastData);
-                var items = dataString.Split(':');
+				var items = addr.Split(':');
                 Prototype.NetworkLobby.LobbyServerEntry obj = Instantiate(serverEntryPrefab);
-                obj.setupLocalMatch("Local: " + items[1], () => { startCallback(items[1]); });
+				obj.setupLocalMatch("Local: " + items[3], () => { startCallback(items[3]); });
                 localMatches.Add(obj);
             }
         }

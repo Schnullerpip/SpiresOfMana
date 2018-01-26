@@ -99,10 +99,13 @@ public class WhipBehaviour : A_SummoningBehaviour
         NetworkServer.Spawn(whipBehaviour.gameObject);
     }
 
-    private void Init()
+    private void OnEnable()
     {
         mLifeTime = 0;
+    }
 
+    private void Init()
+    {
         //standard Initializations
         mAffectedPlayerObject = null;
         mAffectedPlayer = null;

@@ -61,6 +61,18 @@ public class ServerMoveable : NetworkBehaviour
         mRigidbody.velocity *= -1 * lossFactor;
     }
 
+    /// <summary>
+    /// method to invert the current velocity, also correct position according to lag
+    /// </summary>
+    [ClientRpc]
+    public void RpcInvertVelocityAndHighPacePositionCorrection(float lossFactor, Vector3 position)
+    {
+        mRigidbody.velocity *= -1 * lossFactor;
+        mRigidbody.position = position;
+    }
+
+
+
 	[ClientRpc]
 	public void RpcSetVelocity(Vector3 velocity)
 	{

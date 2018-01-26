@@ -91,7 +91,6 @@ public class WhipBehaviour : A_SummoningBehaviour
 
         whipBehaviour.caster = caster;
         whipBehaviour.casterObject = caster.gameObject;
-        whipBehaviour.mInitWidth = lineRenderer.widthMultiplier;
         whipBehaviour.lineRenderer.widthMultiplier = 0;
         whipBehaviour.Init();
 
@@ -162,6 +161,7 @@ public class WhipBehaviour : A_SummoningBehaviour
             mAffectedPlayer = mAffectedPlayerObject.GetComponent<PlayerScript>();
             transform.parent = mAffectedPlayer.transform;
         }
+		mInitWidth = lineRenderer.widthMultiplier;
     }
 
     void Update()

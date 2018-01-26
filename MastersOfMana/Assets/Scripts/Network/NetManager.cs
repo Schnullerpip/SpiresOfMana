@@ -44,14 +44,15 @@ public class NetManager : NetworkBehaviour {
     [ClientRpc]
     public void RpcTriggerGameStarted()
     {
-        GameManager.instance.players.Clear();
-        //GameManager on client doe not have the players yet - get them
-        var players = FindObjectsOfType<PlayerScript>();
-        foreach (var p in players)
-        {
-            GameManager.instance.players.Add(p);
-        }
-
+		if (!isServer) 
+		{
+			GameManager.instance.players.Clear ();
+			//GameManager on client doe not have the players yet - get them
+			var players = FindObjectsOfType<PlayerScript> ();
+			foreach (var p in players) {
+				GameManager.instance.players.Add (p);
+			}
+		}
         GameManager.instance.TriggerGameStarted();
     }
 

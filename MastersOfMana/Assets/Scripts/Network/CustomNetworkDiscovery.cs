@@ -9,40 +9,107 @@ public class CustomNetworkDiscovery : UnityEngine.Networking.NetworkDiscovery {
 	public Prototype.NetworkLobby.LobbyServerList lobbyServerList;
 	public Prototype.NetworkLobby.LobbyManager lobbyManager;
 	public List<Prototype.NetworkLobby.LobbyServerEntry> localMatches = new List<Prototype.NetworkLobby.LobbyServerEntry> ();
-	private Dictionary<string, Prototype.NetworkLobby.LobbyServerEntry> mAddressMatchDicitonary = new Dictionary<string, Prototype.NetworkLobby.LobbyServerEntry>();
 	public Prototype.NetworkLobby.LobbyServerEntry serverEntryPrefab;
+    private Dictionary<string, Coroutine> mAddressMatchDicitonary = new Dictionary<string, Coroutine>();
 
+    public bool CustomStartAsServer()
+    {
+        if (!running)
+        {
+            //NetworkTransport.Shutdown();
+            //NetworkTransport.Init();
+            Initialize();
+        }
+        //if (!isServer)
+        return StartAsServer();
+    }
 
-	public override void OnReceivedBroadcast(string fromAddress, string data)
-	{
-		base.OnReceivedBroadcast (fromAddress, data);
+    public bool CustomStartAsClient()
+    {
+        NetworkTransport.Shutdown();
+        NetworkTransport.Init();
+        return StartAsClient();
+    }
 
-		if (mAddressMatchDicitonary.ContainsKey (fromAddress))
-		{
-			return;
-		}
+    static string BytesToString(byte[] bytes)
+    {
+        char[] chars = new char[bytes.Length / sizeof(char)];
+        Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
+        return new string(chars);
+    }
 
-		Prototype.NetworkLobby.LobbyServerEntry obj = Instantiate (serverEntryPrefab);
-		obj.setupLocalMatch("Local: "+fromAddress, () => {startCallback(fromAddress);});
-		localMatches.Add (obj);
-		mAddressMatchDicitonary.Add (fromAddress, obj);
-		StartCoroutine (intermediate (fromAddress,obj));
-	}
+    private IEnumerator RemoveBroadcastDataDelayed(string address)
+    {
+        yield return new WaitForSeconds(broadcastInterval * 0.002f);
+        if (mAddressMatchDicitonary.ContainsKey(address))
+        {
+            StopCoroutine(mAddressMatchDicitonary[address]);
+            mAddressMatchDicitonary.Remove(address);
+            if (broadcastsReceived != null && broadcastsReceived.ContainsKey(address))
+            {
+                broadcastsReceived.Remove(address);
+            }
+        }
+    }
 
-	public IEnumerator intermediate(string fromAddress, Prototype.NetworkLobby.LobbyServerEntry obj)
-	{
-		yield return new WaitForSeconds(2); 
-		localMatches.Remove(obj); 
-		mAddressMatchDicitonary.Remove(fromAddress);
-	}
+    public override void OnReceivedBroadcast(string fromAddress, string data)
+    {
+        base.OnReceivedBroadcast(fromAddress, data);
+        if(mAddressMatchDicitonary.ContainsKey(fromAddress))
+        {
+            StopCoroutine(mAddressMatchDicitonary[fromAddress]);
+            mAddressMatchDicitonary.Remove(fromAddress);
+        }
+        mAddressMatchDicitonary.Add(fromAddress, StartCoroutine(RemoveBroadcastDataDelayed(fromAddress)));
+    }
+
+    public void UpdateLocalMatches()
+    {
+        ClearMatchList();
+
+        if (broadcastsReceived != null)
+        {
+            foreach (var addr in broadcastsReceived.Keys)
+            {
+				var items = addr.Split(':');
+                Prototype.NetworkLobby.LobbyServerEntry obj = Instantiate(serverEntryPrefab);
+				obj.setupLocalMatch("Local: " + items[3], () => { startCallback(items[3]); });
+                localMatches.Add(obj);
+            }
+        }
+    }
+
+    private void ClearMatchList()
+    {
+        foreach (Prototype.NetworkLobby.LobbyServerEntry entry in localMatches)
+        {
+            if (entry)
+            {
+                Destroy(entry.gameObject);
+            }
+        }
+        localMatches.Clear();
+    }
+
+    void OnDisable()
+    {
+        ClearMatchList();
+    }
+
+    public void SafeStopBroadcast()
+    {
+        if (hostId != -1 && running)
+        {
+            StopBroadcast();
+        }
+    }
 	
 	public void startCallback(string data)
 	{
-		//var items = data.Split (':');
-		lobbyManager.networkAddress = data;
-		//lobbyManager.networkPort = Convert.ToInt32(items[2]);
-		StopBroadcast ();
-		lobbyManager.StartClient ();
+        lobbyManager.DisplayIsConnecting();
+        lobbyManager.networkAddress = data;
+        SafeStopBroadcast();
+        lobbyManager.StartClient ();
 	}
 }
 

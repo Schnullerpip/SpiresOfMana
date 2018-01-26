@@ -35,6 +35,7 @@ namespace Prototype.NetworkLobby
 
             mLobbyManager = LobbyManager.s_Singleton;
             RequestPage(0);
+			StartCoroutine(RefreshAfter (1));
         }
 
         public void OnClickJoin()
@@ -54,7 +55,7 @@ namespace Prototype.NetworkLobby
 
         public void OnGUIMatchList(bool success, string extendedInfo, List<MatchInfoSnapshot> matches)
 		{
-			if (matches.Count == 0 && networkDiscovery.localMatches.Count == 0)
+            if (matches.Count == 0 && networkDiscovery.localMatches.Count == 0)
 			{
                 if (currentPage == 0)
                 {
@@ -78,12 +79,24 @@ namespace Prototype.NetworkLobby
 
 				o.transform.SetParent(serverListRect, false);
             }
-
-			foreach (LobbyServerEntry entry in networkDiscovery.localMatches)
+          
+            foreach (LobbyServerEntry entry in networkDiscovery.localMatches)
 			{
 				entry.transform.SetParent(serverListRect, false);
 			}
         }
+
+		private IEnumerator RefreshAfter(float seconds)
+		{
+			yield return new WaitForSeconds (seconds);
+			RequestPage (0);
+			RefreshAfter (5);
+		}
+
+		void OnDisable()
+		{
+			StopAllCoroutines ();
+		}
 
         public void ChangePage(int dir)
         {
@@ -100,7 +113,8 @@ namespace Prototype.NetworkLobby
         {
             previousPage = currentPage;
             currentPage = page;
-			mLobbyManager.matchMaker.ListMatches(page, 6, "", true, 0, 0, OnGUIMatchList);
+            networkDiscovery.UpdateLocalMatches();
+            mLobbyManager.matchMaker.ListMatches(page, 6, "", true, 0, 0, OnGUIMatchList);
 		}
     }
 }

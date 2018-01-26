@@ -53,7 +53,7 @@ GameObject:
   - component: {fileID: 4676358748422064}
   - component: {fileID: 33310600118001002}
   - component: {fileID: 23590431821068414}
-  - component: {fileID: 64125957587306212}
+  - component: {fileID: 65735599900195172}
   m_Layer: 0
   m_Name: WallLogs
   m_TagString: Untagged
@@ -181,8 +181,8 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1950028402338036}
   m_Mesh: {fileID: 4300004, guid: 66b72c3f0a27c47438e7e5ab1390c45c, type: 3}
---- !u!64 &64125957587306212
-MeshCollider:
+--- !u!65 &65735599900195172
+BoxCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -191,7 +191,5 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Convex: 0
-  m_InflateMesh: 0
-  m_SkinWidth: 0.01
-  m_Mesh: {fileID: 4300006, guid: 66b72c3f0a27c47438e7e5ab1390c45c, type: 3}
+  m_Size: {x: 0.916188, y: 8.77604, z: 3.528807}
+  m_Center: {x: 0, y: 0, z: 1.7644035}

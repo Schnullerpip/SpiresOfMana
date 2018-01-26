@@ -120,11 +120,18 @@ public class GameManager : MonoBehaviour
         if (NetManager.instance.amIServer())
         {
             //enable the players to actually do stuff and update the chosen Spells
+			GameManager.instance.players.Clear();
+			var playerArray = FindObjectsOfType<PlayerScript>();
+			foreach (var p in playerArray)
+			{
+				GameManager.instance.players.Add(p);
+			}
+			mStartPoints = FindObjectOfType<StartPoints>();
+			ResetGame ();
             foreach (var p in players)
             {
                 p.RpcSetInputState(InputStateSystem.InputStateID.Normal);
             }
-
             NetManager.instance.RpcTriggerGameStarted();
         }
     }
@@ -143,7 +150,6 @@ public class GameManager : MonoBehaviour
     public void TriggerGameStarted()
     {
         ResetLocalGameState();
-        mStartPoints = FindObjectOfType<StartPoints>();
         if (OnGameStarted != null)
         {
             OnGameStarted();
@@ -351,7 +357,6 @@ public class GameManager : MonoBehaviour
 			players[i].movement.RpcSetPositionAndRotation(startPositions[i].position, startPositions[i].rotation);
 			players[i].movement.RpcSetVelocity(Vector3.zero);
             players[i].RpcSetInputState(InputStateSystem.InputStateID.Normal);
-			//players[i].enabled = true;
 		}
     }
 
@@ -359,7 +364,6 @@ public class GameManager : MonoBehaviour
     {
         gameRunning = true;
         OnApplicationFocus(true);
-        ResetGame();
         listener.enabled = false;
         if (OnRoundStarted != null)
         {
@@ -421,6 +425,7 @@ public class GameManager : MonoBehaviour
 
     public void TriggerHostEndedRound()
     {
+		ResetGame();
         if (OnHostEndedRound!=null)
         {
             OnHostEndedRound();

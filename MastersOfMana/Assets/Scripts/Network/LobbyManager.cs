@@ -50,6 +50,7 @@ namespace Prototype.NetworkLobby
 
         private string originalLobbyScene;
         public bool sceneChangeAllowed = false;
+		private bool mWasKicked = false;
 
         public LobbyManager(): base()
         {
@@ -255,6 +256,7 @@ namespace Prototype.NetworkLobby
 
         public void StopHostClbk()
         {
+            networkDiscovery.SafeStopBroadcast();
             if (mIsMatchmaking)
             {
 				matchMaker.DestroyMatch((NetworkID)mCurrentMatchID, 0, OnDestroyMatch);
@@ -322,6 +324,7 @@ namespace Prototype.NetworkLobby
         public void StopClientClbk()
         {
             StopClient();
+            networkDiscovery.SafeStopBroadcast();
 
             if (mIsMatchmaking)
             {
@@ -345,7 +348,8 @@ namespace Prototype.NetworkLobby
         
         public void KickedMessageHandler(NetworkMessage netMsg)
         {
-            mainMenu.infoPanel.Display("Kicked by Server", "Close", null);
+			mWasKicked = true;
+			mainMenu.infoPanel.Display("Kicked by Server", "Close", OnDisconnectedMenuReturn);
             netMsg.conn.Disconnect();
         }
 
@@ -557,12 +561,17 @@ namespace Prototype.NetworkLobby
         
         public override void OnClientDisconnect(NetworkConnection conn)
         {
-            mainMenu.loadingScreen.gameObject.SetActive(true);
+			if (isInGame) 
+			{
+				mainMenu.loadingScreen.gameObject.SetActive (true);
+			}
             StopClientClbk();
-            disconnectedMenu.gameObject.SetActive(true);
+			if (!mWasKicked) 
+			{
+				disconnectedMenu.gameObject.SetActive (true);
+			}
+			mWasKicked = false;
             mainMenu.gameObject.SetActive(false);
-            //base.OnClientDisconnect(conn);
-            //ChangeTo(mainMenu.mainMenuPanel);
         }
 
         public void OnDisconnectedMenuReturn()

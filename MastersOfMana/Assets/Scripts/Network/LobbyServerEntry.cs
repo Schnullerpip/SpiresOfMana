@@ -30,7 +30,7 @@ namespace Prototype.NetworkLobby
 		public void setupLocalMatch (string matchName, UnityEngine.Events.UnityAction callback)
 		{
 			serverInfoText.text = matchName;
-			slotInfo.text =""; 
+			slotInfo.text ="1/4"; 
 			joinButton.onClick.RemoveAllListeners();
 			joinButton.onClick.AddListener(callback);
 		}

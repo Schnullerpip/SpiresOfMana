@@ -24,7 +24,7 @@ public class StatsIndicator : MonoBehaviour
     {
         mFill = statslider.fillRect.GetComponentInChildren<Image>();
 
-        AttachEventTrigger();
+        //AttachEventTrigger();
     }
 
     private void AttachEventTrigger()

@@ -8,9 +8,18 @@ public class LobbyPanel : MonoBehaviour {
 
 	public void OnEnable()
 	{
-		List<PlayerScript> players = GameManager.instance.players;
-		for (int i = 0; i < playerStatus.Count; i++) 
-		{
+        if(GameManager.instance.lobbyPanel == null)
+        {
+            GameManager.instance.lobbyPanel = this;
+        }
+        Init();
+    }
+
+    public void Init()
+    {
+        List<PlayerScript> players = GameManager.instance.players;
+        for (int i = 0; i < playerStatus.Count; i++)
+        {
             bool playerExists = i < players.Count;
             playerStatus[i].gameObject.SetActive(playerExists);
             if (playerExists)
@@ -18,8 +27,8 @@ public class LobbyPanel : MonoBehaviour {
                 playerStatus[i].SetName(players[i].playerName);
                 playerStatus[i].SetStatus(players[i].playerLobby.isReady);
             }
-		}
-	}
+        }
+    }
 
 	public void Update()
 	{

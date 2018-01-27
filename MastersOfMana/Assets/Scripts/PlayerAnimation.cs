@@ -35,7 +35,7 @@ public class PlayerAnimation : NetworkBehaviour {
 		mPlayer = GetComponent<PlayerScript>();
 		mPlayer.movement.onMovement += UpdateMovement;
 		mPlayer.healthScript.OnDamageTaken += TookDamage;
-        GameManager.OnRoundStarted += ResetState;
+        GameManager.OnHostEndedRound += ResetState;
     }
 
     void UpdateMovement(float movementSpeed, Vector2 direction, bool isGrounded)
@@ -82,7 +82,7 @@ public class PlayerAnimation : NetworkBehaviour {
 
     public void OnDisable()
     {
-        GameManager.OnRoundStarted -= ResetState;
+        GameManager.OnHostEndedRound -= ResetState;
     }
 
     void ResetState()

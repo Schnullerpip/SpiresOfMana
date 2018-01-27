@@ -40,13 +40,13 @@ public class SpellHUD : MonoBehaviour
         //mRewired = Rewired.ReInput.players.GetPlayer(0);
         Rewired.ActiveControllerChangedDelegate onControllerChangedDelegate = OnControllerChanged;
         Rewired.ReInput.controllers.AddLastActiveControllerChangedDelegate(onControllerChangedDelegate);
-		GameManager.OnRoundStarted += RoundStarted;
+		GameManager.OnPreGameAnimationFinished += RoundStarted;
 		GameManager.OnRoundEnded += RoundEnded;
     }
 
 	private void OnDestroy()
 	{
-		GameManager.OnRoundStarted -= RoundStarted;
+		GameManager.OnPreGameAnimationFinished -= RoundStarted;
 		GameManager.OnRoundEnded -= RoundEnded;
 
         localPlayerSpells.onUltiChange -= UltiEnergyChangeEvent;

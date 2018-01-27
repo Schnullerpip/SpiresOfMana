@@ -42,6 +42,11 @@ public class PlayerAim : NetworkBehaviour {
 		}
 	}
 
+    private void Start()
+    {
+        GameManager.OnHostEndedRound += RestoreInit;
+    }
+
 	public PlayerCamera GetCameraRig(){
 		return mCameraRig;
 	}
@@ -222,6 +227,13 @@ public class PlayerAim : NetworkBehaviour {
 		mFocusActive = false;
 		//mFocusedTarget = null;
 	}
+
+    public void RestoreInit()
+    {
+        yAngle = 0;
+        mFocusActive = false;
+        currentLookRotation = Quaternion.identity;
+    }
 
 //	/// <summary>
 //	/// Returns a Collider thats within the specified 

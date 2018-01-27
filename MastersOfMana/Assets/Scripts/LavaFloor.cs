@@ -50,7 +50,7 @@ public class LavaFloor : NetworkBehaviour
 
     public void OnEnable()
     {
-        GameManager.OnRoundStarted += RoundStarted;
+        GameManager.OnPreGameAnimationFinished += RoundStarted;
         GameManager.OnHostEndedRound += HostRoundEnded;
         GameManager.OnRoundEnded += RoundEnded;
         mInstanceCoroutineDictionary = new Dictionary<HealthScript, Coroutine>();
@@ -62,7 +62,7 @@ public class LavaFloor : NetworkBehaviour
 
     public void OnDisable()
     {
-        GameManager.OnRoundStarted -= RoundStarted;
+        GameManager.OnPreGameAnimationFinished -= RoundStarted;
         GameManager.OnHostEndedRound -= HostRoundEnded;
         GameManager.OnRoundEnded -= RoundEnded;
     }

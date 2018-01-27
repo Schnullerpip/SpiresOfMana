@@ -12,6 +12,7 @@ public class IngameLobby : MonoBehaviour
         GameObject cinematicCamera = Instantiate(cineCamPrefab);
         GameManager.instance.cameraSystem.RegisterCameraObject(CameraSystem.Cameras.CinematicCamera, cinematicCamera.gameObject);
         GameManager.OnRoundStarted += RoundStarted;
+        GameManager.OnPreGameAnimationFinished += OnPreGameAnimationFinished;
     }   
 
     public void OnEnable()
@@ -23,6 +24,10 @@ public class IngameLobby : MonoBehaviour
     void RoundStarted()
     {
         gameObject.SetActive(false);
+    }
+
+    void OnPreGameAnimationFinished()
+    {
         GameManager.instance.localPlayer.SetInputState(InputStateSystem.InputStateID.Normal);
     }
 

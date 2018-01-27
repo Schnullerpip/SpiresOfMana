@@ -52,8 +52,6 @@ namespace Prototype.NetworkLobby
             }
             matchNameInput.onEndEdit.RemoveAllListeners();
             matchNameInput.onEndEdit.AddListener(onEndEditGameName);
-            backButton.onClick.RemoveAllListeners();
-            backButton.onClick.AddListener(lobbyManager.GoBackButton);
 
 			ipInput.onEndEdit.RemoveAllListeners();
 			ipInput.onEndEdit.AddListener(onEndEditIP);
@@ -172,6 +170,10 @@ namespace Prototype.NetworkLobby
 
         public void OnPlayerNameChanged(InputField input)
         {
+            if(input.text == "")
+            {
+                input.text = PlayerPrefs.GetString("Playername", "PlayerName");
+            }
             PlayerPrefs.SetString("Playername", input.text);
             PlayerPrefs.Save();
             matchNameInput.text = input.text + "'s Gameroom";

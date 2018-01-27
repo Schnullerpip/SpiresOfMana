@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     public CameraSystem cameraSystem;
     private LavaFloor mLavaFloor;
     public KillFeed mKillFeed;
+    public LobbyPanel lobbyPanel;
 
     public AudioListener listener;
 
@@ -49,6 +50,9 @@ public class GameManager : MonoBehaviour
 
     public delegate void HostEndedRound();
     public static event HostEndedRound OnHostEndedRound;
+
+    public delegate void PreGameAnimationFinished();
+    public static event PreGameAnimationFinished OnPreGameAnimationFinished;
 
     private int mNumOfReadyPlayers = 0;
     private StartPoints mStartPoints;
@@ -337,6 +341,7 @@ public class GameManager : MonoBehaviour
                     ++mNumOfReadyPlayers;
                 }
             }
+            lobbyPanel.Init();
             if (mNumOfReadyPlayers >= players.Count)
             {
                 NetManager.instance.RpcTriggerRoundStarted();
@@ -369,15 +374,8 @@ public class GameManager : MonoBehaviour
         {
             OnRoundStarted();
         }
-
-        //<ExampleCode For Arne //TODO Remove this code!!! --------------------->
-        //FindObjectOfType<Check_DamageDistribution>().OnLethalDamage += (victim, killedBy, opponent) =>
-        //{
-            //commented out to prevent whining
-            //Debug.Log(victim + " was defeated by: " + opponent + " with " + killedBy);
-        //};
-        //</ExampleCode For Arne ------------------------------------------------>
-	}
+        TriggerOnPreGameAnimationFinished();
+    }
 
     public void TriggerOnLocalPlayerWon()
     {
@@ -476,5 +474,24 @@ public class GameManager : MonoBehaviour
 
         return mLavaFloor.GetHeightNormalized() * 0.75f + 
                          (1 - localPlayer.healthScript.GetCurrentHealthPercentage()) * 0.25f;
+    }
+
+    public void TriggerOnPreGameAnimationFinishedAfter(float seconds)
+    {
+        StartCoroutine(TriggerOnPreGameAnimationFinishedDelayed(seconds));   
+    }
+
+    public void TriggerOnPreGameAnimationFinished()
+    {
+        if (OnPreGameAnimationFinished != null)
+        {
+            OnPreGameAnimationFinished();
+        }
+    }
+
+    private IEnumerator TriggerOnPreGameAnimationFinishedDelayed(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        TriggerOnPreGameAnimationFinished();
     }
 }

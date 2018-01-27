@@ -36,14 +36,14 @@ public class EnergyZoneSystem : NetworkBehaviour
 
     public void OnEnable()
 	{
-		GameManager.OnRoundStarted += RoundStarted;
+		GameManager.OnPreGameAnimationFinished += RoundStarted;
 		GameManager.OnRoundEnded += RoundEnded;
 	}
 
 	public void OnDisable()
 	{
 		StopAllCoroutines();
-		GameManager.OnRoundStarted -= RoundStarted;
+		GameManager.OnPreGameAnimationFinished -= RoundStarted;
 		GameManager.OnRoundEnded -= RoundEnded;
 	}
 

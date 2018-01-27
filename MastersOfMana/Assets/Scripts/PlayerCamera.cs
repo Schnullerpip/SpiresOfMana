@@ -50,12 +50,12 @@ public class PlayerCamera : MonoBehaviour {
 		mStartFOV = mCamera.fieldOfView;
 		mSlider = GetComponentInChildren<CamSlider>();
 		mShaker = GetComponentInChildren<CameraShaker>();
-        GameManager.OnRoundStarted += RoundStarted;
+        GameManager.OnPreGameAnimationFinished += RoundStarted;
     }
 
     public void OnDestroy()
     {
-        GameManager.OnRoundStarted -= RoundStarted;
+        GameManager.OnPreGameAnimationFinished -= RoundStarted;
     }
 
     void RoundStarted()
@@ -78,7 +78,15 @@ public class PlayerCamera : MonoBehaviour {
 		}
 	}
 
-	void FixedUpdate()
+    private void OnEnable()
+    {
+        if(followTarget != null)
+        {
+			transform.position = followTarget.transform.position;
+        }
+    }
+
+    void FixedUpdate()
 	{
 		Vector3 targetPosition = followTarget.transform.position;
 

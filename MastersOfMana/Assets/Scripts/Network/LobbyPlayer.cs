@@ -40,8 +40,8 @@ namespace Prototype.NetworkLobby
         public Button waitingPlayerButton;
         public Button removePlayerButton;
 
-        public GameObject localIcone;
-        public GameObject remoteIcone;
+        //public GameObject localIcone;
+        //public GameObject remoteIcone;
         private Button backButton;
         [SyncVar]
         private bool forcedColor = false;
@@ -133,8 +133,8 @@ namespace Prototype.NetworkLobby
         void SetupLocalPlayer()
         {
             nameInput.interactable = true;
-            remoteIcone.gameObject.SetActive(false);
-            localIcone.gameObject.SetActive(true);
+            //remoteIcone.gameObject.SetActive(false);
+            //localIcone.gameObject.SetActive(true);
 
 
             CheckRemoveButton();
@@ -297,6 +297,10 @@ namespace Prototype.NetworkLobby
 
         public void OnNameChanged(string str)
         {
+            if (nameInput.text == "")
+            {
+                nameInput.text = str = playerName;
+            }
             PlayerPrefs.SetString("Playername", str);
             PlayerPrefs.Save();
             CmdNameChanged(str);
@@ -333,6 +337,7 @@ namespace Prototype.NetworkLobby
                 lobbyPlayerList.canvasGroup.interactable = false;
                 if (isLocalPlayer)
                 {
+                    OnNameChanged(nameInput.text);
                     CmdNameChanged(playerName);
                     CmdSetPlayerColor(playerColor,false);
                     PlayerPrefs.SetString("Playername", playerName);

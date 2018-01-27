@@ -212,7 +212,7 @@ Animator:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1295082064813566}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 0}
   m_CullingMode: 0
@@ -309,6 +309,8 @@ MonoBehaviour:
   mLifeTime: 6
   mGravityreduction: 2
   mMinimalHeightFactor: 1
+  whirl: {fileID: 198228195685966092}
+  flickers: {fileID: 198012508399574986}
   trigger: {fileID: 136843206926783506}
 --- !u!136 &136843206926783506
 CapsuleCollider:
@@ -382,7 +384,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -50914599
+  randomSeed: 1158354683
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -942,7 +944,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0
+      scalar: 5
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -3644,7 +3646,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 1776695818
+  randomSeed: -1323244210
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -4204,7 +4206,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 300
+      scalar: 160
       minScalar: 10
       maxCurve:
         serializedVersion: 2

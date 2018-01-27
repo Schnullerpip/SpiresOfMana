@@ -109,9 +109,16 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         {
             //apply Explosion force and damage
             caster.SetColliderIgnoreRaycast(true);
-            ExplosionDamage(caster.transform.position + Vector3.up*0.3f /*so the terrain is not hit*/,
-                mExplosionRadius, mExplosionFalloff, new List<HealthScript>(), resultingHeightFactor,
-                1 + resultingHeightFactor, mMinDamage, mMaxDamage);
+            ExplosionDamage(
+                caster.transform.position + Vector3.up*0.3f /*so the terrain is not hit*/,
+                mExplosionRadius,
+                mExplosionFalloff,
+                new List<HealthScript>(),
+                resultingHeightFactor,
+                1 + resultingHeightFactor,
+                mMinDamage, mMaxDamage,
+                Vector3.down /*so naturally there will be an upforce included*/
+            );
             caster.SetColliderIgnoreRaycast(false);
 
             //remove the fistoffury object on all clients
@@ -160,7 +167,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
     private void Explosion(Vector3 position, float height)
     {
         {
-            GameObject explosion = PoolRegistry.GetInstance(explosionPrefab, 2, 2);
+            GameObject explosion = PoolRegistry.GetInstance(explosionPrefab, 1, 1);
             explosion.transform.position = position;
             explosion.SetActive(true);
         }

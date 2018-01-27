@@ -94,7 +94,7 @@ public class WhipBehaviour : A_SummoningBehaviour
 
         whipBehaviour.caster = caster;
         whipBehaviour.casterObject = caster.gameObject;
-        whipBehaviour.lineRenderer.widthMultiplier = 0;
+        //whipBehaviour.lineRenderer.widthMultiplier = 0;
         whipBehaviour.Init();
 
         //TODO why the fuck does this work but not with caster?!?!?!?!?! I HATE UNET!!!!!!!
@@ -116,6 +116,7 @@ public class WhipBehaviour : A_SummoningBehaviour
         //standard Initializations
         mAffectedPlayerObject = null;
         mAffectedPlayer = null;
+        mLifeTime = 0;
 
         //initialize the linepoint
         Vector3 casterPosition = caster.handTransform.position;
@@ -160,8 +161,9 @@ public class WhipBehaviour : A_SummoningBehaviour
         }
     }
 
-    void Start()
+    public override void Awake()
     {
+        base.Awake();
         mInitWidth = lineRenderer.widthMultiplier;
     }
 
@@ -179,7 +181,8 @@ public class WhipBehaviour : A_SummoningBehaviour
             mAffectedPlayer = mAffectedPlayerObject.GetComponent<PlayerScript>();
             transform.parent = mAffectedPlayer.transform;
         }
-		mInitWidth = lineRenderer.widthMultiplier;
+        lineRenderer.widthMultiplier = mInitWidth;
+        mLifeTime = 0;
 
         if (mCasterObjectScript)
         {
@@ -210,6 +213,8 @@ public class WhipBehaviour : A_SummoningBehaviour
 
         if(mLifeTime >= disappearTimer)
         {
+            mLifeTime = 0;
+            lineRenderer.widthMultiplier = mInitWidth;
             mCasterScript = null;
             mCasterObjectScript = null;
             transform.parent = null;

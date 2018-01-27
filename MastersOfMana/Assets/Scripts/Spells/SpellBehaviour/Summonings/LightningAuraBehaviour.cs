@@ -16,7 +16,6 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
     [SerializeField]
     private ParticleSystem mLightningProjectile;
     private ParticleSystem.MainModule mLightningProjectileMainModule;
-    private float mInitialStartSize;
 
     public AudioSource mAudioSource;
     public AudioClip CastEffectClip;
@@ -68,7 +67,6 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
     {
         base.Awake();
         mLightningProjectileMainModule = mLightningProjectile.main;
-        mInitialStartSize = mLightningProjectileMainModule.startSizeMultiplier;
     }
 
     public void OnTriggerStay(Collider other)

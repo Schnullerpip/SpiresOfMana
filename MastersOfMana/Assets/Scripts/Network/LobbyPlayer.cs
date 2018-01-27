@@ -40,8 +40,8 @@ namespace Prototype.NetworkLobby
         public Button waitingPlayerButton;
         public Button removePlayerButton;
 
-        public GameObject localIcone;
-        public GameObject remoteIcone;
+        //public GameObject localIcone;
+        //public GameObject remoteIcone;
         private Button backButton;
         [SyncVar]
         private bool forcedColor = false;
@@ -133,8 +133,8 @@ namespace Prototype.NetworkLobby
         void SetupLocalPlayer()
         {
             nameInput.interactable = true;
-            remoteIcone.gameObject.SetActive(false);
-            localIcone.gameObject.SetActive(true);
+            //remoteIcone.gameObject.SetActive(false);
+            //localIcone.gameObject.SetActive(true);
 
 
             CheckRemoveButton();

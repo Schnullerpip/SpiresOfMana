@@ -86,6 +86,7 @@ public class PlayerCamera : MonoBehaviour {
         }
     }
 
+    void FixedUpdate()
 	{
 		Vector3 targetPosition = followTarget.transform.position;
 

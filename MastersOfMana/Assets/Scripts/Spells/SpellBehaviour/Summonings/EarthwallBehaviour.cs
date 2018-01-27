@@ -138,7 +138,7 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
         if (needInstantEffect)
         {
             wall.mPendingContactEffect = true;
-            caster.movement.RpcInvertVelocityAndHighPacePositionCorrection(VelocityLossFactor, wall.transform.position+Vector3.up*0.7f);
+            caster.movement.RpcInvertVelocityAndHighPacePositionCorrection(VelocityLossFactor, wall.transform.position+Vector3.up*0.3f);
         }
 
         NetworkServer.Spawn(wall.gameObject);

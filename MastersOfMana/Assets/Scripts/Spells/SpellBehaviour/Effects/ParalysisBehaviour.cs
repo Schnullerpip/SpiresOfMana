@@ -27,7 +27,6 @@ public class ParalysisBehaviour : A_EffectBehaviour
     //tracks the lifetime of the paralysis
     private float mTimeCount;
     //indicates whether or not to follow the affected Player
-    private bool mFollowTarget;
 
 
     //damage representation and visual reduction
@@ -93,12 +92,14 @@ public class ParalysisBehaviour : A_EffectBehaviour
                 //player was hit -> create an icecrystalsurrounding him/her
                 ParalysisBehaviour pb = PoolRegistry.GetInstance(gameObject, p.transform.position, caster.transform.rotation, 2, 1) .GetComponent<ParalysisBehaviour>();
 
-                pb.gameObject.layer = LayerMask.NameToLayer("FrostPrison");
-
-                pb.Init(p.gameObject);
+                pb.Init(p);
                 pb.mAffectedPlayer = p;
                 pb.caster = caster;
                 pb.casterObject = caster.gameObject;
+
+                //make it, so the frostPrison replaces the players colliders
+                p.GetComponentInChildren<SphereCollider>().enabled = false;
+                p.GetComponentInChildren<CapsuleCollider>().enabled = false;
 
                 NetworkServer.Spawn(pb.gameObject);
 
@@ -128,7 +129,6 @@ public class ParalysisBehaviour : A_EffectBehaviour
                     //its definitely terrain
                     //get its normal and create an iceCrystal with the hit points normal as rotation
                     ParalysisBehaviour pb = PoolRegistry.GetInstance(gameObject, hit.point,Quaternion.FromToRotation(Vector3.up, hit.normal), 1, 1) .GetComponent<ParalysisBehaviour>();
-                    pb.gameObject.layer = LayerMask.NameToLayer("Default");
                     pb.Init(null);
                     NetworkServer.Spawn(pb.gameObject);
                 }
@@ -144,13 +144,22 @@ public class ParalysisBehaviour : A_EffectBehaviour
     }
 
     #region Initialization
-    private void Init(GameObject affectedPlayer)
+    private void Init(PlayerScript affectedPlayer)
     {
         gameObject.SetActive(true);
-        mAffectedPlayerObject = affectedPlayer;
         mTimeCount = 0;
         ActivateOnDeactivation.SetActive(true);
         healthscript.ResetObject();
+
+        if (affectedPlayer)
+        {
+            mAffectedPlayerObject = affectedPlayer.gameObject;
+            //make it, so the frostPrison replaces the players colliders
+            affectedPlayer.GetComponentInChildren<SphereCollider>().enabled = false;
+            affectedPlayer.GetComponentInChildren<CapsuleCollider>().enabled = false;
+        }
+        //now that the affected player cant interact with us anymore, make the icecrystal interactable
+        gameObject.layer = LayerMask.NameToLayer("FrostPrison");
 
         //according to how long the paralysis should be applied, calculate how much damage the icecrystal has to inflict to itself per second to disappear after its lifetime
         mDamagePerSecond = (int)(healthscript.GetMaxHealth()/mLifeTime*mReductionIntervalInSeconds);
@@ -176,7 +185,6 @@ public class ParalysisBehaviour : A_EffectBehaviour
     {
         mAffectedPlayer = null;
         mShatterEffect.SetActive(false);
-        mFollowTarget = true;
         mLastIndex = 0;
         iceCollider.isTrigger = false;
     }
@@ -189,13 +197,11 @@ public class ParalysisBehaviour : A_EffectBehaviour
         if (mAffectedPlayerObject)
         {
             mAffectedPlayer = mAffectedPlayerObject.GetComponent<PlayerScript>();
-            gameObject.layer = LayerMask.NameToLayer("FrostPrison");
+            mAffectedPlayer.GetComponentInChildren<CapsuleCollider>().enabled = false;
+            mAffectedPlayer.GetComponentInChildren<SphereCollider>().enabled = false;
+            transform.parent = mAffectedPlayer.transform;
 
             ApplyMaliciousEffect();
-        }
-        else
-        {
-            gameObject.layer = LayerMask.NameToLayer("Default");
         }
     }
 
@@ -260,16 +266,6 @@ public class ParalysisBehaviour : A_EffectBehaviour
         }
     }
 
-    public void FixedUpdate()
-    {
-        if (mAffectedPlayer)
-        {
-            if (mFollowTarget)
-            {
-                transform.position = mAffectedPlayer.transform.position;
-            }
-        }
-    }
     #endregion
 
     #region EventReactions
@@ -339,6 +335,13 @@ public class ParalysisBehaviour : A_EffectBehaviour
     [ClientRpc]
     private void RpcDisappear()
     {
+        transform.parent = null;
+        if (mAffectedPlayer)
+        {
+            mAffectedPlayer.GetComponentInChildren<CapsuleCollider>().enabled = true;
+            mAffectedPlayer.GetComponentInChildren<SphereCollider>().enabled = true;
+        }
+
         Shatter();
     }
 
@@ -348,11 +351,9 @@ public class ParalysisBehaviour : A_EffectBehaviour
     private void Shatter()
     {
         mShatterEffect.SetActive(true);
-        mFollowTarget = false;
 
         //disallow collisions for the icecrystal collider
         iceCollider.isTrigger = true;
-        gameObject.layer = LayerMask.NameToLayer("IgnoreAll");
 
         //disable the actual crystal and replace it completely with the fragments
         ActivateOnDeactivation.SetActive(false);

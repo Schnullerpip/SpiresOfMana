@@ -368,6 +368,14 @@ public class ParalysisBehaviour : A_EffectBehaviour
         }
     }
 
+    void FixedUpdate()
+    {
+        if (mAffectedPlayer && transform.parent != null)
+        {
+            transform.position = mAffectedPlayer.transform.position;
+        }
+    }
+
     IEnumerator DisappearAfterSeconds(ParalysisBehaviour pb, float seconds)
     {
         yield return new WaitForSeconds(seconds);

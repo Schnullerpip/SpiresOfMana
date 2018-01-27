@@ -223,6 +223,13 @@ public class PlayerAim : NetworkBehaviour {
 		//mFocusedTarget = null;
 	}
 
+    public void RestoreInit()
+    {
+        yAngle = 0;
+        mFocusActive = false;
+        currentLookRotation = Quaternion.identity;
+    }
+
 //	/// <summary>
 //	/// Returns a Collider thats within the specified 
 //	/// maxAngle of the camera and that is not obstructed.	/// </summary>

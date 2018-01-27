@@ -11,16 +11,14 @@ public class CustomNetworkDiscovery : UnityEngine.Networking.NetworkDiscovery {
 	public List<Prototype.NetworkLobby.LobbyServerEntry> localMatches = new List<Prototype.NetworkLobby.LobbyServerEntry> ();
 	public Prototype.NetworkLobby.LobbyServerEntry serverEntryPrefab;
     private Dictionary<string, Coroutine> mAddressMatchDicitonary = new Dictionary<string, Coroutine>();
+    private Dictionary<string, GameObject> mAddressObjDicitonary = new Dictionary<string, GameObject>();
 
     public bool CustomStartAsServer()
     {
         if (!running)
         {
-            //NetworkTransport.Shutdown();
-            //NetworkTransport.Init();
             Initialize();
         }
-        //if (!isServer)
         return StartAsServer();
     }
 
@@ -45,6 +43,9 @@ public class CustomNetworkDiscovery : UnityEngine.Networking.NetworkDiscovery {
         {
             StopCoroutine(mAddressMatchDicitonary[address]);
             mAddressMatchDicitonary.Remove(address);
+            localMatches.Remove(mAddressObjDicitonary[address].GetComponent<Prototype.NetworkLobby.LobbyServerEntry>());
+            Destroy(mAddressObjDicitonary[address]);
+            mAddressObjDicitonary.Remove(address);
             if (broadcastsReceived != null && broadcastsReceived.ContainsKey(address))
             {
                 broadcastsReceived.Remove(address);
@@ -65,16 +66,20 @@ public class CustomNetworkDiscovery : UnityEngine.Networking.NetworkDiscovery {
 
     public void UpdateLocalMatches()
     {
-        ClearMatchList();
+        //ClearMatchList();
 
         if (broadcastsReceived != null)
         {
             foreach (var addr in broadcastsReceived.Keys)
             {
-				var items = addr.Split(':');
-                Prototype.NetworkLobby.LobbyServerEntry obj = Instantiate(serverEntryPrefab);
-				obj.setupLocalMatch("Local: " + items[3], () => { startCallback(items[3]); });
-                localMatches.Add(obj);
+                if (!mAddressObjDicitonary.ContainsKey(addr))
+                {
+                    var items = addr.Split(':');
+                    Prototype.NetworkLobby.LobbyServerEntry obj = Instantiate(serverEntryPrefab);
+                    obj.setupLocalMatch("Local: " + items[3], () => { startCallback(items[3]); });
+                    mAddressObjDicitonary.Add(addr, obj.gameObject);
+                    localMatches.Add(obj);
+                }
             }
         }
     }

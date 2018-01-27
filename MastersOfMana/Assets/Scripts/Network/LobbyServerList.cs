@@ -68,16 +68,61 @@ namespace Prototype.NetworkLobby
             }
 
             noServerFound.SetActive(false);
+            //Check if the transform is still valid
             foreach (Transform t in serverListRect)
-                Destroy(t.gameObject);
+            {
+                bool stillValid = false;
+                LobbyServerEntry entry = t.GetComponent<LobbyServerEntry>();
+                //check against online games
+                foreach (MatchInfoSnapshot matchInfo in matches)
+                {
+                    if (entry.identifier == matchInfo.networkId.ToString())
+                    {
+                        stillValid = true;
+                        break;
+                    }
+                 }
+                //Check against local games
+                if(!stillValid)
+                {
+                    foreach(LobbyServerEntry serverEntry in networkDiscovery.localMatches)
+                    {
+                        if (entry.identifier == serverEntry.identifier)
+                        {
+                            stillValid = true;
+                            break;
+                        }
+                    }
+                }
+
+                //Delete if its not valid
+                if(!stillValid)
+                {
+                    Destroy(t.gameObject);
+                }
+            }
 
 			for (int i = 0; i < matches.Count; ++i)
 			{
-                GameObject o = Instantiate(serverEntryPrefab) as GameObject;
+                //Only create if it doesnt already exist!
+                bool existsAlready = false;
+                foreach (Transform t in serverListRect)
+                {
+                    LobbyServerEntry entry = t.GetComponent<LobbyServerEntry>();
+                    if (entry.identifier == matches[i].networkId.ToString())
+                    {
+                        existsAlready = true;
+                        break;
+                    }
+                }
+                if (!existsAlready)
+                {
+                    GameObject o = Instantiate(serverEntryPrefab) as GameObject;
 
-				o.GetComponent<LobbyServerEntry>().Populate(matches[i], mLobbyManager, (i % 2 == 0) ? OddServerColor : EvenServerColor);
+                    o.GetComponent<LobbyServerEntry>().Populate(matches[i], mLobbyManager, (i % 2 == 0) ? OddServerColor : EvenServerColor);
 
-				o.transform.SetParent(serverListRect, false);
+                    o.transform.SetParent(serverListRect, false);
+                }
             }
           
             foreach (LobbyServerEntry entry in networkDiscovery.localMatches)
@@ -90,7 +135,7 @@ namespace Prototype.NetworkLobby
 		{
 			yield return new WaitForSeconds (seconds);
 			RequestPage (0);
-			RefreshAfter (5);
+			StartCoroutine(RefreshAfter (2));
 		}
 
 		void OnDisable()

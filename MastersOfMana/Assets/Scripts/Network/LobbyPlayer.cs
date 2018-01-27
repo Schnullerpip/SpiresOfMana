@@ -297,6 +297,10 @@ namespace Prototype.NetworkLobby
 
         public void OnNameChanged(string str)
         {
+            if (nameInput.text == "")
+            {
+                nameInput.text = str = playerName;
+            }
             PlayerPrefs.SetString("Playername", str);
             PlayerPrefs.Save();
             CmdNameChanged(str);
@@ -333,6 +337,7 @@ namespace Prototype.NetworkLobby
                 lobbyPlayerList.canvasGroup.interactable = false;
                 if (isLocalPlayer)
                 {
+                    OnNameChanged(nameInput.text);
                     CmdNameChanged(playerName);
                     CmdSetPlayerColor(playerColor,false);
                     PlayerPrefs.SetString("Playername", playerName);

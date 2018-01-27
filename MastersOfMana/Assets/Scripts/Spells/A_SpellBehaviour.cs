@@ -210,8 +210,6 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
         )
 	{
 
-        Debug.Log("ForceOriginOffset: " + ForceOriginOffset);
-
 		//overlap a sphere at the hit position
 	    int layerId = 2; //ignore raycast layer
 	    int mask = 1 << layerId;

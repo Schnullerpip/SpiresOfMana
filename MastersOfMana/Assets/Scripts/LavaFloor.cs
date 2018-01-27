@@ -50,7 +50,7 @@ public class LavaFloor : NetworkBehaviour
 
     public void OnEnable()
     {
-        GameManager.OnRoundStarted += RoundStarted;
+        GameManager.OnPreGameAnimationFinished += RoundStarted;
         GameManager.OnHostEndedRound += HostRoundEnded;
         GameManager.OnRoundEnded += RoundEnded;
         mInstanceCoroutineDictionary = new Dictionary<HealthScript, Coroutine>();
@@ -62,7 +62,7 @@ public class LavaFloor : NetworkBehaviour
 
     public void OnDisable()
     {
-        GameManager.OnRoundStarted -= RoundStarted;
+        GameManager.OnPreGameAnimationFinished -= RoundStarted;
         GameManager.OnHostEndedRound -= HostRoundEnded;
         GameManager.OnRoundEnded -= RoundEnded;
     }
@@ -75,23 +75,21 @@ public class LavaFloor : NetworkBehaviour
 
         //is it the local player?
         PlayerScript ps = other.GetComponentInParent<PlayerScript>();
-        if (ps && GameManager.instance.localPlayer == ps && !mInstanceCoroutineDictionary.ContainsKey(ps.healthScript))
+        ParalysisBehaviour pb = other.GetComponent<ParalysisBehaviour>();
+        if (!pb && ps && GameManager.instance.localPlayer == ps && !mInstanceCoroutineDictionary.ContainsKey(ps.healthScript))
         {
             //it is the local player! move it! damage will be applied by the server!
             mInstanceCoroutineDictionary.Add(ps.healthScript, StartCoroutine(LavaEffectLocal(ps)));	
         }
         //if it is not a player handle it on the server only!
-        else 
+        else if (isServer)
         {
-            if (isServer)
+            HealthScript health = other.GetComponentInParent<HealthScript>();
+            if (health && health.IsAlive() && !mInstanceCoroutineDictionary.ContainsKey(health))
             {
-                HealthScript health = other.GetComponentInParent<HealthScript>();
-                if (health && health.IsAlive() && !mInstanceCoroutineDictionary.ContainsKey(health))
-                {
-                    ServerMoveable sm = other.GetComponentInParent<ServerMoveable>();
-                    //Remember which server moveable this coroutine belongs to
-                    mInstanceCoroutineDictionary.Add(health, StartCoroutine(LavaEffectServer(health, sm)));
-                }
+                ServerMoveable sm = other.GetComponentInParent<ServerMoveable>();
+                //Remember which server moveable this coroutine belongs to
+                mInstanceCoroutineDictionary.Add(health, StartCoroutine(LavaEffectServer(health, sm)));
             }
         }
     }

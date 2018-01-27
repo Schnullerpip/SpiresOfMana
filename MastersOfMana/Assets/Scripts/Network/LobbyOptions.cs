@@ -36,7 +36,7 @@ public class LobbyOptions : MonoBehaviour
         musicSlider.value = PlayerPrefs.GetFloat("musicVol", 1);
         sfxSlider.value = PlayerPrefs.GetFloat("sfxVol", 1);
         mutedToggle.isOn = PlayerPrefsExtended.GetBool("muted", false);
-        mouseSensitivity.value = PlayerPrefs.GetFloat("mouse", 0.5f);
+        mouseSensitivity.value = PlayerPrefs.GetFloat("mouse", 180f);
 
         OnAudioMutedChanged();
     }

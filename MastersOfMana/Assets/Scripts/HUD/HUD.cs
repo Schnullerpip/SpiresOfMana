@@ -15,7 +15,7 @@ public class HUD : MonoBehaviour {
     void OnEnable()
     {
         GameManager.OnGameStarted += Init;
-        GameManager.OnRoundStarted += RoundStarted;
+        GameManager.OnPreGameAnimationFinished += RoundStarted;
     }
 
     // Use this for initialization
@@ -51,7 +51,7 @@ public class HUD : MonoBehaviour {
     void OnDisable()
     {
         GameManager.OnGameStarted -= Init;
-        GameManager.OnRoundStarted -= RoundStarted;
+        GameManager.OnPreGameAnimationFinished -= RoundStarted;
     }
 
    public void ShowPostGameScreen(bool show)

@@ -16,7 +16,7 @@ public class InfoHUD : MonoBehaviour
 
     void Awake()
     {
-        GameManager.OnRoundStarted += RoundStarted;
+        GameManager.OnPreGameAnimationFinished += RoundStarted;
         GameManager.OnRoundEnded += RoundEnded;
 
         mLavaScaler = lavaImage.GetComponent<UniformScaler>();
@@ -28,7 +28,7 @@ public class InfoHUD : MonoBehaviour
 
     void OnDestroy()
     {
-        GameManager.OnRoundStarted -= RoundStarted;
+        GameManager.OnPreGameAnimationFinished -= RoundStarted;
         GameManager.OnRoundEnded -= RoundEnded;
     }
 

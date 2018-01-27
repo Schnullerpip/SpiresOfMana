@@ -36,7 +36,7 @@ public class OpponentHUD : MonoBehaviour {
         player.healthScript.OnHealthChanged += HealthChanged;
 
         GameManager.OnLocalPlayerDead += localPlayerDead;
-        GameManager.OnRoundStarted += RoundStarted;
+        GameManager.OnPreGameAnimationFinished += RoundStarted;
     }
 
     public void Update()
@@ -81,7 +81,7 @@ public class OpponentHUD : MonoBehaviour {
     private void OnDestroy()
     {
         player.healthScript.OnHealthChanged -= HealthChanged;
-        GameManager.OnRoundStarted -= RoundStarted;
+        GameManager.OnPreGameAnimationFinished -= RoundStarted;
         GameManager.OnLocalPlayerDead -= localPlayerDead;
     }
 }

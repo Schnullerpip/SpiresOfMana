@@ -361,7 +361,6 @@ public class GameManager : MonoBehaviour
 		{
 			players[i].movement.RpcSetPositionAndRotation(startPositions[i].position, startPositions[i].rotation);
 			players[i].movement.RpcSetVelocity(Vector3.zero);
-            players[i].RpcSetInputState(InputStateSystem.InputStateID.Normal);
 		}
     }
 
@@ -374,7 +373,6 @@ public class GameManager : MonoBehaviour
         {
             OnRoundStarted();
         }
-        TriggerOnPreGameAnimationFinished();
     }
 
     public void TriggerOnLocalPlayerWon()

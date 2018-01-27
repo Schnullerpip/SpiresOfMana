@@ -75,6 +75,7 @@ GameObject:
   - component: {fileID: 222239734720069742}
   - component: {fileID: 114182096595769528}
   - component: {fileID: 114293378172468548}
+  - component: {fileID: 114247633168940736}
   m_Layer: 5
   m_Name: HealthHUD
   m_TagString: Untagged
@@ -220,6 +221,38 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 100
+--- !u!114 &114247633168940736
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1873515211363010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b27610c08262d4e7f89ed3984ae2cbec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initialOffset: {x: -165, y: -210, z: 0}
+  speed: 2
+  curve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  delay: 0.5
 --- !u!114 &114293378172468548
 MonoBehaviour:
   m_ObjectHideFlags: 1

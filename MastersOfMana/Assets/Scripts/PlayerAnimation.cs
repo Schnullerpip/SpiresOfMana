@@ -9,12 +9,22 @@ public class PlayerAnimation : NetworkBehaviour {
     [Tooltip("How fast does a change in movment direction affect the movement animation?")]
     public float movementDirectionTransitionSpeed = 10;
 
+    public float introDuration = 5;
+
 	private Vector2 mDirection;
     private PlayerScript mPlayer;
 
-    private int movementSpeedHash, speedRightHash, speedForwardHash, groundedHash, isDeadHash, isCastingHash, castAnimationHash;
-
-
+    private int movementSpeedHash, 
+    speedRightHash, 
+    speedForwardHash, 
+    groundedHash, 
+    isDeadHash, 
+    isCastingHash, 
+    castAnimationHash,
+    gameRunning,
+    hitDamage,
+    fof
+    ;
 
     void Start()
 	{
@@ -25,6 +35,9 @@ public class PlayerAnimation : NetworkBehaviour {
         groundedHash = Animator.StringToHash("grounded");
         isDeadHash = Animator.StringToHash("isDead");
         isCastingHash = Animator.StringToHash("isCasting");
+        gameRunning = Animator.StringToHash("gameRunning");
+        hitDamage = Animator.StringToHash("hitDamage");
+        fof = Animator.StringToHash("fof");
 
 		if(!isLocalPlayer)
 		{
@@ -36,6 +49,7 @@ public class PlayerAnimation : NetworkBehaviour {
 		mPlayer.movement.onMovement += UpdateMovement;
 		mPlayer.healthScript.OnDamageTaken += TookDamage;
         GameManager.OnHostEndedRound += ResetState;
+        GameManager.OnRoundStarted += Intro;
     }
 
     void UpdateMovement(float movementSpeed, Vector2 direction, bool isGrounded)
@@ -53,10 +67,11 @@ public class PlayerAnimation : NetworkBehaviour {
 
 	void TookDamage(int damage)
 	{
-        animator.SetInteger("hitDamage",damage);
+        animator.SetInteger(hitDamage, damage);
 
 		if(!mPlayer.healthScript.IsAlive())
 		{
+            animator.SetBool(gameRunning, false);
 			animator.SetBool(isDeadHash, true);
 		}
 	}
@@ -66,6 +81,19 @@ public class PlayerAnimation : NetworkBehaviour {
 		animator.SetBool(isCastingHash, value);
 	}
 
+    public void Intro()
+    {
+        animator.SetBool(gameRunning, true);
+        animator.Update(0);
+        StartCoroutine(WaitIntroDuration());
+    }
+
+    IEnumerator WaitIntroDuration()
+    {
+        yield return new WaitForSeconds(introDuration);
+        GameManager.instance.TriggerOnPreGameAnimationFinished();
+    }
+
 	public void Cast(int castAnimationID)
 	{
         animator.SetInteger(castAnimationHash, castAnimationID);
@@ -73,7 +101,7 @@ public class PlayerAnimation : NetworkBehaviour {
 
         if(castAnimationID == 1)
         {
-            animator.SetBool("fof",true);
+            animator.SetBool(fof, true);
         }
 
 		//force an update to avoid a 1 to 2 frame delay
@@ -88,5 +116,6 @@ public class PlayerAnimation : NetworkBehaviour {
     void ResetState()
     {
         animator.SetBool(isDeadHash, false);
+        animator.SetBool(gameRunning, false);
     }
 }

@@ -29,6 +29,11 @@ public class FloatingDamageTextSystem : MonoBehaviour {
         transform.SetParent(parent, true);
     }
 
+    void OnEnable()
+    {
+        Clear();
+    }
+
     /// <summary>
     /// Initializes the Floating Damage Text System.
     /// </summary>
@@ -48,14 +53,12 @@ public class FloatingDamageTextSystem : MonoBehaviour {
     {
         player.healthScript.OnDamageTaken += CreateDamageText;
         player.healthScript.OnHealTaken += CreateHealText;
-        GameManager.OnRoundStarted += Clear;
     }
 
     public void UnsubscribeFromEvents()
     {
         player.healthScript.OnDamageTaken -= CreateDamageText;
         player.healthScript.OnHealTaken -= CreateHealText;
-        GameManager.OnRoundStarted -= Clear;
     }
 
     public void CreateDamageText(int damage)

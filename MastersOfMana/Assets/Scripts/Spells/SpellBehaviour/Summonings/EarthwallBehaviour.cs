@@ -121,7 +121,7 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
 
     public override void Execute(PlayerScript caster)
     {
-        EarthwallBehaviour wall = PoolRegistry.GetInstance(gameObject, 1, 1).GetComponent<EarthwallBehaviour>();
+        EarthwallBehaviour wall = PoolRegistry.GetInstance(gameObject, 1, 2).GetComponent<EarthwallBehaviour>();
         wall.gameObject.SetActive(true);
         wall.casterObject = caster.gameObject;
         wall.caster = caster;
@@ -138,7 +138,10 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
         if (needInstantEffect)
         {
             wall.mPendingContactEffect = true;
-            caster.movement.RpcInvertVelocityAndHighPacePositionCorrection(VelocityLossFactor, wall.transform.position+Vector3.up*0.7f);
+            caster.movement.RpcInvertVelocityAndHighPacePositionCorrection(VelocityLossFactor, wall.transform.position+Vector3.up*0.3f);
+
+            //make the caster 'landing' and take falldamage accordingly
+            caster.movement.LandingBehavior();
         }
 
         NetworkServer.Spawn(wall.gameObject);

@@ -78,6 +78,11 @@ public class PlayerCamera : MonoBehaviour {
 		}
 	}
 
+    public void Teleport(Vector3 position)
+    {
+        transform.position = position;
+    }
+
 	void FixedUpdate()
 	{
 		Vector3 targetPosition = followTarget.transform.position;

@@ -64,8 +64,9 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
         mSelfInflictDamageTimeCount = 0;
     }
 
-    void Awake()
+    public override void Awake()
     {
+        base.Awake();
         mLightningProjectileMainModule = mLightningProjectile.main;
         mInitialStartSize = mLightningProjectileMainModule.startSizeMultiplier;
     }

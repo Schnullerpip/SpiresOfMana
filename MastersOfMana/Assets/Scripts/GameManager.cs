@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     public CameraSystem cameraSystem;
     private LavaFloor mLavaFloor;
     public KillFeed mKillFeed;
+    public LobbyPanel lobbyPanel;
 
     public AudioListener listener;
 
@@ -337,6 +338,7 @@ public class GameManager : MonoBehaviour
                     ++mNumOfReadyPlayers;
                 }
             }
+            lobbyPanel.Init();
             if (mNumOfReadyPlayers >= players.Count)
             {
                 NetManager.instance.RpcTriggerRoundStarted();

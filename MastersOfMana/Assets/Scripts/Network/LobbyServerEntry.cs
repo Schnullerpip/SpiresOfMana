@@ -12,25 +12,26 @@ namespace Prototype.NetworkLobby
         public Text serverInfoText;
         public Text slotInfo;
         public Button joinButton;
+        public string identifier;
 
-		public void Populate(MatchInfoSnapshot match, LobbyManager lobbyManager, Color c)
+        public void Populate(MatchInfoSnapshot match, LobbyManager lobbyManager, Color c)
 		{
             serverInfoText.text = match.name;
 
-            slotInfo.text = match.currentSize.ToString() + "/" + match.maxSize.ToString(); 
+            slotInfo.text = match.currentSize.ToString() + "/" + match.maxSize.ToString();
 
-            NetworkID networkID = match.networkId;
+            identifier = match.networkId.ToString();
 
             joinButton.onClick.RemoveAllListeners();
-            joinButton.onClick.AddListener(() => { JoinMatch(networkID, lobbyManager); });
+            joinButton.onClick.AddListener(() => { JoinMatch(match.networkId, lobbyManager); });
 
             GetComponent<Image>().color = c;
         }
 
 		public void setupLocalMatch (string matchName, UnityEngine.Events.UnityAction callback)
 		{
-			serverInfoText.text = matchName;
-			slotInfo.text ="1/4"; 
+			serverInfoText.text = identifier = matchName;
+			slotInfo.text = ""; 
 			joinButton.onClick.RemoveAllListeners();
 			joinButton.onClick.AddListener(callback);
 		}

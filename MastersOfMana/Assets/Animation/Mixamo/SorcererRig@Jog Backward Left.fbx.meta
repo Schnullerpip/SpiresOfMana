@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 0a9d574f20403484cafe9ec368265575
+guid: 4b3a3fa9faba54182917f4ce91caf008
 timeCreated: 1516649252
 licenseType: Free
 ModelImporter:
@@ -73,7 +73,7 @@ ModelImporter:
     400062: upper_arm.L
     400064: upper_arm.R
     400066: Rig
-    7400000: Jog Backward Diagonal Mirror
+    7400000: Jog Backward Left
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -100,7 +100,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Jog Backward Diagonal Mirror
+      name: Jog Backward Left
       takeName: mixamo.com
       firstFrame: 0
       lastFrame: 20
@@ -111,7 +111,7 @@ ModelImporter:
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 1
-      loopBlend: 0
+      loopBlend: 1
       loopBlendOrientation: 0
       loopBlendPositionY: 0
       loopBlendPositionXZ: 0
@@ -123,14 +123,14 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.2184466
+      - time: 0.20720808
         functionName: Step
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.802589
+      - time: 0.8317152
         functionName: Step
         data: 
         objectReferenceParameter: {instanceID: 0}
@@ -161,7 +161,7 @@ ModelImporter:
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
-    useFileScale: 1
+    useFileScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0

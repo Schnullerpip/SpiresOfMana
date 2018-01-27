@@ -42,6 +42,11 @@ public class PlayerAim : NetworkBehaviour {
 		}
 	}
 
+    private void Start()
+    {
+        GameManager.OnHostEndedRound += RestoreInit;
+    }
+
 	public PlayerCamera GetCameraRig(){
 		return mCameraRig;
 	}

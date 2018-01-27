@@ -171,6 +171,12 @@ public class PlayerMovement : ServerMoveable
 
 	public void Landing()
 	{
+        LandingBehavior();
+        soundEffects.PlayLandingSFX();
+	}
+
+    public void LandingBehavior()
+    {
 		if(mIsFalling)
 		{
             int delta = Mathf.RoundToInt(-mRigidbody.velocity.y - fallingDamageThreshold);
@@ -180,9 +186,7 @@ public class PlayerMovement : ServerMoveable
                 onLandingWhileFalling(delta);
 			}
 		}
-
-        soundEffects.PlayLandingSFX();
-	}
+    }
 
 	///// <summary>
 	///// Let's the character jump with the default jumpStength

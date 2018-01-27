@@ -139,6 +139,9 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
         {
             wall.mPendingContactEffect = true;
             caster.movement.RpcInvertVelocityAndHighPacePositionCorrection(VelocityLossFactor, wall.transform.position+Vector3.up*0.3f);
+
+            //make the caster 'landing' and take falldamage accordingly
+            caster.movement.LandingBehavior();
         }
 
         NetworkServer.Spawn(wall.gameObject);

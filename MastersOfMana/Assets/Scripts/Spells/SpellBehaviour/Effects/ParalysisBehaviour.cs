@@ -93,12 +93,13 @@ public class ParalysisBehaviour : A_EffectBehaviour
                 //player was hit -> create an icecrystalsurrounding him/her
                 ParalysisBehaviour pb = PoolRegistry.GetInstance(gameObject, p.transform.position, caster.transform.rotation, 2, 1) .GetComponent<ParalysisBehaviour>();
 
-                pb.gameObject.layer = LayerMask.NameToLayer("FrostPrison");
+                //pb.gameObject.layer = LayerMask.NameToLayer("FrostPrison");
 
                 pb.Init(p.gameObject);
                 pb.mAffectedPlayer = p;
                 pb.caster = caster;
                 pb.casterObject = caster.gameObject;
+
 
                 NetworkServer.Spawn(pb.gameObject);
 
@@ -128,7 +129,7 @@ public class ParalysisBehaviour : A_EffectBehaviour
                     //its definitely terrain
                     //get its normal and create an iceCrystal with the hit points normal as rotation
                     ParalysisBehaviour pb = PoolRegistry.GetInstance(gameObject, hit.point,Quaternion.FromToRotation(Vector3.up, hit.normal), 1, 1) .GetComponent<ParalysisBehaviour>();
-                    pb.gameObject.layer = LayerMask.NameToLayer("Default");
+                    //pb.gameObject.layer = LayerMask.NameToLayer("Default");
                     pb.Init(null);
                     NetworkServer.Spawn(pb.gameObject);
                 }
@@ -151,6 +152,14 @@ public class ParalysisBehaviour : A_EffectBehaviour
         mTimeCount = 0;
         ActivateOnDeactivation.SetActive(true);
         healthscript.ResetObject();
+
+        if (mAffectedPlayer)
+        {
+            //make it so the player wont collide with us (glitchy stuff)
+            affectedPlayer.layer = LayerMask.NameToLayer("FrozenPlayer");
+        }
+        //now that the player wont collide with us anymore - we can change our layer to something (other) players and things still collide with
+        gameObject.layer = LayerMask.NameToLayer("FrostPrison");
 
         //according to how long the paralysis should be applied, calculate how much damage the icecrystal has to inflict to itself per second to disappear after its lifetime
         mDamagePerSecond = (int)(healthscript.GetMaxHealth()/mLifeTime*mReductionIntervalInSeconds);
@@ -189,14 +198,15 @@ public class ParalysisBehaviour : A_EffectBehaviour
         if (mAffectedPlayerObject)
         {
             mAffectedPlayer = mAffectedPlayerObject.GetComponent<PlayerScript>();
-            gameObject.layer = LayerMask.NameToLayer("FrostPrison");
+
+            //make it so the player wont collide with us (glitchy stuff)
+            mAffectedPlayer.gameObject.layer = LayerMask.NameToLayer("FrozenPlayer");
 
             ApplyMaliciousEffect();
         }
-        else
-        {
-            gameObject.layer = LayerMask.NameToLayer("Default");
-        }
+
+        //now that the player wont collide with us anymore (or there is none to begin with) - we can change our layer to something (other) players and things still collide with
+        gameObject.layer = LayerMask.NameToLayer("FrostPrison");
     }
 
     void Start()
@@ -339,6 +349,11 @@ public class ParalysisBehaviour : A_EffectBehaviour
     [ClientRpc]
     private void RpcDisappear()
     {
+        if (mAffectedPlayer)
+        {
+            mAffectedPlayer.gameObject.layer = LayerMask.NameToLayer("Player");
+        }
+        gameObject.layer = LayerMask.NameToLayer("IgnoreAll");
         Shatter();
     }
 
@@ -352,7 +367,7 @@ public class ParalysisBehaviour : A_EffectBehaviour
 
         //disallow collisions for the icecrystal collider
         iceCollider.isTrigger = true;
-        gameObject.layer = LayerMask.NameToLayer("IgnoreAll");
+        //gameObject.layer = LayerMask.NameToLayer("IgnoreAll");
 
         //disable the actual crystal and replace it completely with the fragments
         ActivateOnDeactivation.SetActive(false);

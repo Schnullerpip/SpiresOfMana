@@ -358,6 +358,7 @@ public class GameManager : MonoBehaviour
 			players[i].movement.RpcSetVelocity(Vector3.zero);
             players[i].RpcSetInputState(InputStateSystem.InputStateID.Normal);
 		}
+        localPlayer.aim.RestoreInit();
     }
 
     public void TriggerOnRoundStarted()

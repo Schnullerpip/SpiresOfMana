@@ -22,6 +22,7 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
     protected Dictionary<ServerMoveable, int> mAlreadyCaught;
     public float instantEffectTriggerThreshold;
     public float dotProductThreshold;
+    public float lagCorrection;
     [SyncVar]
     private bool mPendingContactEffect = false;
     public float mOriginalVolume;
@@ -45,11 +46,25 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
         preview.instance.MoveAndRotate(position, rotation);
 	}
 
-    private void GetSpawnPositionAndRotation(PlayerScript caster, out Vector3 position, out Quaternion rotation, bool isClientCall)
+    private bool GetSpawnPositionAndRotation(PlayerScript caster, out Vector3 position, out Quaternion rotation, bool isClientCall)
     {
+
+        //check whether an instant velocity change and contactEffect should be applied
+        //if the player falls down rapidly he/she wont be able to catch him/herself with the shield, because the triggers will fall right through the colliders
+        var y = caster.movement.GetVelocity().y;
+        var dot = Vector3.Dot(Vector3.down, isClientCall ? caster.aim.currentLookRotation * Vector3.forward : caster.GetCameraLookDirection());
+        bool shouldBeCorrected = y < 0 && Mathf.Abs(y) >= instantEffectTriggerThreshold && dot >= dotProductThreshold;
+
 		RaycastHit hit;
         Vector3 aimDirection = isClientCall ? GetAimClient(caster, out hit, false) : GetAimServer(caster, out hit, false);
         Vector3 expectedPos = caster.movement.mRigidbody.worldCenterOfMass + aimDirection * initialDistanceToCaster;
+
+        if (shouldBeCorrected)
+        {
+            //we're rapidly falling, so the lag will make the shield spawn above us even though we're aiming to the floors
+            //adjust the position downwards, so the lag is balanced out
+            expectedPos += Vector3.down*lagCorrection;
+        }
 
         caster.SetColliderIgnoreRaycast(true);
         if (Physics.Raycast(new Ray(caster.movement.mRigidbody.worldCenterOfMass, aimDirection), out hit))
@@ -71,6 +86,8 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
 
         position = expectedPos;
         rotation = Quaternion.LookRotation(aimDirection);
+
+        return shouldBeCorrected;
     }
 
     private Vector3 CorrigatePosition(Vector3 pos, Vector3 aimDirection)
@@ -104,32 +121,35 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
 
     public override void Execute(PlayerScript caster)
     {
-        EarthwallBehaviour wall = PoolRegistry.GetInstance(gameObject, 1, 1).GetComponent<EarthwallBehaviour>();
+        EarthwallBehaviour wall = PoolRegistry.GetInstance(gameObject, 1, 2).GetComponent<EarthwallBehaviour>();
         wall.gameObject.SetActive(true);
         wall.casterObject = caster.gameObject;
         wall.caster = caster;
 
         Vector3 position;
         Quaternion rotation;
-        GetSpawnPositionAndRotation(caster, out position, out rotation, false);
+
+        bool needInstantEffect = GetSpawnPositionAndRotation(caster, out position, out rotation, false);
         wall.transform.position = position;
         wall.transform.rotation = rotation;
-        NetworkServer.Spawn(wall.gameObject);
-
 
         //check whether an instant velocity change and contactEffect should be applied
         //if the player falls down rapidly he/she wont be able to catch him/herself with the shield, because the triggers will fall right through the colliders
-        var y = caster.movement.GetVelocity().y;
-        var dot = Vector3.Dot(Vector3.down, caster.GetCameraLookDirection());
-        if (y < 0 && Mathf.Abs(y) >= instantEffectTriggerThreshold && dot >= dotProductThreshold)
+        if (needInstantEffect)
         {
             wall.mPendingContactEffect = true;
-            caster.movement.RpcInvertVelocity(VelocityLossFactor);
+            caster.movement.RpcInvertVelocityAndHighPacePositionCorrection(VelocityLossFactor, wall.transform.position+Vector3.up*0.3f);
+
+            //make the caster 'landing' and take falldamage accordingly
+            caster.movement.LandingBehavior();
         }
+
+        NetworkServer.Spawn(wall.gameObject);
     }
 
     void OnTriggerExit(Collider collider)
     {
+        if (!isServer) return;
         Rigidbody rigid = collider.attachedRigidbody;
         if (rigid)
         {
@@ -148,6 +168,7 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
 
     new void OnTriggerEnter(Collider collider)
     {
+        if (!isServer) return;
         //if its a server moveable - invert its velocity (deflect/trampoline effect)
         Rigidbody rigid = collider.attachedRigidbody;
         ServerMoveable sm = null;

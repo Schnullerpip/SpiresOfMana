@@ -189,15 +189,28 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 	}
 
 
-	/// <summary>
-	/// Applies an explosion with the provided parameters.
-	/// </summary>
-	/// <param name="explosionOrigin">Explosion origin.</param>
-	/// <param name="radius">Radius.</param>
-	/// <param name="explFalloff">Explosion falloff.</param>
-	/// <param name="excluded">A list of Healthscript that should be skipped. eg these already got hit.</param>
-	protected void ExplosionDamage(Vector3 explosionOrigin, float radius, ExplosionFalloff explFalloff, List<HealthScript> excluded = null, float externalDamageFactor = 1.0f, float externalForceFactor = 1.0f, int min_damage = 0, int max_damage = int.MaxValue)
+    /// <summary>
+    /// Applies an explosion with the provided parameters.
+    /// </summary>
+    /// <param name="explosionOrigin">Explosion origin.</param>
+    /// <param name="radius">Radius.</param>
+    /// <param name="explFalloff">Explosion falloff.</param>
+    /// <param name="excluded">A list of Healthscript that should be skipped. eg these already got hit.</param>
+    /// <param name="ForceOriginOffset"> the offset that is added to the origin for forcecalculation </param>
+    protected void ExplosionDamage(
+        Vector3 explosionOrigin,
+        float radius,
+        ExplosionFalloff explFalloff,
+        List<HealthScript> excluded = null,
+        float externalDamageFactor = 1.0f,
+        float externalForceFactor = 1.0f,
+        int min_damage = 0,
+        int max_damage = int.MaxValue,
+        Vector3 ForceOriginOffset = default(Vector3)
+        )
 	{
+
+        Debug.Log("ForceOriginOffset: " + ForceOriginOffset);
 
 		//overlap a sphere at the hit position
 	    int layerId = 2; //ignore raycast layer
@@ -247,7 +260,7 @@ public abstract class A_SpellBehaviour : NetworkBehaviour
 
 				cachedRigidbodies.Add(c.attachedRigidbody);
 
-				Vector3 forceVector = c.attachedRigidbody.worldCenterOfMass - explosionOrigin; 
+				Vector3 forceVector = c.attachedRigidbody.worldCenterOfMass - (explosionOrigin + ForceOriginOffset); 
 
 				affect = 1 - forceVector.sqrMagnitude / radiusSqr;
 				

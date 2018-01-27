@@ -12,12 +12,20 @@ public class JetBehaviour : A_SummoningBehaviour
     private float mUpForce;
     [SerializeField]
     private float mLifeTime;
+    private static float FADE_TIME = 3.0f;
     [SerializeField]
     private float mGravityreduction;
     [SerializeField]
     [Range(0.0f, 1.0f)]
     private float mMinimalHeightFactor;
 
+    //the particle systems (visuals) for the jet
+    [SerializeField] private ParticleSystem whirl;
+    [SerializeField] private ParticleSystem flickers;
+    private ParticleSystem.EmissionModule whirlEmission;
+    private ParticleSystem.EmissionModule flickersEmission;
+
+    //the trigger that will evaluate which players/objects to affect
     [SerializeField] private CapsuleCollider trigger;
     private Vector3 triggerPos;
 
@@ -40,7 +48,7 @@ public class JetBehaviour : A_SummoningBehaviour
             jet.gameObject.SetActive(true);
             NetworkServer.Spawn(jet.gameObject);
 
-            caster.StartCoroutine(UnSpawnJetAfterSeconds(jet.gameObject, mLifeTime));
+            caster.StartCoroutine(UnSpawnJetAfterSeconds(jet, mLifeTime));
         }
     }
 
@@ -86,6 +94,14 @@ public class JetBehaviour : A_SummoningBehaviour
         preview.instance.Deactivate();
 	}
 
+    public override void Awake()
+    {
+        base.Awake();
+
+        whirlEmission = whirl.emission;
+        flickersEmission = flickers.emission;
+    }
+
     void Start()
     {
         if (mAffecting == null)
@@ -97,6 +113,16 @@ public class JetBehaviour : A_SummoningBehaviour
     void OnEnable()
     {
         mAffecting = new List<ServerMoveable>();
+        mTimeCount = 0;
+        mFadeIndicator = true;
+
+        //stop new particles from coming
+        var emission = whirl.emission;
+        emission.enabled = true;
+
+        //stop the flickers from coming
+        emission = flickers.emission;
+        emission.enabled = true;
     }
 
     protected override void ExecuteTriggerEnter_Host(Collider other)
@@ -136,7 +162,23 @@ public class JetBehaviour : A_SummoningBehaviour
                 mAffecting.Remove(sm);
             }
         }
+    }
 
+    private float mTimeCount;
+    private bool mFadeIndicator;
+    public void Update()
+    {
+        mTimeCount += Time.deltaTime;
+        if (mFadeIndicator && mTimeCount >= (mLifeTime - FADE_TIME))
+        {
+            mFadeIndicator = false;
+
+            //stop new particles from coming
+            whirlEmission.enabled = false;
+
+            //stop the flickers from coming
+            flickersEmission.enabled = false;
+        }
     }
 
     public void FixedUpdate()
@@ -179,10 +221,10 @@ public class JetBehaviour : A_SummoningBehaviour
         }
     }
 
-    IEnumerator UnSpawnJetAfterSeconds(GameObject jet, float seconds)
+    IEnumerator UnSpawnJetAfterSeconds(JetBehaviour jet, float seconds)
     {
         yield return new WaitForSeconds(seconds);
-        jet.SetActive(false);
-        NetworkServer.UnSpawn(jet);
+        jet.gameObject.SetActive(false);
+        NetworkServer.UnSpawn(jet.gameObject);
     }
 }

@@ -50,7 +50,6 @@ public class SoloGameSetup : MonoBehaviour {
 		{
 			yield return null;
 		}
-        GameManager.instance.players.Add(GameManager.instance.localPlayer);
 		GameManager.instance.Go();
 		Init();
 	}

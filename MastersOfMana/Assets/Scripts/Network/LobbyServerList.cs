@@ -35,6 +35,7 @@ namespace Prototype.NetworkLobby
 
             mLobbyManager = LobbyManager.s_Singleton;
             RequestPage(0);
+			StartCoroutine(RefreshAfter (1));
         }
 
         public void OnClickJoin()
@@ -84,6 +85,18 @@ namespace Prototype.NetworkLobby
 				entry.transform.SetParent(serverListRect, false);
 			}
         }
+
+		private IEnumerator RefreshAfter(float seconds)
+		{
+			yield return new WaitForSeconds (seconds);
+			RequestPage (0);
+			RefreshAfter (5);
+		}
+
+		void OnDisable()
+		{
+			StopAllCoroutines ();
+		}
 
         public void ChangePage(int dir)
         {

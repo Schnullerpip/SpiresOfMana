@@ -272,12 +272,12 @@ namespace Prototype.NetworkLobby
         //so that all client get the new value throught syncvar
         public void OnNextColorClicked()
         {
-            CmdColorChange();
+            CmdColorChange(true);
         }
 
         public void OnPrevColorClicked()
         {
-            throw new System.NotImplementedException();
+            CmdColorChange(false);
         }
 
         public void OnReadyClicked()
@@ -369,7 +369,7 @@ namespace Prototype.NetworkLobby
             playerColor = color;
             if (validate)
             {
-                CmdColorChange();
+                CmdColorChange(true);
             }
             if(playerColor != color)
             {
@@ -378,7 +378,7 @@ namespace Prototype.NetworkLobby
         }
 
         [Command]
-        public void CmdColorChange()
+        public void CmdColorChange(bool changeForward)
         {
             forcedColor = false;
             int idx = System.Array.IndexOf(Colors, playerColor);
@@ -399,7 +399,16 @@ namespace Prototype.NetworkLobby
                     if (_colorInUse[i] == idx)
                     {//that color is already in use
                         alreadyInUse = true;
-                        idx = (idx + 1) % Colors.Length;
+                        if (changeForward)
+                        {
+                            idx = (idx + 1) % Colors.Length;
+                        }
+                        else
+                        {
+                            idx = (idx - 1);
+                            if (idx < 0)
+                                idx = Colors.Length - 1;
+                        }
                     }
                 }
             }

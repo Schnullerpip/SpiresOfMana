@@ -568,7 +568,7 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 2
       time: 0
-      value: 0
+      value: 0.05
       inSlope: 2
       outSlope: 2
       tangentMode: 0
@@ -585,7 +585,8 @@ MonoBehaviour:
   damagePerSecond: 5
   instantEffectTriggerThreshold: 0
   dotProductThreshold: 0.8
-  mOriginalVolume: 0
+  lagCorrection: 1.6
+  mOriginalVolume: 1
   VelocityLossFactor: 0.8
   EffectIntervalInSeconds: 1.5
 --- !u!198 &198080264341971810

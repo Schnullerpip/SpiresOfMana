@@ -33,6 +33,9 @@ public class WhipBehaviour : A_SummoningBehaviour
     [SyncVar]
     private GameObject mAffectedPlayerObject;
     private PlayerScript mAffectedPlayer;
+    [SyncVar]
+    private GameObject mCasterObjectScript;
+    private PlayerScript mCasterScript;
 
 	private void SetLinePoint0(Vector3 vec)
 	{
@@ -94,6 +97,11 @@ public class WhipBehaviour : A_SummoningBehaviour
         whipBehaviour.lineRenderer.widthMultiplier = 0;
         whipBehaviour.Init();
 
+        //TODO why the fuck does this work but not with caster?!?!?!?!?! I HATE UNET!!!!!!!
+        whipBehaviour.mCasterScript = caster;
+        whipBehaviour.mCasterObjectScript = caster.gameObject;
+
+        
         whipBehaviour.gameObject.SetActive(true);
         NetworkServer.Spawn(whipBehaviour.gameObject);
     }
@@ -152,9 +160,19 @@ public class WhipBehaviour : A_SummoningBehaviour
         }
     }
 
+    void Start()
+    {
+        mInitWidth = lineRenderer.widthMultiplier;
+    }
+
     public override void OnStartClient()
     {
         base.OnStartClient();
+
+        if (casterObject)
+        {
+            caster = casterObject.GetComponent<PlayerScript>();
+        }
 
         if (mAffectedPlayerObject)
         {
@@ -162,15 +180,26 @@ public class WhipBehaviour : A_SummoningBehaviour
             transform.parent = mAffectedPlayer.transform;
         }
 		mInitWidth = lineRenderer.widthMultiplier;
+
+        if (mCasterObjectScript)
+        {
+            mCasterScript = mCasterObjectScript.GetComponent<PlayerScript>();
+        }
     }
 
     void Update()
     {
-        if (caster)
+
+        if (mCasterScript)
         {
-            Vector3 casterPosition = caster.handTransform.position;
+            Vector3 casterPosition = mCasterScript.handTransform.position;
             casterPosition += WhipStartOffset;
             lineRenderer.SetPosition(0, casterPosition);
+        }
+        else
+        {
+            //as long as we dont have a caster - do nothing and wait for it to be initialized
+            return;
         }
 
         lineRenderer.SetPosition(1, transform.position);
@@ -181,8 +210,9 @@ public class WhipBehaviour : A_SummoningBehaviour
 
         if(mLifeTime >= disappearTimer)
         {
-            caster = null;
-            casterObject = null;
+            mCasterScript = null;
+            mCasterObjectScript = null;
+            transform.parent = null;
             gameObject.SetActive(false);
             NetworkServer.UnSpawn(gameObject);
         }

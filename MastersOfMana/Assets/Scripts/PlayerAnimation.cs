@@ -50,6 +50,8 @@ public class PlayerAnimation : NetworkBehaviour {
 		mPlayer.healthScript.OnDamageTaken += TookDamage;
         GameManager.OnHostEndedRound += ResetState;
         GameManager.OnRoundStarted += Intro;
+
+        Debug.LogWarning("Shift + K to cancel intro animation. Remove this code for release build!");
     }
 
     void UpdateMovement(float movementSpeed, Vector2 direction, bool isGrounded)
@@ -88,8 +90,11 @@ public class PlayerAnimation : NetworkBehaviour {
         StartCoroutine(WaitIntroDuration());
     }
 
+    bool mInIntro = false;
+
     IEnumerator WaitIntroDuration()
     {
+        mInIntro = true;
         yield return new WaitForSeconds(introDuration);
         GameManager.instance.TriggerOnPreGameAnimationFinished();
     }
@@ -117,5 +122,21 @@ public class PlayerAnimation : NetworkBehaviour {
     {
         animator.SetBool(isDeadHash, false);
         animator.SetBool(gameRunning, false);
+    }
+
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.K) && Input.GetKey(KeyCode.LeftShift))
+        {
+            if(mInIntro)
+            {
+                mInIntro = false;
+                StopAllCoroutines();
+                GameManager.instance.TriggerOnPreGameAnimationFinished();
+
+                Animator camAni = mPlayer.aim.GetCameraRig().GetComponentInChildren<Animator>();
+                camAni.Play(camAni.GetCurrentAnimatorStateInfo(0).shortNameHash, 0, 1);
+            }
+		}
     }
 }

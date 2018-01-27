@@ -15,6 +15,8 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
     private ParticleSystem mStaticPotential;
     [SerializeField]
     private ParticleSystem mLightningProjectile;
+    private ParticleSystem.MainModule mLightningProjectileMainModule;
+    private float mInitialStartSize;
 
     public AudioSource mAudioSource;
     public AudioClip CastEffectClip;
@@ -41,15 +43,6 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
         preview.instance.Deactivate();
 	}
 
-    void OnEnable()
-    {
-        mAudioSource.PlayOneShot(CastEffectClip);
-        mAlreadyCaught = new List<HealthScript>();
-        mEnergyLevel = mDuration;
-        mTimeCount = mCountTilDamage;
-        mSelfInflictDamageTimeCount = 0;
-    }
-
     public override void Execute(PlayerScript caster)
     {
         LightningAuraBehaviour la = PoolRegistry.GetInstance(this.gameObject, 4, 4).GetComponent<LightningAuraBehaviour>();
@@ -60,6 +53,21 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
         la.casterObject = caster.gameObject;
         la.mEnergyLevel = mDuration;//should work in Start also
         NetworkServer.Spawn(la.gameObject);
+    }
+
+    void OnEnable()
+    {
+        mAudioSource.PlayOneShot(CastEffectClip);
+        mAlreadyCaught = new List<HealthScript>();
+        mEnergyLevel = mDuration;
+        mTimeCount = mCountTilDamage;
+        mSelfInflictDamageTimeCount = 0;
+    }
+
+    void Awake()
+    {
+        mLightningProjectileMainModule = mLightningProjectile.main;
+        mInitialStartSize = mLightningProjectileMainModule.startSizeMultiplier;
     }
 
     public void OnTriggerStay(Collider other)
@@ -183,12 +191,25 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
                 float dist = Vector3.Distance(hs.transform.position, caster.transform.position);
                 if (dist < distance)
                 {
+                    distance = dist;
                     nearest = hs;
                 }
             }
 
             if (nearest)
             {
+                //apply damage to nearest opponent
+                if (isServer && ((mTimeCount += Time.deltaTime) >= mCountTilDamage))
+                {
+                    mTimeCount = 0;
+                    nearest.TakeDamage(mDamage, caster, this.GetType());
+                }
+
+                //we know our trigger radius and also the distance to nearest - according to that information
+                //we should scale the lightnings otherwise they shoot right through the nearest (looks weird)
+                float sizeFactor = distance/mDecectionTrigger.radius;
+                mLightningProjectileMainModule.startSizeMultiplier = sizeFactor;
+
                 //since mAlreadyCaught is not empty we assume, that mLightningProjectile is already active
                 //shoot the lightning projectile at nearest opponent
                 ServerMoveable sm = nearest.GetComponent<ServerMoveable>();
@@ -199,13 +220,6 @@ public class LightningAuraBehaviour : A_SummoningBehaviour
                 else
                 {
                     mLightningProjectile.transform.LookAt(nearest.transform.position);
-                }
-
-                //apply damage to nearest opponent
-                if (isServer && ((mTimeCount += Time.deltaTime) >= mCountTilDamage))
-                {
-                    mTimeCount = 0;
-                    nearest.TakeDamage(mDamage, caster, this.GetType());
                 }
             }
             else

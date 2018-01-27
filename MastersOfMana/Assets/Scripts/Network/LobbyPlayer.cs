@@ -126,13 +126,17 @@ namespace Prototype.NetworkLobby
 			}
             readyButton.interactable = false;
 
-            colorNextButton.interactable = false;
-            colorPrevButton.interactable = false;
+            colorNextButton.gameObject.SetActive(false);
+            colorPrevButton.gameObject.SetActive(false);
         }
 
         void SetupLocalPlayer()
         {
             nameInput.interactable = true;
+
+            colorNextButton.gameObject.SetActive(true);
+            colorPrevButton.gameObject.SetActive(true);
+
             //remoteIcone.gameObject.SetActive(false);
             //localIcone.gameObject.SetActive(true);
 

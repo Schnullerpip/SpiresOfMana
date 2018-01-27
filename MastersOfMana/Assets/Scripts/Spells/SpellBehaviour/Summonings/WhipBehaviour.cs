@@ -94,6 +94,7 @@ public class WhipBehaviour : A_SummoningBehaviour
 
         whipBehaviour.caster = caster;
         whipBehaviour.casterObject = caster.gameObject;
+        whipBehaviour.lineRenderer.widthMultiplier = 0;
         whipBehaviour.Init();
 
         //TODO why the fuck does this work but not with caster?!?!?!?!?! I HATE UNET!!!!!!!
@@ -178,6 +179,7 @@ public class WhipBehaviour : A_SummoningBehaviour
             mAffectedPlayer = mAffectedPlayerObject.GetComponent<PlayerScript>();
             transform.parent = mAffectedPlayer.transform;
         }
+		mInitWidth = lineRenderer.widthMultiplier;
 
         if (mCasterObjectScript)
         {

@@ -59,6 +59,7 @@ GameObject:
   - component: {fileID: 4759319563353992}
   - component: {fileID: 33587426073145406}
   - component: {fileID: 23852596919613806}
+  - component: {fileID: 208705336043516280}
   m_Layer: 14
   m_Name: FloorOfLava
   m_TagString: Untagged
@@ -981,3 +982,18 @@ MonoBehaviour:
       max: 2
   outbreakSource: {fileID: 82462473501002354}
   RAS_Offset: 1
+--- !u!208 &208705336043516280
+NavMeshObstacle:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1310517581602906}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 1, y: 1, z: 8}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 0
+  m_Center: {x: 0, y: 0, z: -11}
+  m_TimeToStationary: 0.5

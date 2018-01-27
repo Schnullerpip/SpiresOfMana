@@ -16,6 +16,11 @@ public class UISelectAnimation : MonoBehaviour, IPointerEnterHandler, IPointerEx
         mInitScale = transform.localScale;
     }
 
+    private void OnDisable()
+    {
+        transform.localScale = mInitScale;
+    }
+
     public void OnPointerEnter(PointerEventData eventData)
     {
         Grow();

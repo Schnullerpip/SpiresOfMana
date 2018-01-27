@@ -21,6 +21,11 @@ public class UISpellButton : MonoBehaviour
         mColor = icon.color;
     }
 
+    private void OnDisable()
+    {
+        icon.color = mColor;
+    }
+
     public void SetColor(Color color)
     {
         StopAllCoroutines();

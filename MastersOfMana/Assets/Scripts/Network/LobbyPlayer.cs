@@ -19,7 +19,7 @@ namespace Prototype.NetworkLobby
         new Color(0.5955882f,0.5626678f,0.1182418f), //yellow
         new Color(0.7714174f,0.1308391f,0.8088235f), //pink
         new Color(0.4375839f,0.1021842f,0.9264706f), //purple
-        new Color(0.79f,0.2604276f,0.02212f), //orange
+        new Color(0.79f,0.5043123f,0.12561f), //orange
         new Color(0.255045f,0.735f,0.6555591f), //turquoise
         new Color(0.8602941f,0.8602941f,0.8602941f), //white
         new Color(0.134f,0.134f,0.134f) //black

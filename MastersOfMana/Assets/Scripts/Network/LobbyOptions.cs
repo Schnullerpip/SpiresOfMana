@@ -9,6 +9,8 @@ public class LobbyOptions : MonoBehaviour
     public Dropdown resolutionDropdown;
     public Toggle fullscreenToggle;
 
+    public Dropdown qualityDropdown;
+
     public UnityEngine.Audio.AudioMixer mixer;
     public Slider musicSlider;
     public Slider sfxSlider;
@@ -22,10 +24,6 @@ public class LobbyOptions : MonoBehaviour
     private Dictionary<string, int> mReverseResolutionDropdownMatch = new Dictionary<string,int>();
     private bool isInitialized = false;
     private bool valuesSaved = false;
-    //private float mInitialMusicVolume;
-    //private float mInitialSfxVolume;
-    //private bool mInitialMuted;
-    //private int mInitialDropdownValue;
 
     /// <summary>
     /// Applies the audio settings. 
@@ -37,6 +35,7 @@ public class LobbyOptions : MonoBehaviour
         sfxSlider.value = PlayerPrefs.GetFloat("sfxVol", 1);
         mutedToggle.isOn = PlayerPrefsExtended.GetBool("muted", false);
         mouseSensitivity.value = PlayerPrefs.GetFloat("mouse", 180f);
+        QualitySettings.SetQualityLevel(PlayerPrefs.GetInt("QualitySettings", QualitySettings.GetQualityLevel()));
 
         OnAudioMutedChanged();
     }
@@ -64,6 +63,12 @@ public class LobbyOptions : MonoBehaviour
             }
         }
         resolutionDropdown.AddOptions(screenResolutions);
+        List<string> qualitySettings = new List<string>();
+        foreach(string setting in QualitySettings.names)
+        {
+            qualitySettings.Add(setting);
+        }
+        qualityDropdown.AddOptions(qualitySettings);
     }
 
     public void OnEnable()
@@ -79,6 +84,7 @@ public class LobbyOptions : MonoBehaviour
             resolutionDropdown.value = mReverseResolutionDropdownMatch[Screen.width + " x " + Screen.height];
         }
         fullscreenToggle.isOn = Screen.fullScreen;
+        qualityDropdown.value = PlayerPrefs.GetInt("QualitySettings", QualitySettings.GetQualityLevel());
     }
 
     public void OnSave()
@@ -86,12 +92,14 @@ public class LobbyOptions : MonoBehaviour
         valuesSaved = true;
         Resolution resolution = mResolutionDropdownMatch[resolutionDropdown.value];
         Screen.SetResolution(resolution.width, resolution.height, fullscreenToggle.isOn);
+        QualitySettings.SetQualityLevel(qualityDropdown.value);
         PlayerPrefsExtended.SetResolution("resolution", resolution);
         PlayerPrefsExtended.SetBool("fullscreen", fullscreenToggle.isOn);
         PlayerPrefs.SetFloat("musicVol", musicSlider.value);
         PlayerPrefs.SetFloat("sfxVol", sfxSlider.value);
         PlayerPrefsExtended.SetBool("muted", mutedToggle.isOn);
         PlayerPrefs.SetFloat("mouse", mouseSensitivity.value);
+        PlayerPrefs.SetInt("QualitySettings", qualityDropdown.value);
         PlayerPrefs.Save();
         if (GameManager.instance.localPlayer)
         {
@@ -186,6 +194,8 @@ public class LobbyOptions : MonoBehaviour
             resolutionDropdown.value = mReverseResolutionDropdownMatch[resolution];
         }
         fullscreenToggle.isOn = Screen.fullScreen;
+
+        qualityDropdown.value = PlayerPrefs.GetInt("QualitySettings", QualitySettings.GetQualityLevel());
     }
 }
 

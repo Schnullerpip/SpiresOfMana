@@ -1846,6 +1846,7 @@ MonoBehaviour:
   playerLobby: {fileID: 114753484251476076}
   playerName: 
   playerColor: {r: 1, g: 0, b: 0, a: 0}
+  playerColorIndex: 0
   recolors:
   - {fileID: 114661865744656202}
   healthScript: {fileID: 114581584314824656}
@@ -1869,6 +1870,7 @@ MonoBehaviour:
   animator: {fileID: 95559592168868734}
   movementDirectionTransitionSpeed: 20
   introDuration: 5
+  introImpactSound: {fileID: 8300000, guid: fc14557488d234fa59799c49af8b0c2b, type: 3}
 --- !u!114 &114661865744656202
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -9,7 +9,9 @@ public class PlayerAnimation : NetworkBehaviour {
     [Tooltip("How fast does a change in movment direction affect the movement animation?")]
     public float movementDirectionTransitionSpeed = 10;
 
+    [Header("Intro")]
     public float introDuration = 5;
+    public AudioClip introImpactSound;
 
 	private Vector2 mDirection;
     private PlayerScript mPlayer;
@@ -53,7 +55,7 @@ public class PlayerAnimation : NetworkBehaviour {
         GameManager.OnHostEndedRound += ResetState;
         GameManager.OnRoundStarted += Intro;
 
-        animator.SetInteger(charID, Random.Range(0, 10));
+        animator.SetInteger(charID, mPlayer.playerColorIndex);
 
         Debug.LogWarning("Shift + K to cancel intro animation. Remove this code for release build!");
     }
@@ -91,6 +93,7 @@ public class PlayerAnimation : NetworkBehaviour {
     {
         animator.SetBool(gameRunning, true);
         animator.Update(0);
+        GameManager.instance.audioSource2D.PlayOneShot(introImpactSound);
         StartCoroutine(WaitIntroDuration());
     }
 

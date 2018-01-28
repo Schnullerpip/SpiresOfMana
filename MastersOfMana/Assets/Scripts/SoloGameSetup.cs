@@ -41,6 +41,12 @@ public class SoloGameSetup : MonoBehaviour {
     public void OnEnable()
     {
         GameManager.OnRoundStarted += RoundStarted;
+        GameManager.OnLocalPlayerDead += LocalPlayerDead;
+    }
+
+    void LocalPlayerDead()
+    {
+        GameManager.instance.PostGame();
     }
 
     IEnumerator PullingGameStart()
@@ -50,7 +56,6 @@ public class SoloGameSetup : MonoBehaviour {
 		{
 			yield return null;
 		}
-		GameManager.instance.Go();
 		Init();
 	}
 
@@ -81,5 +86,6 @@ public class SoloGameSetup : MonoBehaviour {
     {
         GameManager.OnGameStarted -= Init;
         GameManager.OnRoundStarted -= RoundStarted;
+        GameManager.OnLocalPlayerDead -= LocalPlayerDead;
     }
 }

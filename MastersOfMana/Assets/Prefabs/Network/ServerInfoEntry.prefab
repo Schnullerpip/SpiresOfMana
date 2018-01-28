@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 11491464}
   - component: {fileID: 11481954}
   - component: {fileID: 114640573997704080}
+  - component: {fileID: 114515728210838688}
   m_Layer: 5
   m_Name: JoinButton
   m_TagString: Untagged
@@ -212,6 +213,7 @@ MonoBehaviour:
   serverInfoText: {fileID: 11437380}
   slotInfo: {fileID: 11423146}
   joinButton: {fileID: 11481954}
+  identifier: 
 --- !u!114 &11478862
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -541,6 +543,18 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 104980}
   m_IsPrefabParent: 1
+--- !u!114 &114515728210838688
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 101316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bd9b4bb08fe747b4a149a3a76cae930, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sfxs: {fileID: 11400000, guid: 18eeba44e485646158f1b62cd9240788, type: 2}
 --- !u!114 &114640573997704080
 MonoBehaviour:
   m_ObjectHideFlags: 1

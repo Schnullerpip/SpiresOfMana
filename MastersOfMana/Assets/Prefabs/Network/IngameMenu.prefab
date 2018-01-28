@@ -91,6 +91,7 @@ GameObject:
   - component: {fileID: 114694278688400172}
   - component: {fileID: 114248011526214780}
   - component: {fileID: 114360962899932756}
+  - component: {fileID: 114881849378581458}
   m_Layer: 5
   m_Name: No
   m_TagString: Untagged
@@ -161,6 +162,7 @@ GameObject:
   - component: {fileID: 114018264479734132}
   - component: {fileID: 114870639059575120}
   - component: {fileID: 114476787478088290}
+  - component: {fileID: 114552273372657086}
   m_Layer: 5
   m_Name: QuitToDesktopButton
   m_TagString: Untagged
@@ -247,6 +249,7 @@ GameObject:
   - component: {fileID: 114115636360309858}
   - component: {fileID: 114006260904842274}
   - component: {fileID: 114327133386651142}
+  - component: {fileID: 114356370108103442}
   m_Layer: 5
   m_Name: Yes
   m_TagString: Untagged
@@ -296,6 +299,7 @@ GameObject:
   - component: {fileID: 114902000239645142}
   - component: {fileID: 114283594886937570}
   - component: {fileID: 114862886733994172}
+  - component: {fileID: 114823550038575200}
   m_Layer: 5
   m_Name: SaveButton
   m_TagString: Untagged
@@ -348,6 +352,7 @@ GameObject:
   - component: {fileID: 114974668393471454}
   - component: {fileID: 114640683572282292}
   - component: {fileID: 114208082763329486}
+  - component: {fileID: 114484663631921950}
   m_Layer: 5
   m_Name: BackButton
   m_TagString: Untagged
@@ -635,6 +640,7 @@ GameObject:
   - component: {fileID: 114328522824512720}
   - component: {fileID: 114583343055569030}
   - component: {fileID: 114307261628965270}
+  - component: {fileID: 114557329055770138}
   m_Layer: 5
   m_Name: ResumeButton
   m_TagString: Untagged
@@ -854,6 +860,7 @@ GameObject:
   - component: {fileID: 114805001344553410}
   - component: {fileID: 114786898030480632}
   - component: {fileID: 114243953903213284}
+  - component: {fileID: 114882132097650920}
   m_Layer: 5
   m_Name: QuitToMainMenuButton
   m_TagString: Untagged
@@ -985,6 +992,7 @@ GameObject:
   - component: {fileID: 114494601208844742}
   - component: {fileID: 114567705163050946}
   - component: {fileID: 114614232861976906}
+  - component: {fileID: 114117135251370686}
   m_Layer: 5
   m_Name: OptionsButton
   m_TagString: Untagged
@@ -1878,6 +1886,18 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114117135251370686
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1650063916374228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bd9b4bb08fe747b4a149a3a76cae930, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sfxs: {fileID: 11400000, guid: 18eeba44e485646158f1b62cd9240788, type: 2}
 --- !u!114 &114129089585476828
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2722,6 +2742,18 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Slider+SliderEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114356370108103442
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1236261771613990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bd9b4bb08fe747b4a149a3a76cae930, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sfxs: {fileID: 11400000, guid: 18eeba44e485646158f1b62cd9240788, type: 2}
 --- !u!114 &114360962899932756
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3151,6 +3183,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   colorSet: {fileID: 11400000, guid: f57400294e0c8472a87941a05d2e7467, type: 2}
+--- !u!114 &114484663631921950
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1280161297909208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bd9b4bb08fe747b4a149a3a76cae930, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sfxs: {fileID: 11400000, guid: 18eeba44e485646158f1b62cd9240788, type: 2}
 --- !u!114 &114494601208844742
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3298,6 +3342,18 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114552273372657086
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1126318785786948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bd9b4bb08fe747b4a149a3a76cae930, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sfxs: {fileID: 11400000, guid: 18eeba44e485646158f1b62cd9240788, type: 2}
 --- !u!114 &114554015662386130
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3325,6 +3381,18 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114557329055770138
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1478831501562816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bd9b4bb08fe747b4a149a3a76cae930, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sfxs: {fileID: 11400000, guid: 18eeba44e485646158f1b62cd9240788, type: 2}
 --- !u!114 &114567705163050946
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4130,6 +4198,18 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114823550038575200
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1249757831216806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bd9b4bb08fe747b4a149a3a76cae930, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sfxs: {fileID: 11400000, guid: 18eeba44e485646158f1b62cd9240788, type: 2}
 --- !u!114 &114840127783605028
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4371,6 +4451,30 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114881849378581458
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1083565455834090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bd9b4bb08fe747b4a149a3a76cae930, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sfxs: {fileID: 11400000, guid: 18eeba44e485646158f1b62cd9240788, type: 2}
+--- !u!114 &114882132097650920
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1574265225392340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bd9b4bb08fe747b4a149a3a76cae930, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sfxs: {fileID: 11400000, guid: 18eeba44e485646158f1b62cd9240788, type: 2}
 --- !u!114 &114884894647643814
 MonoBehaviour:
   m_ObjectHideFlags: 1

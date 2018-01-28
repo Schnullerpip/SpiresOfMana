@@ -55,7 +55,7 @@ public class PlayerAnimation : NetworkBehaviour {
         GameManager.OnHostEndedRound += ResetState;
         GameManager.OnRoundStarted += Intro;
 
-        animator.SetInteger(charID, Random.Range(0, 10));
+        animator.SetInteger(charID, mPlayer.playerColorIndex);
 
         Debug.LogWarning("Shift + K to cancel intro animation. Remove this code for release build!");
     }

@@ -44,6 +44,7 @@ public class PlayerAim : NetworkBehaviour {
 
     private void Start()
     {
+        GameManager.OnRoundStarted += RestoreInit;
         GameManager.OnHostEndedRound += RestoreInit;
     }
 

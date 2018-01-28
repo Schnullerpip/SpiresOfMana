@@ -23,7 +23,8 @@ public class PlayerAnimation : NetworkBehaviour {
     castAnimationHash,
     gameRunning,
     hitDamage,
-    fof
+    fof,
+    charID
     ;
 
     void Start()
@@ -38,6 +39,7 @@ public class PlayerAnimation : NetworkBehaviour {
         gameRunning = Animator.StringToHash("gameRunning");
         hitDamage = Animator.StringToHash("hitDamage");
         fof = Animator.StringToHash("fof");
+        charID = Animator.StringToHash("charID");
 
 		if(!isLocalPlayer)
 		{
@@ -50,6 +52,8 @@ public class PlayerAnimation : NetworkBehaviour {
 		mPlayer.healthScript.OnDamageTaken += TookDamage;
         GameManager.OnHostEndedRound += ResetState;
         GameManager.OnRoundStarted += Intro;
+
+        animator.SetInteger(charID, Random.Range(0, 10));
 
         Debug.LogWarning("Shift + K to cancel intro animation. Remove this code for release build!");
     }

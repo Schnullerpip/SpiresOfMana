@@ -30,6 +30,15 @@ public class CameraShaker : MonoBehaviour
         Shake(dmg, defaultDuration);
     }
 
+    /// <summary>
+    /// Shakes the camera with a scaling amount times the multiplier and the default duration.
+    /// </summary>
+    /// <param name="multiplier">Multiplier.</param>
+    public void ShakeMultiply(float multiplier)
+    {
+        ShakeByDamage(defaultAmount * multiplier);
+    }
+
 	/// <summary>
 	/// Shake the camera with the default amount and duration.
 	/// </summary>

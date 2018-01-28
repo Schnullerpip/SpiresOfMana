@@ -91,6 +91,11 @@ namespace Prototype.NetworkLobby
             lobbyManager.StartHost();
             
             networkDiscovery.CustomStartAsServer();
+            lobbyPanel.localIpText.gameObject.SetActive(LobbyManager.s_Singleton.networkDiscovery.isServer);
+            if (LobbyManager.s_Singleton.networkDiscovery.isServer)
+            {
+                lobbyPanel.localIpText.text = "IP: " + Network.player.ipAddress.ToString();
+            }
         }
 
         public void OnClickDedicated()

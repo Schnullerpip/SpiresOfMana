@@ -129,6 +129,12 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
             caster.RpcSetEffectState(EffectStateSystem.EffectStateID.Normal);
         }
 
+        if(caster.isLocalPlayer)
+        {
+            //shake the camera. default value on the ground up to twice as hard on full force
+            caster.aim.GetCameraRig().GetShaker().ShakeMultiply(1.0f + resultingHeightFactor);
+        }
+
         StartCoroutine(ImmobilizeCasterForSeconds(caster, mMovementRestrictionTimeInSeconds));
     }
 

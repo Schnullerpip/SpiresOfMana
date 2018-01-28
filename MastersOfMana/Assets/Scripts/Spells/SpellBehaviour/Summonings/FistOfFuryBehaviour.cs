@@ -63,6 +63,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         fof.transform.parent = caster.transform;
         fof.GetComponent<Collider>().enabled = true;
         fof.gameObject.SetActive(true);
+        caster.RpcSetInputState(InputStateSystem.InputStateID.NoCasting);
 
         //spawn it on all clients
         NetworkServer.Spawn(fof.gameObject);
@@ -71,7 +72,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         if (!caster.movement.feet.IsGrounded())
         {
             //set caster's state so he or she doesnt get falldamage
-            caster.SetEffectState(EffectStateSystem.EffectStateID.NoFallDamage);
+            caster.RpcSetEffectState(EffectStateSystem.EffectStateID.NoFallDamage);
             caster.movement.RpcAddForce(Vector3.down * mPushDownForce, ForceMode.VelocityChange);
 
             //activate initial spawneffect

@@ -30,6 +30,11 @@ public class GameManager : MonoBehaviour
 
     public AudioListener listener;
 
+    /// <summary>
+    /// A general 2D audio source for SFX. This can be used from anywhere to play a OneShot SFX.
+    /// </summary>
+    public AudioSource audioSource2D;
+
     public delegate void GameStarted();
     public static event GameStarted OnGameStarted;
 

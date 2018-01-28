@@ -72,6 +72,7 @@ public class PlayerScript : NetworkBehaviour
 
 	[SyncVar] public string playerName;
     [SyncVar] public Color playerColor;
+    [SyncVar] public int playerColorIndex;
 
     public ARecolorSingleColor[] recolors;
 

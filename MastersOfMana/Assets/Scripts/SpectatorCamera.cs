@@ -32,7 +32,7 @@ public class SpectatorCamera : MonoBehaviour
         mCam = GetComponent<Camera>();
 		mCam.CopyFrom(copyCam);
 
-        mEuler = transform.rotation.eulerAngles;
+        mEuler = GetEulerInRange(transform.rotation);
     }
 
     private void Start()
@@ -61,6 +61,16 @@ public class SpectatorCamera : MonoBehaviour
     private PlayerScript mFollowPlayer = null;
     private int mFollowPlayerIndex = -1;
 
+    private Vector3 GetEulerInRange(Quaternion rotation)
+    {
+        Vector3 eul = rotation.eulerAngles;
+        if(eul.x > 180)
+        {
+            eul.x -= 360;
+        }
+        return eul;
+    }
+
     private void Update()
     {
         if(player.GetButtonDown("ShoulderSwap"))
@@ -70,7 +80,7 @@ public class SpectatorCamera : MonoBehaviour
             {
                 mFollowPlayerIndex = -1;
                 text.text = "Freecam";
-                mEuler = mFollowPlayer.aim.currentLookRotation.eulerAngles;
+                mEuler = GetEulerInRange(mFollowPlayer.aim.currentLookRotation);
             }
             else
             {
@@ -87,17 +97,7 @@ public class SpectatorCamera : MonoBehaviour
             mEuler.y += aimInput.x;
             mEuler.x -= aimInput.y;
 
-            Debug.Log(mEuler.x);
-
-            mEuler.x += 360;
-
-            //if(mEuler.x < 0)
-            //{
-            //    mEuler.x += 360;
-            //}
-
-            //mEuler.x = Mathf.Clamp(mEuler.x, minYAngle, maxYAngle);
-
+            mEuler.x = Mathf.Clamp(mEuler.x, minYAngle, maxYAngle);
 
             transform.rotation = Quaternion.Euler(mEuler);
 

@@ -91,7 +91,19 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
 
     private new void OnTriggerEnter(Collider collider)
     {
-        if (collider.isTrigger) return;
+        //Debug.Log("fist hits: " + collider.gameObject + " is Trigger: " + collider.isTrigger);
+
+        //special case - hitting a shield
+        var earthWall = collider.gameObject.GetComponent<EarthwallBehaviour>();
+        if (collider.isTrigger && earthWall)
+        {
+            earthWall.DontBounce = caster.gameObject;
+        }else
+        //case we hit some other trigger and its not the lavafloor (we want to fist on lavafloor)
+        if (collider.isTrigger && !collider.gameObject.GetComponent<LavaFloor>())
+        {
+            return;
+        }
 
         Vector3 distanceVector = caster.transform.position - castPosition;
         float distance = Mathf.Clamp(Vector3.Magnitude(distanceVector), 3.0f, mMaxDistance); //so there will ALWAYS be a little damage at least

@@ -109,22 +109,16 @@ public class PlayerAnimation : NetworkBehaviour {
 	public void Cast(int castAnimationID)
 	{
         animator.SetInteger(castAnimationHash, castAnimationID);
-		//the bool is reset inside the animation state. a trigger is not used, since it is buggy with the network animation component
+        //the bool is reset inside the animation state. a trigger is not used, since it is buggy with the network animation component
 
-        //if(castAnimationID == 1)
-        //{
-        //    animator.SetBool(fof, true);
-        //}
+        if (castAnimationID == 1)
+        {
+            animator.SetBool(fof, true);
+        }
 
-		//force an update to avoid a 1 to 2 frame delay
-		animator.Update(Time.deltaTime);
+        //force an update to avoid a 1 to 2 frame delay
+        animator.Update(Time.deltaTime);
     }
-
-    public void FistOfFury()
-    {
-        animator.SetBool(fof, true);
-    }
-
 
     public void OnDisable()
     {

@@ -78,7 +78,6 @@ namespace Prototype.NetworkLobby
 
             DontDestroyOnLoad(gameObject);
             SetServerInfo("Offline", "None");
-            SetCancelDelegate(mainMenu.Quit);
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
 

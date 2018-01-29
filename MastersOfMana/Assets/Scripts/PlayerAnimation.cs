@@ -9,12 +9,25 @@ public class PlayerAnimation : NetworkBehaviour {
     [Tooltip("How fast does a change in movment direction affect the movement animation?")]
     public float movementDirectionTransitionSpeed = 10;
 
+    [Header("Intro")]
+    public float introDuration = 5;
+    public AudioClip introImpactSound;
+
 	private Vector2 mDirection;
     private PlayerScript mPlayer;
 
-    private int movementSpeedHash, speedRightHash, speedForwardHash, groundedHash, isDeadHash, isCastingHash, castAnimationHash;
-
-
+    private int movementSpeedHash, 
+    speedRightHash, 
+    speedForwardHash, 
+    groundedHash, 
+    isDeadHash, 
+    isCastingHash, 
+    castAnimationHash,
+    gameRunning,
+    hitDamage,
+    fof,
+    charID
+    ;
 
     void Start()
 	{
@@ -25,6 +38,10 @@ public class PlayerAnimation : NetworkBehaviour {
         groundedHash = Animator.StringToHash("grounded");
         isDeadHash = Animator.StringToHash("isDead");
         isCastingHash = Animator.StringToHash("isCasting");
+        gameRunning = Animator.StringToHash("gameRunning");
+        hitDamage = Animator.StringToHash("hitDamage");
+        fof = Animator.StringToHash("fof");
+        charID = Animator.StringToHash("charID");
 
 		if(!isLocalPlayer)
 		{
@@ -36,6 +53,11 @@ public class PlayerAnimation : NetworkBehaviour {
 		mPlayer.movement.onMovement += UpdateMovement;
 		mPlayer.healthScript.OnDamageTaken += TookDamage;
         GameManager.OnHostEndedRound += ResetState;
+        GameManager.OnRoundStarted += Intro;
+
+        animator.SetInteger(charID, mPlayer.playerColorIndex);
+
+        Debug.LogWarning("Shift + K to cancel intro animation. Remove this code for release build!");
     }
 
     void UpdateMovement(float movementSpeed, Vector2 direction, bool isGrounded)
@@ -53,10 +75,11 @@ public class PlayerAnimation : NetworkBehaviour {
 
 	void TookDamage(int damage)
 	{
-        animator.SetInteger("hitDamage",damage);
+        animator.SetInteger(hitDamage, damage);
 
 		if(!mPlayer.healthScript.IsAlive())
 		{
+            animator.SetBool(gameRunning, false);
 			animator.SetBool(isDeadHash, true);
 		}
 	}
@@ -66,18 +89,35 @@ public class PlayerAnimation : NetworkBehaviour {
 		animator.SetBool(isCastingHash, value);
 	}
 
+    public void Intro()
+    {
+        animator.SetBool(gameRunning, true);
+        animator.Update(0);
+        GameManager.instance.audioSource2D.PlayOneShot(introImpactSound);
+        StartCoroutine(WaitIntroDuration());
+    }
+
+    bool mInIntro = false;
+
+    IEnumerator WaitIntroDuration()
+    {
+        mInIntro = true;
+        yield return new WaitForSeconds(introDuration);
+        GameManager.instance.TriggerOnPreGameAnimationFinished();
+    }
+
 	public void Cast(int castAnimationID)
 	{
         animator.SetInteger(castAnimationHash, castAnimationID);
-		//the bool is reset inside the animation state. a trigger is not used, since it is buggy with the network animation component
+        //the bool is reset inside the animation state. a trigger is not used, since it is buggy with the network animation component
 
-        if(castAnimationID == 1)
+        if (castAnimationID == 1)
         {
-            animator.SetBool("fof",true);
+            animator.SetBool(fof, true);
         }
 
-		//force an update to avoid a 1 to 2 frame delay
-		animator.Update(Time.deltaTime);
+        //force an update to avoid a 1 to 2 frame delay
+        animator.Update(Time.deltaTime);
     }
 
     public void OnDisable()
@@ -88,5 +128,22 @@ public class PlayerAnimation : NetworkBehaviour {
     void ResetState()
     {
         animator.SetBool(isDeadHash, false);
+        animator.SetBool(gameRunning, false);
+    }
+
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.K) && Input.GetKey(KeyCode.LeftShift))
+        {
+            if(mInIntro)
+            {
+                mInIntro = false;
+                StopAllCoroutines();
+                GameManager.instance.TriggerOnPreGameAnimationFinished();
+
+                Animator camAni = mPlayer.aim.GetCameraRig().GetComponentInChildren<Animator>();
+                camAni.Play(camAni.GetCurrentAnimatorStateInfo(0).shortNameHash, 0, 1);
+            }
+		}
     }
 }

@@ -63,6 +63,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         fof.transform.parent = caster.transform;
         fof.GetComponent<Collider>().enabled = true;
         fof.gameObject.SetActive(true);
+        caster.RpcSetInputState(InputStateSystem.InputStateID.NoCasting);
 
         //spawn it on all clients
         NetworkServer.Spawn(fof.gameObject);
@@ -71,7 +72,7 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         if (!caster.movement.feet.IsGrounded())
         {
             //set caster's state so he or she doesnt get falldamage
-            caster.SetEffectState(EffectStateSystem.EffectStateID.NoFallDamage);
+            caster.RpcSetEffectState(EffectStateSystem.EffectStateID.NoFallDamage);
             caster.movement.RpcAddForce(Vector3.down * mPushDownForce, ForceMode.VelocityChange);
 
             //activate initial spawneffect
@@ -90,7 +91,19 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
 
     private new void OnTriggerEnter(Collider collider)
     {
-        if (collider.isTrigger) return;
+        //Debug.Log("fist hits: " + collider.gameObject + " is Trigger: " + collider.isTrigger);
+
+        //special case - hitting a shield
+        var earthWall = collider.gameObject.GetComponent<EarthwallBehaviour>();
+        if (collider.isTrigger && earthWall)
+        {
+            earthWall.DontBounce = caster.gameObject;
+        }else
+        //case we hit some other trigger and its not the lavafloor (we want to fist on lavafloor)
+        if (collider.isTrigger && !collider.gameObject.GetComponent<LavaFloor>())
+        {
+            return;
+        }
 
         Vector3 distanceVector = caster.transform.position - castPosition;
         float distance = Mathf.Clamp(Vector3.Magnitude(distanceVector), 3.0f, mMaxDistance); //so there will ALWAYS be a little damage at least
@@ -126,6 +139,12 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
 
             //Set state of player to normal
             caster.RpcSetEffectState(EffectStateSystem.EffectStateID.Normal);
+        }
+
+        if(caster.isLocalPlayer)
+        {
+            //shake the camera. default value on the ground up to twice as hard on full force
+            caster.aim.GetCameraRig().GetShaker().ShakeMultiply(1.0f + resultingHeightFactor);
         }
 
         StartCoroutine(ImmobilizeCasterForSeconds(caster, mMovementRestrictionTimeInSeconds));

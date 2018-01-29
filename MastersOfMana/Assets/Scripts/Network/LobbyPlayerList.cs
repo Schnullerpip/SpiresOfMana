@@ -17,6 +17,7 @@ namespace Prototype.NetworkLobby
         public Text countdownText;
         public RectTransform panel;
         public CanvasGroup canvasGroup;
+        public Text localIpText;
 
         protected VerticalLayoutGroup _layout;
         protected List<LobbyPlayer> _players = new List<LobbyPlayer>();
@@ -37,6 +38,7 @@ namespace Prototype.NetworkLobby
             LobbyManager.s_Singleton.SetCancelDelegate(GoBack);
             _instance = this;
             _layout = playerListContentTransform.GetComponent<VerticalLayoutGroup>();
+            localIpText.gameObject.SetActive(false); //Main menu will activate this afterwards when starting the broadcasting
         }
 
 

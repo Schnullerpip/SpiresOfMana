@@ -212,11 +212,11 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
         }
     }
 
+    public GameObject DontBounce = null;
     public void CollisionRoutine(Collision collision)
     {
         //if its a server moveable - invert its velocity (deflect/trampoline effect)
         Rigidbody rigid = collision.collider.attachedRigidbody;
-        ServerMoveable sm = null;
         if (rigid)
         {
             //handle local effect -> local player bouncing (cause of local authority on players)
@@ -224,8 +224,13 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
             //if its the local player, then move it locally
             if (player)
             {
-                if (player.isLocalPlayer)
+                if (player.isLocalPlayer && !collision.collider.isTrigger && !player.GetComponentInChildren<FistOfFuryBehaviour>())
                 {
+                    //Debug.Log("player has fist: " + player.GetComponentInChildren<FistOfFuryBehaviour>() + "; dontBounce: " + DontBounce);
+                    if (DontBounce)
+                    {
+                        return;
+                    }
                     if (!mAlreadyCaught.ContainsKey(player.movement))
                     {
                         mAlreadyCaught.Add(player.movement, 1);
@@ -239,18 +244,22 @@ public class EarthwallBehaviour : A_SummoningBehaviour {
             }
 
             //contact reaction
-            //create a contatreaction effect object
+            //create a contactreaction effect object
             SpawnContactEffect();
             //make sure the client reacts upon even, if the lag lets the clientside think no collision hapened
-            if (isServer && sm)
+            if (isServer && player)
             {
-                RpcSpawnContactEffect(sm.gameObject);
+                RpcSpawnContactEffect(player.gameObject);
             }
         }
     }
 
     public void CollisionExitRoutine(Collision collision)
     {
+        if (collision.gameObject == DontBounce)
+        {
+            DontBounce = null;
+        }
         Rigidbody rigid = collision.collider.attachedRigidbody;
         if (rigid)
         {

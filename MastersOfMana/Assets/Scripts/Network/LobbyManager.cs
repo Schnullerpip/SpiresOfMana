@@ -78,7 +78,6 @@ namespace Prototype.NetworkLobby
 
             DontDestroyOnLoad(gameObject);
             SetServerInfo("Offline", "None");
-            SetCancelDelegate(mainMenu.Quit);
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
@@ -256,6 +255,7 @@ namespace Prototype.NetworkLobby
 
         public void StopHostClbk()
         {
+			StopAllCoroutines ();
             networkDiscovery.SafeStopBroadcast();
             if (mIsMatchmaking)
             {

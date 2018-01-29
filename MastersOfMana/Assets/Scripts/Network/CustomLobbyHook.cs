@@ -12,5 +12,6 @@ public class CustomLobbyHook : Prototype.NetworkLobby.LobbyHook
 
         gamePlayerScript.playerName = lobbyPlayerScript.playerName;
 		gamePlayerScript.playerColor = lobbyPlayerScript.playerColor;
+        gamePlayerScript.playerColorIndex = System.Array.IndexOf(Prototype.NetworkLobby.LobbyPlayer.Colors, lobbyPlayerScript.playerColor);
     }
 }

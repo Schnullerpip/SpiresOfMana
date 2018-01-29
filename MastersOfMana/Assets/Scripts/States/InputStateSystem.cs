@@ -18,7 +18,7 @@ public class InputStateSystem
 	/// if a state change occures the 'new' state can be adressed through the player's
 	/// dictionary with the respective InputStateID as the key
 	/// </summary>
-    public enum InputStateID {Normal, Hurt, Idle, Paralyzed, Dead, Lobby, NoMovement};
+    public enum InputStateID {Normal, Hurt, Idle, Paralyzed, Dead, Lobby, NoMovement, NoCasting};
 
 
 
@@ -34,7 +34,8 @@ public class InputStateSystem
             new InputStateParalyzed(player),
             new InputStateDead(player),
             new InputStateLobby(player),
-            new InputStateNoMovement(player)
+            new InputStateNoMovement(player),
+            new InputStateNoCasting(player)
         };
 
         current = states[0];

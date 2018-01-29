@@ -30,6 +30,11 @@ public class GameManager : MonoBehaviour
 
     public AudioListener listener;
 
+    /// <summary>
+    /// A general 2D audio source for SFX. This can be used from anywhere to play a OneShot SFX.
+    /// </summary>
+    public AudioSource audioSource2D;
+
     public delegate void GameStarted();
     public static event GameStarted OnGameStarted;
 
@@ -89,7 +94,6 @@ public class GameManager : MonoBehaviour
     {
         mNeededToGo = mInitialNeededToGo;
         mNumberOfGoMessages = 0;
-        mNumberOfDeadPlayers = 0;
         mLavaFloor = FindObjectOfType<LavaFloor>();
         //end ultispells, that are currently running
         if (isUltimateActive)
@@ -164,10 +168,8 @@ public class GameManager : MonoBehaviour
     // This is only executed on the Server
     public void PlayerDown() {
         ++mNumberOfDeadPlayers;
-
-        //TODO: What happens if both die simultaniously?
-        if (mNumberOfDeadPlayers >= (players.Count - 1)) //only one player left -> he/she won the game!
-        { 
+        if (mNumberOfDeadPlayers == (players.Count - 1)) //only one player left -> he/she won the game!
+        {
             PostGame();
         }
     }
@@ -221,7 +223,6 @@ public class GameManager : MonoBehaviour
         //make sure the preview is ended whenever the current round has ended
         localPlayer.GetPlayerSpells().StopPreview();
         localPlayer.inputStateSystem.current.SetPreview(false);
-
         gameRunning = false;
         if (OnRoundEnded != null)
         {
@@ -356,12 +357,12 @@ public class GameManager : MonoBehaviour
 		{
 			return;
 		}
-		List<Transform> startPositions = mStartPoints.GetRandomStartPositions();
+        mNumberOfDeadPlayers = 0;
+        List<Transform> startPositions = mStartPoints.GetRandomStartPositions();
 		for(int i = 0; i < players.Count; i++)
 		{
 			players[i].movement.RpcSetPositionAndRotation(startPositions[i].position, startPositions[i].rotation);
 			players[i].movement.RpcSetVelocity(Vector3.zero);
-            players[i].RpcSetInputState(InputStateSystem.InputStateID.Normal);
 		}
     }
 
@@ -374,7 +375,6 @@ public class GameManager : MonoBehaviour
         {
             OnRoundStarted();
         }
-        TriggerOnPreGameAnimationFinished();
     }
 
     public void TriggerOnLocalPlayerWon()

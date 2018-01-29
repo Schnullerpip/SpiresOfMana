@@ -77,25 +77,25 @@ public class ParalysisBehaviour : A_EffectBehaviour
         preview.instance.Deactivate();
 	}
 
-    public override void Execute(PlayerScript caster)
+    public override void Execute(PlayerScript castingPlayer)
     {
         //check for a hit
         var opponents = GameManager.instance.players;
         foreach (var p in opponents)
         {
-            if (p == caster) continue;
+            if (p == castingPlayer) continue;
 
-            if (ConfirmedHitServer(p.headJoint.position, caster, mHitRadius, mHitRange) ||
-                ConfirmedHitServer(p.transform.position, caster, mHitRadius, mHitRange) ||
-                ConfirmedHitServer(p.movement.mRigidbody.worldCenterOfMass, caster, mHitRadius, mHitRange))
+            if (ConfirmedHitServer(p.headJoint.position, castingPlayer, mHitRadius, mHitRange) ||
+                ConfirmedHitServer(p.transform.position, castingPlayer, mHitRadius, mHitRange) ||
+                ConfirmedHitServer(p.movement.mRigidbody.worldCenterOfMass, castingPlayer, mHitRadius, mHitRange))
             {
                 //player was hit -> create an icecrystalsurrounding him/her
-                ParalysisBehaviour pb = PoolRegistry.GetInstance(gameObject, p.transform.position, caster.transform.rotation, 2, 1) .GetComponent<ParalysisBehaviour>();
+                ParalysisBehaviour pb = PoolRegistry.GetInstance(gameObject, p.transform.position, castingPlayer.transform.rotation, 2, 1) .GetComponent<ParalysisBehaviour>();
 
                 pb.Init(p);
                 pb.mAffectedPlayer = p;
-                pb.caster = caster;
-                pb.casterObject = caster.gameObject;
+                pb.caster = castingPlayer;
+                pb.casterObject = castingPlayer.gameObject;
 
                 //make it, so the frostPrison replaces the players colliders
                 p.GetComponentInChildren<SphereCollider>().enabled = false;
@@ -112,14 +112,14 @@ public class ParalysisBehaviour : A_EffectBehaviour
         // no player was hit - maybe geometry?
         {
             RaycastHit hit;
-            caster.SetColliderIgnoreRaycast(true);
-            bool hitSomething = Physics.Raycast(new Ray(caster.GetCameraPosition(), caster.GetCameraLookDirection()), out hit);
-            caster.SetColliderIgnoreRaycast(false);
+            castingPlayer.SetColliderIgnoreRaycast(true);
+            bool hitSomething = Physics.Raycast(new Ray(castingPlayer.GetCameraPosition(), castingPlayer.GetCameraLookDirection()), out hit);
+            castingPlayer.SetColliderIgnoreRaycast(false);
             if (!hitSomething || hit.distance > mHitRange) //not hitting anything
             {
                 //we hit nothing in range -> spawn empty ice-ish explosion
-                GameObject nonHitEffect = PoolRegistry.GetInstance(mNonHitEffect, 1, 1, Pool.PoolingStrategy.OnMissRoundRobin, Pool.Activation.ReturnActivated);
-                nonHitEffect.transform.position = caster.GetCameraPosition() + caster.GetCameraLookDirection() * mHitRange;
+                GameObject nonHitEffect = PoolRegistry.GetInstance(mNonHitEffect, 1, 1, Pool.PoolingStrategy.OnMissSubjoinElements, Pool.Activation.ReturnActivated);
+                nonHitEffect.transform.position = castingPlayer.GetCameraPosition() + castingPlayer.GetCameraLookDirection() * mHitRange;
                 NetworkServer.Spawn(nonHitEffect);
             }
             else //hit some nonplayer object or terrain
@@ -157,6 +157,10 @@ public class ParalysisBehaviour : A_EffectBehaviour
             //make it, so the frostPrison replaces the players colliders
             affectedPlayer.GetComponentInChildren<SphereCollider>().enabled = false;
             affectedPlayer.GetComponentInChildren<CapsuleCollider>().enabled = false;
+        }
+        else
+        {
+            mAffectedPlayerObject = null;
         }
         //now that the affected player cant interact with us anymore, make the icecrystal interactable
         gameObject.layer = LayerMask.NameToLayer("FrostPrison");
@@ -278,6 +282,7 @@ public class ParalysisBehaviour : A_EffectBehaviour
         if (isServer && !healthscript.IsAlive())
         {
             RestoreNormalState();
+            transform.parent = null;
             RpcDisappear();
             StartCoroutine(DisappearAfterSeconds(this, mLifetimeAfterShatter));
         }

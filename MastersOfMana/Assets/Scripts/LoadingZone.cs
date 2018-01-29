@@ -59,11 +59,20 @@ public abstract class LoadingZone : NetworkBehaviour
             var player = other.GetComponentInParent<PlayerScript>();
             if(player)
             {
-                if (isServer)
-                {
-                    //Remember which player this coroutine belongs to
-                    mInstanceCoroutineDictionary.Add(player.netId, StartCoroutine(LoadingZoneEffect(player)));
-                }
+				//Fix for frost prison spawning in loading zone
+				if(mInstanceCoroutineDictionary.ContainsKey(player.netId))
+				{
+					return;
+				}
+				if (isServer) {
+					//Remember which player this coroutine belongs to
+					mInstanceCoroutineDictionary.Add (player.netId, StartCoroutine (LoadingZoneEffect (player)));
+				} 
+				else 
+				{
+					//Remember which player this coroutine belongs to
+					mInstanceCoroutineDictionary.Add (player.netId, null);
+				}
 
 
                 //handle effects locally
@@ -91,11 +100,15 @@ public abstract class LoadingZone : NetworkBehaviour
             var player = other.GetComponentInParent<PlayerScript>();
             if (player)
             {
-                if (isServer)
-                {
-                    StopCoroutine(mInstanceCoroutineDictionary[player.netId]);
-                    mInstanceCoroutineDictionary.Remove(player.netId);
-                }
+				if (isServer) 
+				{
+					StopCoroutine (mInstanceCoroutineDictionary [player.netId]);
+					mInstanceCoroutineDictionary.Remove (player.netId);
+				} 
+				else 
+				{
+					mInstanceCoroutineDictionary.Remove (player.netId);
+				}
 
                 int indexToRemove = -1;
                 for(int i = 0; i < mInstancedActiveEffects.Count; i++)

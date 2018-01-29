@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 114853011476891102}
   - component: {fileID: 114041408634641604}
   - component: {fileID: 114806671110587774}
+  - component: {fileID: 114815877185421510}
   m_Layer: 5
   m_Name: SpellButton
   m_TagString: Untagged
@@ -217,6 +218,18 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 0
   speed: 6
+--- !u!114 &114815877185421510
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1595006412173192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bd9b4bb08fe747b4a149a3a76cae930, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sfxs: {fileID: 11400000, guid: 18eeba44e485646158f1b62cd9240788, type: 2}
 --- !u!114 &114853011476891102
 MonoBehaviour:
   m_ObjectHideFlags: 1

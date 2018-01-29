@@ -13,16 +13,16 @@ namespace Prototype.NetworkLobby
     {
         public static Color[] Colors = new Color[]
         {
-        new Color(0.722f,0.07869802f,0.07869802f), //red
-        new Color(0.1352774f,0.061072f,0.694f), //blue
-        new Color(0.1764447f,0.406f,0.133168f), //green
-        new Color(0.5955882f,0.5626678f,0.1182418f), //yellow
-        new Color(0.7714174f,0.1308391f,0.8088235f), //pink
-        new Color(0.4375839f,0.1021842f,0.9264706f), //purple
-        new Color(0.79f,0.2604276f,0.02212f), //orange
-        new Color(0.255045f,0.735f,0.6555591f), //turquoise
-        new Color(0.8602941f,0.8602941f,0.8602941f), //white
-        new Color(0.134f,0.134f,0.134f) //black
+        new Color(0.722f, 0.078f, 0.078f), //red
+        new Color(0.060f, 0.086f, 0.834f), //blue
+        new Color(0.176f, 0.406f, 0.133f), //green
+        new Color(0.595f, 0.562f, 0.118f), //yellow
+        new Color(0.771f, 0.130f, 0.808f), //pink
+        new Color(0.437f, 0.102f, 0.926f), //purple
+        new Color(0.790f, 0.504f, 0.125f), //orange
+        new Color(0.255f, 0.735f, 0.655f), //turquoise
+        new Color(0.860f, 0.860f, 0.860f), //white
+        new Color(0.134f, 0.134f, 0.134f) //black
         };        
         //used on server to avoid assigning the same color to two player
         static List<int> _colorInUse = new List<int>();
@@ -126,13 +126,17 @@ namespace Prototype.NetworkLobby
 			}
             readyButton.interactable = false;
 
-            colorNextButton.interactable = false;
-            colorPrevButton.interactable = false;
+            colorNextButton.gameObject.SetActive(false);
+            colorPrevButton.gameObject.SetActive(false);
         }
 
         void SetupLocalPlayer()
         {
             nameInput.interactable = true;
+
+            colorNextButton.gameObject.SetActive(true);
+            colorPrevButton.gameObject.SetActive(true);
+
             //remoteIcone.gameObject.SetActive(false);
             //localIcone.gameObject.SetActive(true);
 
@@ -260,10 +264,18 @@ namespace Prototype.NetworkLobby
             nameInput.text = playerName;
         }
 
+        public Sprite[] portraits;
+
         public void OnMyColor(Color newColor)
         {
             playerColor = newColor;
-            colorPortrait.color = newColor;
+
+            int index = System.Array.IndexOf(Colors, newColor);
+
+            if(index != -1)
+            {
+				colorPortrait.sprite = portraits[index];
+            }
         }
 
         //===== UI Handler

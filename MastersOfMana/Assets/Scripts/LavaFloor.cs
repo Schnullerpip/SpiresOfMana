@@ -45,7 +45,7 @@ public class LavaFloor : NetworkBehaviour
     {
         mStartHeight = transform.position.y;
 
-        Debug.LogWarning("Remove code for stopping lava for release build!");
+        Debug.LogWarning("Shift + L to stop lava. Remove this code for release build!");
     }
 
     public void OnEnable()

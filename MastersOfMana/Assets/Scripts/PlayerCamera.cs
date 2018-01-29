@@ -50,12 +50,12 @@ public class PlayerCamera : MonoBehaviour {
 		mStartFOV = mCamera.fieldOfView;
 		mSlider = GetComponentInChildren<CamSlider>();
 		mShaker = GetComponentInChildren<CameraShaker>();
-        GameManager.OnPreGameAnimationFinished += RoundStarted;
+        GameManager.OnRoundStarted += RoundStarted;
     }
 
     public void OnDestroy()
     {
-        GameManager.OnPreGameAnimationFinished -= RoundStarted;
+        GameManager.OnRoundStarted -= RoundStarted;
     }
 
     void RoundStarted()

@@ -105,8 +105,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1981868326868832}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.5000018, y: 1.8659992, z: -1.2390035}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 224517396063763484}
@@ -130,7 +130,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 2000
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -200,14 +200,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 689c08f3be73442a5b818b3f151d3a34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxYAngle: 89
-  movementSpeed: 10
-  aimSpeed: {fileID: 11400000, guid: 5a34550dde8fd4ca0ace1bb7ae75734c, type: 2}
   zoomSpeed: 10
   zoomOutFOV: 90
+  aimSpeed: {fileID: 11400000, guid: 5a34550dde8fd4ca0ace1bb7ae75734c, type: 2}
+  text: {fileID: 114684475484119072}
+  maxYAngle: 80
+  movementSpeed: 10
   heightOffset: {x: 0, y: 1.866, z: 0}
   jointOffset: {x: 0.5, y: 0, z: -1.239}
-  text: {fileID: 114684475484119072}
+  cinematicRotationSpeed: 5
+  cinematicStartPos: {x: 49.19833, y: 33.20394, z: -41.83484}
+  cinematicStartRot: {x: 25.611, y: -51.223, z: 0}
 --- !u!114 &114157403451148810
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -162,6 +162,7 @@ namespace Prototype.NetworkLobby
         public void OnClickOptions()
         {
             lobbyManager.ChangeTo(optionsPanel);
+			lobbyManager.SetCancelDelegate (lobbyManager.SimpleBackClbk);
         }
 
         public void Quit()

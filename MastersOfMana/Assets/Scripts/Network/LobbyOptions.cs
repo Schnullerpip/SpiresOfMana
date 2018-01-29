@@ -119,7 +119,8 @@ public class LobbyOptions : MonoBehaviour
         }
         else
         {
-			Prototype.NetworkLobby.LobbyManager.s_Singleton.SimpleBackClbk();
+			Prototype.NetworkLobby.LobbyManager.s_Singleton.Cancel ();
+
         }
     }
 

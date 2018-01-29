@@ -256,6 +256,7 @@ namespace Prototype.NetworkLobby
 
         public void StopHostClbk()
         {
+			StopAllCoroutines ();
             networkDiscovery.SafeStopBroadcast();
             if (mIsMatchmaking)
             {

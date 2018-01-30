@@ -303,6 +303,7 @@ namespace Prototype.NetworkLobby
             if(isLocalPlayer)
             {
                 GameManager.ResetEvents();
+				LobbyManager.s_Singleton.ClearCancelDelegate ();
                 SendReadyToBeginMessage();
             }
         }

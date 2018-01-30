@@ -169,8 +169,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4984617020668464}
-  - component: {fileID: 114971814295737394}
-  - component: {fileID: 114562810480977894}
+  - component: {fileID: 114308576781220422}
+  - component: {fileID: 114837153353692332}
   m_Layer: 0
   m_Name: IceCrystalNonHitEffect
   m_TagString: Untagged
@@ -554,6 +554,38 @@ MonoBehaviour:
   GraphIntensityMultiplier: 1.5
   IsLoop: 0
   canUpdate: 0
+--- !u!114 &114308576781220422
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1794378090699984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 56
+    i1: 249
+    i2: 83
+    i3: 103
+    i4: 135
+    i5: 94
+    i6: 169
+    i7: 164
+    i8: 10
+    i9: 220
+    i10: 208
+    i11: 135
+    i12: 88
+    i13: 45
+    i14: 227
+    i15: 61
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!114 &114419708941236990
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -594,18 +626,6 @@ MonoBehaviour:
   GraphIntensityMultiplier: 1
   IsLoop: 0
   UseSharedMaterial: 0
---- !u!114 &114562810480977894
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1794378090699984}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97e4ce3f3a6438d4a9b8e9c2bd57e811, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mLifeTime: 3.5
 --- !u!114 &114732357482900326
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -654,6 +674,18 @@ MonoBehaviour:
   RotationDamper: 2
   IsEnabled: 1
   canUpdate: 0
+--- !u!114 &114837153353692332
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1794378090699984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1756bcdb668167a4c8bc829f1859b051, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lifetime: 3.5
 --- !u!114 &114872678752112614
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -725,38 +757,6 @@ MonoBehaviour:
   GraphIntensityMultiplier: 1
   IsLoop: 0
   UseSharedMaterial: 0
---- !u!114 &114971814295737394
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1794378090699984}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 56
-    i1: 249
-    i2: 83
-    i3: 103
-    i4: 135
-    i5: 94
-    i6: 169
-    i7: 164
-    i8: 10
-    i9: 220
-    i10: 208
-    i11: 135
-    i12: 88
-    i13: 45
-    i14: 227
-    i15: 61
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
 --- !u!119 &119383345100058600
 Projector:
   m_ObjectHideFlags: 1

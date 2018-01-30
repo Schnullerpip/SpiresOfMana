@@ -118,13 +118,14 @@ public class ParalysisBehaviour : A_EffectBehaviour
             if (!hitSomething || hit.distance > mHitRange) //not hitting anything
             {
                 //we hit nothing in range -> spawn empty ice-ish explosion
-                GameObject nonHitEffect = PoolRegistry.GetInstance(mNonHitEffect, 1, 1, Pool.PoolingStrategy.OnMissSubjoinElements, Pool.Activation.ReturnActivated);
+                GameObject nonHitEffect = PoolRegistry.GetInstance(mNonHitEffect, 1, 1);
                 nonHitEffect.transform.position = castingPlayer.GetCameraPosition() + castingPlayer.GetCameraLookDirection() * mHitRange;
+                nonHitEffect.SetActive(true);
                 NetworkServer.Spawn(nonHitEffect);
             }
             else //hit some nonplayer object or terrain
             {
-                if (hit.transform.gameObject.isStatic)
+                if (hit.transform.gameObject.CompareTag("LevelGeometry"))
                 {
                     //its definitely terrain
                     //get its normal and create an iceCrystal with the hit points normal as rotation
@@ -135,8 +136,9 @@ public class ParalysisBehaviour : A_EffectBehaviour
                 else
                 {
                     //we hit a nonterrain object - we would not want to spawn an icecrystal here (would just look strange to frost a flying grenade for example)
-                    GameObject nonHitEffect = PoolRegistry.GetInstance(mNonHitEffect, hit.point, Quaternion.identity, 2, 2, Pool.PoolingStrategy.OnMissRoundRobin, Pool.Activation.ReturnActivated);
+                    GameObject nonHitEffect = PoolRegistry.GetInstance(mNonHitEffect, 1, 1);
                     nonHitEffect.transform.position = hit.point;
+                    nonHitEffect.SetActive(true);
                     NetworkServer.Spawn(nonHitEffect);
                 }
             }

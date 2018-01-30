@@ -20,6 +20,8 @@ public class SpectatorCamera : MonoBehaviour
     public Vector3 heightOffset = new Vector3(0,1.866f,0);
     public Vector3 jointOffset = new Vector3(0.5f, 0, -1.239f);
 
+	public Vector3 center;
+
     private PlayerScript mFollowPlayer = null;
     private int mFollowPlayerIndex = -1;
 
@@ -80,6 +82,14 @@ public class SpectatorCamera : MonoBehaviour
 
     private bool hide = false;
 
+	private Vector2 mSmooth;
+	public float smoothSpeed = 10;
+	public float smoothMoveSpeed = 10;
+
+	private Vector2 mSmoothMove;
+
+	private float mSmoothUp;
+
     private void Update()
     {
         if(Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.H))
@@ -133,18 +143,21 @@ public class SpectatorCamera : MonoBehaviour
         Vector2 moveInput = mRewiredPlayer.GetAxis2D("MoveHorizontal", "MoveVertical") * Time.deltaTime * movementSpeed;
         Vector2 aimInput = mRewiredPlayer.GetAxis2D("AimHorizontal", "AimVertical") * Time.deltaTime * aimSpeed.value;
 
-        mEuler.y += aimInput.x;
-        mEuler.x -= aimInput.y;
+		mSmoothMove = Vector2.Lerp (mSmoothMove, moveInput, Time.deltaTime * smoothMoveSpeed);
+		mSmooth = Vector2.Lerp(mSmooth, aimInput, Time.deltaTime * smoothSpeed);
+
+		mEuler.y += mSmooth.x;
+		mEuler.x -= mSmooth.y;
 
         mEuler.x = Mathf.Clamp(mEuler.x, -maxYAngle, maxYAngle);
 
         if(mFollowPlayerIndex == -1)
         {
-            FreeCam(moveInput);
+			FreeCam(mSmoothMove);
         }
         else if(mFollowPlayerIndex == -2)
         {
-            transform.RotateAround(Vector3.zero, Vector3.up, Time.deltaTime * cinematicRotationSpeed);
+			transform.RotateAround(center, Vector3.up, Time.deltaTime * cinematicRotationSpeed);
         }
         else
         {
@@ -168,7 +181,9 @@ public class SpectatorCamera : MonoBehaviour
 
         float up = mRewiredPlayer.GetAxis("SpectatorUpDown") * Time.deltaTime * movementSpeed;
 
-        Vector3 moveDirection = transform.TransformVector(moveInput.x, up, moveInput.y);
+		mSmoothUp = Mathf.Lerp (mSmoothUp, up, Time.deltaTime * smoothMoveSpeed);
+
+		Vector3 moveDirection = transform.TransformVector(moveInput.x, mSmoothUp, moveInput.y);
 
         RaycastHit hit;
 

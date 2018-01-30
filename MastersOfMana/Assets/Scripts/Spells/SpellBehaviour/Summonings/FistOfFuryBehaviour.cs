@@ -145,7 +145,6 @@ public class FistOfFuryBehaviour : A_SummoningBehaviour
         {
             //shake the camera. default value on the ground up to twice as hard on full force
             caster.aim.GetCameraRig().GetShaker().ShakeMultiply(1.0f + resultingHeightFactor);
-            caster.GetPlayerAnimation().FistOfFury();
         }
 
         StartCoroutine(ImmobilizeCasterForSeconds(caster, mMovementRestrictionTimeInSeconds));

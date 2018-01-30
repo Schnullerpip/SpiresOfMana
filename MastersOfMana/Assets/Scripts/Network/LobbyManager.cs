@@ -293,6 +293,13 @@ namespace Prototype.NetworkLobby
             }
         }
 
+		public void ClearCancelDelegate()
+		{
+			cancelDelegate = null;
+			backDelegate = null;
+			oldCancelDelegates.Clear ();
+		}
+
         public void Cancel()
         {
             if(cancelDelegate != null)

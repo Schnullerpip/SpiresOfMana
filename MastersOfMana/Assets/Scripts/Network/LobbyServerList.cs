@@ -57,13 +57,12 @@ namespace Prototype.NetworkLobby
 		{
             if (matches.Count == 0 && networkDiscovery.localMatches.Count == 0)
 			{
-                if (currentPage == 0)
-                {
-                    noServerFound.SetActive(true);
-                }
-
+                noServerFound.SetActive(true);
                 currentPage = previousPage;
-               
+				foreach (Transform t in serverListRect) 
+				{
+					Destroy(t.gameObject);
+				}
                 return;
             }
 

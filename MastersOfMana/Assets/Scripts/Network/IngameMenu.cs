@@ -56,7 +56,7 @@ public class IngameMenu : MonoBehaviour
 
     void Update()
     {
-        if (mRewiredPlayer != null && mRewiredPlayer.GetButtonDown("IngameMenu"))
+		if (mRewiredPlayer != null && mRewiredPlayer.GetButtonDown("IngameMenu") && !lobbyManager.mainMenu.loadingScreen.gameObject.activeSelf)
         {
             Resume();
         }

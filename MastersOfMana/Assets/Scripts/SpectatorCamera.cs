@@ -78,8 +78,24 @@ public class SpectatorCamera : MonoBehaviour
         return eul;
     }
 
+    private bool hide = false;
+
     private void Update()
     {
+        if(Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.H))
+        {
+            hide = !hide;
+            text.GetComponentInParent<Canvas>().enabled = !hide;
+            GameObject.Find("HUD").GetComponent<Canvas>().enabled = !hide;
+            FindObjectOfType<KillFeed>().GetComponent<Canvas>().enabled = !hide;
+
+            foreach (var opHud in FindObjectsOfType<OpponentHUD>())
+            {
+                opHud.GetComponent<Canvas>().enabled = !hide;
+            }
+
+        }
+
         if(mRewiredPlayer.GetButtonDown("ShoulderSwap"))
         {
             ++mFollowPlayerIndex;

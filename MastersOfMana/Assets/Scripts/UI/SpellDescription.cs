@@ -13,6 +13,8 @@ public class SpellDescription : MonoBehaviour {
 	public StatsIndicator cooldownIndicator;
     public VideoPlayer previewPlayer;
 
+    public int frameExtend = 5;
+
     private string defaultStats;
 
     private A_Spell.SpellDescription mCurrentDescription;
@@ -35,8 +37,8 @@ public class SpellDescription : MonoBehaviour {
 
         flavorText.SetText(mCurrentDescription.flavorText);
 
-        mStartFrame = mCurrentDescription.beginFrame;
-        mEndFrame = mCurrentDescription.endFrame;
+        mStartFrame = mCurrentDescription.beginFrame + frameExtend;
+        mEndFrame = mCurrentDescription.endFrame - frameExtend;
         if (!previewPlayer.isPlaying)
         {
             previewPlayer.Play();

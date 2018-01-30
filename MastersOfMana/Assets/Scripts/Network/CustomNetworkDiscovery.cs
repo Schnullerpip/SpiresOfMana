@@ -43,7 +43,10 @@ public class CustomNetworkDiscovery : UnityEngine.Networking.NetworkDiscovery {
         {
             StopCoroutine(mAddressMatchDicitonary[address]);
             mAddressMatchDicitonary.Remove(address);
-            localMatches.Remove(mAddressObjDicitonary[address].GetComponent<Prototype.NetworkLobby.LobbyServerEntry>());
+			if(localMatches.Contains(mAddressObjDicitonary[address].GetComponent<Prototype.NetworkLobby.LobbyServerEntry>()))
+			{
+				localMatches.Remove(mAddressObjDicitonary[address].GetComponent<Prototype.NetworkLobby.LobbyServerEntry>());
+			}
             Destroy(mAddressObjDicitonary[address]);
             mAddressObjDicitonary.Remove(address);
             if (broadcastsReceived != null && broadcastsReceived.ContainsKey(address))

@@ -112,8 +112,6 @@ namespace Prototype.NetworkLobby
         {
             lobbyManager.isHost = true;
             lobbyManager.isLocalGame = false;
-            PlayerPrefsExtended.SetColor("Playercolor", playerColor.color);
-            PlayerPrefs.Save();
             lobbyManager.StartMatchMaker();
             lobbyManager.matchMaker.CreateMatch(
                 matchNameInput.text,
@@ -132,8 +130,6 @@ namespace Prototype.NetworkLobby
         public void OnClickOpenServerList()
         {
             lobbyManager.isHost = false;
-            PlayerPrefsExtended.SetColor("Playercolor", playerColor.color);
-            PlayerPrefs.Save();
             lobbyManager.StartMatchMaker();
             lobbyManager.SetCancelDelegate(lobbyManager.SimpleBackClbk);
             lobbyManager.backDelegate = lobbyManager.Cancel;

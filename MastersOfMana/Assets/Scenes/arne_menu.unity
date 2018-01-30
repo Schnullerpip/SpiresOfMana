@@ -7447,8 +7447,8 @@ MonoBehaviour:
   - {fileID: 1679527539424384, guid: 405c847a688227f439dc739133dab0da, type: 2}
   - {fileID: 1019098708853560, guid: 9ed67b18f32bff948b23a43e2d59fc81, type: 2}
   - {fileID: 1171774870737118, guid: 83763df6623bec248b48769ddaf87f0e, type: 2}
-  - {fileID: 1794378090699984, guid: 38f95367875ea9a40adcd087582de33d, type: 2}
   - {fileID: 1373831901795182, guid: 6eca4adc8c23e6c4e84f8579830bc1a9, type: 2}
+  - {fileID: 1794378090699984, guid: 38f95367875ea9a40adcd087582de33d, type: 2}
   m_CustomConfig: 1
   m_MaxConnections: 4
   m_ConnectionConfig:
@@ -7754,14 +7754,14 @@ Prefab:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1321811817}
-    - target: {fileID: 11478224, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
-      propertyPath: networkDiscovery
-      value: 
-      objectReference: {fileID: 1321811820}
     - target: {fileID: 155310, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
       propertyPath: m_Name
       value: MainMenu
       objectReference: {fileID: 0}
+    - target: {fileID: 11478224, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
+      propertyPath: networkDiscovery
+      value: 
+      objectReference: {fileID: 1321811820}
     - target: {fileID: 114907993927819114, guid: c0978251ff7b10d4fb954a4b56acd9f0,
         type: 2}
       propertyPath: lobbyManager
@@ -7772,11 +7772,6 @@ Prefab:
       propertyPath: networkDiscovery
       value: 
       objectReference: {fileID: 1321811820}
-    - target: {fileID: 224121087320787042, guid: c0978251ff7b10d4fb954a4b56acd9f0,
-        type: 2}
-      propertyPath: m_SizeDelta.y
-      value: 225
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
   m_IsPrefabParent: 0

@@ -43,8 +43,6 @@ namespace Prototype.NetworkLobby
         //public GameObject localIcone;
         //public GameObject remoteIcone;
         private Button backButton;
-        [SyncVar]
-        private bool forcedColor = false;
 
         //OnMyName function will be invoked on clients when server change the value of playerName
         [SyncVar(hook = "OnMyName")]
@@ -303,6 +301,7 @@ namespace Prototype.NetworkLobby
             if(isLocalPlayer)
             {
                 GameManager.ResetEvents();
+				LobbyManager.s_Singleton.ClearCancelDelegate ();
                 SendReadyToBeginMessage();
             }
         }
@@ -353,10 +352,7 @@ namespace Prototype.NetworkLobby
                     CmdNameChanged(playerName);
                     CmdSetPlayerColor(playerColor,false);
                     PlayerPrefs.SetString("Playername", playerName);
-                    if (!forcedColor)
-                    {
-                        PlayerPrefsExtended.SetColor("Playercolor", playerColor);
-                    }
+                    PlayerPrefsExtended.SetColor("Playercolor", playerColor);
                     PlayerPrefs.Save();
                 }
             }
@@ -388,16 +384,11 @@ namespace Prototype.NetworkLobby
             {
                 CmdColorChange(true);
             }
-            if(playerColor != color)
-            {
-                forcedColor = true;
-            }
         }
 
         [Command]
         public void CmdColorChange(bool changeForward)
         {
-            forcedColor = false;
             int idx = System.Array.IndexOf(Colors, playerColor);
 
             int inUseIdx = _colorInUse.IndexOf(idx);

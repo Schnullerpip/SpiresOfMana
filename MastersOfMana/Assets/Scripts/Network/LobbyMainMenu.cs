@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
+using UnityEngine.Networking;
 using Rewired;
 
 namespace Prototype.NetworkLobby
@@ -94,7 +94,14 @@ namespace Prototype.NetworkLobby
             lobbyPanel.localIpText.gameObject.SetActive(LobbyManager.s_Singleton.networkDiscovery.isServer);
             if (LobbyManager.s_Singleton.networkDiscovery.isServer)
             {
-                lobbyPanel.localIpText.text = "IP: " + Network.player.ipAddress.ToString();
+                var host = System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName());
+                foreach (var ip in host.AddressList)
+                {
+                    if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                    {
+                        lobbyPanel.localIpText.text = "IP: " + ip.ToString();
+                    }
+                }
             }
         }
 

@@ -327,7 +327,7 @@ public class LavaFloor : NetworkBehaviour
 
     private void OnValidate()
     {
-        AnimationCurve temp = new AnimationCurve();
+        var temp = new AnimationCurve();
 
         for (int i = 0; i < lavaFlow.length; ++i)
         {
